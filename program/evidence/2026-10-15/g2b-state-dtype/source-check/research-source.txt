@@ -1,0 +1,855 @@
+image sha256:95bb9a2d6602f743be1f0556e0aa3283de28a3330991f6996a9d66ffc35c080a
+python 3.12.3 torch 2.11.0+cu128 transformers 5.15.0
+fla installed /workspace/cotcodec/.venv/lib/python3.12/site-packages/fla/__init__.py
+flash_attn absent 
+flash_attn_interface absent 
+causal_conv1d absent 
+kernels absent 
+triton installed /workspace/cotcodec/.venv/lib/python3.12/site-packages/triton/__init__.py
+/workspace/cotcodec/.venv/lib/python3.12/site-packages/fla/utils/_device.py:100: UserWarning: Triton is not supported on current platform, roll back to CPU.
+  _cpu_device_warning()
+fla 0.5.2
+== modeling_qwen3_5: /workspace/cotcodec/.venv/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py
+classes: ['Qwen3_5VisionRotaryEmbedding', 'Qwen3_5TextRotaryEmbedding', 'Qwen3_5RMSNormGated', 'Qwen3_5GatedDeltaNet', 'Qwen3_5Attention', 'Qwen3_5MLP', 'Qwen3_5RMSNorm', 'Qwen3_5DecoderLayer', 'Qwen3_5PreTrainedModel', 'Qwen3_5VisionMLP', 'Qwen3_5VisionPatchEmbed', 'Qwen3_5VisionPatchMerger', 'Qwen3_5VisionAttention', 'Qwen3_5VisionBlock', 'Qwen3_5VisionModel', 'Qwen3_5ModelOutputWithPast', 'Qwen3_5TextModel', 'Qwen3_5Model', 'Qwen3_5ForCausalLM', 'Qwen3_5ForTokenClassification', 'Qwen3_5CausalLMOutputWithPast', 'Qwen3_5ForConditionalGeneration', 'Qwen3_5TextForSequenceClassification', 'Qwen3_5ForSequenceClassification']
+######## class Qwen3_5RMSNormGated
+@use_kernel_forward_from_hub("RMSNormGated")
+class Qwen3_5RMSNormGated(nn.Module):
+    def __init__(self, hidden_size, eps=1e-6, **kwargs):
+        super().__init__()
+        self.weight = nn.Parameter(torch.ones(hidden_size))
+        self.variance_epsilon = eps
+        self.activation = "silu"
+
+    def forward(self, hidden_states, gate=None):
+        input_dtype = hidden_states.dtype
+        hidden_states = hidden_states.to(torch.float32)
+        variance = hidden_states.pow(2).mean(-1, keepdim=True)
+        # Norm before gate
+        hidden_states = hidden_states * torch.rsqrt(variance + self.variance_epsilon)
+        hidden_states = self.weight * hidden_states.to(input_dtype)
+        hidden_states = hidden_states * ACT2FN[self.activation](gate.to(torch.float32))
+
+        return hidden_states.to(input_dtype)
+
+######## class Qwen3_5GatedDeltaNet
+@use_kernel_forward_from_hub("Qwen3_5GatedDeltaNet")
+@use_kernelized_func(
+    [torch_recurrent_gated_delta_rule, torch_chunk_gated_delta_rule, causal_conv1d_fn, causal_conv1d_update]
+)
+class Qwen3_5GatedDeltaNet(nn.Module):
+    def __init__(self, config: Qwen3_5Config, layer_idx: int):
+        super().__init__()
+        self.hidden_size = config.hidden_size
+        self.num_v_heads = config.linear_num_value_heads
+        self.num_k_heads = config.linear_num_key_heads
+        self.head_k_dim = config.linear_key_head_dim
+        self.head_v_dim = config.linear_value_head_dim
+        self.key_dim = self.head_k_dim * self.num_k_heads
+        self.value_dim = self.head_v_dim * self.num_v_heads
+
+        self.conv_kernel_size = config.linear_conv_kernel_dim
+        self.layer_idx = layer_idx
+        self.activation = config.hidden_act
+        self.layer_norm_epsilon = config.rms_norm_eps
+
+        # QKV
+        self.conv_dim = self.key_dim * 2 + self.value_dim
+        self.conv1d = nn.Conv1d(
+            in_channels=self.conv_dim,
+            out_channels=self.conv_dim,
+            bias=False,
+            kernel_size=self.conv_kernel_size,
+            groups=self.conv_dim,
+            padding=self.conv_kernel_size - 1,
+        )
+
+        # time step projection (discretization)
+        # instantiate once and copy inv_dt in init_weights of PretrainedModel
+        self.dt_bias = nn.Parameter(torch.ones(self.num_v_heads))
+
+        A = torch.empty(self.num_v_heads).uniform_(0, 16)
+        self.A_log = nn.Parameter(torch.log(A))
+
+        self.norm = Qwen3_5RMSNormGated(self.head_v_dim, eps=self.layer_norm_epsilon)
+        self.out_proj = nn.Linear(self.value_dim, self.hidden_size, bias=False)
+
+        self.layer_type = config.layer_types[layer_idx]
+
+        self.in_proj_qkv = nn.Linear(self.hidden_size, self.key_dim * 2 + self.value_dim, bias=False)
+        self.in_proj_z = nn.Linear(self.hidden_size, self.value_dim, bias=False)
+        self.in_proj_b = nn.Linear(self.hidden_size, self.num_v_heads, bias=False)
+        self.in_proj_a = nn.Linear(self.hidden_size, self.num_v_heads, bias=False)
+
+    @force_accelerate_hooks("conv1d")
+    def forward(
+        self,
+        hidden_states: torch.Tensor,
+        cache_params: Cache | None = None,
+        attention_mask: torch.Tensor | None = None,
+        **kwargs: Unpack[TransformersKwargs],
+    ):
+        hidden_states = apply_mask_to_padding_states(hidden_states, attention_mask)
+
+        # Set up dimensions for reshapes later
+        batch_size, seq_len, _ = hidden_states.shape
+        use_precomputed_states = cache_params is not None and cache_params.has_previous_state(self.layer_idx)
+
+        mixed_qkv = self.in_proj_qkv(hidden_states)
+        mixed_qkv = mixed_qkv.transpose(1, 2)
+
+        z = self.in_proj_z(hidden_states)
+        z = z.reshape(batch_size, seq_len, -1, self.head_v_dim)
+
+        b = self.in_proj_b(hidden_states)
+        a = self.in_proj_a(hidden_states)
+
+        if use_precomputed_states and seq_len == 1 and not cache_params.layers[self.layer_idx].record_past:
+            conv_state = cache_params.layers[self.layer_idx].conv_states[0]
+            # Single-token cached decode: the fused per-step kernel updates the conv state in-place.
+            mixed_qkv = causal_conv1d_update(
+                mixed_qkv,
+                conv_state,
+                self.conv1d.weight.squeeze(1),
+                self.conv1d.bias,
+                self.activation,
+            )
+        else:
+            if cache_params is not None:
+                mixed_qkv = cache_params.update_conv_state(
+                    mixed_qkv, self.layer_idx, conv_kernel_size=self.conv_kernel_size
+                )
+
+            mixed_qkv = causal_conv1d_fn(
+                mixed_qkv,
+                self.conv1d.weight.squeeze(1),
+                self.conv1d.bias,
+                activation=self.activation,
+                **kwargs,
+            )
+
+            # Drop the additional previous states
+            if cache_params is not None:
+                mixed_qkv = mixed_qkv[:, :, -seq_len:]
+
+        mixed_qkv = mixed_qkv.transpose(1, 2)
+        query, key, value = torch.split(
+            mixed_qkv,
+            [
+                self.key_dim,
+                self.key_dim,
+                self.value_dim,
+            ],
+            dim=-1,
+        )
+
+        query = query.reshape(batch_size, seq_len, -1, self.head_k_dim)
+        key = key.reshape(batch_size, seq_len, -1, self.head_k_dim)
+        value = value.reshape(batch_size, seq_len, -1, self.head_v_dim)
+
+        beta = b.sigmoid()
+        # If the model is loaded in fp16, without the .float() here, A might be -inf
+        g = -self.A_log.float().exp() * F.softplus(a.float() + self.dt_bias)
+        if self.num_v_heads // self.num_k_heads > 1:
+            query = query.repeat_interleave(self.num_v_heads // self.num_k_heads, dim=2)
+            key = key.repeat_interleave(self.num_v_heads // self.num_k_heads, dim=2)
+
+        recurrent_state = cache_params.layers[self.layer_idx].recurrent_states[0] if use_precomputed_states else None
+        if use_precomputed_states and seq_len == 1:
+            core_attn_out, last_recurrent_state = torch_recurrent_gated_delta_rule(
+                query,
+                key,
+                value,
+                g=g,
+                beta=beta,
+                initial_state=recurrent_state,
+                output_final_state=cache_params is not None,
+                use_qk_l2norm_in_kernel=True,
+                cu_seqlens=kwargs.pop("cu_seq_lens_q", None),
+                **kwargs,
+            )
+        else:
+            core_attn_out, last_recurrent_state = torch_chunk_gated_delta_rule(
+                query,
+                key,
+                value,
+                g=g,
+                beta=beta,
+                initial_state=recurrent_state,
+                output_final_state=cache_params is not None,
+                use_qk_l2norm_in_kernel=True,
+                cu_seqlens=kwargs.pop("cu_seq_lens_q", None),
+                **kwargs,
+            )
+
+        # Update cache
+        if cache_params is not None:
+            cache_params.update_recurrent_state(last_recurrent_state, self.layer_idx)
+
+        # reshape input data into 2D tensor
+        core_attn_out = core_attn_out.reshape(-1, self.head_v_dim)
+        z = z.reshape(-1, self.head_v_dim)
+        core_attn_out = self.norm(core_attn_out, z)
+        core_attn_out = core_attn_out.reshape(batch_size, seq_len, -1)
+
+        output = self.out_proj(core_attn_out)
+        return output
+
+######## class Qwen3_5Attention
+class Qwen3_5Attention(nn.Module):
+    """Multi-headed attention from 'Attention Is All You Need' paper"""
+
+    def __init__(self, config: Qwen3_5Config, layer_idx: int):
+        super().__init__()
+        self.config = config
+        self.layer_idx = layer_idx
+        self.head_dim = getattr(config, "head_dim", config.hidden_size // config.num_attention_heads)
+        self.num_key_value_groups = config.num_attention_heads // config.num_key_value_heads
+        self.scaling = self.head_dim**-0.5
+        self.attention_dropout = config.attention_dropout
+        self.is_causal = True
+        self.q_proj = nn.Linear(
+            config.hidden_size, config.num_attention_heads * self.head_dim * 2, bias=config.attention_bias
+        )
+        self.k_proj = nn.Linear(
+            config.hidden_size, config.num_key_value_heads * self.head_dim, bias=config.attention_bias
+        )
+        self.v_proj = nn.Linear(
+            config.hidden_size, config.num_key_value_heads * self.head_dim, bias=config.attention_bias
+        )
+        self.o_proj = nn.Linear(
+            config.num_attention_heads * self.head_dim, config.hidden_size, bias=config.attention_bias
+        )
+        self.q_norm = Qwen3_5RMSNorm(self.head_dim, eps=config.rms_norm_eps)  # unlike olmo, only on the head dim!
+        self.k_norm = Qwen3_5RMSNorm(self.head_dim, eps=config.rms_norm_eps)  # thus post q_norm does not need reshape
+
+    def forward(
+        self,
+        hidden_states: torch.Tensor,
+        position_embeddings: tuple[torch.Tensor, torch.Tensor],
+        attention_mask: torch.Tensor | None,
+        past_key_values: Cache | None = None,
+        **kwargs: Unpack[FlashAttentionKwargs],
+    ) -> tuple[torch.Tensor, torch.Tensor | None]:
+        input_shape = hidden_states.shape[:-1]
+        hidden_shape = (*input_shape, -1, self.head_dim)
+
+        query_states, gate = torch.chunk(
+            self.q_proj(hidden_states).view(*input_shape, -1, self.head_dim * 2), 2, dim=-1
+        )
+        gate = gate.reshape(*input_shape, -1)
+
+        query_states = self.q_norm(query_states.view(hidden_shape)).transpose(1, 2)
+        key_states = self.k_norm(self.k_proj(hidden_states).view(hidden_shape)).transpose(1, 2)
+        value_states = self.v_proj(hidden_states).view(hidden_shape).transpose(1, 2)
+
+        cos, sin = position_embeddings
+        query_states, key_states = apply_rotary_pos_emb(query_states, key_states, cos, sin)
+
+        if past_key_values is not None:
+            key_states, value_states = past_key_values.update(key_states, value_states, self.layer_idx)
+
+        attention_interface: Callable = ALL_ATTENTION_FUNCTIONS.get_interface(
+            self.config._attn_implementation, eager_attention_forward
+        )
+
+        attn_output, attn_weights = attention_interface(
+            self,
+            query_states,
+            key_states,
+            value_states,
+            attention_mask,
+            dropout=0.0 if not self.training else self.attention_dropout,
+            scaling=self.scaling,
+            **kwargs,
+        )
+
+        attn_output = attn_output.reshape(*input_shape, -1).contiguous()
+        attn_output = attn_output * torch.sigmoid(gate)
+
+        attn_output = self.o_proj(attn_output)
+        return attn_output, attn_weights
+
+######## class Qwen3_5DecoderLayer
+class Qwen3_5DecoderLayer(GradientCheckpointingLayer):
+    def __init__(self, config: Qwen3_5TextConfig, layer_idx: int):
+        super().__init__()
+        self.hidden_size = config.hidden_size
+        self.block_type = config.layer_types[layer_idx]
+        if self.block_type == "linear_attention":
+            self.linear_attn = Qwen3_5GatedDeltaNet(config, layer_idx)
+        elif self.block_type == "full_attention":
+            self.self_attn = Qwen3_5Attention(config, layer_idx)
+        self.mlp = Qwen3_5MLP(config, config.intermediate_size)
+        self.input_layernorm = Qwen3_5RMSNorm(config.hidden_size, eps=config.rms_norm_eps)
+        self.post_attention_layernorm = Qwen3_5RMSNorm(config.hidden_size, eps=config.rms_norm_eps)
+
+    def forward(
+        self,
+        hidden_states: torch.Tensor,
+        position_embeddings: tuple[torch.Tensor, torch.Tensor],
+        attention_mask: torch.Tensor | None = None,
+        position_ids: torch.LongTensor | None = None,
+        past_key_values: Cache | None = None,
+        **kwargs: Unpack[TransformersKwargs],
+    ) -> torch.FloatTensor:
+        residual = hidden_states
+
+        hidden_states = self.input_layernorm(hidden_states)
+
+        # Token Mixer
+        if self.block_type == "linear_attention":
+            hidden_states = self.linear_attn(
+                hidden_states=hidden_states,
+                cache_params=past_key_values,
+                attention_mask=attention_mask,
+                **kwargs,
+            )
+        elif self.block_type == "full_attention":
+            # Self Attention
+            hidden_states, _ = self.self_attn(
+                hidden_states=hidden_states,
+                attention_mask=attention_mask,
+                position_ids=position_ids,
+                past_key_values=past_key_values,
+                position_embeddings=position_embeddings,
+                **kwargs,
+            )
+
+        hidden_states = residual + hidden_states
+
+        # Fully Connected
+        residual = hidden_states
+        hidden_states = self.post_attention_layernorm(hidden_states)
+        hidden_states = self.mlp(hidden_states)
+        hidden_states = residual + hidden_states
+
+        return hidden_states
+
+######## class Qwen3_5VisionAttention
+class Qwen3_5VisionAttention(nn.Module):
+    def __init__(self, config: Qwen3_5VisionConfig) -> None:
+        super().__init__()
+        self.dim = config.hidden_size
+        self.num_heads = config.num_heads
+        self.head_dim = self.dim // self.num_heads
+        self.num_key_value_groups = 1  # needed for eager attention
+        self.qkv = nn.Linear(self.dim, self.dim * 3, bias=True)
+        self.proj = nn.Linear(self.dim, self.dim)
+        self.scaling = self.head_dim**-0.5
+        self.config = config
+        self.attention_dropout = 0.0
+        self.is_causal = False
+
+    def forward(
+        self,
+        hidden_states: torch.Tensor,
+        cu_seqlens: torch.Tensor,
+        position_embeddings: tuple[torch.Tensor, torch.Tensor] | None = None,
+        max_seqlen: int | None = None,
+        **kwargs,
+    ) -> torch.Tensor:
+        seq_length = hidden_states.shape[0]
+        query_states, key_states, value_states = (
+            self.qkv(hidden_states).reshape(seq_length, 3, self.num_heads, -1).permute(1, 0, 2, 3).unbind(0)
+        )
+        cos, sin = position_embeddings
+        query_states, key_states = apply_rotary_pos_emb_vision(query_states, key_states, cos, sin)
+
+        query_states = query_states.transpose(0, 1).unsqueeze(0)
+        key_states = key_states.transpose(0, 1).unsqueeze(0)
+        value_states = value_states.transpose(0, 1).unsqueeze(0)
+
+        attention_interface: Callable = ALL_ATTENTION_FUNCTIONS.get_interface(
+            self.config._attn_implementation, eager_attention_forward
+        )
+
+        if is_flash_attention_requested(self.config):
+            # Flash Attention: Use cu_seqlens for variable length attention
+            max_seqlen = get_max_seqlen(cu_seqlens, self.config, kwargs={"max_seqlen": max_seqlen})
+            attn_output, _ = attention_interface(
+                self,
+                query_states,
+                key_states,
+                value_states,
+                attention_mask=None,
+                scaling=self.scaling,
+                dropout=0.0 if not self.training else self.attention_dropout,
+                cu_seq_lens_q=cu_seqlens,
+                cu_seq_lens_k=cu_seqlens,
+                max_length_q=max_seqlen,
+                max_length_k=max_seqlen,
+                is_causal=False,
+                **kwargs,
+            )
+        else:
+            # Other implementations: Process each chunk separately
+            lengths = cu_seqlens[1:] - cu_seqlens[:-1]
+            splits = [
+                torch.split(tensor, lengths.tolist(), dim=2) for tensor in (query_states, key_states, value_states)
+            ]
+
+            attn_outputs = [
+                attention_interface(
+                    self,
+                    q,
+                    k,
+                    v,
+                    attention_mask=None,
+                    scaling=self.scaling,
+                    dropout=0.0 if not self.training else self.attention_dropout,
+                    is_causal=False,
+                    **kwargs,
+                )[0]
+                for q, k, v in zip(*splits)
+            ]
+            attn_output = torch.cat(attn_outputs, dim=1)
+
+        attn_output = attn_output.reshape(seq_length, -1).contiguous()
+        attn_output = self.proj(attn_output)
+        return attn_output
+
+######## apply_mask_to_padding_states
+def apply_mask_to_padding_states(hidden_states, attention_mask):
+    """
+    Tunes out the hidden states for padding tokens, see https://github.com/state-spaces/mamba/issues/66
+    """
+    # NOTE: attention mask is a 2D boolean tensor
+    if attention_mask is not None:
+        dtype = hidden_states.dtype
+        hidden_states = (hidden_states * attention_mask[:, :, None]).to(dtype)
+
+    return hidden_states
+
+######## l2norm
+def l2norm(x: torch.FloatTensor, dim: int = -1, eps: float = 1e-6):
+    """This function is intended to align with the l2norm implementation in the FLA library."""
+    inv_norm = torch.rsqrt((x * x).sum(dim=dim, keepdim=True) + eps)
+    return x * inv_norm
+
+######## Qwen3_5TextModel.forward
+    @merge_with_config_defaults
+    @capture_outputs
+    @auto_docstring
+    def forward(
+        self,
+        input_ids: torch.LongTensor | None = None,
+        attention_mask: torch.Tensor | None = None,
+        position_ids: torch.LongTensor | None = None,
+        past_key_values: Cache | None = None,
+        inputs_embeds: torch.FloatTensor | None = None,
+        use_cache: bool | None = None,
+        **kwargs: Unpack[TransformersKwargs],
+    ) -> BaseModelOutputWithPast:
+        if (input_ids is None) ^ (inputs_embeds is not None):
+            raise ValueError("You must specify exactly one of input_ids or inputs_embeds")
+
+        if inputs_embeds is None:
+            inputs_embeds = self.embed_tokens(input_ids)
+
+        if use_cache and past_key_values is None:
+            past_key_values = DynamicCache(config=self.config)
+
+        # the hard coded `4` is for text, temporal, height and width.
+        if position_ids is None:
+            past_seen_tokens = past_key_values.get_seq_length() if past_key_values is not None else 0
+            position_ids = torch.arange(inputs_embeds.shape[1], device=inputs_embeds.device) + past_seen_tokens
+            position_ids = position_ids.view(1, 1, -1).expand(4, inputs_embeds.shape[0], -1)
+        elif position_ids.ndim == 2:
+            position_ids = position_ids[None, ...].expand(4, position_ids.shape[0], -1)
+
+        if position_ids.ndim == 3 and position_ids.shape[0] == 4:
+            text_position_ids = position_ids[0]
+            position_ids = position_ids[1:]
+        else:
+            text_position_ids = None
+
+        if not isinstance(causal_mask_mapping := attention_mask, dict):
+            # Prepare mask arguments
+            mask_kwargs = {
+                "config": self.config,
+                "inputs_embeds": inputs_embeds,
+                "attention_mask": attention_mask,
+                "past_key_values": past_key_values,
+                "position_ids": text_position_ids,
+            }
+            # Create the masks
+            causal_mask_mapping = {
+                "full_attention": create_causal_mask(**mask_kwargs),
+                "linear_attention": create_recurrent_attention_mask(**mask_kwargs),
+            }
+
+        hidden_states = inputs_embeds
+        position_embeddings = self.rotary_emb(hidden_states, position_ids)
+
+        for i, decoder_layer in enumerate(self.layers[: self.config.num_hidden_layers]):
+            hidden_states = decoder_layer(
+                hidden_states,
+                position_embeddings=position_embeddings,
+                attention_mask=causal_mask_mapping[self.config.layer_types[i]],
+                position_ids=text_position_ids,
+                past_key_values=past_key_values,
+                use_cache=use_cache,
+                **kwargs,
+            )
+
+        hidden_states = self.norm(hidden_states)
+
+        return Qwen3_5ModelOutputWithPast(
+            last_hidden_state=hidden_states,
+            past_key_values=past_key_values,
+        )
+
+######## module globals that look like kernels
+causal_conv1d_update = <function causal_conv1d_update at 0x790f62089f80>
+causal_conv1d_fn = <function causal_conv1d_fn at 0x790f62166340>
+torch_chunk_gated_delta_rule = <function torch_chunk_gated_delta_rule at 0x790f62166520>
+torch_recurrent_gated_delta_rule = <function torch_recurrent_gated_delta_rule at 0x790f62166660>
+######## fla chunk_gated_delta_rule (q: torch.Tensor, k: torch.Tensor, v: torch.Tensor, g: torch.Tensor, beta: torch.Tensor, scale: float | None = None, initial_state: torch.Tensor | None = None, output_final_state: bool = False, use_qk_l2norm_in_kernel: bool = False, use_beta_sigmoid_in_kernel: bool = False, allow_neg_eigval: bool = False, state_v_first: bool = False, cu_seqlens: torch.LongTensor | None = None, cu_seqlens_cpu: torch.LongTensor | None = None, cp_context: fla.ops.cp.context.FLACPContext | None = None, **kwargs)
+/workspace/cotcodec/.venv/lib/python3.12/site-packages/torch/_dynamo/eval_frame.py
+   33 def chunk_gated_delta_rule_fwd(
+   40     initial_state: torch.Tensor,
+   41     output_final_state: bool,
+   43     cu_seqlens: torch.LongTensor | None = None,
+   59             cu_seqlens=cu_seqlens,
+   67             cu_seqlens=cu_seqlens,
+   77         cu_seqlens=cu_seqlens,
+   83         initial_state = chunk_gated_delta_rule_fwd_h_pre_process(
+   88             cu_seqlens=cu_seqlens,
+   89             initial_state=initial_state,
+   95     h, v_new, final_state = chunk_gated_delta_rule_fwd_h(
+  100         initial_state=initial_state,
+  101         output_final_state=output_final_state,
+  102         cu_seqlens=cu_seqlens,
+  109         initial_state = compress_h0(initial_state, context=cp_context)
+  118         cu_seqlens=cu_seqlens,
+  123     return g, o, A, final_state, initial_state, g_input
+  126 def chunk_gated_delta_rule_bwd(
+  134     initial_state: torch.Tensor,
+  138     cu_seqlens: torch.LongTensor | None = None,
+  153         cu_seqlens=cu_seqlens,
+  158         initial_state = expand_h0(initial_state, context=cp_context)
+  160     h, v_new, _ = chunk_gated_delta_rule_fwd_h(
+  165         initial_state=initial_state,
+  166         output_final_state=False,
+  167         cu_seqlens=cu_seqlens,
+  178         cu_seqlens=cu_seqlens,
+  184         # initial_state is None in the CP mode
+  186         dht, initial_state = chunk_gated_delta_rule_bwd_dhu_pre_process(
+  194             cu_seqlens=cu_seqlens,
+  196             initial_state=initial_state,
+  207         h0=initial_state,
+  212         cu_seqlens=cu_seqlens,
+  228         cu_seqlens=cu_seqlens,
+  241         cu_seqlens=cu_seqlens,
+  246     dg = chunk_local_cumsum(dg, chunk_size=chunk_size, reverse=True, cu_seqlens=cu_seqlens, chunk_indices=chunk_indices)
+  258     def forward(
+  266         initial_state: torch.Tensor,
+  267         output_final_state: bool,
+  269         cu_seqlens: torch.LongTensor | None = None,
+  270         cu_seqlens_cpu: torch.LongTensor | None = None,
+  290         if cu_seqlens is not None:
+  291             chunk_indices = prepare_chunk_indices(cu_seqlens, chunk_size, cu_seqlens_cpu=cu_seqlens_cpu)
+  292         g, o, A, final_state, initial_state, g_input = chunk_gated_delta_rule_fwd(
+  299             initial_state=initial_state,
+  300             output_final_state=output_final_state,
+  301             cu_seqlens=cu_seqlens,
+  320             initial_state,
+  321             cu_seqlens,
+  335         return o.to(q.dtype), final_state
+  340     def backward(
+  355             initial_state,
+  356             cu_seqlens,
+  370             initial_state=initial_state,
+  373             cu_seqlens=cu_seqlens,
+  397 def chunk_gated_delta_rule(
+  404     initial_state: torch.Tensor | None = None,
+  405     output_final_state: bool = False,
+  410     cu_seqlens: torch.LongTensor | None = None,
+  411     cu_seqlens_cpu: torch.LongTensor | None = None,
+  434         initial_state (Optional[torch.Tensor]):
+  438         output_final_state (Optional[bool]):
+  463         cu_seqlens (torch.LongTensor):
+  468             When provided, `initial_state` and `output_final_state` are not supported,
+  469             and `cu_seqlens` will be overridden by the context. Default: `None`.
+  474         final_state (torch.Tensor):
+  475             Final state of shape `[N, HV, K, V]` if `output_final_state=True` else `None`.
+  484         >>> q = torch.randn(B, T, H, K, dtype=torch.bfloat16, device='cuda')
+  485         >>> k = F.normalize(torch.randn(B, T, H, K, dtype=torch.bfloat16, device='cuda'), p=2, dim=-1)
+  486         >>> v = torch.randn(B, T, HV, V, dtype=torch.bfloat16, device='cuda')
+  487         >>> beta = torch.rand(B, T, HV, dtype=torch.bfloat16, device='cuda').sigmoid()
+  488         >>> g = F.logsigmoid(torch.rand(B, T, HV, dtype=torch.bfloat16, device='cuda'))
+  489         >>> h0 = torch.randn(B, HV, K, V, dtype=torch.bfloat16, device='cuda')
+  492             initial_state=h0,
+  493             output_final_state=True
+  495         # for variable-length inputs, the batch size `B` is expected to be 1 and `cu_seqlens` is required
+  497         # for a batch with 4 sequences, `cu_seqlens` with 5 start/end positions are expected
+  498         >>> cu_seqlens = q.new_tensor([0, 2048, 4096, 6144, 8192], dtype=torch.long)
+  501             initial_state=h0,
+  502             output_final_state=True,
+  503             cu_seqlens=cu_seqlens
+  539         assert initial_state is None, "Initial state is not supported for CP"
+  540         assert output_final_state is False, "Output final state is not supported for CP"
+  541         assert cp_context.cu_seqlens is not None, "cu_seqlens is required for CP"
+  542         cu_seqlens = cp_context.cu_seqlens
+  543         if cp_context.cu_seqlens_cpu is not None:
+  544             cu_seqlens_cpu = cp_context.cu_seqlens_cpu
+  546     if cu_seqlens is not None:
+  549                 f"The batch size is expected to be 1 rather than {q.shape[0]} when using `cu_seqlens`."
+  552         if initial_state is not None and initial_state.shape[0] != len(cu_seqlens) - 1:
+  555                 f"i.e., {len(cu_seqlens) - 1} rather than {initial_state.shape[0]}.",
+  567     o, final_state = ChunkGatedDeltaRuleFunction.apply(
+  574         initial_state,
+  575         output_final_state,
+  577         cu_seqlens,
+  578         cu_seqlens_cpu,
+  588     return o, final_state
+######## fla fused_recurrent_gated_delta_rule (q: torch.Tensor, k: torch.Tensor, v: torch.Tensor, g: torch.Tensor | None = None, gk: torch.Tensor | None = None, gv: torch.Tensor | None = None, beta: torch.Tensor | None = None, scale: float = None, initial_state: torch.Tensor = None, output_final_state: bool = False, use_qk_l2norm_in_kernel: bool = False, use_gate_in_kernel: bool = False, A_log: torch.Tensor | None = None, dt_bias: torch.Tensor | None = None, use_beta_sigmoid_in_kernel: bool = False, allow_neg_eigval: bool = False, state_v_first: bool = False, cu_seqlens: torch.LongTensor | None = None, **kwargs) -> tuple[torch.Tensor, torch.Tensor]
+== fla.ops.common.chunk_delta_h: /workspace/cotcodec/.venv/lib/python3.12/site-packages/fla/ops/common/chunk_delta_h.py
+    1 # Copyright (c) 2023-2026, Songlin Yang, Yu Zhang, Zhiyuan Li
+    6 #   https://github.com/fla-org/flash-linear-attention/graphs/contributors
+   34     'USE_INITIAL_STATE': lambda args: args['h0'] is not None,
+   35     'STORE_FINAL_STATE': lambda args: args['ht'] is not None,
+   50 def chunk_gated_delta_rule_fwd_kernel_h_blockdim64(
+   58     h0,
+   59     ht,
+   90         b_h1 = tl.zeros([BV, 64], dtype=tl.float32)
+   92             b_h2 = tl.zeros([BV, 64], dtype=tl.float32)
+   94             b_h3 = tl.zeros([BV, 64], dtype=tl.float32)
+   96             b_h4 = tl.zeros([BV, 64], dtype=tl.float32)
+   98         b_h1 = tl.zeros([64, BV], dtype=tl.float32)
+  100             b_h2 = tl.zeros([64, BV], dtype=tl.float32)
+  102             b_h3 = tl.zeros([64, BV], dtype=tl.float32)
+  104             b_h4 = tl.zeros([64, BV], dtype=tl.float32)
+  115         h0 = h0 + i_nh * K*V
+  117         ht = ht + i_nh * K*V
+  132             p_h0_1 = h0 + o_v[:, None] * K + o_k1[None, :]
+  133             m_h0_1 = m_v[:, None] & m_k1[None, :]
+  135             p_h0_1 = h0 + o_k1[:, None] * V + o_v[None, :]
+  136             m_h0_1 = m_k1[:, None] & m_v[None, :]
+  137         b_h1 += tl.load(p_h0_1, mask=m_h0_1, other=0.0).to(tl.float32)
+  140                 p_h0_2 = h0 + o_v[:, None] * K + o_k2[None, :]
+  141                 m_h0_2 = m_v[:, None] & m_k2[None, :]
+  143                 p_h0_2 = h0 + o_k2[:, None] * V + o_v[None, :]
+  144                 m_h0_2 = m_k2[:, None] & m_v[None, :]
+  145             b_h2 += tl.load(p_h0_2, mask=m_h0_2, other=0.0).to(tl.float32)
+  148                 p_h0_3 = h0 + o_v[:, None] * K + o_k3[None, :]
+  149                 m_h0_3 = m_v[:, None] & m_k3[None, :]
+  151                 p_h0_3 = h0 + o_k3[:, None] * V + o_v[None, :]
+  152                 m_h0_3 = m_k3[:, None] & m_v[None, :]
+  153             b_h3 += tl.load(p_h0_3, mask=m_h0_3, other=0.0).to(tl.float32)
+  156                 p_h0_4 = h0 + o_v[:, None] * K + o_k4[None, :]
+  157                 m_h0_4 = m_v[:, None] & m_k4[None, :]
+  159                 p_h0_4 = h0 + o_k4[:, None] * V + o_v[None, :]
+  160                 m_h0_4 = m_k4[:, None] & m_v[None, :]
+  161             b_h4 += tl.load(p_h0_4, mask=m_h0_4, other=0.0).to(tl.float32)
+  174         tl.store(p_h1, b_h1.to(p_h1.dtype.element_ty), mask=m_h1)
+  182             tl.store(p_h2, b_h2.to(p_h2.dtype.element_ty), mask=m_h2)
+  190             tl.store(p_h3, b_h3.to(p_h3.dtype.element_ty), mask=m_h3)
+  198             tl.store(p_h4, b_h4.to(p_h4.dtype.element_ty), mask=m_h4)
+  203             b_v = tl.dot(b_w, tl.trans(b_h1).to(b_w.dtype))
+  205             b_v = tl.dot(b_w, b_h1.to(b_w.dtype))
+  210                 b_v += tl.dot(b_w, tl.trans(b_h2).to(b_w.dtype))
+  212                 b_v += tl.dot(b_w, b_h2.to(b_w.dtype))
+  217                 b_v += tl.dot(b_w, tl.trans(b_h3).to(b_w.dtype))
+  219                 b_v += tl.dot(b_w, b_h3.to(b_w.dtype))
+  224                 b_v += tl.dot(b_w, tl.trans(b_h4).to(b_w.dtype))
+  226                 b_v += tl.dot(b_w, b_h4.to(b_w.dtype))
+  232             tl.store(p_v, b_v.to(p_v.dtype.element_ty), mask=m_t[:, None] & m_v[None, :])
+  236             b_g_last = tl.load(g + (bos * HV + last_idx * HV + i_h).to(tl.int64)).to(tl.float32)
+  238             b_g = tl.load(p_g, mask=m_t, other=0.0).to(tl.float32)
+  241             b_h1 *= b_g_last
+  243                 b_h2 *= b_g_last
+  245                 b_h3 *= b_g_last
+  247                 b_h4 *= b_g_last
+  251             b_gk_last1 = tl.load(gk + (bos + last_idx) * HV*K + i_h * K + o_k1, mask=(o_k1 < K), other=0.).to(tl.float32)
+  253                 b_h1 *= exp2(b_gk_last1)[None, :]
+  255                 b_h1 *= exp2(b_gk_last1)[:, None]
+  258                 b_gk_last2 = tl.load(gk + (bos + last_idx) * HV*K + i_h * K + o_k2, mask=(o_k2 < K), other=0.).to(tl.float32)
+  260                     b_h2 *= exp2(b_gk_last2)[None, :]
+  262                     b_h2 *= exp2(b_gk_last2)[:, None]
+  265                 b_gk_last3 = tl.load(gk + (bos + last_idx) * HV*K + i_h * K + o_k3, mask=(o_k3 < K), other=0.).to(tl.float32)
+  267                     b_h3 *= exp2(b_gk_last3)[None, :]
+  269                     b_h3 *= exp2(b_gk_last3)[:, None]
+  272                 b_gk_last4 = tl.load(gk + (bos + last_idx) * HV*K + i_h * K + o_k4, mask=(o_k4 < K), other=0.).to(tl.float32)
+  274                     b_h4 *= exp2(b_gk_last4)[None, :]
+  276                     b_h4 *= exp2(b_gk_last4)[:, None]
+  277         b_v = b_v.to(k.dtype.element_ty)
+  282             b_h1 += tl.trans(tl.dot(b_k, b_v))
+  284             b_h1 += tl.dot(b_k, b_v)
+  289                 b_h2 += tl.trans(tl.dot(b_k, b_v))
+  291                 b_h2 += tl.dot(b_k, b_v)
+  296                 b_h3 += tl.trans(tl.dot(b_k, b_v))
+  298                 b_h3 += tl.dot(b_k, b_v)
+  303                 b_h4 += tl.trans(tl.dot(b_k, b_v))
+  305                 b_h4 += tl.dot(b_k, b_v)
+  309             p_ht = ht + o_v[:, None] * K + o_k1[None, :]
+  310             m_ht = m_v[:, None] & m_k1[None, :]
+  312             p_ht = ht + o_k1[:, None] * V + o_v[None, :]
+  313             m_ht = m_k1[:, None] & m_v[None, :]
+  314         tl.store(p_ht, b_h1.to(p_ht.dtype.element_ty), mask=m_ht)
+  317                 p_ht = ht + o_v[:, None] * K + o_k2[None, :]
+  318                 m_ht = m_v[:, None] & m_k2[None, :]
+  320                 p_ht = ht + o_k2[:, None] * V + o_v[None, :]
+  321                 m_ht = m_k2[:, None] & m_v[None, :]
+  322             tl.store(p_ht, b_h2.to(p_ht.dtype.element_ty), mask=m_ht)
+  325                 p_ht = ht + o_v[:, None] * K + o_k3[None, :]
+  326                 m_ht = m_v[:, None] & m_k3[None, :]
+  328                 p_ht = ht + o_k3[:, None] * V + o_v[None, :]
+  329                 m_ht = m_k3[:, None] & m_v[None, :]
+  330             tl.store(p_ht, b_h3.to(p_ht.dtype.element_ty), mask=m_ht)
+  333                 p_ht = ht + o_v[:, None] * K + o_k4[None, :]
+  334                 m_ht = m_v[:, None] & m_k4[None, :]
+  336                 p_ht = ht + o_k4[:, None] * V + o_v[None, :]
+  337                 m_ht = m_k4[:, None] & m_v[None, :]
+  338             tl.store(p_ht, b_h4.to(p_ht.dtype.element_ty), mask=m_ht)
+  344     'USE_INITIAL_STATE': lambda args: args['dh0'] is not None,
+  345     'USE_FINAL_STATE_GRADIENT': lambda args: args['dht'] is not None,
+  359 def chunk_gated_delta_rule_bwd_kernel_dhu_blockdim64(
+  365     dht,
+  366     dh0,
+  401         b_dh1 = tl.zeros([BV, 64], dtype=tl.float32)
+  403             b_dh2 = tl.zeros([BV, 64], dtype=tl.float32)
+  405             b_dh3 = tl.zeros([BV, 64], dtype=tl.float32)
+  407             b_dh4 = tl.zeros([BV, 64], dtype=tl.float32)
+  409         b_dh1 = tl.zeros([64, BV], dtype=tl.float32)
+  411             b_dh2 = tl.zeros([64, BV], dtype=tl.float32)
+  413             b_dh3 = tl.zeros([64, BV], dtype=tl.float32)
+  415             b_dh4 = tl.zeros([64, BV], dtype=tl.float32)
+  429         dh0 += i_nh * K*V
+  431         dht += i_nh * K*V
+  445             p_dht1 = dht + o_v[:, None] * K + o_k1[None, :]
+  446             m_dht1 = m_v[:, None] & m_k1[None, :]
+  448             p_dht1 = dht + o_k1[:, None] * V + o_v[None, :]
+  449             m_dht1 = m_k1[:, None] & m_v[None, :]
+  450         b_dh1 += tl.load(p_dht1, mask=m_dht1, other=0.0)
+  453                 p_dht2 = dht + o_v[:, None] * K + o_k2[None, :]
+  454                 m_dht2 = m_v[:, None] & m_k2[None, :]
+  456                 p_dht2 = dht + o_k2[:, None] * V + o_v[None, :]
+  457                 m_dht2 = m_k2[:, None] & m_v[None, :]
+  458             b_dh2 += tl.load(p_dht2, mask=m_dht2, other=0.0)
+  461                 p_dht3 = dht + o_v[:, None] * K + o_k3[None, :]
+  462                 m_dht3 = m_v[:, None] & m_k3[None, :]
+  464                 p_dht3 = dht + o_k3[:, None] * V + o_v[None, :]
+  465                 m_dht3 = m_k3[:, None] & m_v[None, :]
+  466             b_dh3 += tl.load(p_dht3, mask=m_dht3, other=0.0)
+  469                 p_dht4 = dht + o_v[:, None] * K + o_k4[None, :]
+  470                 m_dht4 = m_v[:, None] & m_k4[None, :]
+  472                 p_dht4 = dht + o_k4[:, None] * V + o_v[None, :]
+  473                 m_dht4 = m_k4[:, None] & m_v[None, :]
+  474             b_dh4 += tl.load(p_dht4, mask=m_dht4, other=0.0)
+  486         tl.store(p_dh1, b_dh1.to(p_dh1.dtype.element_ty), mask=m_dh1)
+  494             tl.store(p_dh2, b_dh2.to(p_dh2.dtype.element_ty), mask=m_dh2)
+  502             tl.store(p_dh3, b_dh3.to(p_dh3.dtype.element_ty), mask=m_dh3)
+  510             tl.store(p_dh4, b_dh4.to(p_dh4.dtype.element_ty), mask=m_dh4)
+  514             bg_last = tl.load(g + (bos + last_idx) * HV + i_h).to(tl.float32)
+  516             b_g = tl.load(p_g, mask=m_t, other=0.0).to(tl.float32)
+  530             b_gk_last1 = tl.load(gk + last_idx * HV*K + o_k1, mask=(o_k1 < K), other=0.).to(tl.float32)
+  532             b_dv = tl.dot(b_k, tl.trans(b_dh1).to(b_k.dtype))
+  534             b_dv = tl.dot(b_k, b_dh1.to(b_k.dtype))
+  540                 b_gk_last2 = tl.load(gk + last_idx * HV*K + o_k2, mask=(o_k2 < K), other=0.).to(tl.float32)
+  542                 b_dv += tl.dot(b_k, tl.trans(b_dh2).to(b_k.dtype))
+  544                 b_dv += tl.dot(b_k, b_dh2.to(b_k.dtype))
+  550                 b_gk_last3 = tl.load(gk + last_idx * HV*K + o_k3, mask=(o_k3 < K), other=0.).to(tl.float32)
+  552                 b_dv += tl.dot(b_k, tl.trans(b_dh3).to(b_k.dtype))
+  554                 b_dv += tl.dot(b_k, b_dh3.to(b_k.dtype))
+  560                 b_gk_last4 = tl.load(gk + last_idx * HV*K + o_k4, mask=(o_k4 < K), other=0.).to(tl.float32)
+  562                 b_dv += tl.dot(b_k, tl.trans(b_dh4).to(b_k.dtype))
+  564                 b_dv += tl.dot(b_k, b_dh4.to(b_k.dtype))
+  570         tl.store(p_dv2, b_dv.to(p_dv.dtype.element_ty), mask=m_t[:, None] & m_v[None, :])
+  585             b_dh1 += tl.trans(tl.dot(b_q.to(b_q.dtype), b_do.to(b_q.dtype)) * scale - tl.dot(b_w, b_dv.to(b_w.dtype)))
+  587             b_dh1 += tl.dot(b_q.to(b_q.dtype), b_do.to(b_q.dtype)) * scale - tl.dot(b_w, b_dv.to(b_w.dtype))
+  602                 b_dh2 += tl.trans(tl.dot(b_q.to(b_q.dtype), b_do.to(b_q.dtype)) * scale - tl.dot(b_w, b_dv.to(b_w.dtype)))
+  604                 b_dh2 += tl.dot(b_q.to(b_q.dtype), b_do.to(b_q.dtype)) * scale - tl.dot(b_w, b_dv.to(b_w.dtype))
+  619                 b_dh3 += tl.trans(tl.dot(b_q.to(b_q.dtype), b_do.to(b_q.dtype)) * scale - tl.dot(b_w, b_dv.to(b_w.dtype)))
+  621                 b_dh3 += tl.dot(b_q.to(b_q.dtype), b_do.to(b_q.dtype)) * scale - tl.dot(b_w, b_dv.to(b_w.dtype))
+  636                 b_dh4 += tl.trans(tl.dot(b_q.to(b_q.dtype), b_do.to(b_q.dtype)) * scale - tl.dot(b_w, b_dv.to(b_w.dtype)))
+  638                 b_dh4 += tl.dot(b_q.to(b_q.dtype), b_do.to(b_q.dtype)) * scale - tl.dot(b_w, b_dv.to(b_w.dtype))
+  642             p_dh0 = dh0 + o_v[:, None] * K + o_k1[None, :]
+  643             m_dh0 = m_v[:, None] & m_k1[None, :]
+  645             p_dh0 = dh0 + o_k1[:, None] * V + o_v[None, :]
+  646             m_dh0 = m_k1[:, None] & m_v[None, :]
+  647         tl.store(p_dh0, b_dh1.to(p_dh0.dtype.element_ty), mask=m_dh0)
+  650                 p_dh1 = dh0 + o_v[:, None] * K + o_k2[None, :]
+  653                 p_dh1 = dh0 + o_k2[:, None] * V + o_v[None, :]
+  655             tl.store(p_dh1, b_dh2.to(p_dh1.dtype.element_ty), mask=m_dh1)
+  658                 p_dh2 = dh0 + o_v[:, None] * K + o_k3[None, :]
+  661                 p_dh2 = dh0 + o_k3[:, None] * V + o_v[None, :]
+  663             tl.store(p_dh2, b_dh3.to(p_dh2.dtype.element_ty), mask=m_dh2)
+  666                 p_dh3 = dh0 + o_v[:, None] * K + o_k4[None, :]
+  669                 p_dh3 = dh0 + o_k4[:, None] * V + o_v[None, :]
+  671             tl.store(p_dh3, b_dh4.to(p_dh3.dtype.element_ty), mask=m_dh3)
+  675 def chunk_gated_delta_rule_fwd_h(
+  703         h = k.new_empty(B, NT, HV, V, K)
+  704         final_state = k.new_zeros(N, HV, V, K, dtype=torch.float32) if output_final_state else None
+  706         h = k.new_empty(B, NT, HV, K, V)
+  707         final_state = k.new_zeros(N, HV, K, V, dtype=torch.float32) if output_final_state else None
+  709     v_new = torch.empty_like(u) if save_new_value else None
+  710     def grid(meta): return (triton.cdiv(V, meta['BV']), N*HV)
+  719         h0=initial_state,
+  720         ht=final_state,
+  735 def chunk_gated_delta_rule_bwd_dhu(
+  743     h0: torch.Tensor | None = None,
+  744     dht: torch.Tensor | None = None,
+  764         dh = q.new_empty(B, NT, HV, V, K)
+  766         dh = q.new_empty(B, NT, HV, K, V)
+  767     dh0 = torch.empty_like(h0, dtype=torch.float32) if h0 is not None else None
+  768     dv2 = torch.empty_like(dv)
+  770     def grid(meta): return (triton.cdiv(V, meta['BV']), N*HV)
+  777         dht=dht,
+  778         dh0=dh0,
+  794     return dh, dh0, dv2
+######## fla.modules.convolution: /workspace/cotcodec/.venv/lib/python3.12/site-packages/fla/modules/convolution.py
+causal_conv1d (x: torch.Tensor, weight: torch.Tensor | None = None, bias: torch.Tensor | None = None, residual: torch.Tensor | None = None, initial_state: torch.Tensor | None = None, output_final_state: bool | None = False, activation: str | None = None, backend: str | None = 'triton', cu_seqlens: torch.Tensor | None = None, cu_seqlens_cpu: torch.LongTensor | None = None, chunk_indices: torch.LongTensor | None = None, cp_context: fla.ops.cp.context.FLACPContext | None = None, **kwargs)
+ShortConvolution 
+(x: torch.Tensor, weight: torch.Tensor | None = None, bias: torch.Tensor | None = None, residual: torch.Tensor | None = None, initial_state: torch.Tensor | None = None, output_final_state: bool | None = False, activation: str | None = None, backend: str | None = 'triton', cu_seqlens: torch.Tensor | None = None, cu_seqlens_cpu: torch.LongTensor | None = None, chunk_indices: torch.LongTensor | None = None, cp_context: fla.ops.cp.context.FLACPContext | None = None, **kwargs)
+prepare_sequence_ids (cu_seqlens: torch.LongTensor, cu_seqlens_cpu: torch.LongTensor | None = None) -> torch.LongTensor
+######## torch.nn.attention.varlen ['Any', 'AuxRequest', 'NamedTuple', 'log', 'logging', 'lru_cache', 'torch', 'varlen_attn']
+(query: torch.Tensor, key: torch.Tensor, value: torch.Tensor, cu_seq_q: torch.Tensor, cu_seq_k: torch.Tensor, max_q: int, max_k: int, *, return_aux: torch.nn.attention.varlen.AuxRequest | None = None, scale: float | None = None, window_size: tuple[int, int] = (-1, -1)) -> torch.Tensor | tuple[torch.Tensor, torch.Tensor]
+
+    Compute variable-length attention using Flash Attention.
+    This function is similar to scaled_dot_product_attention but optimized for
+    variable-length sequences using cumulative sequence position tensors.
+
+    Args:
+        query (Tensor): Query tensor; shape :math:`(T_q, H, D)`
+        key (Tensor): Key tensor; shape :math:`(T_k, H, D)`
+        value (Tensor): Value tensor; shape :math:`(T_k, H, D)`
+        cu_seq_q (Tensor): Cumulative sequence positions for queries; shape :math:`(N+1,)`
+        cu_seq_k (Tensor): Cumulative sequence positions for keys/values; shape :math:`(N+1,)`
+        max_q (int): Maximum query sequence length in the batch.
+        max_k (int): Maximum key/value sequence length in the batch.
+        return_aux (Optional[AuxRequest]): If not None and ``return_aux.lse`` is True, also returns the logsumexp tensor.
+        scale (float, optional): Scaling factor for attention scores
+        window_size (tuple[int, int], optional): Window size for sliding window attention as (left, right).
+            Use (-1, -1) for full attention (default), (-1, 0) for causal attention,
+            or (W, 0) for causal attention with sliding window of size W.
+
+    Returns:
+        output (Tensor): Output tensor from attention computation; shape :math:`(T_q, H, D)`.
+
+        If ``return_aux`` is not None and ``return_aux.lse`` is True:
+            lse (Tensor): Log-sum-exp of attention scores; shape :math:`(T_q, H)`.
+
+    Shape legend:
+        - :math:`N`: Batch size
+        - :math:`T_q`: Total number of query tokens in the batch (sum of all query sequence lengths)
+        - :math:`T_k`: Total number of key/value tokens in the batch (sum of all key/value sequence lengths)
+        - :math:`H`: Number of attention heads
+        - :math:`D`: Head dimension
+
+    Example::
+
+        >>> # xdoctest: +REQUIRES(env:TORCH_DOCTEST_CUDA)
+        >>> batch_size, max_seq_len, embed_dim, num_heads = 2, 512, 1024, 16
+        >>> head_dim = embed_dim // num_heads
+        >>> seq_lengths = []
+        >>> for _ in range(batch_size):
+        ...     length = torch.randint(1, max_seq_len // 64 + 1, (1,)).item() * 64
+        ...     seq_lengths.append(min(length, max_seq_len))
+        >>> seq_lengths = torch.tensor(seq_lengths, device="cuda")
+        >>> total_tokens = seq_lengths.sum().item()
+        >>>
+        >>> # Create packed query, key, value tensors
+        >>> query = torch.randn(
+        ...     total_tokens, num_heads, head_dim, dtype=torch.float16, de
+######## flash attention utils: ['PACKAGE_DISTRIBUTION_MAPPING', '__package__', '_flash_varlen_fn', '_is_packed_sequence']

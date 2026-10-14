@@ -1,0 +1,82 @@
+{
+  "arms": {
+    "bf16": {
+      "argv": [
+        "/usr/local/bin/python",
+        "/workspace/cotcodec/scripts/run_g2b_rollouts.py",
+        "prefill-worker",
+        "--model",
+        "qwen3.5-9b",
+        "--state-dtype",
+        "bfloat16",
+        "--evidence",
+        "/inputs/study-artifact.json",
+        "--output-dir",
+        "/outputs/g2bp",
+        "--deadline",
+        "1792018666.000"
+      ],
+      "exit": 0,
+      "gpu_memory_after_mib": [
+        0
+      ],
+      "started_at": "2026-10-14T22:50:19Z",
+      "status": "complete",
+      "wall_s": 147.0,
+      "worker_done": {
+        "exit": 0,
+        "utc": "2026-10-14T22:52:42Z"
+      }
+    },
+    "fp32": {
+      "argv": [
+        "/usr/local/bin/python",
+        "/workspace/cotcodec/scripts/run_g2b_rollouts.py",
+        "prefill-worker",
+        "--model",
+        "qwen3.5-9b",
+        "--state-dtype",
+        "auto",
+        "--evidence",
+        "/inputs/study-artifact.json",
+        "--output-dir",
+        "/outputs/g2bp",
+        "--deadline",
+        "1792018666.000"
+      ],
+      "exit": 0,
+      "gpu_memory_after_mib": [
+        0
+      ],
+      "started_at": "2026-10-14T22:47:35Z",
+      "status": "complete",
+      "wall_s": 164.0,
+      "worker_done": {
+        "exit": 0,
+        "utc": "2026-10-14T22:50:14Z"
+      }
+    }
+  },
+  "claim_level": "exploratory",
+  "deadline_source": "job.env started_at",
+  "deadline_utc": "2026-10-14T22:57:46Z",
+  "evidence_sha256": "c5bbd08f4178ea2c48b812a6f859b7b71bc59dd4fb85dc18f0f02608b4feb092",
+  "experiment_id": "g2b-state-dtype-v1",
+  "finished_at": "2026-10-14T22:52:46Z",
+  "job": "prefill",
+  "model": "qwen3.5-9b",
+  "sequences": 144,
+  "signal": null,
+  "started_at": "2026-10-14T22:47:31Z",
+  "verification": {
+    "artifact_root_sha256": "9845026dbe255e24b105224eebbb5436d315713b9a5c53c434137896b160c5b1",
+    "mode": "full",
+    "model_id": "qwen3.5-9b",
+    "receipt": "/model-cache/cotcodec-receipts/qwen3.5-9b.json",
+    "receipt_sha256": "0a9e052d561b017c505adf5a1c6fcdc048522660a0db134486b84edbf3de5cb3",
+    "repo_id": "Qwen/Qwen3.5-9B",
+    "revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+    "total_bytes": 19329393661,
+    "verified_by": "lane (model-verification.txt)"
+  }
+}

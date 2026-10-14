@@ -1,0 +1,46 @@
+# g2b-state-dtype-v1 (EXPLORATORY) teacher-force: r1 unpacked, r2 packed varlen, r4 fp32 on both arms of Qwen3.5-4B (rollout jobs 1368, 1370)
+# Slurm limit 16 min x 1 H100 = 0.2667 GPU-h cap; the drivers stop starting work 210 s before it.
+runtime: docker-single-node-discovery-v1
+name: g2b-tf-q35-4b
+image_id: sha256:f8e136e4e40ae20b340acab2d8b257803dfa221730852e2f1eccacdf9cf82fac
+git_sha: "4555c647cc39651d45feafc288a6072b0f72bde3"
+source_sha256: "50f87660bd421e3b0ff785e1db1d17d9b2df1fff0570ee0a3203dab4aeecc788"
+run_root: /home/kevin/cotcodec-runs/stage0/g2b-state-dtype/runs/tf
+container_profile: default
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 16
+  memory_gb: 128
+  minutes: 16
+budget:
+  max_gpu_hours: 0.2667
+randomness_contract: deterministic
+seeds: []
+model:
+  cache_host_path: /home/kevin/cotcodec-runs/hf-cache
+  model_id: qwen3.5-4b
+  revision: "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a"
+  receipt_sha256: "75ebfc531acdcbc0c39bbf83ee7bf5267a3ddf02c4fafdf6181624612a0d3082"
+  artifact_root_sha256: "3b8a075149bffe4dea784db5b4b37bc0896688cba0b3de7d8d0f6e8ae6157b9e"
+study_artifact:
+  source_id: g2b-tf-input-qwen3.5-4b
+  revision: "4555c647cc39651d45feafc288a6072b0f72bde3"
+  license: MIT
+  host_path: /home/kevin/cotcodec-runs/stage0/g2b-state-dtype/inputs/tf-input-qwen3.5-4b.json
+  sha256: "ad63a776b7bd707593ea9bf3997d550644c566da4753504f483bc809432a0f7e"
+  size_bytes: 38063942
+command:
+  - "python"
+  - "scripts/run_g2b_teacher_force.py"
+  - "run"
+  - "--evidence"
+  - "/inputs/study-artifact.json"
+  - "--expected-evidence-sha256"
+  - "ad63a776b7bd707593ea9bf3997d550644c566da4753504f483bc809432a0f7e"
+  - "--model"
+  - "qwen3.5-4b"
+  - "--output-dir"
+  - "/outputs/g2btf"
+  - "--allocation-minutes"
+  - "16"

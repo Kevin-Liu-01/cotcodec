@@ -1,0 +1,727 @@
+image sha256:fabad63386d3c39b296e037491d6a6a3b5457c3af31e57764c80ca33c4dec011
+== vllm '0.31.0'
+
+######## 1. CacheConfig: MambaDType and the mamba dtype fields
+a9b2a804c9c353e7bded64081bf920c79432d4e44ca180c05e275c69e642a280  config/cache.py
+== grep config/cache.py: MambaDType|mamba_ssm_cache_dtype|mamba_cache_dtype|mamba_cache_mode|mamba_block_size
+61:MambaDType = Literal["auto", "float32", "float16", "bfloat16"]
+78:    user_specified_mamba_block_size: bool = field(default=False, init=False)
+79:    """Whether mamba_block_size was explicitly provided. Derived automatically."""
+178:    mamba_block_size: int | None = Field(default=None, gt=0)
+182:    mamba_cache_dtype: MambaDType = "auto"
+186:    mamba_ssm_cache_dtype: MambaDType = "auto"
+188:    still be controlled by mamba_cache_dtype). If set to 'auto', the data type
+189:    for the ssm state will be determined by mamba_cache_dtype."""
+190:    mamba_cache_mode: MambaCacheMode = "none"
+202:    prompt tail. Off by default; only takes effect with `mamba_cache_mode`
+212:    Requires mamba_cache_mode 'none' or 'align' (prefix caching) and the Triton
+214:    mode flushes are most efficient when mamba_block_size is a multiple of
+293:            "user_specified_mamba_block_size",
+337:        if self.mamba_block_size is not None:
+338:            self.user_specified_mamba_block_size = True
+341:    @field_validator("mamba_cache_mode", mode="after")
+343:    def _validate_mamba_cache_mode(cls, mode: MambaCacheMode) -> MambaCacheMode:
+/bin/sh: 12: [[: not found
+/bin/sh: 13: [[: not found
+
+######## 2. CLI flags
+== grep engine/arg_utils.py: mamba.ssm.cache.dtype|mamba_ssm_cache_dtype|mamba_cache_dtype
+783:    mamba_cache_dtype: MambaDType = CacheConfig.mamba_cache_dtype
+784:    mamba_ssm_cache_dtype: MambaDType = CacheConfig.mamba_ssm_cache_dtype
+1362:            "--mamba-cache-dtype", **cache_kwargs["mamba_cache_dtype"]
+1365:            "--mamba-ssm-cache-dtype", **cache_kwargs["mamba_ssm_cache_dtype"]
+2222:            mamba_cache_dtype=self.mamba_cache_dtype,
+2223:            mamba_ssm_cache_dtype=self.mamba_ssm_cache_dtype,
+
+######## 3. dtype string map
+/usr/local/lib/python3.12/dist-packages/vllm/utils/torch_utils.py:33:STR_DTYPE_TO_TORCH_DTYPE = {
+/usr/local/lib/python3.12/dist-packages/vllm/utils/torch_utils.py:37:    "bfloat16": torch.bfloat16,
+
+######## 4. GDN layer: where the state cache is read and written
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/warmup/kimi_k3_triton_warmup.py
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/warmup/qwen_triton_warmup.py
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/mamba.py
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/nemotron_h.py
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/zamba2.py
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/mamba2.py
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/bailing_moe_v3.py
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/falcon_h1.py
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/jamba.py
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/granitemoehybrid.py
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/mamba_mixer.py
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/gdn/olmo_gdn_linear_attn.py
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/gdn/qwen_gdn_linear_attn.py
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/gdn/kimi_gdn_linear_attn.py
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/mamba_mixer2.py
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/ops/cpu/gdn_attention.py
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/ops/mamba_ssm.py
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/abstract.py
+/usr/local/lib/python3.12/dist-packages/vllm/v1/attention/backends/mamba_attn.py
+/usr/local/lib/python3.12/dist-packages/vllm/v1/attention/backends/recoverssm_metadata.py
+/usr/local/lib/python3.12/dist-packages/vllm/v1/worker/gpu/model_states/recoverssm.py
+c74cef04da82ccb697a29f1f6ae3d22bb2963c7a512b38156ef3be4438586726  model_executor/layers/mamba/gdn/olmo_gdn_linear_attn.py
+== grep model_executor/layers/mamba/gdn/olmo_gdn_linear_attn.py: class |def |ssm_state|conv_state|initial_state|chunk_gated_delta_rule|fused_recurrent|fused_sigmoid|flashinfer|FlashInfer|dtype|float32|\.to\(
+25:    is_conv_state_dim_first,
+37:    chunk_gated_delta_rule,
+38:    fused_recurrent_gated_delta_rule,
+47:class OlmoHybridGatedDeltaNetAttention(GatedDeltaNetAttention):
+54:    def get_state_shape(
+67:    def __init__(
+154:            dtype=config.torch_dtype if hasattr(config, "torch_dtype") else None,
+175:    def rearrange_mixed_qkv(self, mixed_qkv):
+205:    def forward(
+241:    def _full_forward(
+264:            dtype=hidden_states.dtype,
+289:    def _forward_core(
+310:        has_initial_state = attn_metadata.has_initial_state
+319:        # conv_state must be (..., dim, width-1) for the conv kernels.
+321:        conv_state = (
+323:            if is_conv_state_dim_first()
+326:        ssm_state = self_kv_cache[1]
+355:                conv_state,
+359:                conv_state_indices=spec_state_indices_tensor[:, 0][
+376:                conv_states=conv_state,
+377:                has_initial_state=has_initial_state,
+386:                conv_state,
+390:                conv_state_indices=non_spec_state_indices_tensor[
+430:            core_attn_out_spec, last_recurrent_state = fused_recurrent_gated_delta_rule(
+436:                initial_state=ssm_state,
+439:                ssm_state_indices=spec_state_indices_tensor,
+448:            assert has_initial_state is not None
+450:            initial_state = ssm_state[non_spec_state_indices_tensor].contiguous()
+451:            initial_state[~has_initial_state, ...] = 0
+455:            ) = chunk_gated_delta_rule(
+461:                initial_state=initial_state,
+466:            ssm_state[non_spec_state_indices_tensor] = last_recurrent_state.to(
+467:                ssm_state.dtype
+473:                fused_recurrent_gated_delta_rule(
+479:                    initial_state=ssm_state,
+484:                    ssm_state_indices=non_spec_state_indices_tensor,
+494:                dtype=core_attn_out_non_spec.dtype,
+506:def _make_fused_conv1d_weight_loader(dims, tp_size, tp_rank):
+514:    def weight_loader(param, loaded_weight, loaded_shard_id=None):
+527:def olmo_hybrid_gdn_full_forward(
+554:def fused_olmo_hybrid_gdn_gating_kernel(
+578:    x = blk_a.to(tl.float32) + blk_bias.to(tl.float32)
+582:    blk_g = -tl.exp(blk_A_log.to(tl.float32)) * softplus_x
+583:    tl.store(g + off, blk_g.to(g.dtype.element_ty), mask=mask)
+587:    blk_beta_output = tl.sigmoid(blk_b.to(tl.float32))
+591:        beta_output + off, blk_beta_output.to(beta_output.dtype.element_ty), mask=mask
+595:def fused_olmo_hybrid_gdn_gating(
+607:    g = torch.empty(1, batch, num_heads, dtype=torch.float32, device=a.device)
+608:    beta_output = torch.empty(1, batch, num_heads, dtype=torch.float32, device=b.device)
+3bd2f805f0f4b821e6902ef18da8ba66ad42a7e5a633b76abe96892532293d9c  model_executor/layers/mamba/gdn/qwen_gdn_linear_attn.py
+== grep model_executor/layers/mamba/gdn/qwen_gdn_linear_attn.py: class |def |ssm_state|conv_state|initial_state|chunk_gated_delta_rule|fused_recurrent|fused_sigmoid|flashinfer|FlashInfer|dtype|float32|\.to\(
+36:    is_conv_state_dim_first,
+52:    chunk_gated_delta_rule as fla_chunk_gated_delta_rule,
+56:    fused_recurrent_gated_delta_rule_packed_decode,
+57:    fused_sigmoid_gating_delta_rule_update,
+90:FUSED_GDN_STATE_DTYPES = (torch.float32, torch.bfloat16)
+93:def _resolve_gdn_prefill_backend(
+95:) -> tuple[str, Literal["triton", "flashinfer", "cutedsl"]]:
+98:    FlashInfer's GDN prefill kernel is chosen when:
+99:    * ``requested in ["flashinfer", "auto"]``;
+125:    supports_flashinfer = False
+129:        supports_flashinfer = True
+135:        supports_flashinfer = True
+143:        supports_flashinfer = True
+145:    if backend in ["flashinfer", "auto"] and supports_flashinfer:
+146:        return backend, "flashinfer"
+152:def _log_gdn_backend_decision(
+173:        "flashinfer": "FlashInfer",
+183:    if active_backend == "flashinfer" and current_platform.is_device_capability(90):
+185:            "FlashInfer GDN prefill is JIT-compiled; first run may take a "
+190:def fi_chunk_gated_delta_rule(
+196:    initial_state: torch.Tensor,
+201:    from flashinfer.gdn_prefill import (
+202:        chunk_gated_delta_rule as chunk_gated_delta_rule_fi,
+209:    # use flashinfer implementation
+216:    fi_state = initial_state.to(torch.float32)
+217:    fi_g = g.to(torch.float32)
+218:    fi_beta = beta.to(torch.float32)
+220:        cu_seqlens = cu_seqlens.to(torch.int64)
+221:    result = chunk_gated_delta_rule_fi(
+227:        initial_state=fi_state,
+230:        backend="flashinfer",
+232:    # FlashInfer returns (output, state) when output_final_state=True,
+242:@CustomOp.register("chunk_gated_delta_rule")
+243:class ChunkGatedDeltaRule(CustomOp):
+244:    def __init__(self) -> None:
+250:        if backend in ("flashinfer", "cutedsl") and active_backend != backend:
+258:        if active_backend == "flashinfer":
+265:    def forward_cuda(
+272:        initial_state: torch.Tensor,
+280:        o, final_state = fi_chunk_gated_delta_rule(
+286:            initial_state=initial_state,
+297:    def forward_native(
+304:        initial_state: torch.Tensor,
+312:        return fla_chunk_gated_delta_rule(
+318:            initial_state=initial_state,
+327:    def forward_cutedsl(
+334:        initial_state: torch.Tensor,
+343:            chunk_gated_delta_rule_cutedsl,
+354:        o, final_state = chunk_gated_delta_rule_cutedsl(
+360:            initial_state=initial_state,
+372:class QwenGatedDeltaNetAttention(GatedDeltaNetAttention):
+373:    def get_state_shape(
+386:    def __init__(
+476:                dtype=torch.float32,
+509:        self.chunk_gated_delta_rule = ChunkGatedDeltaRule()
+510:        self.gdn_prefill_backend = self.chunk_gated_delta_rule.gdn_prefill_backend
+540:    def _fused_gdn_decode_unsupported_reason(
+543:        conv_state_dtype, recurrent_state_dtype = self.get_state_dtype()
+549:            or vllm_config.model_config.dtype != torch.bfloat16
+550:            or conv_state_dtype != torch.bfloat16
+e326cba09aceca3e247d0b51e6073240d04591ca433dbb20359c720167869fa0  model_executor/layers/mamba/gdn/base.py
+== grep model_executor/layers/mamba/gdn/base.py: class |def |ssm_state|conv_state|initial_state|chunk_gated_delta_rule|fused_recurrent|fused_sigmoid|flashinfer|FlashInfer|dtype|float32|\.to\(
+22:class GatedDeltaNetAttention(PluggableLayer, MambaBase):
+23:    """Base class for GatedDeltaNet attention layer."""
+25:    def __init__(
+50:    def mamba_type(self) -> MambaAttentionBackendEnum:
+53:    def get_state_dtype(self) -> tuple[torch.dtype, ...]:
+54:        return MambaStateDtypeCalculator.gated_delta_net_state_dtype(
+55:            self.model_config.dtype,
+56:            self.cache_config.mamba_cache_dtype,
+57:            self.cache_config.mamba_ssm_cache_dtype,
+3bae1be0d5ed66d4ade10b40bda3230146c4516b95e7409c0293b8900c0dee34  model_executor/layers/mamba/gdn/kimi_gdn_linear_attn.py
+== grep model_executor/layers/mamba/gdn/kimi_gdn_linear_attn.py: class |def |ssm_state|conv_state|initial_state|chunk_gated_delta_rule|fused_recurrent|fused_sigmoid|flashinfer|FlashInfer|dtype|float32|\.to\(
+38:    is_conv_state_dim_first,
+41:from ..ops.gather_initial_states import gather_initial_states
+47:def a_log_weight_loader(
+52:    def loader(param: torch.Tensor, loaded_weight: torch.Tensor) -> None:
+72:def _make_fused_conv1d_weight_loader(
+79:    def weight_loader(
+95:class _KimiGDNMergedColumnParallelLinear(MergedColumnParallelLinear):
+103:    def __init__(
+116:    def weight_loader(
+135:    def weight_loader_v2(
+156:class KimiGatedDeltaNetAttention(GatedDeltaNetAttention):
+157:    def get_state_dtype(
+159:    ) -> tuple[torch.dtype, torch.dtype]:
+162:        return MambaStateDtypeCalculator.kda_state_dtype(
+163:            self.model_config.dtype, self.cache_config.mamba_cache_dtype
+166:    def get_state_shape(
+177:    def __init__(
+238:            torch.empty(self.local_projection_size, dtype=torch.float32)
+249:            params_dtype=torch.float32,
+266:            torch.empty(self.local_num_heads, dtype=torch.float32)
+318:    def rearrange_mixed_qkv(
+328:    def forward(
+365:            dtype=hidden_states.dtype,
+380:    def _forward(
+401:                fused_recurrent_kda,
+402:                fused_recurrent_kda_packed_decode,
+407:                fused_recurrent_kda,
+408:                fused_recurrent_kda_packed_decode,
+413:                fused_recurrent_kda,
+414:                fused_recurrent_kda_packed_decode,
+424:        has_initial_state = m.has_initial_state
+440:        conv_state, recurrent_state = constant_caches
+441:        # conv_state must be (..., dim, width-1) for the conv kernels.
+443:        if not is_conv_state_dim_first():
+444:            conv_state = conv_state.transpose(-1, -2)
+452:        q_conv_state, k_conv_state, v_conv_state = conv_state.split(
+486:                dtype=mixed_qkv_spec.dtype,
+491:                conv_state,
+495:                conv_state_indices=spec_conv_indices,
+513:            core_attn_out_spec, _ = fused_recurrent_kda(
+522:                initial_state=recurrent_state,
+524:                ssm_state_indices=spec_state_indices_tensor,
+543:                def _prefill_conv(
+553:                        conv_states=state,
+554:                        has_initial_state=has_initial_state,
+560:                q_ns = _prefill_conv(q_ns, q_conv_state, q_conv_weight)
+561:                k_ns = _prefill_conv(k_ns, k_conv_state, k_conv_weight)
+562:                v_ns = _prefill_conv(v_ns, v_conv_state, v_conv_weight)
+569:                assert has_initial_state is not None
+570:                initial_state = gather_initial_states(
+573:                    has_initial_state,
+587:                    initial_state=initial_state,
+605:                    dtype=mixed_qkv_ns.dtype,
+610:                    conv_state,
+614:                    conv_state_indices=decode_conv_indices,
+618:                core_attn_out_non_spec, _ = fused_recurrent_kda_packed_decode(
+625:                    initial_state=recurrent_state,
+634:                dtype=core_attn_out_spec.dtype,
+
+######## 5. vLLM FLA ops (state load and store)
+
+######## 6. FlashInfer GDN
+/bin/sh: 27: [[: not found
+/bin/sh: 27: [[: not found
+/bin/sh: 27: [[: not found
+/bin/sh: 27: [[: not found
+gdn_decode.py
+gdn_kernels
+gdn_prefill.py
+mamba
+/usr/local/lib/python3.12/dist-packages/flashinfer/aot.py
+/usr/local/lib/python3.12/dist-packages/flashinfer/data/cccl/libcudacxx/include/cuda/std/__random/fisher_f_distribution.h
+/usr/local/lib/python3.12/dist-packages/flashinfer/data/csrc/gdn/cake/README.md
+/usr/local/lib/python3.12/dist-packages/flashinfer/data/csrc/gdn/cake/manifest.json
+/usr/local/lib/python3.12/dist-packages/flashinfer/data/csrc/gdn/cake/host/cake_gdn_prefill_dvsplit_initial_bf16state_1c987612a6c1.cc
+/usr/local/lib/python3.12/dist-packages/flashinfer/data/csrc/gdn/cake/host/cake_gdn_prefill_dvsplit_initial_bf16state_d8b5b50285af.cc
+/usr/local/lib/python3.12/dist-packages/flashinfer/data/csrc/gdn/cake/host/cake_gdn_prefill_dvsplit_initial_f16io_gatepipe4_e097d48f3e09.cc
+/usr/local/lib/python3.12/dist-packages/flashinfer/data/csrc/gdn/cake/host/cake_gdn_prefill_dvsplit_initial_f16io_fullgrid_vhold_aff8217cc85c.cc
+/usr/local/lib/python3.12/dist-packages/flashinfer/data/csrc/gdn/cake/host/cake_gdn_prefill_dvsplit_single_chunk_6d7aa504763f.cc
+/usr/local/lib/python3.12/dist-packages/flashinfer/data/csrc/gdn/cake/host/cake_gdn_prefill_dvsplit_initial_f16io_gatepipe4_5aa991a25681.cc
+== /usr/local/lib/python3.12/dist-packages/flashinfer/trace/templates/gdn.py
+28:def _gdn_decode_reference(q, k, v, state, A_log, a, dt_bias, b, scale):
+32:    State layout: [B, H, V, K] (k-last, K dimension at the end)
+39:    state_new = g * state_old + k^T @ (beta * v + (1-beta) * k @ state_old) - k^T @ (k @ state_old)
+40:    output = scale * q @ state_new
+61:    if state is not None:
+62:        state_f32 = state.float()
+64:        state_f32 = torch.zeros(B, num_heads, V, K, dtype=torch.float32, device=device)
+69:    new_state = torch.zeros_like(state_f32)
+70:    output = torch.zeros(B, num_heads, V, dtype=torch.float32, device=device)
+77:            h_state = (
+78:                state_f32[b_idx, h_idx].clone().transpose(-1, -2)
+83:            old_state = g_val * h_state
+84:            old_v = k_h @ old_state
+86:            state_remove = k_h.unsqueeze(1) @ old_v.unsqueeze(0)
+87:            state_update = k_h.unsqueeze(1) @ new_v.unsqueeze(0)
+88:            h_state = old_state - state_remove + state_update
+90:            output[b_idx, h_idx] = scale * (q_h @ h_state)
+91:            new_state[b_idx, h_idx] = h_state.transpose(-1, -2)  # [K,V] -> [V,K]
+93:    output = output.unsqueeze(1).to(torch.bfloat16)
+94:    return output, new_state
+97:def _gdn_decode_init(
+112:    ``dt_bias``, ``a`` are scaled by 0.1; state is full ``randn`` (not zeros).
+116:        batch_size, seq_len, num_q_heads, head_size, dtype=torch.bfloat16, device=device
+119:        batch_size, seq_len, num_k_heads, head_size, dtype=torch.bfloat16, device=device
+123:        batch_size, seq_len, num_v_heads, head_size, dtype=torch.bfloat16, device=device
+125:    state = torch.randn(
+130:        dtype=torch.float32,
+133:    A_log = torch.randn(num_v_heads, dtype=torch.float32, device=device) * 0.1
+136:            batch_size, seq_len, num_v_heads, dtype=torch.bfloat16, device=device
+140:    dt_bias = torch.randn(num_v_heads, dtype=torch.float32, device=device) * 0.1
+142:        batch_size, seq_len, num_v_heads, dtype=torch.bfloat16, device=device
+148:        "state": state,
+160:        "Gated Delta Net decode with GVA configuration and k-last state layout. "
+161:        "Single-token generation with recurrent state update."
+197:        "state": Tensor(
+200:            description="Recurrent state in k-last layout [B, H, V, K].",
+219:            "float32",
+227:            dtype="bfloat16",
+230:        "new_state": Tensor(
+232:            dtype="float32",
+233:            description="Updated recurrent state in k-last layout [B, H, V, K].",
+250:def _gdn_prefill_reference(q, k, v, state, A_log, a, dt_bias, b, cu_seqlens, scale):
+254:    State layout: [H, V, K] (k-last, K dimension at the end)
+261:    state_new = g * state_old + k^T @ (beta * v + (1-beta) * k @ state_old) - k^T @ (k @ state_old)
+262:    output = scale * q @ state_new
+282:        (total_seq_len, num_sab_heads, head_size), dtype=torch.bfloat16, device=device
+284:    new_state = torch.zeros(
+286:        dtype=torch.float32,
+297:        if state is not None:
+298:            state_HKV = (
+== /usr/local/lib/python3.12/dist-packages/flashinfer/gdn_decode.py
+25:- gated_delta_rule_decode_pretranspose: V-major state layout [B, HV, V, K], T=1
+26:- gated_delta_rule_decode: K-major state layout [B, HV, K, V], T=1
+58:    def flashinfer_api(func=None, *, trace=None):  # type: ignore[misc]
+64:# GDN decode BF16 state kernels - optional backend
+66:    from .gdn_kernels.gdn_decode_bf16_state import (
+67:        gated_delta_rule as _gated_delta_rule_bf16_state,
+68:        gated_delta_rule_mtp as _gated_delta_rule_bf16_state_mtp,
+71:    _GDN_DECODE_BF16_STATE_AVAILABLE = True
+73:    _GDN_DECODE_BF16_STATE_AVAILABLE = False
+74:    _gated_delta_rule_bf16_state = None
+75:    _gated_delta_rule_bf16_state_mtp = None
+77:# Pretranspose decode kernel (V-major state, T=1)
+86:# Nontranspose decode kernel (K-major state, T=1)
+120:def _cake_gdn_assert_state_slots(
+123:    """Validate CUDA-resident state slots without a host synchronization."""
+135:def _run_cake_gdn_decode_pretranspose(
+140:    state_pool: torch.Tensor,
+148:    initial_state_indices: torch.Tensor,
+149:    output_state_indices: Optional[torch.Tensor],
+150:    intermediate_states_buffer: Optional[torch.Tensor],
+151:    disable_state_update: bool,
+159:    if q.dtype != torch.bfloat16:
+162:        k.dtype != torch.bfloat16
+163:        or v.dtype != torch.bfloat16
+164:        or a.dtype != torch.bfloat16
+165:        or b.dtype != torch.bfloat16
+166:        or A_log.dtype != torch.float32
+167:        or dt_bias.dtype != torch.float32
+172:    if state_pool.dtype not in (torch.bfloat16, torch.float32):
+174:            "GDN non-CP decode requires BF16 or FP32 state"
+192:    tensors = (q, k, v, state_pool, A_log, a, dt_bias, b, initial_state_indices)
+198:        initial_state_indices.shape != (batch_size,)
+199:        or not initial_state_indices.is_contiguous()
+202:            "GDN non-CP decode requires contiguous [B] state indices"
+204:    if int(state_pool.shape[0]) <= 0 or state_pool.shape[1:] != (
+210:            "GDN non-CP decode requires a [pool, HV, 128, 128] state pool"
+212:    if state_pool.dtype == torch.bfloat16 and state_pool.stride()[1:] != (
+218:            "GDN non-CP BF16 decode requires packed inner state dimensions"
+221:        state_pool.dtype == torch.float32
+225:            for tensor in (q, k, v, state_pool, A_log, a, dt_bias, b)
+229:            "GDN non-CP FP32 T=1 decode requires contiguous inputs and state"
+231:    if initial_state_indices.dtype != torch.int32:
+233:            "GDN non-CP decode requires int32 state indices"
+236:        initial_state_indices if output_state_indices is None else output_state_indices
+238:    if write_indices.dtype != torch.int32:
+240:            "GDN non-CP decode requires int32 output state indices"
+244:            "GDN non-CP decode requires contiguous [B] output state indices"
+248:            "GDN non-CP decode requires output state indices on the input CUDA device"
+253:            dtype=torch.bfloat16,
+256:    elif output.dtype != torch.bfloat16 or not output.is_contiguous():
+== /usr/local/lib/python3.12/dist-packages/flashinfer/gdn_kernels/gdn_decode_pretranspose.py
+19:CuTe-DSL implementation of GDN decode with state layout [B*HV, V, K].
+43:NUM_BLOCKS_PER_STATE = 8
+47:def gdn_decode_kernel_small_batch_pretranspose(
+61:    h0_indices: cute.Tensor,  # [B] - initial state indices (read)
+62:    h0_out_indices: cute.Tensor,  # [B] - output state indices (write)
+72:    use_initial_state: cutlass.Constexpr[bool],
+84:    batch_idx = block_idx // NUM_BLOCKS_PER_STATE
+85:    batch_inner = block_idx % NUM_BLOCKS_PER_STATE
+86:    num_v_tiles_per_block = num_v_tiles // NUM_BLOCKS_PER_STATE
+97:    sData = smem.allocate_tensor(cutlass.Float32, smem_layout_staged, 128)
+99:    # Allocate shared memory for output (size V) - use BFloat16 to match SGLang
+100:    sOutput = smem.allocate_tensor(cutlass.BFloat16, cute.make_layout((V,)), 16)
+103:    sV = smem.allocate_tensor(cutlass.Float32, cute.make_layout((V,)), 16)
+106:        cute.make_layout((vec_size,), stride=(1,)), cutlass.Float32
+109:        cute.make_layout((vec_size,), stride=(1,)), cutlass.Float32
+113:        cute.make_layout((vec_size,), stride=(1,)), cutlass.Float32
+117:        cute.make_layout((vec_size,), stride=(1,)), cutlass.BFloat16
+120:        cute.make_layout((vec_size,), stride=(1,)), cutlass.BFloat16
+123:        cute.make_layout((vec_size,), stride=(1,)), cutlass.BFloat16
+130:    r_A_log = cutlass.Float32(A_log[i_hv])
+131:    r_a = cutlass.Float32(a[i_n, i_t, i_hv])
+132:    r_dt_bias = cutlass.Float32(dt_bias[i_hv])
+133:    r_b = cutlass.Float32(b[i_n, i_t, i_hv])
+137:    # Compute state index: use pool indexing if enabled.
+167:            state_idx = batch_idx
+168:            gSrc_batch = h0_source[(state_idx, None, None)]  # (V, K)
+169:            gDst = cute.local_tile(h0_source, (1, TILE_V, TILE_K), (state_idx, None, 0))
+203:            r_q[i] = cutlass.Float32(r_q_bf16[i])
+204:            r_k[i] = cutlass.Float32(r_k_bf16[i])
+210:            sV[k_start + i] = cutlass.Float32(r_v_bf16[i])
+226:                # Compute in Float32
+228:                log_input = cutlass.Float32(1.0 + exp_beta_x)
+229:                log_result = cutlass.Float32(cute.log(log_input, fastmath=True))
+230:                softplus_x = cutlass.Float32(
+231:                    (cutlass.Float32(1.0) / softplus_beta) * log_result
+242:            # Store to scalar (Float32)
+270:        # Apply scaling in Float32
+349:                    sOutput[o_idx] = cutlass.BFloat16(sum_hq)
+363:            o[(i_n, i_t, i_hv, tidx)] = cutlass.BFloat16(0.0)
+367:def gdn_decode_kernel_big_batch_pretranspose(
+381:    h0_indices: cute.Tensor,  # [B] - initial state indices (read)
+382:    h0_out_indices: cute.Tensor,  # [B] - output state indices (write)
+392:    use_initial_state: cutlass.Constexpr[bool],
+409:    r_A_log = cutlass.Float32(A_log[i_hv])
+410:    r_a = cutlass.Float32(a[i_n, i_t, i_hv])
+411:    r_dt_bias = cutlass.Float32(dt_bias[i_hv])
+412:    r_b = cutlass.Float32(b[i_n, i_t, i_hv])
+419:    sData = smem.allocate_tensor(cutlass.Float32, smem_layout_staged, 128)
+421:    # Allocate shared memory for output (size V) - use BFloat16 to match SGLang
+422:    sOutput = smem.allocate_tensor(cutlass.BFloat16, cute.make_layout((V,)), 16)
+== /usr/local/lib/python3.12/dist-packages/flashinfer/gdn_kernels/gdn_decode_bf16_wy_ucache.py
+5:outputs from the checkpoint state and a small per-request history ring, and
+7:steps can replay the recurrence. The checkpoint state is read-only here;
+8:folding the ring into the state ("flush") is handled by the companion
+16:Activations (q/k/v, a/b), the u and k rings, the checkpoint state, and the
+22:  Name                   Shape             Dtype   Dir    Meaning
+29:  initial_state_source   [pool, HV, V, K]  bf16    in     checkpoint S0 (read-only here)
+30:  initial_state_indices  [B]               int32   in     per-request pool slot
+41:Ring tensors are pool-indexed via initial_state_indices and MUST be
+53:  4. GEMM the state S0 against the packed [k; q] tile, add the history-ring
+59:- The state tile is streamed with TMA into an SW128-swizzled shared buffer,
+96:io = cutlass.BFloat16
+97:f32 = cutlass.Float32
+103:# The state tile is streamed in two K-halves so its SMEM buffer is 16 KiB
+121:def _smat_off(row, col):
+128:def _ldmatrix_x4(smem_tensor, lane_id):
+153:def _dot_sq_bf16x2(packed_i32, acc):
+168:    return cutlass.Float32(r)
+171:def _rsqrt_approx_f32(x):
+181:    return cutlass.Float32(r)
+184:def _exp2_approx_f32(x):
+194:    return cutlass.Float32(r)
+197:def _exp_approx_f32(x):
+201:def _mul_bf16x2_f32(packed_i32, scalar):
+220:def _cp_async_bf16x8(base_addr_i64, bf16_elem_offset, smem_addr_i32):
+240:def _cp_async_bf16x8_cg(base_addr_i64, bf16_elem_offset, smem_addr_i32):
+263:def _cp_async_commit_group():
+276:def _cp_async_wait_group_0():
+289:def _exit_cta_if_neg(idx_i32):
+309:def _st_global_f32(base_addr_i64, f32_elem_offset, val_f32):
+329:def _prefetch_l2_bf16(base_addr_i64, bf16_elem_offset):
+346:def _bar_sync_1_64():
+363:def _r_sub_bf16x2(packed_i32, neg_eg_f32, hw0_f32, hw1_f32):
+389:def _sts_bf16x2_f32(smem_addr_i32, lo_f32, hi_f32):
+408:def _lds_v4_b32(smem_addr_i32):
+429:def _st_global_v4_b32(base_addr_i64, bf16_elem_offset, v0, v1, v2, v3):
+451:def _fused_ab_1mma(a_addr, b_addr, c0, c1, c2, c3):
+474:        cutlass.Float32(llvm.extractvalue(mlir_T.f32(), r, [0])),
+475:        cutlass.Float32(llvm.extractvalue(mlir_T.f32(), r, [1])),
+476:        cutlass.Float32(llvm.extractvalue(mlir_T.f32(), r, [2])),
+477:        cutlass.Float32(llvm.extractvalue(mlir_T.f32(), r, [3])),
+481:def _fused_ab_4mma_serial_brow(a_base, b_base, c0, c1, c2, c3):
+516:        cutlass.Float32(llvm.extractvalue(mlir_T.f32(), r, [0])),
+517:        cutlass.Float32(llvm.extractvalue(mlir_T.f32(), r, [1])),
+518:        cutlass.Float32(llvm.extractvalue(mlir_T.f32(), r, [2])),
+519:        cutlass.Float32(llvm.extractvalue(mlir_T.f32(), r, [3])),
+523:def _qtv_4mma(a0, a1, a2, a3, b_base):
+525:    zero = cutlass.Float32(0.0)
+557:        cutlass.Float32(llvm.extractvalue(mlir_T.f32(), r, [i])) for i in range(16)
+561:def _h_gemm_4v(
+590:    from the SW128-swizzled state tile (K_DIM*2=256 stride); callers MUST apply
+/usr/local/lib/python3.12/dist-packages/vllm/v1/attention/backends/registry.py:217:    GDN_ATTN = "vllm.v1.attention.backends.gdn_attn.GDNAttentionBackend"
+/usr/local/lib/python3.12/dist-packages/vllm/v1/attention/backends/gdn_attn.py:27:class GDNAttentionBackend(AttentionBackend):
+/usr/local/lib/python3.12/dist-packages/vllm/v1/attention/backends/gdn_attn.py:101:            _resolve_gdn_prefill_backend,
+/usr/local/lib/python3.12/dist-packages/vllm/v1/attention/backends/gdn_attn.py:104:        self.gdn_prefill_backend: Literal["triton", "flashinfer", "cutedsl"]
+/usr/local/lib/python3.12/dist-packages/vllm/v1/attention/backends/gdn_attn.py:105:        _, self.gdn_prefill_backend = _resolve_gdn_prefill_backend(vllm_config)
+/usr/local/lib/python3.12/dist-packages/vllm/v1/attention/backends/gdn_attn.py:189:        if self.gdn_prefill_backend == "cutedsl":
+/usr/local/lib/python3.12/dist-packages/vllm/v1/attention/backends/short_conv_attn.py:106:    # CUDA graph capture, matching the GDN backend.
+/usr/local/lib/python3.12/dist-packages/vllm/engine/arg_utils.py:837:    gdn_prefill_backend: Literal["flashinfer", "triton", "cutedsl"] | None = None
+/usr/local/lib/python3.12/dist-packages/vllm/engine/arg_utils.py:1874:            "--gdn-prefill-backend",
+/usr/local/lib/python3.12/dist-packages/vllm/engine/arg_utils.py:1875:            dest="gdn_prefill_backend",
+/usr/local/lib/python3.12/dist-packages/vllm/engine/arg_utils.py:1878:            help="Select GDN prefill backend.",
+/usr/local/lib/python3.12/dist-packages/vllm/engine/arg_utils.py:2755:        if self.gdn_prefill_backend is not None:
+/usr/local/lib/python3.12/dist-packages/vllm/engine/arg_utils.py:2756:            self.additional_config["gdn_prefill_backend"] = self.gdn_prefill_backend
+/usr/local/lib/python3.12/dist-packages/vllm/platforms/cpu.py:295:                    "Using %s SSM state storage for the CPU accelerated GDN backend.",
+/usr/local/lib/python3.12/dist-packages/vllm/models/kimi_k3/amd/kda_metadata.py:17:    GDNAttentionBackend,
+/usr/local/lib/python3.12/dist-packages/vllm/models/kimi_k3/amd/kda_metadata.py:102:class KimiK3ROCmKDABackend(GDNAttentionBackend):
+/usr/local/lib/python3.12/dist-packages/vllm/models/kimi_k3/nvidia/kda_metadata.py:30:    GDNAttentionBackend,
+/usr/local/lib/python3.12/dist-packages/vllm/models/kimi_k3/nvidia/kda_metadata.py:755:class KimiK3KDAAttentionBackend(GDNAttentionBackend):
+/usr/local/lib/python3.12/dist-packages/vllm/third_party/flash_linear_attention/ops/__init__.py:10:from .fused_gdn_prefill_post_conv import fused_post_conv_prep
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/warmup/qwen_triton_warmup.py:209:    from vllm.third_party.flash_linear_attention.ops.fused_gdn_prefill_post_conv import (  # noqa: E501
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/gdn/qwen_gdn_linear_attn.py:93:def _resolve_gdn_prefill_backend(
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/gdn/qwen_gdn_linear_attn.py:96:    """Resolve GDN prefill backend.
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/gdn/qwen_gdn_linear_attn.py:98:    FlashInfer's GDN prefill kernel is chosen when:
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/gdn/qwen_gdn_linear_attn.py:112:        additional_config.get("gdn_prefill_backend", "auto")
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/gdn/qwen_gdn_linear_attn.py:152:def _log_gdn_backend_decision(
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/gdn/qwen_gdn_linear_attn.py:157:    """Log the GDN prefill backend choice in the attention-selector style."""
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/gdn/qwen_gdn_linear_attn.py:185:            "FlashInfer GDN prefill is JIT-compiled; first run may take a "
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/gdn/qwen_gdn_linear_attn.py:186:            "while. Set --gdn-prefill-backend triton to skip JIT.",
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/gdn/qwen_gdn_linear_attn.py:201:    from flashinfer.gdn_prefill import (
+/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/mamba/gdn/qwen_gdn_linear_attn.py:247:        backend, active_backend = _resolve_gdn_prefill_backend(vllm_config)
+
+######## 7. Offline metrics: LLM.get_metrics, metric names
+== grep entrypoints/llm.py: def get_metrics|disable_log_stats|log_stats
+228:        if "disable_log_stats" not in kwargs:
+229:            kwargs["disable_log_stats"] = True
+857:    def get_metrics(self) -> list["Metric"]:
+/bin/sh: 37: [[: not found
+12:class Metric:
+25:class Counter(Metric):
+32:class Vector(Metric):
+43:class Gauge(Metric):
+50:class Histogram(Metric):
+70:def get_metrics_snapshot() -> list[Metric]:
+147:def _get_samples(metric: PromMetric, suffix: str | None = None) -> list[Sample]:
+152:def _strip_label(labels: dict[str, str], key_to_remove: str) -> dict[str, str]:
+158:def _digest_histogram(
+218:def _digest_num_accepted_by_pos_samples(
+== grep v1/metrics/loggers.py: name="vllm:(num_preemptions|num_requests_running|num_requests_waiting|kv_cache_usage_perc|cache_config_info|generation_tokens|prompt_tokens)
+509:            name="vllm:num_requests_running",
+519:            name="vllm:num_requests_waiting",
+529:            name="vllm:num_requests_waiting_by_reason",
+577:            name="vllm:kv_cache_usage_perc",
+677:            name="vllm:num_preemptions",
+686:            name="vllm:prompt_tokens",
+696:            name="vllm:prompt_tokens_by_source",
+711:            name="vllm:prompt_tokens_cached",
+720:            name="vllm:generation_tokens",
+== grep v1/metrics/loggers.py: cache_config|log_metrics_info|info_metric|def log\(
+72:    def log(self):  # noqa
+268:    def log(self):
+334:        if self.vllm_config.cache_config.num_gpu_blocks:
+336:                "Engine %03d: vllm cache_config_info with initialization "
+339:                self.vllm_config.cache_config.num_gpu_blocks,
+401:    def log(self):
+405:        if self.vllm_config.cache_config.num_gpu_blocks:
+407:                "%d Engines: vllm cache_config_info with initialization "
+410:                self.vllm_config.cache_config.num_gpu_blocks,
+445:    def log(self):
+1003:    def log_metrics_info(self, type: str, config_obj: SupportsMetricsInfo):
+1008:        if type == "cache_config":
+1009:            name = "vllm:cache_config_info"
+1216:        self.log_metrics_info("cache_config", self.vllm_config.cache_config)
+1303:    def log(self):
+
+######## 8. SchedulerStats and preemption counting
+== grep v1/metrics/stats.py: class |num_running|num_waiting|kv_cache_usage|preempt
+19:class BaseCacheStats:
+35:class CachingMetrics:
+117:class PrefixCacheStats(BaseCacheStats):
+123:    preempted_requests: int = 0
+124:    """The number of previously preempted requests in this update."""
+126:    preempted_queries: int = 0
+127:    """The `queries` number for preempted requests."""
+129:    preempted_hits: int = 0
+130:    """The `hits` number for preempted requests."""
+132:    def record(self, num_tokens: int, num_hits: int, preempted: bool) -> None:
+134:        if preempted:
+135:            # Previously preempted request
+136:            self.preempted_requests += 1
+137:            self.preempted_queries += num_tokens
+138:            self.preempted_hits += num_hits
+147:class MultiModalCacheStats(BaseCacheStats):
+162:class KVCacheEvictionEvent:
+171:class SchedulerIterationDetails:
+186:class SchedulerStats:
+189:    num_running_reqs: int = 0
+191:    num_waiting_reqs: int = 0  # waiting requests not deferred
+199:    kv_cache_usage: float = 0.0
+220:class RequestStateStats:
+224:    num_preemptions: int = 0
+243:class FinishedRequestStats:
+250:    num_preemptions: int = 0
+263:class PrefillStats:
+305:class RequestSpecDecodeMetrics:
+381:class PromptTokenStats:
+429:class IterationStats:
+436:        self.num_preempted_reqs = 0
+525:                if req_stats.scheduled_ts == 0.0:  # ignore preemptions
+529:                self.num_preempted_reqs += 1
+530:                req_stats.num_preemptions += 1
+548:        # Any preemptions during prefill is included in the interval
+552:        # Any preemptions during decode are included
+556:        # Any preemptions during prefill or decode are included
+571:            num_preemptions=req_stats.num_preemptions,
+589:class LoRAStats:
+613:class LoRARequestStates:
+== grep v1/core/sched/scheduler.py: preempt|num_preempted
+157:        # Whether a preempted request's in-flight output must be dropped; see
+228:        # IDs of requests preempted since the last call to schedule().
+229:        self.reset_preempted_req_ids: set[str] = set()
+578:        preempted_reqs: list[Request] = []
+766:                        preempted_req = max(
+771:                        preempted_req = self.running[-1]
+774:                    if not self._request_blocks_can_be_freed(preempted_req):
+778:                        victim_index = self.running.index(preempted_req)
+783:                        if preempted_req in scheduled_running_reqs:
+784:                            preempted_req_id = preempted_req.request_id
+785:                            scheduled_running_reqs.remove(preempted_req)
+786:                            restored = num_scheduled_tokens.pop(preempted_req_id)
+789:                            req_to_new_blocks.pop(preempted_req_id)
+790:                            scheduled_spec_decode_tokens.pop(preempted_req_id, None)
+791:                            preempted_encoder_inputs = scheduled_encoder_inputs.pop(
+792:                                preempted_req_id, None
+794:                            if preempted_encoder_inputs:
+795:                                # Restore encoder compute budget if the preempted
+798:                                    preempted_req.get_num_encoder_embeds(i)
+799:                                    for i in preempted_encoder_inputs
+803:                        preempted_req = self.running.pop()
+805:                    self._preempt_request(
+806:                        preempted_req,
+810:                    preempted_reqs.append(preempted_req)
+811:                    if preempted_req == request:
+812:                        # No more request to preempt. Cannot schedule this request.
+873:        if not preempted_reqs and self._pause_state == PauseState.UNPAUSED:
+1033:                    # Track first scheduled prefill, not post-preemption repeat prefills
+1034:                    if request.prefill_stats and request.num_preemptions <= 0:
+1197:                    # no forward progress and isn't preemptible here. Admit it
+1200:                    # predictable preemptions.
+1249:                            preempted=request.num_preemptions > 0,
+1470:            preempted_req_ids=self.reset_preempted_req_ids,
+1538:    def _preempt_request(
+1549:        which the preemption's block free would leave without valid KV.
+1552:            "Only running requests can be preempted"
+1575:        request.num_preemptions += 1
+1581:        self.reset_preempted_req_ids.add(request.request_id)
+1611:        # Clear the finished and preempted request IDs.
+1615:        self.reset_preempted_req_ids = set()
+2017:        stopped_preempted_reqs: set[Request] = set()
+2024:                # Drain any stale share (see _preempt_request) in lockstep.
+2063:                # tokens). A stale rejection count predates the preemption
+2187:                    stopped_preempted_reqs.add(request)
+2237:        if stopped_preempted_reqs:
+2239:            self.waiting.remove_requests(stopped_preempted_reqs)
+2240:            self.kv_holding_waiting.remove_requests(stopped_preempted_reqs)
+2241:            self.deferred_waiting.difference_update(stopped_preempted_reqs)
+2780:        preempted and moved to the waiting queue.
+2804:                self._preempt_request(request, timestamp, drop_stale_output=True)
+2806:            # Clear scheduled request ids cache. Since we are forcing preemption
+2816:                "preempted and moved to the waiting queue. This is likely due to "
+3108:            # Promote request to waiting or preempted.
+3110:            if request.num_preemptions:
+
+######## 9. KV-cache sizing log lines and num_gpu_blocks in the front end
+179:    # Block ID, ranging from 0 to num_gpu_blocks - 1.
+1126:    """Override the number of kv cache blocks if `num_gpu_blocks_override` is set.
+1129:    if vllm_config.cache_config.num_gpu_blocks_override is not None:
+1130:        num_blocks = vllm_config.cache_config.num_gpu_blocks_override
+1138:    capacity once `num_gpu_blocks_override` is applied.
+2466:        "Maximum concurrency for %s tokens per request: %.2fx",
+2758:    # If `num_gpu_blocks_override` is set, the cache size that will actually
+2764:    override = vllm_config.cache_config.num_gpu_blocks_override
+2773:                "Overriding num_gpu_blocks=%d with num_gpu_blocks_override=%d",
+/usr/local/lib/python3.12/dist-packages/vllm/v1/engine/core_client.py:844:        # engine core process. Sum num_gpu_blocks from all engines in DP case.
+/usr/local/lib/python3.12/dist-packages/vllm/v1/engine/core_client.py:845:        num_gpu_blocks = vllm_config.cache_config.num_gpu_blocks or 0
+/usr/local/lib/python3.12/dist-packages/vllm/v1/engine/core_client.py:846:        num_gpu_blocks += response.num_gpu_blocks
+/usr/local/lib/python3.12/dist-packages/vllm/v1/engine/core_client.py:847:        vllm_config.cache_config.num_gpu_blocks = num_gpu_blocks
+/usr/local/lib/python3.12/dist-packages/vllm/v1/engine/core.py:334:        vllm_config.cache_config.num_gpu_blocks = scheduler_kv_cache_config.num_blocks
+/usr/local/lib/python3.12/dist-packages/vllm/v1/engine/core.py:1712:            num_gpu_blocks=self.vllm_config.cache_config.num_gpu_blocks or 0,
+
+######## 10. SamplingParams and parallel-sampling seeds
+== grep sampling_params.py: ignore_eos|min_tokens|    seed|output_kind|logprobs_mode
+234:        outputs upon completion, use `output_kind=RequestOutputKind.FINAL_ONLY`
+264:    seed: int | None = None
+273:    ignore_eos: bool = False
+278:    min_tokens: int = 0
+321:    output_kind: RequestOutputKind = RequestOutputKind.CUMULATIVE
+396:        seed: int | None = None,
+402:        ignore_eos: bool = False,
+404:        min_tokens: int = 0,
+412:        output_kind: RequestOutputKind = RequestOutputKind.CUMULATIVE,
+464:            seed=seed,
+470:            ignore_eos=ignore_eos,
+472:            min_tokens=min_tokens,
+481:            output_kind=output_kind,
+631:        if self.min_tokens < 0:
+633:                f"min_tokens must be greater than or equal to 0, got {self.min_tokens}."
+635:        if self.max_tokens is not None and self.min_tokens > self.max_tokens:
+637:                f"min_tokens must be less than or equal to "
+638:                f"max_tokens={self.max_tokens}, got {self.min_tokens}."
+715:        if not self.ignore_eos:
+720:            # min_tokens processing.
+734:                if not self.ignore_eos:
+1128:            or self.min_tokens > 0
+1134:                "The temperature, min_p, seed, min_tokens, logit_bias, "
+1364:            f"ignore_eos={self.ignore_eos}, "
+1366:            f"min_tokens={self.min_tokens}, "
+1387:            min_tokens=2,
+1405:    ignore_eos: bool = False
+58:        If `sampling_params.seed` is not `None` then
+60:        parent `sampling_params` with a unique seed.
+69:        seed = self.sampling_params.seed
+76:        if seed is None:
+80:            # Each child gets a clone with a unique seed
+81:            child_sampling_params.seed = seed + index
+
+######## 11. LLMEngine add_request / abort_request / step
+== grep v1/engine/llm_engine.py: def add_request|def abort_request|def step|def get_metrics|def has_unfinished
+197:    def has_unfinished_requests(self) -> bool:
+203:    def has_unfinished_requests_dp(self, has_unfinished: bool) -> bool:
+218:    def abort_request(self, request_ids: list[str], internal: bool = False) -> None:
+223:    def add_request(
+306:    def step(self) -> list[RequestOutput | PoolingRequestOutput]:
+398:    def get_metrics(self) -> list[Metric]:
+
+######## 12. Qwen3.5 GDN state dtype from config (already cited by inference-baseline-v1)
+== grep model_executor/models/config.py: class Qwen3_5ForConditionalGenerationConfig|mamba_ssm_dtype
+819:class Qwen3_5ForConditionalGenerationConfig(VerifyAndUpdateConfig):
+824:        mamba_ssm_dtype field. Warn if the user explicitly overrides it to a
+829:        mamba_ssm_dtype = getattr(hf_text_config, "mamba_ssm_dtype", None)
+831:            if mamba_ssm_dtype is not None:
+832:                cache_config.mamba_ssm_cache_dtype = mamba_ssm_dtype
+834:            mamba_ssm_dtype is not None
+835:            and cache_config.mamba_ssm_cache_dtype != mamba_ssm_dtype
+838:                "Qwen3.5 model specifies mamba_ssm_dtype='%s' in its config, "
+841:                mamba_ssm_dtype,
+== grep model_executor/layers/mamba/mamba_utils.py: def _mamba_state_dtype|temporal_state_dtype|conv_state_dtype
+98:    def _mamba_state_dtype(
+104:        conv_state_dtype = get_kv_cache_torch_dtype(mamba_cache_dtype, model_dtype)
+106:            temporal_state_dtype = conv_state_dtype
+108:            temporal_state_dtype = STR_DTYPE_TO_TORCH_DTYPE[mamba_ssm_cache_dtype]
+110:        return (conv_state_dtype, temporal_state_dtype)
+113:    def short_conv_state_dtype(
+118:        conv_state_dtype = get_kv_cache_torch_dtype(mamba_cache_dtype, model_dtype)
+119:        return (conv_state_dtype,)
+139:        conv_state_dtype = get_kv_cache_torch_dtype(mamba_cache_dtype, model_dtype)
+149:        return (conv_state_dtype, recurrent_state_dtype)

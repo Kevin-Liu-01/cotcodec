@@ -1,0 +1,2118 @@
+image sha256:fabad63386d3c39b296e037491d6a6a3b5457c3af31e57764c80ca33c4dec011
+3bd2f805f0f4b821e6902ef18da8ba66ad42a7e5a633b76abe96892532293d9c  model_executor/layers/mamba/gdn/qwen_gdn_linear_attn.py
+== model_executor/layers/mamba/gdn/qwen_gdn_linear_attn.py:86-150
+    86	
+    87	logger = init_logger(__name__)
+    88	
+    89	MAX_FUSED_GDN_MTP_TOKENS = 8
+    90	FUSED_GDN_STATE_DTYPES = (torch.float32, torch.bfloat16)
+    91	
+    92	
+    93	def _resolve_gdn_prefill_backend(
+    94	    vllm_config: VllmConfig,
+    95	) -> tuple[str, Literal["triton", "flashinfer", "cutedsl"]]:
+    96	    """Resolve GDN prefill backend.
+    97	
+    98	    FlashInfer's GDN prefill kernel is chosen when:
+    99	    * ``requested in ["flashinfer", "auto"]``;
+   100	    * ``platform == cuda``;
+   101	    * one of the following:
+   102	      - Hopper (SM90) - no further constraints;
+   103	      - Blackwell (SM10.x) with ``head_k_dim == 128``, ``cuda_runtime >= 13``;
+   104	      - Blackwell (SM12.x) with ``head_k_dim == 128``, ``cuda_runtime >= 13``.
+   105	
+   106	    In-tree CuteDSL GDN prefill kernel is chosen when:
+   107	    * "cutedsl" is requested; (opt-in only)
+   108	    * Blackwell (SM10.x) with ``head_k_dim == 128``;
+   109	    """
+   110	    additional_config = vllm_config.additional_config
+   111	    backend_cfg = (
+   112	        additional_config.get("gdn_prefill_backend", "auto")
+   113	        if isinstance(additional_config, dict)
+   114	        else "auto"
+   115	    )
+   116	    backend = str(backend_cfg).strip().lower()
+   117	
+   118	    if not current_platform.is_cuda():
+   119	        return backend, "triton"
+   120	
+   121	    head_k_dim = getattr(
+   122	        vllm_config.model_config.hf_text_config, "linear_key_head_dim", None
+   123	    )
+   124	
+   125	    supports_flashinfer = False
+   126	    supports_cutedsl = False
+   127	
+   128	    if current_platform.is_device_capability(90):
+   129	        supports_flashinfer = True
+   130	    elif (
+   131	        current_platform.is_device_capability_family(100)
+   132	        and head_k_dim == 128
+   133	        and current_platform.get_cuda_runtime_major() >= 13
+   134	    ):
+   135	        supports_flashinfer = True
+   136	        supports_cutedsl = True
+   137	    elif (
+   138	        current_platform.is_device_capability_family(120)
+   139	        and head_k_dim == 128
+   140	        and current_platform.get_cuda_runtime_major() >= 13
+   141	    ):
+   142	        # The in-tree CuteDSL kernel targets SM100 only, so it stays off here.
+   143	        supports_flashinfer = True
+   144	
+   145	    if backend in ["flashinfer", "auto"] and supports_flashinfer:
+   146	        return backend, "flashinfer"
+   147	    if backend == "cutedsl" and supports_cutedsl:
+   148	        return backend, "cutedsl"
+   149	    return backend, "triton"
+   150	
+== model_executor/layers/mamba/gdn/qwen_gdn_linear_attn.py:186-300
+   186	            "while. Set --gdn-prefill-backend triton to skip JIT.",
+   187	        )
+   188	
+   189	
+   190	def fi_chunk_gated_delta_rule(
+   191	    q: torch.Tensor,
+   192	    k: torch.Tensor,
+   193	    v: torch.Tensor,
+   194	    g: torch.Tensor,
+   195	    beta: torch.Tensor,
+   196	    initial_state: torch.Tensor,
+   197	    output_final_state: bool,
+   198	    cu_seqlens: torch.Tensor | None = None,
+   199	    use_qk_l2norm_in_kernel: bool = True,
+   200	):
+   201	    from flashinfer.gdn_prefill import (
+   202	        chunk_gated_delta_rule as chunk_gated_delta_rule_fi,
+   203	    )
+   204	
+   205	    if use_qk_l2norm_in_kernel:
+   206	        q = l2norm_fwd(q)
+   207	        k = l2norm_fwd(k)
+   208	
+   209	    # use flashinfer implementation
+   210	    q = q.squeeze(0).contiguous()
+   211	    k = k.squeeze(0).contiguous()
+   212	    v = v.squeeze(0).contiguous()
+   213	
+   214	    g = g.squeeze(0).contiguous()
+   215	    beta = beta.squeeze(0).contiguous()
+   216	    fi_state = initial_state.to(torch.float32)
+   217	    fi_g = g.to(torch.float32)
+   218	    fi_beta = beta.to(torch.float32)
+   219	    if cu_seqlens is not None:
+   220	        cu_seqlens = cu_seqlens.to(torch.int64)
+   221	    result = chunk_gated_delta_rule_fi(
+   222	        q=q,
+   223	        k=k,
+   224	        v=v,
+   225	        g=torch.exp(fi_g),
+   226	        beta=fi_beta,
+   227	        initial_state=fi_state,
+   228	        output_final_state=output_final_state,
+   229	        cu_seqlens=cu_seqlens,
+   230	        backend="flashinfer",
+   231	    )
+   232	    # FlashInfer returns (output, state) when output_final_state=True,
+   233	    # or just output when output_final_state=False.
+   234	    # Unsqueeze back to 4D (1, L, H, D) to match fla output format
+   235	    if output_final_state:
+   236	        output, final_state = result
+   237	        return output.unsqueeze(0), final_state
+   238	    else:
+   239	        return result.unsqueeze(0), None
+   240	
+   241	
+   242	@CustomOp.register("chunk_gated_delta_rule")
+   243	class ChunkGatedDeltaRule(CustomOp):
+   244	    def __init__(self) -> None:
+   245	        super().__init__()
+   246	        vllm_config = get_current_vllm_config()
+   247	        backend, active_backend = _resolve_gdn_prefill_backend(vllm_config)
+   248	        self.gdn_prefill_backend = active_backend
+   249	
+   250	        if backend in ("flashinfer", "cutedsl") and active_backend != backend:
+   251	            logger.warning_once(
+   252	                "GDN prefill backend '%s' is selected but cannot use this "
+   253	                "kernel on the current platform. Falling back to Triton/FLA.",
+   254	                backend,
+   255	            )
+   256	        _log_gdn_backend_decision(vllm_config, backend, active_backend)
+   257	
+   258	        if active_backend == "flashinfer":
+   259	            self._forward_method = self.forward_cuda
+   260	        elif active_backend == "cutedsl":
+   261	            self._forward_method = self.forward_cutedsl
+   262	        else:
+   263	            self._forward_method = self.forward_native
+   264	
+   265	    def forward_cuda(
+   266	        self,
+   267	        q: torch.Tensor,
+   268	        k: torch.Tensor,
+   269	        v: torch.Tensor,
+   270	        g: torch.Tensor,
+   271	        beta: torch.Tensor,
+   272	        initial_state: torch.Tensor,
+   273	        output_final_state: bool,
+   274	        cu_seqlens: torch.Tensor | None = None,
+   275	        chunk_indices: torch.Tensor | None = None,
+   276	        chunk_offsets: torch.Tensor | None = None,
+   277	        use_qk_l2norm_in_kernel: bool = True,
+   278	        core_attn_out: torch.Tensor | None = None,
+   279	    ):
+   280	        o, final_state = fi_chunk_gated_delta_rule(
+   281	            q=q,
+   282	            k=k,
+   283	            v=v,
+   284	            g=g,
+   285	            beta=beta,
+   286	            initial_state=initial_state,
+   287	            output_final_state=output_final_state,
+   288	            cu_seqlens=cu_seqlens,
+   289	            use_qk_l2norm_in_kernel=use_qk_l2norm_in_kernel,
+   290	        )
+   291	        if core_attn_out is not None:
+   292	            o_flat = o.squeeze(0).reshape(-1)
+   293	            co_flat = core_attn_out.reshape(-1)
+   294	            co_flat[: o_flat.numel()].copy_(o_flat)
+   295	        return o, final_state
+   296	
+   297	    def forward_native(
+   298	        self,
+   299	        q: torch.Tensor,
+   300	        k: torch.Tensor,
+== model_executor/layers/mamba/gdn/qwen_gdn_linear_attn.py:372-1963
+   372	class QwenGatedDeltaNetAttention(GatedDeltaNetAttention):
+   373	    def get_state_shape(
+   374	        self,
+   375	    ) -> tuple[tuple[int, ...], tuple[int, ...], tuple[int, ...], tuple[int, ...]]:
+   376	        return MambaStateShapeCalculator.gated_delta_net_state_shape(
+   377	            self.tp_size,
+   378	            self.num_k_heads,
+   379	            self.num_v_heads,
+   380	            self.head_k_dim,
+   381	            self.head_v_dim,
+   382	            self.conv_kernel_size,
+   383	            self.num_spec,
+   384	        )
+   385	
+   386	    def __init__(
+   387	        self,
+   388	        config: Qwen3NextConfig,
+   389	        vllm_config: VllmConfig,
+   390	        prefix: str = "",
+   391	        gqa_interleaved_layout=False,
+   392	        reduce_results: bool = True,
+   393	    ) -> None:
+   394	        super().__init__(config, vllm_config, prefix)
+   395	
+   396	        self.num_k_heads = config.linear_num_key_heads
+   397	        self.num_v_heads = config.linear_num_value_heads
+   398	        self.head_k_dim = config.linear_key_head_dim
+   399	        self.head_v_dim = config.linear_value_head_dim
+   400	        self.conv_kernel_size = config.linear_conv_kernel_dim
+   401	        self.key_dim = self.head_k_dim * self.num_k_heads
+   402	        self.value_dim = self.head_v_dim * self.num_v_heads
+   403	        self.gqa_interleaved_layout = gqa_interleaved_layout
+   404	        self.qkvz_layout = "interleaved" if gqa_interleaved_layout else "flat"
+   405	        if current_platform.is_xpu():
+   406	            self._forward_method = self.forward_xpu
+   407	        elif current_platform.is_cpu():
+   408	            from vllm.model_executor.layers.mamba.ops.cpu.gdn_attention import (
+   409	                register_cpu_gdn_attention_ops,
+   410	            )
+   411	
+   412	            register_cpu_gdn_attention_ops()
+   413	            self._forward_method = self.forward_cpu
+   414	        elif current_platform.is_rocm():
+   415	            self._forward_method = self.forward_hip
+   416	        else:
+   417	            self._forward_method = self.forward_cuda
+   418	
+   419	        # QKV
+   420	        self.conv_dim = self.key_dim * 2 + self.value_dim
+   421	        self.conv1d = ColumnParallelLinear(
+   422	            input_size=self.conv_kernel_size,
+   423	            output_size=self.conv_dim,
+   424	            bias=False,
+   425	            prefix=f"{prefix}.conv1d",
+   426	        )
+   427	        self.conv1d.weight.data = self.conv1d.weight.data.unsqueeze(1)
+   428	
+   429	        # projection of the input hidden states
+   430	        # Qwen3-Next and Qwen3.5 has a different qkv_proj layout,
+   431	        # we need to create qkvz_proj adaptively here.
+   432	        # When create_in_proj_qkvz is False (e.g. LoRA enabled in Qwen3.5),
+   433	        # in_proj_qkv and in_proj_z are created separately instead.
+   434	        self.in_proj_qkvz = self.create_qkvz_proj(
+   435	            hidden_size=self.hidden_size,
+   436	            key_dim=self.key_dim,
+   437	            value_dim=self.value_dim,
+   438	            quant_config=self.quant_config,
+   439	            prefix=f"{prefix}.in_proj_qkvz",
+   440	        )
+   441	
+   442	        # ba_proj doesn't support blockwise fp8 quantization.
+   443	        # Qwen3-Next and Qwen3.5 have different in_proj_ba checkpoint
+   444	        # layouts, so we use a factory method to create the projection.
+   445	        self.in_proj_ba = self.create_ba_proj(
+   446	            hidden_size=self.hidden_size,
+   447	            num_v_heads=self.num_v_heads,
+   448	            quant_config=self.quant_config,
+   449	            prefix=f"{prefix}.in_proj_ba",
+   450	        )
+   451	        self.disable_tp_for_ba_proj = self.maybe_disable_tp(self.quant_config)
+   452	
+   453	        query_key_settings = (self.key_dim, 0, False)
+   454	        value_settings = (self.value_dim, 0, False)
+   455	
+   456	        self.conv1d.weight.weight_loader = mamba_v2_sharded_weight_loader(
+   457	            [
+   458	                query_key_settings,
+   459	                query_key_settings,
+   460	                value_settings,
+   461	            ],
+   462	            self.tp_size,
+   463	            self.tp_rank,
+   464	        )
+   465	
+   466	        # selective projection used to make dt, B and C input dependent
+   467	
+   468	        # time step projection (discretization)
+   469	        # instantiate once and copy inv_dt in init_weights of PretrainedModel
+   470	        self.dt_bias = nn.Parameter(
+   471	            torch.ones(self.num_v_heads // self.tp_size),
+   472	        )
+   473	        self.A_log = nn.Parameter(
+   474	            torch.empty(
+   475	                divide(self.num_v_heads, self.tp_size),
+   476	                dtype=torch.float32,
+   477	            )
+   478	        )
+   479	
+   480	        set_weight_attrs(self.A_log, {"weight_loader": sharded_weight_loader(0)})
+   481	        set_weight_attrs(self.dt_bias, {"weight_loader": sharded_weight_loader(0)})
+   482	
+   483	        output_gate_type = getattr(config, "output_gate_type", "silu")
+   484	        if output_gate_type == "swish":
+   485	            output_gate_type = "silu"
+   486	        assert output_gate_type in ["silu", "swish", "sigmoid"], (
+   487	            f"unsupported {output_gate_type=}"
+   488	        )
+   489	
+   490	        self.norm = RMSNormGated(
+   491	            self.head_v_dim,
+   492	            eps=self.layer_norm_epsilon,
+   493	            group_size=None,
+   494	            norm_before_gate=True,
+   495	            activation=output_gate_type,
+   496	            device=current_platform.current_device(),
+   497	        )
+   498	
+   499	        self.out_proj = RowParallelLinear(
+   500	            self.value_dim,
+   501	            self.hidden_size,
+   502	            bias=False,
+   503	            input_is_parallel=True,
+   504	            reduce_results=reduce_results,
+   505	            quant_config=self.quant_config,
+   506	            prefix=f"{prefix}.out_proj",
+   507	        )
+   508	
+   509	        self.chunk_gated_delta_rule = ChunkGatedDeltaRule()
+   510	        self.gdn_prefill_backend = self.chunk_gated_delta_rule.gdn_prefill_backend
+   511	        self._prefill_kernels_warmed_up = False
+   512	        self.enable_packed_recurrent_decode = (
+   513	            envs.VLLM_ENABLE_FLA_PACKED_RECURRENT_DECODE
+   514	        )
+   515	        self.gdn_decode_kernel = envs.VLLM_GDN_DECODE_KERNEL.strip().lower()
+   516	        if self.gdn_decode_kernel == "cuda" and current_platform.is_cuda_alike():
+   517	            reason = self._fused_gdn_decode_unsupported_reason(vllm_config)
+   518	            if reason is not None:
+   519	                if "VLLM_GDN_DECODE_KERNEL" in os.environ:
+   520	                    raise ValueError(
+   521	                        f"VLLM_GDN_DECODE_KERNEL=cuda is not supported: {reason}"
+   522	                    )
+   523	                logger.info_once(
+   524	                    "Falling back to the Triton GDN decode path: %s", reason
+   525	                )
+   526	                self.gdn_decode_kernel = "triton"
+   527	        elif current_platform.is_cpu():
+   528	            self.gdn_decode_kernel = "CPU"
+   529	        elif current_platform.is_xpu():
+   530	            self.gdn_decode_kernel = "XPU"
+   531	
+   532	        self.enable_fused_gdn_decode = self.gdn_decode_kernel == "cuda"
+   533	        logger.info_once("GDN decode kernel: %s", self.gdn_decode_kernel)
+   534	
+   535	        compilation_config = get_current_vllm_config().compilation_config
+   536	        if prefix in compilation_config.static_forward_context:
+   537	            raise ValueError(f"Duplicate layer name: {prefix}")
+   538	        compilation_config.static_forward_context[prefix] = self
+   539	
+   540	    def _fused_gdn_decode_unsupported_reason(
+   541	        self, vllm_config: VllmConfig
+   542	    ) -> str | None:
+   543	        conv_state_dtype, recurrent_state_dtype = self.get_state_dtype()
+   544	        if (
+   545	            self.gqa_interleaved_layout
+   546	            or self.head_k_dim != 128
+   547	            or self.head_v_dim != 128
+   548	            or self.norm.activation not in ("silu", "sigmoid")
+   549	            or vllm_config.model_config.dtype != torch.bfloat16
+   550	            or conv_state_dtype != torch.bfloat16
+   551	            or recurrent_state_dtype not in FUSED_GDN_STATE_DTYPES
+   552	            or not current_platform.has_device_capability(80)
+   553	        ):
+   554	            return (
+   555	                "the fused CUDA kernel requires a BF16 GDN model with "
+   556	                "K=V=128, SiLU or sigmoid gating, non-interleaved GQA "
+   557	                "layout, BF16 convolution cache, BF16 or FP32 recurrent "
+   558	                "state, and a GPU with compute capability 8.0+"
+   559	            )
+   560	        if not hasattr(torch.ops._C, "fused_gdn_decode_post_conv_mtp"):
+   561	            return "torch.ops._C.fused_gdn_decode_post_conv_mtp is not built"
+   562	        return None
+   563	
+   564	    def create_qkvz_proj(
+   565	        self,
+   566	        hidden_size: int,
+   567	        key_dim: int,
+   568	        value_dim: int,
+   569	        quant_config: QuantizationConfig | None,
+   570	        prefix: str,
+   571	    ) -> MergedColumnParallelLinear:
+   572	        # When gqa_interleaved_layout=True (Qwen3-Next), qkvz weights are
+   573	        # stored as a single fused tensor with interleaved GQA layout, so we
+   574	        # use one output shard to preserve the interleaving across TP ranks.
+   575	        # When gqa_interleaved_layout=False (Qwen3.5), the checkpoint has
+   576	        # separate q, k, v, z weights, so we use 4 independent output sizes.
+   577	        output_sizes = (
+   578	            [sum((key_dim, key_dim, value_dim, value_dim))]
+   579	            if self.gqa_interleaved_layout
+   580	            else [key_dim, key_dim, value_dim, value_dim]
+   581	        )
+   582	        return MergedColumnParallelLinear(
+   583	            input_size=hidden_size,
+   584	            output_sizes=output_sizes,
+   585	            bias=False,
+   586	            quant_config=quant_config,
+   587	            prefix=prefix,
+   588	        )
+   589	
+   590	    def create_ba_proj(
+   591	        self,
+   592	        hidden_size: int,
+   593	        num_v_heads: int,
+   594	        quant_config: QuantizationConfig | None,
+   595	        prefix: str,
+   596	    ) -> MergedColumnParallelLinear:
+   597	        # When gqa_interleaved_layout=True (Qwen3-Next), in_proj_ba is stored
+   598	        # as a single fused weight [b_g0, a_g0, b_g1, a_g1, ...] interleaved
+   599	        # by key-head group; a single output shard preserves this across TP.
+   600	        # When gqa_interleaved_layout=False (Qwen3.5), in_proj_b and in_proj_a
+   601	        # are separate checkpoint weights, so we use 2 independent output sizes.
+   602	        output_sizes = (
+   603	            [num_v_heads * 2] if self.gqa_interleaved_layout else [num_v_heads] * 2
+   604	        )
+   605	        return MergedColumnParallelLinear(
+   606	            input_size=hidden_size,
+   607	            output_sizes=output_sizes,
+   608	            bias=False,
+   609	            quant_config=quant_config,
+   610	            prefix=prefix,
+   611	            disable_tp=self.maybe_disable_tp(quant_config),
+   612	        )
+   613	
+   614	    def maybe_disable_tp(self, quant_config: QuantizationConfig | None) -> bool:
+   615	        """Whether to replicate ba_proj instead of TP-sharding it.
+   616	
+   617	        Marlin requires output_size_per_partition >= MIN_THREAD_N=64, which
+   618	        the Qwen3.5 non-interleaved [num_v_heads]*2 layout violates at TP>=2
+   619	        (e.g. num_v_heads=64, TP=4 -> 16). Replicating the projection keeps
+   620	        each rank above the Marlin threshold; forward() then slices b/a to
+   621	        the local TP partition. Qwen3-Next's interleaved [num_v_heads*2]
+   622	        layout is unaffected and stays TP-sharded.
+   623	
+   624	        See https://github.com/vllm-project/vllm/issues/35924
+   625	        """
+   626	        return (
+   627	            current_platform.is_cuda()
+   628	            and not self.gqa_interleaved_layout
+   629	            and isinstance(quant_config, (AutoAWQConfig, AutoGPTQConfig, INCConfig))
+   630	        )
+   631	
+   632	    def split_ba(self, ba: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
+   633	        b, a = ba.chunk(2, dim=-1)
+   634	        if self.disable_tp_for_ba_proj and self.tp_size > 1:
+   635	            # ba_proj is replicated for Marlin; slice b/a to local TP rank.
+   636	            ba_chunk = self.num_v_heads // self.tp_size
+   637	            ba_start = self.tp_rank * ba_chunk
+   638	            b = b[:, ba_start : ba_start + ba_chunk]
+   639	            a = a[:, ba_start : ba_start + ba_chunk]
+   640	        return b, a
+   641	
+   642	    def fix_query_key_value_ordering(
+   643	        self,
+   644	        mixed_qkvz: torch.Tensor,
+   645	        mixed_ba: torch.Tensor,
+   646	    ):
+   647	        """Derives `query`, `key` and `value` tensors from `mixed_qkvzba`."""
+   648	        new_tensor_shape_qkvz = mixed_qkvz.size()[:-1] + (
+   649	            self.num_k_heads // self.tp_size,
+   650	            (
+   651	                self.head_k_dim
+   652	                + self.head_k_dim
+   653	                + (self.head_v_dim + self.head_v_dim)
+   654	                * self.num_v_heads
+   655	                // self.num_k_heads
+   656	            ),
+   657	        )
+   658	        new_tensor_shape_ba = mixed_ba.size()[:-1] + (
+   659	            self.num_k_heads // self.tp_size,
+   660	            2 * self.num_v_heads // self.num_k_heads,
+   661	        )
+   662	
+   663	        mixed_qkvz = mixed_qkvz.view(*new_tensor_shape_qkvz)
+   664	        mixed_ba = mixed_ba.view(*new_tensor_shape_ba)
+   665	
+   666	        split_arg_list_qkvz = [
+   667	            self.head_k_dim,
+   668	            self.head_k_dim,
+   669	            (self.num_v_heads // self.num_k_heads * self.head_v_dim),
+   670	            (self.num_v_heads // self.num_k_heads * self.head_v_dim),
+   671	        ]
+   672	        split_arg_list_ba = [
+   673	            self.num_v_heads // self.num_k_heads,
+   674	            self.num_v_heads // self.num_k_heads,
+   675	        ]
+   676	
+   677	        # [b, sq, ng, (hn + hn + np/ng * hn + np/ng + np/ng)]
+   678	        # --> [b, sq, ng, hn], [b, sq, ng, hn], [b, sq, ng, np/ng * hn],
+   679	        #  [b, sq, ng, np/ng * hn], [b, sq, ng, np/ng], [b, sq, ng, np/ng]
+   680	        (query, key, value, z) = torch.split(mixed_qkvz, split_arg_list_qkvz, dim=2)
+   681	        (b, a) = torch.split(mixed_ba, split_arg_list_ba, dim=2)
+   682	
+   683	        # [b, sq, ng, np/ng * hn] -> [b, sq, np, hn]
+   684	        value = value.reshape(value.size(0), -1, self.head_v_dim)
+   685	        z = z.reshape(z.size(0), -1, self.head_v_dim)
+   686	        b = b.reshape(b.size(0), self.num_v_heads // self.tp_size)
+   687	        a = a.reshape(a.size(0), self.num_v_heads // self.tp_size)
+   688	
+   689	        return query, key, value, z, b, a
+   690	
+   691	    @torch.compile(fullgraph=True)
+   692	    def prepare_gdn_attention_core_inputs(
+   693	        self,
+   694	        mixed_qkvz: torch.Tensor,
+   695	        mixed_ba: torch.Tensor,
+   696	        num_tokens: int,
+   697	    ):
+   698	        """Derives mixed_qkv, z, b, a from projected qkvz/ba for the GDN custom op.
+   699	
+   700	        For gqa_interleaved_layout (Qwen3-Next): unpack the interleaved
+   701	        [ng, (hk + hk + np/ng*hv + np/ng*hv)] layout into contiguous qkv.
+   702	        For non-interleaved layout (Qwen3.5): simple split along last dim.
+   703	        """
+   704	        if not self.gqa_interleaved_layout:
+   705	            # Qwen3.5: weights are in [q, k, v, z] order
+   706	            assert num_tokens == mixed_qkvz.shape[0]
+   707	            qkv_size = (self.key_dim * 2 + self.value_dim) // self.tp_size
+   708	            z_size = self.value_dim // self.tp_size
+   709	            mixed_qkv, z_flat = mixed_qkvz.split([qkv_size, z_size], dim=-1)
+   710	            n = mixed_qkvz.shape[0]
+   711	            z_out = z_flat.reshape(n, -1, self.head_v_dim)
+   712	            b, a = mixed_ba.chunk(2, dim=-1)
+   713	            return mixed_qkv, z_out, b, a
+   714	
+   715	        # Qwen3-Next: interleaved GQA layout
+   716	        base_shape_qkvz = mixed_qkvz.size()[:-1]
+   717	        base_shape_ba = mixed_ba.size()[:-1]
+   718	        ng = self.num_k_heads // self.tp_size
+   719	
+   720	        new_tensor_shape_qkvz = base_shape_qkvz + (
+   721	            ng,
+   722	            (
+   723	                self.head_k_dim
+   724	                + self.head_k_dim
+   725	                + (self.head_v_dim + self.head_v_dim)
+   726	                * self.num_v_heads
+   727	                // self.num_k_heads
+   728	            ),
+   729	        )
+   730	        new_tensor_shape_ba = base_shape_ba + (
+   731	            ng,
+   732	            2 * self.num_v_heads // self.num_k_heads,
+   733	        )
+   734	
+   735	        mixed_qkvz = mixed_qkvz.view(*new_tensor_shape_qkvz)
+   736	        mixed_ba = mixed_ba.view(*new_tensor_shape_ba)
+   737	
+   738	        split_arg_list_qkvz = [
+   739	            self.head_k_dim,
+   740	            self.head_k_dim,
+   741	            (self.num_v_heads // self.num_k_heads * self.head_v_dim),
+   742	            (self.num_v_heads // self.num_k_heads * self.head_v_dim),
+   743	        ]
+   744	        split_arg_list_ba = [
+   745	            self.num_v_heads // self.num_k_heads,
+   746	            self.num_v_heads // self.num_k_heads,
+   747	        ]
+   748	
+   749	        (query, key, value, z) = torch.split(mixed_qkvz, split_arg_list_qkvz, dim=-1)
+   750	        (b, a) = torch.split(mixed_ba, split_arg_list_ba, dim=-1)
+   751	
+   752	        mixed_qkv_logical = torch.cat(
+   753	            [
+   754	                query.reshape(num_tokens, -1),
+   755	                key.reshape(num_tokens, -1),
+   756	                value.reshape(num_tokens, -1),
+   757	            ],
+   758	            dim=-1,
+   759	        )
+   760	
+   761	        # The split above produces non-contiguous views into the interleaved
+   762	        # buffer.  Concatenating everything into a single flat tensor forces a
+   763	        # contiguous copy, then slicing back out gives contiguous q/k/v/z/b/a
+   764	        # tensors that downstream kernels require.  Doing this in one cat+slice
+   765	        # keeps torch.compile in a single Triton graph instead of emitting
+   766	        # separate copy kernels per tensor.  The original code used
+   767	        # rearrange(...).contiguous() on each tensor individually.
+   768	        fused = torch.cat(
+   769	            [
+   770	                mixed_qkv_logical.reshape(-1),
+   771	                z.reshape(-1),
+   772	                b.reshape(-1),
+   773	                a.reshape(-1),
+   774	            ],
+   775	            dim=0,
+   776	        )
+   777	
+   778	        curr = 0
+   779	        qkv_numel = mixed_qkv_logical.numel()
+   780	        z_numel = z.numel()
+   781	        b_numel = b.numel()
+   782	        a_numel = a.numel()
+   783	
+   784	        mixed_qkv_out = fused[curr : curr + qkv_numel].view(num_tokens, -1)
+   785	        curr += qkv_numel
+   786	
+   787	        z_out = fused[curr : curr + z_numel].view(
+   788	            num_tokens, self.num_v_heads // self.tp_size, self.head_v_dim
+   789	        )
+   790	        curr += z_numel
+   791	
+   792	        b_out = fused[curr : curr + b_numel].view(
+   793	            num_tokens, self.num_v_heads // self.tp_size
+   794	        )
+   795	        curr += b_numel
+   796	
+   797	        a_out = fused[curr : curr + a_numel].view(
+   798	            num_tokens, self.num_v_heads // self.tp_size
+   799	        )
+   800	
+   801	        return mixed_qkv_out, z_out, b_out, a_out
+   802	
+   803	    def rearrange_mixed_qkv(self, mixed_qkv):
+   804	        """Split packed qkv into contiguous (1, seq, heads, dim) tensors.
+   805	
+   806	        The original code used ``rearrange(x, "l (h d) -> 1 l h d", d=...)``
+   807	        followed by ``.contiguous()`` on each tensor.  This version flattens
+   808	        all three splits into a single buffer via ``torch.cat`` so that
+   809	        torch.compile emits one Triton copy kernel instead of three separate
+   810	        contiguous() calls.
+   811	        """
+   812	        if mixed_qkv is None:
+   813	            return None, None, None
+   814	
+   815	        seq_len = mixed_qkv.shape[0]
+   816	        q_dim = self.key_dim // self.tp_size
+   817	        k_dim = self.key_dim // self.tp_size
+   818	        v_dim = self.value_dim // self.tp_size
+   819	
+   820	        query, key, value = torch.split(mixed_qkv, [q_dim, k_dim, v_dim], dim=-1)
+   821	
+   822	        fused = torch.cat(
+   823	            [query.reshape(-1), key.reshape(-1), value.reshape(-1)], dim=0
+   824	        )
+   825	
+   826	        q_size = seq_len * q_dim
+   827	        k_size = seq_len * k_dim
+   828	
+   829	        q_contig = fused[0:q_size]
+   830	        k_contig = fused[q_size : q_size + k_size]
+   831	        v_contig = fused[q_size + k_size :]
+   832	
+   833	        query = q_contig.view(1, seq_len, -1, self.head_k_dim)
+   834	        key = k_contig.view(1, seq_len, -1, self.head_k_dim)
+   835	        value = v_contig.view(1, seq_len, -1, self.head_v_dim)
+   836	
+   837	        return query, key, value
+   838	
+   839	    def forward(
+   840	        self,
+   841	        hidden_states: torch.Tensor,
+   842	    ) -> torch.Tensor:
+   843	        return self._forward_method(hidden_states)
+   844	
+   845	    def _output_projection(
+   846	        self,
+   847	        core_attn_out: torch.Tensor,
+   848	        z: torch.Tensor,
+   849	    ) -> torch.Tensor:
+   850	        """Part 3: RMSNormGated + output linear projection.
+   851	
+   852	        The RMSNormGated + quant sequence is eligible for fusion
+   853	        by the compilation pass when fuse_norm_quant is enabled.
+   854	        """
+   855	        core_attn_out = self.norm(core_attn_out, z)
+   856	        output, _ = self.out_proj(core_attn_out.flatten(-2))
+   857	        return output
+   858	
+   859	    def forward_hip(
+   860	        self,
+   861	        hidden_states: torch.Tensor,
+   862	    ) -> torch.Tensor:
+   863	        """ROCm forward using AITER Triton fused projection+attention when
+   864	        available, otherwise falling back to the generic CUDA path."""
+   865	        if GDN_AITER_TRITON_AVAILABLE:
+   866	            num_tokens = hidden_states.size(0)
+   867	            projected_states_qkvz, _ = self.in_proj_qkvz(hidden_states)
+   868	            projected_states_ba, _ = self.in_proj_ba(hidden_states)
+   869	            projected_states_qkvz = projected_states_qkvz.view(num_tokens, -1)
+   870	            projected_states_ba = projected_states_ba.view(num_tokens, -1)
+   871	            core_attn_out = torch.empty(
+   872	                (num_tokens, self.num_v_heads // self.tp_size, self.head_v_dim),
+   873	                dtype=hidden_states.dtype,
+   874	                device=hidden_states.device,
+   875	            )
+   876	            z = torch.empty(
+   877	                (num_tokens, self.num_v_heads // self.tp_size, self.head_v_dim),
+   878	                dtype=projected_states_qkvz.dtype,
+   879	                device=projected_states_qkvz.device,
+   880	            )
+   881	
+   882	            torch.ops.vllm.qwen_gdn_attention_core(
+   883	                projected_states_qkvz,
+   884	                projected_states_ba,
+   885	                z,
+   886	                core_attn_out,
+   887	                layer_name=_encode_layer_name(self.prefix),
+   888	                use_aiter=True,
+   889	            )
+   890	
+   891	            return self._output_projection(core_attn_out, z)
+   892	        else:
+   893	            return self.forward_cuda(hidden_states)
+   894	
+   895	    def forward_cuda(
+   896	        self,
+   897	        hidden_states: torch.Tensor,
+   898	    ) -> torch.Tensor:
+   899	        """Forward pass with three parts:
+   900	        1. Input projection
+   901	        2. Core attention (custom op)
+   902	        3. Output projection
+   903	        """
+   904	        num_tokens = hidden_states.size(0)
+   905	        # ============================================================
+   906	        # Part 1: Input Projection
+   907	        # ============================================================
+   908	        mixed_qkvz, _ = self.in_proj_qkvz(hidden_states)
+   909	        ba, _ = self.in_proj_ba(hidden_states)
+   910	
+   911	        use_fused_gdn_decode = (
+   912	            self.enable_fused_gdn_decode
+   913	            and hidden_states.dtype == torch.bfloat16
+   914	            and self.norm.weight.dtype in (torch.bfloat16, torch.float32)
+   915	        )
+   916	        if use_fused_gdn_decode:
+   917	            core_attn_out = torch.zeros(
+   918	                (num_tokens, self.num_v_heads // self.tp_size, self.head_v_dim),
+   919	                dtype=hidden_states.dtype,
+   920	                device=hidden_states.device,
+   921	            )
+   922	            torch.ops.vllm.qwen_gdn_attention_core_fused_norm_packed(
+   923	                mixed_qkvz,
+   924	                ba,
+   925	                core_attn_out,
+   926	                layer_name=_encode_layer_name(self.prefix),
+   927	            )
+   928	            output, _ = self.out_proj(core_attn_out.flatten(-2))
+   929	            return output
+   930	
+   931	        if self.gqa_interleaved_layout:
+   932	            # Qwen3-Next: unpack the interleaved GQA layout
+   933	            query, key, value, z, b, a = self.fix_query_key_value_ordering(
+   934	                mixed_qkvz, ba
+   935	            )
+   936	            query, key, value = map(
+   937	                lambda x: rearrange(x, "l p d -> l (p d)"), (query, key, value)
+   938	            )
+   939	            mixed_qkv = torch.cat((query, key, value), dim=-1)
+   940	        else:
+   941	            # Qwen3.5: weights are already in [q, k, v, z] and [b, a] order
+   942	            qkv_size = (self.key_dim * 2 + self.value_dim) // self.tp_size
+   943	            z_size = self.value_dim // self.tp_size
+   944	            mixed_qkv, z = mixed_qkvz.split([qkv_size, z_size], dim=-1)
+   945	            z = z.reshape(z.size(0), -1, self.head_v_dim)
+   946	            b, a = self.split_ba(ba)
+   947	
+   948	        # ============================================================
+   949	        # Part 2: Core Attention (Custom Op)
+   950	        # ============================================================
+   951	        # Note: we should not use torch.empty here like other attention backends,
+   952	        # see discussions in https://github.com/vllm-project/vllm/pull/28182
+   953	        core_attn_out = torch.zeros(
+   954	            (num_tokens, self.num_v_heads // self.tp_size, self.head_v_dim),
+   955	            dtype=hidden_states.dtype,
+   956	            device=hidden_states.device,
+   957	        )
+   958	
+   959	        torch.ops.vllm.qwen_gdn_attention_core(
+   960	            mixed_qkv,
+   961	            b.contiguous(),
+   962	            a.contiguous(),
+   963	            core_attn_out,
+   964	            layer_name=_encode_layer_name(self.prefix),
+   965	        )
+   966	
+   967	        # ============================================================
+   968	        # Part 3: Output Projection
+   969	        # ============================================================
+   970	        return self._output_projection(core_attn_out, z)
+   971	
+   972	    def forward_xpu(
+   973	        self,
+   974	        hidden_states: torch.Tensor,
+   975	    ) -> torch.Tensor:
+   976	        """Forward pass with three parts:
+   977	        1. Input projection
+   978	        2. Core attention (custom op)
+   979	        3. Output projection
+   980	        """
+   981	        num_tokens = hidden_states.size(0)
+   982	
+   983	        # ============================================================
+   984	        # Part 1: Input Projection
+   985	        # ============================================================
+   986	        projected_states_qkvz, _ = self.in_proj_qkvz(hidden_states)
+   987	        projected_states_ba, _ = self.in_proj_ba(hidden_states)
+   988	
+   989	        # ============================================================
+   990	        # Part 2: Core Attention
+   991	        # ============================================================
+   992	        core_attn_out = torch.zeros(
+   993	            (num_tokens, self.num_v_heads // self.tp_size, self.head_v_dim),
+   994	            dtype=hidden_states.dtype,
+   995	            device=hidden_states.device,
+   996	        )
+   997	        z = torch.empty_like(core_attn_out)
+   998	
+   999	        torch.ops.vllm.gdn_attention_core_xpu(
+  1000	            core_attn_out,
+  1001	            z,
+  1002	            projected_states_qkvz,
+  1003	            projected_states_ba,
+  1004	            self.prefix,
+  1005	        )
+  1006	
+  1007	        # ============================================================
+  1008	        # Part 3: Output Projection
+  1009	        # ============================================================
+  1010	        return self._output_projection(core_attn_out, z)
+  1011	
+  1012	    def forward_cpu(
+  1013	        self,
+  1014	        hidden_states: torch.Tensor,
+  1015	    ) -> torch.Tensor:
+  1016	        assert not hasattr(self, "in_proj_qkv"), "lora isn't supported on CPU."
+  1017	
+  1018	        mixed_qkvz, _ = self.in_proj_qkvz(hidden_states)
+  1019	        ba, _ = self.in_proj_ba(hidden_states)
+  1020	
+  1021	        if self.gqa_interleaved_layout:
+  1022	            # Qwen3-Next: unpack the interleaved GQA layout
+  1023	            query, key, value, z, b, a = self.fix_query_key_value_ordering(
+  1024	                mixed_qkvz, ba
+  1025	            )
+  1026	            query, key, value = map(
+  1027	                lambda x: rearrange(x, "l p d -> l (p d)"), (query, key, value)
+  1028	            )
+  1029	            mixed_qkv = torch.cat((query, key, value), dim=-1)
+  1030	        else:
+  1031	            # Qwen3.5: weights are already in [q, k, v, z] and [b, a] order
+  1032	            qkv_size = (self.key_dim * 2 + self.value_dim) // self.tp_size
+  1033	            z_size = self.value_dim // self.tp_size
+  1034	            mixed_qkv, z = mixed_qkvz.split([qkv_size, z_size], dim=-1)
+  1035	            z = z.reshape(z.size(0), -1, self.head_v_dim)
+  1036	            b, a = ba.chunk(2, dim=-1)
+  1037	
+  1038	        num_tokens = hidden_states.size(0)
+  1039	        core_attn_out = torch.zeros(
+  1040	            (num_tokens, self.num_v_heads // self.tp_size, self.head_v_dim),
+  1041	            dtype=hidden_states.dtype,
+  1042	            device=hidden_states.device,
+  1043	        )
+  1044	
+  1045	        torch.ops.vllm.cpu_gdn_attention_core(
+  1046	            mixed_qkv,
+  1047	            b,
+  1048	            a,
+  1049	            core_attn_out,
+  1050	            _encode_layer_name(self.prefix),
+  1051	        )
+  1052	
+  1053	        return self._output_projection(core_attn_out, z)
+  1054	
+  1055	    def _warmup_prefill_kernels(self, qkv_or_qkvz: torch.Tensor, v_dim: int) -> None:
+  1056	        """Warm up GDN prefill kernels during V1 profiling.
+  1057	
+  1058	        During V1 profile runs, ``_forward_core`` returns early because
+  1059	        ``attn_metadata`` is ``None``, so the autotuned kernels used by
+  1060	        ``chunk_gated_delta_rule`` (e.g. ``solve_tril``,
+  1061	        ``chunk_scaled_dot_kkt``) are never invoked.  After profiling,
+  1062	        vLLM allocates KV cache using most of the remaining GPU memory.
+  1063	        When the first real inference triggers the autotuner it OOMs
+  1064	        because there is not enough memory left for benchmarking.
+  1065	
+  1066	        This method runs minimal forward passes through
+  1067	        ``chunk_gated_delta_rule`` with small dummy tensors to force
+  1068	        autotuning while GPU memory is still plentiful.  The autotuner
+  1069	        results are cached globally, so only the first layer incurs
+  1070	        actual benchmarking cost.
+  1071	
+  1072	        All kernels including ``chunk_fwd_kernel_o`` now use a fixed
+  1073	        ``BT = chunk_size`` (64).  A single warmup pass with T = 64
+  1074	        is sufficient to populate the autotuner cache.
+  1075	
+  1076	        The decode path uses ``gdn_aiter_fused_rearrange_sigmoid_gated_delta_rule``
+  1077	        which has fixed kernel parameters (no autotuning), so only the
+  1078	        prefill (chunked) path needs warming up.
+  1079	        """
+  1080	        if self._prefill_kernels_warmed_up:
+  1081	            return
+  1082	        self._prefill_kernels_warmed_up = True
+  1083	
+  1084	        device = qkv_or_qkvz.device
+  1085	        dtype = qkv_or_qkvz.dtype
+  1086	        num_k_heads = self.num_k_heads // self.tp_size
+  1087	        num_v_heads = self.num_v_heads // self.tp_size
+  1088	        _, state_dtype = self.get_state_dtype()
+  1089	
+  1090	        # All kernels use BT = chunk_size, so a single pass with T = chunk_size
+  1091	        # is sufficient to populate every autotuner cache. Mirror the real
+  1092	        # prefill path here: build q/k/v/g/beta via fused_post_conv_prep and
+  1093	        # then run chunk_gated_delta_rule with in-kernel L2 norm disabled.
+  1094	        T = FLA_CHUNK_SIZE
+  1095	        dummy_mixed_qkv = torch.randn(
+  1096	            T, qkv_or_qkvz.shape[-1] - v_dim, device=device, dtype=dtype
+  1097	        )
+  1098	        dummy_a = torch.randn(T, num_v_heads, device=device, dtype=dtype)
+  1099	        dummy_b = torch.randn(T, num_v_heads, device=device, dtype=dtype)
+  1100	        q, k, v, g, beta = fused_post_conv_prep(
+  1101	            conv_output=dummy_mixed_qkv,
+  1102	            a=dummy_a,
+  1103	            b=dummy_b,
+  1104	            A_log=self.A_log,
+  1105	            dt_bias=self.dt_bias,
+  1106	            num_k_heads=num_k_heads,
+  1107	            head_k_dim=self.head_k_dim,
+  1108	            head_v_dim=self.head_v_dim,
+  1109	            apply_l2norm=True,
+  1110	            output_g_exp=False,
+  1111	        )
+  1112	        q = q.unsqueeze(0)
+  1113	        k = k.unsqueeze(0)
+  1114	        v = v.unsqueeze(0)
+  1115	        g = g.unsqueeze(0)
+  1116	        beta = beta.unsqueeze(0)
+  1117	        state = torch.zeros(
+  1118	            1,
+  1119	            num_v_heads,
+  1120	            self.head_v_dim,
+  1121	            self.head_k_dim,
+  1122	            device=device,
+  1123	            dtype=state_dtype,
+  1124	        )
+  1125	        cu_seqlens = torch.tensor([0, T], device=device, dtype=torch.int32)
+  1126	
+  1127	        # CuteDSL kernels require metadata
+  1128	        chunk_indices = None
+  1129	        chunk_offsets = None
+  1130	        if self.gdn_prefill_backend == "cutedsl":
+  1131	            from vllm.model_executor.layers.mamba.ops.gdn_chunk_cutedsl import (
+  1132	                prepare_metadata_cutedsl,
+  1133	            )
+  1134	
+  1135	            chunk_indices, chunk_offsets = prepare_metadata_cutedsl(cu_seqlens, T)
+  1136	
+  1137	        try:
+  1138	            self.chunk_gated_delta_rule(
+  1139	                q=q,
+  1140	                k=k,
+  1141	                v=v,
+  1142	                g=g,
+  1143	                beta=beta,
+  1144	                initial_state=state,
+  1145	                output_final_state=True,
+  1146	                cu_seqlens=cu_seqlens,
+  1147	                chunk_indices=chunk_indices,
+  1148	                chunk_offsets=chunk_offsets,
+  1149	                use_qk_l2norm_in_kernel=False,
+  1150	            )
+  1151	        except Exception:
+  1152	            logger.warning(
+  1153	                "GDN prefill kernel warmup (T=%d) failed for "
+  1154	                "layer %s. First inference may OOM due to "
+  1155	                "autotuner.",
+  1156	                T,
+  1157	                self.prefix,
+  1158	                exc_info=True,
+  1159	            )
+  1160	        else:
+  1161	            logger.debug(
+  1162	                "GDN prefill kernel warmup (T=%d) completed for layer %s",
+  1163	                T,
+  1164	                self.prefix,
+  1165	            )
+  1166	        finally:
+  1167	            del (
+  1168	                dummy_mixed_qkv,
+  1169	                q,
+  1170	                k,
+  1171	                v,
+  1172	                dummy_a,
+  1173	                dummy_b,
+  1174	                g,
+  1175	                beta,
+  1176	                state,
+  1177	                cu_seqlens,
+  1178	                chunk_indices,
+  1179	                chunk_offsets,
+  1180	            )
+  1181	
+  1182	        torch.accelerator.empty_cache()
+  1183	
+  1184	    def _forward_core_rocm(
+  1185	        self,
+  1186	        qkvz: torch.Tensor,
+  1187	        ba: torch.Tensor,
+  1188	        z_out: torch.Tensor,
+  1189	        core_attn_out: torch.Tensor,
+  1190	    ):
+  1191	        """ROCm AITER fast path: conv1d + recurrent attention from packed
+  1192	        qkvz/ba layout.
+  1193	
+  1194	        For decode-only (no spec, no prefill) batches, dispatches directly to
+  1195	        ``_forward_core_decode_aiter``. Otherwise unpacks the packed layout and
+  1196	        falls through to ``_forward_core``.
+  1197	
+  1198	        Args:
+  1199	            qkvz: packed [q, k, v, z] projection (num_tokens, qkvz_dim)
+  1200	            ba:   packed [b, a] gating vectors    (num_tokens, 2*num_heads)
+  1201	            z_out: **output** buffer for z        (num_tokens, num_heads,
+  1202	                   head_dim); mutated in-place.
+  1203	            core_attn_out: Pre-allocated output buffer for attention results.
+  1204	
+  1205	        """
+  1206	        forward_context = get_forward_context()
+  1207	        attn_metadata_raw = forward_context.attn_metadata
+  1208	
+  1209	        attn_metadata = None
+  1210	        if isinstance(attn_metadata_raw, dict):
+  1211	            attn_metadata = attn_metadata_raw.get(self.prefix)
+  1212	        if attn_metadata is None:
+  1213	            v_dim = core_attn_out.shape[-1] * core_attn_out.shape[-2]
+  1214	            self._warmup_prefill_kernels(qkvz, v_dim)
+  1215	            return
+  1216	
+  1217	        assert isinstance(attn_metadata, GDNAttentionMetadata)
+  1218	
+  1219	        if (
+  1220	            attn_metadata.spec_sequence_masks is None
+  1221	            and attn_metadata.num_prefills == 0
+  1222	            and attn_metadata.num_decodes > 0
+  1223	        ):
+  1224	            return self._forward_core_decode_aiter(
+  1225	                qkvz=qkvz,
+  1226	                ba=ba,
+  1227	                z_out=z_out,
+  1228	                core_attn_out=core_attn_out,
+  1229	                attn_metadata=attn_metadata,
+  1230	            )
+  1231	
+  1232	        core_attn_out.zero_()
+  1233	        num_tokens_all = qkvz.shape[0]
+  1234	        mixed_qkv, z, b, a = self.prepare_gdn_attention_core_inputs(
+  1235	            qkvz, ba, num_tokens_all
+  1236	        )
+  1237	        z_out[:] = z
+  1238	        self._forward_core(
+  1239	            mixed_qkv=mixed_qkv,
+  1240	            b=b,
+  1241	            a=a,
+  1242	            core_attn_out=core_attn_out,
+  1243	        )
+  1244	
+  1245	    def _forward_core(
+  1246	        self,
+  1247	        mixed_qkv: torch.Tensor,
+  1248	        b: torch.Tensor,
+  1249	        a: torch.Tensor,
+  1250	        core_attn_out: torch.Tensor,
+  1251	    ):
+  1252	        """Core conv1d + recurrent attention (standard path).
+  1253	
+  1254	        Args:
+  1255	            mixed_qkv: packed [q, k, v] projection (num_tokens, qkv_dim)
+  1256	            b: beta gating vector                   (num_tokens, num_heads)
+  1257	            a: alpha gating vector                  (num_tokens, num_heads)
+  1258	            core_attn_out: Pre-allocated output buffer for attention results.
+  1259	
+  1260	        """
+  1261	        forward_context = get_forward_context()
+  1262	        attn_metadata_raw = forward_context.attn_metadata
+  1263	
+  1264	        attn_metadata = None
+  1265	        if isinstance(attn_metadata_raw, dict):
+  1266	            attn_metadata = attn_metadata_raw.get(self.prefix)
+  1267	        if attn_metadata is None:
+  1268	            self._warmup_prefill_kernels(mixed_qkv, 0)
+  1269	            return
+  1270	
+  1271	        assert isinstance(attn_metadata, GDNAttentionMetadata)
+  1272	
+  1273	        if (
+  1274	            self.enable_packed_recurrent_decode
+  1275	            and attn_metadata.spec_sequence_masks is None
+  1276	            and attn_metadata.num_prefills == 0
+  1277	            and attn_metadata.num_decodes > 0
+  1278	        ):
+  1279	            return self._forward_core_decode_non_spec(
+  1280	                mixed_qkv=mixed_qkv,
+  1281	                b=b,
+  1282	                a=a,
+  1283	                core_attn_out=core_attn_out,
+  1284	                attn_metadata=attn_metadata,
+  1285	            )
+  1286	
+  1287	        has_initial_state = attn_metadata.has_initial_state
+  1288	        spec_query_start_loc = attn_metadata.spec_query_start_loc
+  1289	        non_spec_query_start_loc = attn_metadata.non_spec_query_start_loc
+  1290	        spec_sequence_masks = attn_metadata.spec_sequence_masks
+  1291	        spec_token_indx = attn_metadata.spec_token_indx
+  1292	        non_spec_token_indx = attn_metadata.non_spec_token_indx
+  1293	        spec_state_indices_tensor = attn_metadata.spec_state_indices_tensor  # noqa: E501
+  1294	        non_spec_state_indices_tensor = attn_metadata.non_spec_state_indices_tensor  # noqa: E501
+  1295	        self_kv_cache = self.kv_cache
+  1296	        # conv_state must be (..., dim, width-1) for the conv kernels.
+  1297	        # DS layout stores it that way directly; SD layout needs a transpose.
+  1298	        conv_state = (
+  1299	            self_kv_cache[0]
+  1300	            if is_conv_state_dim_first()
+  1301	            else self_kv_cache[0].transpose(-1, -2)
+  1302	        )
+  1303	        ssm_state = self_kv_cache[1]
+  1304	        num_actual_tokens = attn_metadata.num_actual_tokens
+  1305	        num_accepted_tokens = attn_metadata.num_accepted_tokens
+  1306	
+  1307	        mixed_qkv = mixed_qkv[:num_actual_tokens]
+  1308	        b = b[:num_actual_tokens]
+  1309	        a = a[:num_actual_tokens]
+  1310	
+  1311	        # 1. Convolution sequence transformation
+  1312	        conv_weights = self.conv1d.weight.view(
+  1313	            self.conv1d.weight.size(0), self.conv1d.weight.size(2)
+  1314	        )
+  1315	
+  1316	        if spec_sequence_masks is not None:
+  1317	            if attn_metadata.num_prefills == 0 and attn_metadata.num_decodes == 0:
+  1318	                mixed_qkv_spec = mixed_qkv
+  1319	                a_spec = a
+  1320	                b_spec = b
+  1321	                mixed_qkv_non_spec = None
+  1322	            else:
+  1323	                mixed_qkv_spec = mixed_qkv.index_select(0, spec_token_indx)
+  1324	                a_spec = a.index_select(0, spec_token_indx)
+  1325	                b_spec = b.index_select(0, spec_token_indx)
+  1326	                mixed_qkv_non_spec = mixed_qkv.index_select(0, non_spec_token_indx)
+  1327	        else:
+  1328	            mixed_qkv_spec = None
+  1329	            mixed_qkv_non_spec = mixed_qkv
+  1330	
+  1331	        # 1.1: Process the multi-query part
+  1332	        if spec_sequence_masks is not None:
+  1333	            # spec_state_indices_tensor is always set when spec_sequence_masks is set
+  1334	            assert spec_state_indices_tensor is not None
+  1335	            mixed_qkv_spec = causal_conv1d_update(
+  1336	                mixed_qkv_spec,
+  1337	                conv_state,
+  1338	                conv_weights,
+  1339	                self.conv1d.bias,
+  1340	                self.activation,
+  1341	                conv_state_indices=spec_state_indices_tensor[:, 0][  # type: ignore[index]
+  1342	                    : attn_metadata.num_spec_decodes  # type: ignore[attr-defined]
+  1343	                ],
+  1344	                num_accepted_tokens=num_accepted_tokens,
+  1345	                query_start_loc=spec_query_start_loc,
+  1346	                max_query_len=spec_state_indices_tensor.size(-1),
+  1347	                validate_data=False,
+  1348	            )
+  1349	
+  1350	        # 1.2: Process the remaining part
+  1351	        if attn_metadata.num_prefills > 0:
+  1352	            assert mixed_qkv_non_spec is not None
+  1353	            mixed_qkv_non_spec_T = mixed_qkv_non_spec.transpose(0, 1)
+  1354	            # - "cache_indices" updates the conv_state cache in positions
+  1355	            #   pointed to by "state_indices_tensor"
+  1356	            mixed_qkv_non_spec = causal_conv1d_fn(
+  1357	                mixed_qkv_non_spec_T,
+  1358	                conv_weights,
+  1359	                self.conv1d.bias,
+  1360	                activation=self.activation,
+  1361	                conv_states=conv_state,
+  1362	                has_initial_state=has_initial_state,
+  1363	                cache_indices=non_spec_state_indices_tensor,
+  1364	                query_start_loc=non_spec_query_start_loc,
+  1365	                metadata=attn_metadata,
+  1366	            ).transpose(0, 1)
+  1367	        elif attn_metadata.num_decodes > 0:
+  1368	            assert mixed_qkv_non_spec is not None
+  1369	            mixed_qkv_non_spec = causal_conv1d_update(
+  1370	                mixed_qkv_non_spec,
+  1371	                conv_state,
+  1372	                conv_weights,
+  1373	                self.conv1d.bias,
+  1374	                self.activation,
+  1375	                conv_state_indices=non_spec_state_indices_tensor[  # type: ignore[index]
+  1376	                    : attn_metadata.num_actual_tokens  # type: ignore[attr-defined]
+  1377	                ],
+  1378	                validate_data=True,
+  1379	            )
+  1380	        else:
+  1381	            mixed_qkv_non_spec = None
+  1382	
+  1383	        query_spec, key_spec, value_spec = self.rearrange_mixed_qkv(mixed_qkv_spec)
+  1384	
+  1385	        # Split mixed non-spec-decode+prefill to process independently
+  1386	        split_non_spec = (
+  1387	            spec_sequence_masks is None
+  1388	            and attn_metadata.num_prefills > 0
+  1389	            and attn_metadata.num_decodes > 0
+  1390	        )
+  1391	        num_decode_tokens = attn_metadata.num_decode_tokens
+  1392	
+  1393	        if attn_metadata.num_prefills > 0:
+  1394	            assert mixed_qkv_non_spec is not None, (
+  1395	                "mixed_qkv_non_spec must be provided for prefill path"
+  1396	            )
+  1397	            if spec_sequence_masks is not None:
+  1398	                a_non_spec = a.index_select(0, non_spec_token_indx)
+  1399	                b_non_spec = b.index_select(0, non_spec_token_indx)
+  1400	            else:
+  1401	                a_non_spec = a
+  1402	                b_non_spec = b
+  1403	
+  1404	            if split_non_spec:
+  1405	                conv_output_prefill = mixed_qkv_non_spec[num_decode_tokens:]
+  1406	                a_prefill = a_non_spec[num_decode_tokens:]
+  1407	                b_prefill = b_non_spec[num_decode_tokens:]
+  1408	            else:
+  1409	                conv_output_prefill = mixed_qkv_non_spec
+  1410	                a_prefill = a_non_spec
+  1411	                b_prefill = b_non_spec
+  1412	
+  1413	            (
+  1414	                query_non_spec,
+  1415	                key_non_spec,
+  1416	                value_non_spec,
+  1417	                g_non_spec,
+  1418	                beta_non_spec,
+  1419	            ) = fused_post_conv_prep(
+  1420	                conv_output=conv_output_prefill,
+  1421	                a=a_prefill,
+  1422	                b=b_prefill,
+  1423	                A_log=self.A_log,
+  1424	                dt_bias=self.dt_bias,
+  1425	                num_k_heads=self.num_k_heads // self.tp_size,
+  1426	                head_k_dim=self.head_k_dim,
+  1427	                head_v_dim=self.head_v_dim,
+  1428	                apply_l2norm=True,
+  1429	                output_g_exp=False,
+  1430	            )
+  1431	            query_non_spec = query_non_spec.unsqueeze(0)
+  1432	            key_non_spec = key_non_spec.unsqueeze(0)
+  1433	            value_non_spec = value_non_spec.unsqueeze(0)
+  1434	            g_non_spec = g_non_spec.unsqueeze(0)
+  1435	            beta_non_spec = beta_non_spec.unsqueeze(0)
+  1436	        else:
+  1437	            query_non_spec, key_non_spec, value_non_spec = self.rearrange_mixed_qkv(
+  1438	                mixed_qkv_non_spec
+  1439	            )
+  1440	            g_non_spec = None
+  1441	            beta_non_spec = None
+  1442	
+  1443	        # 2. Recurrent attention
+  1444	
+  1445	        # 2.1: Process the multi-query part
+  1446	        if spec_sequence_masks is not None:
+  1447	            core_attn_out_spec, last_recurrent_state = (
+  1448	                fused_sigmoid_gating_delta_rule_update(
+  1449	                    A_log=self.A_log,
+  1450	                    a=a_spec,
+  1451	                    b=b_spec,
+  1452	                    dt_bias=self.dt_bias,
+  1453	                    q=query_spec,
+  1454	                    k=key_spec,
+  1455	                    v=value_spec,
+  1456	                    initial_state=ssm_state,
+  1457	                    inplace_final_state=True,
+  1458	                    cu_seqlens=spec_query_start_loc[  # type: ignore[index]
+  1459	                        : attn_metadata.num_spec_decodes
+  1460	                        + 1  # type: ignore[attr-defined]
+  1461	                    ],
+  1462	                    ssm_state_indices=spec_state_indices_tensor,
+  1463	                    num_accepted_tokens=num_accepted_tokens,
+  1464	                    use_qk_l2norm_in_kernel=True,
+  1465	                )
+  1466	            )
+  1467	        else:
+  1468	            core_attn_out_spec, last_recurrent_state = None, None
+  1469	
+  1470	        # 2.2: Process non-spec-decode part
+  1471	        if split_non_spec:
+  1472	            query_decode, key_decode, value_decode = self.rearrange_mixed_qkv(
+  1473	                mixed_qkv_non_spec[:num_decode_tokens]  # type: ignore[index]
+  1474	            )
+  1475	            core_attn_out_decode, _ = fused_sigmoid_gating_delta_rule_update(
+  1476	                A_log=self.A_log,
+  1477	                a=a[:num_decode_tokens],
+  1478	                b=b[:num_decode_tokens],
+  1479	                dt_bias=self.dt_bias,
+  1480	                q=query_decode,
+  1481	                k=key_decode,
+  1482	                v=value_decode,
+  1483	                initial_state=ssm_state,
+  1484	                inplace_final_state=True,
+  1485	                cu_seqlens=non_spec_query_start_loc[  # type: ignore[index]
+  1486	                    : attn_metadata.num_decodes + 1
+  1487	                ],
+  1488	                ssm_state_indices=non_spec_state_indices_tensor,
+  1489	                use_qk_l2norm_in_kernel=True,
+  1490	            )
+  1491	        else:
+  1492	            core_attn_out_decode = None
+  1493	
+  1494	        # 2.3: Process the remaining part (prefill chunk, or non-spec decode-only)
+  1495	        if attn_metadata.num_prefills > 0:
+  1496	            # State indices, initial-state mask and cu_seqlens for the chunk
+  1497	            # kernel are precomputed by the metadata builder (the prefill tail
+  1498	            # when decodes are peeled off, else the full non-spec batch), so they
+  1499	            # don't need to be re-derived per layer.
+  1500	            prefill_state_indices = attn_metadata.prefill_state_indices
+  1501	            prefill_has_initial_state = attn_metadata.prefill_has_initial_state
+  1502	            assert prefill_state_indices is not None
+  1503	            assert prefill_has_initial_state is not None
+  1504	            initial_state = ssm_state[prefill_state_indices]
+  1505	            initial_state[~prefill_has_initial_state, ...] = 0
+  1506	            (
+  1507	                core_attn_out_non_spec,
+  1508	                last_recurrent_state,
+  1509	            ) = self.chunk_gated_delta_rule(
+  1510	                q=query_non_spec,
+  1511	                k=key_non_spec,
+  1512	                v=value_non_spec,
+  1513	                g=g_non_spec,
+  1514	                beta=beta_non_spec,
+  1515	                initial_state=initial_state,
+  1516	                output_final_state=True,
+  1517	                cu_seqlens=attn_metadata.prefill_query_start_loc,
+  1518	                chunk_indices=attn_metadata.chunk_indices,
+  1519	                chunk_offsets=attn_metadata.chunk_offsets,
+  1520	                use_qk_l2norm_in_kernel=False,
+  1521	            )
+  1522	            # Init cache
+  1523	            ssm_state[prefill_state_indices] = last_recurrent_state.to(ssm_state.dtype)
+  1524	
+  1525	            if split_non_spec:
+  1526	                # Stitch the peeled decode outputs in front of the prefill
+  1527	                # outputs (decode-first order).
+  1528	                core_attn_out_non_spec = torch.cat(
+  1529	                    [core_attn_out_decode, core_attn_out_non_spec], dim=1
+  1530	                )
+  1531	        elif attn_metadata.num_decodes > 0:
+  1532	            core_attn_out_non_spec, last_recurrent_state = (
+  1533	                fused_sigmoid_gating_delta_rule_update(
+  1534	                    A_log=self.A_log,
+  1535	                    a=a,
+  1536	                    b=b,
+  1537	                    dt_bias=self.dt_bias,
+  1538	                    q=query_non_spec,
+  1539	                    k=key_non_spec,
+  1540	                    v=value_non_spec,
+  1541	                    initial_state=ssm_state,
+  1542	                    inplace_final_state=True,
+  1543	                    cu_seqlens=non_spec_query_start_loc[  # type: ignore[index]
+  1544	                        : attn_metadata.num_decodes
+  1545	                        + 1  # type: ignore[attr-defined]
+  1546	                    ],
+  1547	                    ssm_state_indices=non_spec_state_indices_tensor,
+  1548	                    use_qk_l2norm_in_kernel=True,
+  1549	                )
+  1550	            )
+  1551	        else:
+  1552	            core_attn_out_non_spec, last_recurrent_state = None, None
+  1553	
+  1554	        # 3. Merge core attention output
+  1555	        if spec_sequence_masks is not None and core_attn_out_non_spec is not None:
+  1556	            core_attn_out.index_copy_(0, spec_token_indx, core_attn_out_spec.squeeze(0))
+  1557	            core_attn_out.index_copy_(
+  1558	                0, non_spec_token_indx, core_attn_out_non_spec.squeeze(0)
+  1559	            )
+  1560	        elif spec_sequence_masks is not None:
+  1561	            core_attn_out[:num_actual_tokens] = core_attn_out_spec.squeeze(0)
+  1562	        else:
+  1563	            core_attn_out[:num_actual_tokens] = core_attn_out_non_spec.squeeze(0)
+  1564	
+  1565	    def _forward_core_decode_aiter(
+  1566	        self,
+  1567	        qkvz: torch.Tensor,
+  1568	        ba: torch.Tensor,
+  1569	        z_out: torch.Tensor,
+  1570	        core_attn_out: torch.Tensor,
+  1571	        attn_metadata: GDNAttentionMetadata,
+  1572	    ):
+  1573	        non_spec_query_start_loc = attn_metadata.non_spec_query_start_loc
+  1574	        non_spec_state_indices_tensor = attn_metadata.non_spec_state_indices_tensor  # noqa: E501
+  1575	        self_kv_cache = self.kv_cache
+  1576	        # conv_state must be (..., dim, width-1) for the conv kernels.
+  1577	        # DS layout stores it that way directly; SD layout needs a transpose.
+  1578	        conv_state = (
+  1579	            self_kv_cache[0]
+  1580	            if is_conv_state_dim_first()
+  1581	            else self_kv_cache[0].transpose(-1, -2)
+  1582	        )
+  1583	        ssm_state = self_kv_cache[1]
+  1584	
+  1585	        # 1. Convolution sequence transformation
+  1586	        conv_weights = self.conv1d.weight.view(
+  1587	            self.conv1d.weight.size(0), self.conv1d.weight.size(2)
+  1588	        )
+  1589	
+  1590	        mixed_qkv_non_spec, b, a = (
+  1591	            gdn_aiter_fused_reshape_causal_conv1d_update_single_token(
+  1592	                qkvz,
+  1593	                attn_metadata.num_actual_tokens,
+  1594	                self.num_k_heads // self.tp_size,
+  1595	                self.num_v_heads // self.tp_size,
+  1596	                self.head_k_dim,
+  1597	                self.head_v_dim,
+  1598	                ba,
+  1599	                z_out,
+  1600	                core_attn_out,
+  1601	                conv_state,
+  1602	                conv_weights,
+  1603	                self.conv1d.bias,
+  1604	                self.activation,
+  1605	                conv_state_indices=non_spec_state_indices_tensor[  # type: ignore[index]
+  1606	                    : attn_metadata.num_actual_tokens
+  1607	                ],
+  1608	                validate_data=True,
+  1609	                qkvz_layout=self.qkvz_layout,
+  1610	            )
+  1611	        )
+  1612	
+  1613	        # 2. Recurrent attention
+  1614	        gdn_aiter_fused_rearrange_sigmoid_gated_delta_rule(
+  1615	            A_log=self.A_log,
+  1616	            a=a,
+  1617	            b=b,
+  1618	            dt_bias=self.dt_bias,
+  1619	            qkv=mixed_qkv_non_spec,
+  1620	            key_dim=self.key_dim // self.tp_size,
+  1621	            value_dim=self.value_dim // self.tp_size,
+  1622	            head_k_dim=self.head_k_dim,
+  1623	            head_v_dim=self.head_v_dim,
+  1624	            initial_state=ssm_state,
+  1625	            inplace_final_state=True,
+  1626	            cu_seqlens=non_spec_query_start_loc[: attn_metadata.num_decodes + 1],  # type: ignore[index]
+  1627	            ssm_state_indices=non_spec_state_indices_tensor,
+  1628	            use_qk_l2norm_in_kernel=True,
+  1629	            core_attn_out=core_attn_out.reshape(-1),
+  1630	        )
+  1631	
+  1632	    def _forward_core_decode_non_spec(
+  1633	        self,
+  1634	        mixed_qkv: torch.Tensor,
+  1635	        b: torch.Tensor,
+  1636	        a: torch.Tensor,
+  1637	        core_attn_out: torch.Tensor,
+  1638	        attn_metadata: GDNAttentionMetadata,
+  1639	    ):
+  1640	        """Core attention computation with a packed non-spec decode fast path."""
+  1641	        non_spec_state_indices_tensor = attn_metadata.non_spec_state_indices_tensor  # noqa: E501
+  1642	        self_kv_cache = self.kv_cache
+  1643	        # conv_state must be (..., dim, width-1) for the conv kernels.
+  1644	        # DS layout stores it that way directly; SD layout needs a transpose.
+  1645	        conv_state = (
+  1646	            self_kv_cache[0]
+  1647	            if is_conv_state_dim_first()
+  1648	            else self_kv_cache[0].transpose(-1, -2)
+  1649	        )
+  1650	        ssm_state = self_kv_cache[1]
+  1651	        num_actual_tokens = attn_metadata.num_actual_tokens
+  1652	
+  1653	        mixed_qkv = mixed_qkv[:num_actual_tokens]
+  1654	        b = b[:num_actual_tokens]
+  1655	        a = a[:num_actual_tokens]
+  1656	
+  1657	        conv_weights = self.conv1d.weight.view(
+  1658	            self.conv1d.weight.size(0), self.conv1d.weight.size(2)
+  1659	        )
+  1660	        mixed_qkv_non_spec = causal_conv1d_update(
+  1661	            mixed_qkv,
+  1662	            conv_state,
+  1663	            conv_weights,
+  1664	            self.conv1d.bias,
+  1665	            self.activation,
+  1666	            conv_state_indices=non_spec_state_indices_tensor[:num_actual_tokens],  # type: ignore[index]
+  1667	            validate_data=False,
+  1668	        )
+  1669	        out_buf = core_attn_out[:num_actual_tokens].unsqueeze(1)
+  1670	        fused_recurrent_gated_delta_rule_packed_decode(
+  1671	            mixed_qkv=mixed_qkv_non_spec,
+  1672	            a=a,
+  1673	            b=b,
+  1674	            A_log=self.A_log,
+  1675	            dt_bias=self.dt_bias,
+  1676	            scale=self.head_k_dim**-0.5,
+  1677	            initial_state=ssm_state,
+  1678	            out=out_buf,
+  1679	            ssm_state_indices=non_spec_state_indices_tensor[:num_actual_tokens],  # type: ignore[index]
+  1680	            use_qk_l2norm_in_kernel=True,
+  1681	        )
+  1682	        return
+  1683	
+  1684	    def _forward_core_decode_spec_fused_norm(
+  1685	        self,
+  1686	        mixed_qkv: torch.Tensor,
+  1687	        b: torch.Tensor,
+  1688	        a: torch.Tensor,
+  1689	        output_gate: torch.Tensor,
+  1690	        core_attn_out: torch.Tensor,
+  1691	        attn_metadata: GDNAttentionMetadata,
+  1692	    ) -> None:
+  1693	        state_indices = attn_metadata.spec_state_indices_tensor
+  1694	        cu_seqlens = attn_metadata.spec_query_start_loc
+  1695	        num_accepted_tokens = attn_metadata.num_accepted_tokens
+  1696	        assert state_indices is not None
+  1697	        assert cu_seqlens is not None
+  1698	        assert num_accepted_tokens is not None
+  1699	
+  1700	        num_requests = attn_metadata.num_spec_decodes
+  1701	        num_actual_tokens = attn_metadata.num_actual_tokens
+  1702	        conv_state = (
+  1703	            self.kv_cache[0]
+  1704	            if is_conv_state_dim_first()
+  1705	            else self.kv_cache[0].transpose(-1, -2)
+  1706	        )
+  1707	        conv_weights = self.conv1d.weight.view(
+  1708	            self.conv1d.weight.size(0), self.conv1d.weight.size(2)
+  1709	        )
+  1710	        mixed_qkv = causal_conv1d_update(
+  1711	            mixed_qkv[:num_actual_tokens],
+  1712	            conv_state,
+  1713	            conv_weights,
+  1714	            self.conv1d.bias,
+  1715	            self.activation,
+  1716	            conv_state_indices=state_indices[:num_requests, 0],
+  1717	            num_accepted_tokens=num_accepted_tokens[:num_requests],
+  1718	            query_start_loc=cu_seqlens[: num_requests + 1],
+  1719	            max_query_len=state_indices.size(1),
+  1720	            validate_data=False,
+  1721	        )
+  1722	        self._forward_core_decode_spec_post_conv_fused_norm(
+  1723	            mixed_qkv=mixed_qkv,
+  1724	            b=b[:num_actual_tokens],
+  1725	            a=a[:num_actual_tokens],
+  1726	            output_gate=output_gate[:num_actual_tokens],
+  1727	            core_attn_out=core_attn_out[:num_actual_tokens],
+  1728	            attn_metadata=attn_metadata,
+  1729	        )
+  1730	
+  1731	    def _forward_core_decode_spec_post_conv_fused_norm(
+  1732	        self,
+  1733	        mixed_qkv: torch.Tensor,
+  1734	        b: torch.Tensor,
+  1735	        a: torch.Tensor,
+  1736	        output_gate: torch.Tensor,
+  1737	        core_attn_out: torch.Tensor,
+  1738	        attn_metadata: GDNAttentionMetadata,
+  1739	    ) -> None:
+  1740	        state_indices = attn_metadata.spec_state_indices_tensor
+  1741	        cu_seqlens = attn_metadata.spec_query_start_loc
+  1742	        num_accepted_tokens = attn_metadata.num_accepted_tokens
+  1743	        assert state_indices is not None
+  1744	        assert cu_seqlens is not None
+  1745	        assert num_accepted_tokens is not None
+  1746	
+  1747	        num_requests = attn_metadata.num_spec_decodes
+  1748	        ops.fused_gdn_decode_post_conv_mtp(
+  1749	            mixed_qkv=mixed_qkv,
+  1750	            a=a,
+  1751	            b=b,
+  1752	            A_log=self.A_log,
+  1753	            dt_bias=self.dt_bias,
+  1754	            state_indices=state_indices[:num_requests],
+  1755	            cu_seqlens=cu_seqlens[: num_requests + 1],
+  1756	            num_accepted_tokens=num_accepted_tokens[:num_requests],
+  1757	            state=self.kv_cache[1],
+  1758	            output_gate=output_gate,
+  1759	            norm_weight=self.norm.weight,
+  1760	            out=core_attn_out,
+  1761	            scale=self.head_k_dim**-0.5,
+  1762	            norm_eps=self.layer_norm_epsilon,
+  1763	            output_gate_activation=self.norm.activation,
+  1764	        )
+  1765	
+  1766	    def _forward_core_fused_norm_packed(
+  1767	        self,
+  1768	        mixed_qkvz: torch.Tensor,
+  1769	        ba: torch.Tensor,
+  1770	        core_attn_out: torch.Tensor,
+  1771	    ) -> None:
+  1772	        forward_context = get_forward_context()
+  1773	        attn_metadata_raw = forward_context.attn_metadata
+  1774	        qkv_size = (self.key_dim * 2 + self.value_dim) // self.tp_size
+  1775	        attn_metadata = None
+  1776	        if isinstance(attn_metadata_raw, dict):
+  1777	            attn_metadata = attn_metadata_raw.get(self.prefix)
+  1778	        if attn_metadata is None:
+  1779	            self._warmup_prefill_kernels(mixed_qkvz[:, :qkv_size], 0)
+  1780	            return
+  1781	
+  1782	        assert isinstance(attn_metadata, GDNAttentionMetadata)
+  1783	        mixed_qkv, output_gate_flat = mixed_qkvz.split(
+  1784	            [qkv_size, self.value_dim // self.tp_size], dim=-1
+  1785	        )
+  1786	        output_gate = output_gate_flat.reshape(
+  1787	            output_gate_flat.size(0), -1, self.head_v_dim
+  1788	        )
+  1789	        b, a = self.split_ba(ba)
+  1790	        self._forward_core_fused_norm(
+  1791	            mixed_qkv=mixed_qkv,
+  1792	            b=b,
+  1793	            a=a,
+  1794	            output_gate=output_gate,
+  1795	            core_attn_out=core_attn_out,
+  1796	        )
+  1797	
+  1798	    def _can_use_fused_gdn_mtp_decode(
+  1799	        self, attn_metadata: GDNAttentionMetadata
+  1800	    ) -> bool:
+  1801	        state_indices = attn_metadata.spec_state_indices_tensor
+  1802	        return (
+  1803	            attn_metadata.spec_sequence_masks is not None
+  1804	            and attn_metadata.num_decodes == 0
+  1805	            and attn_metadata.num_spec_decodes > 0
+  1806	            and self.kv_cache[1].dtype in FUSED_GDN_STATE_DTYPES
+  1807	            and self.gdn_decode_kernel == "cuda"
+  1808	            and self.num_v_heads % self.num_k_heads == 0
+  1809	            and self.num_v_heads // self.num_k_heads in (1, 2, 3, 4, 8)
+  1810	            and state_indices is not None
+  1811	            and state_indices.size(1) <= MAX_FUSED_GDN_MTP_TOKENS
+  1812	            and hasattr(torch.ops._C, "fused_gdn_decode_post_conv_mtp")
+  1813	        )
+  1814	
+  1815	    def _rms_norm_gated_cuda(
+  1816	        self,
+  1817	        x: torch.Tensor,
+  1818	        output_gate: torch.Tensor,
+  1819	        out: torch.Tensor,
+  1820	    ) -> None:
+  1821	        from vllm.third_party.flash_linear_attention.ops.layernorm_guard import (
+  1822	            layer_norm_fwd,
+  1823	        )
+  1824	
+  1825	        x_shape = x.shape
+  1826	        assert output_gate.shape == x_shape
+  1827	        assert out.shape == x_shape
+  1828	        x_2d = x.reshape(-1, x_shape[-1])
+  1829	        output_gate_2d = output_gate.reshape(-1, x_shape[-1])
+  1830	        out_2d = out.reshape(-1, x_shape[-1])
+  1831	        assert x_2d.stride(-1) == 1
+  1832	        assert output_gate_2d.stride(-1) == 1
+  1833	        assert out_2d.stride(-1) == 1
+  1834	        layer_norm_fwd(
+  1835	            x_2d,
+  1836	            self.norm.weight.contiguous(),
+  1837	            self.norm.bias,
+  1838	            self.norm.eps,
+  1839	            z=output_gate_2d,
+  1840	            out=out_2d,
+  1841	            group_size=(
+  1842	                x_shape[-1] if self.norm.group_size is None else self.norm.group_size
+  1843	            ),
+  1844	            norm_before_gate=self.norm.norm_before_gate,
+  1845	            is_rms_norm=True,
+  1846	            activation=self.norm.activation,
+  1847	        )
+  1848	
+  1849	    def _forward_core_fused_norm(
+  1850	        self,
+  1851	        mixed_qkv: torch.Tensor,
+  1852	        b: torch.Tensor,
+  1853	        a: torch.Tensor,
+  1854	        output_gate: torch.Tensor,
+  1855	        core_attn_out: torch.Tensor,
+  1856	    ) -> None:
+  1857	        forward_context = get_forward_context()
+  1858	        attn_metadata_raw = forward_context.attn_metadata
+  1859	        attn_metadata = None
+  1860	        if isinstance(attn_metadata_raw, dict):
+  1861	            attn_metadata = attn_metadata_raw.get(self.prefix)
+  1862	        if attn_metadata is None:
+  1863	            self._warmup_prefill_kernels(mixed_qkv, 0)
+  1864	            return
+  1865	
+  1866	        assert isinstance(attn_metadata, GDNAttentionMetadata)
+  1867	        if (
+  1868	            self._can_use_fused_gdn_mtp_decode(attn_metadata)
+  1869	            and attn_metadata.num_prefills == 0
+  1870	        ):
+  1871	            self._forward_core_decode_spec_fused_norm(
+  1872	                mixed_qkv=mixed_qkv,
+  1873	                b=b,
+  1874	                a=a,
+  1875	                output_gate=output_gate,
+  1876	                core_attn_out=core_attn_out,
+  1877	                attn_metadata=attn_metadata,
+  1878	            )
+  1879	            return
+  1880	        self._forward_core(
+  1881	            mixed_qkv=mixed_qkv,
+  1882	            b=b.contiguous(),
+  1883	            a=a.contiguous(),
+  1884	            core_attn_out=core_attn_out,
+  1885	        )
+  1886	        num_actual_tokens = attn_metadata.num_actual_tokens
+  1887	        self._rms_norm_gated_cuda(
+  1888	            core_attn_out[:num_actual_tokens],
+  1889	            output_gate[:num_actual_tokens],
+  1890	            core_attn_out[:num_actual_tokens],
+  1891	        )
+  1892	
+  1893	
+  1894	@eager_break_during_capture
+  1895	def qwen_gdn_attention_core(
+  1896	    qkv_or_qkvz: torch.Tensor,
+  1897	    b_or_ba: torch.Tensor,
+  1898	    a_or_z_out: torch.Tensor,
+  1899	    core_attn_out: torch.Tensor,
+  1900	    layer_name: LayerNameType,
+  1901	    use_aiter: bool = False,
+  1902	) -> None:
+  1903	    """Custom op dispatching to _forward_core or _forward_core_rocm.
+  1904	
+  1905	    Handles conv1d + recurrent attention only; input/output projections
+  1906	    are performed by the caller.
+  1907	
+  1908	    When ``use_aiter=False`` (standard path):
+  1909	        qkv_or_qkvz is [q, k, v], b_or_ba is b, a_or_z_out is a (read-only).
+  1910	    When ``use_aiter=True`` (AITER Triton path, ROCm only):
+  1911	        qkv_or_qkvz is [q, k, v, z], b_or_ba is [b, a], a_or_z_out is the
+  1912	        z output buffer (mutated in-place).
+  1913	
+  1914	    ``core_attn_out`` is always mutated in-place.
+  1915	    """
+  1916	    layer_name = _resolve_layer_name(layer_name)
+  1917	    forward_context: ForwardContext = get_forward_context()
+  1918	    self = forward_context.no_compile_layers[layer_name]
+  1919	    if use_aiter:
+  1920	        self._forward_core_rocm(
+  1921	            qkvz=qkv_or_qkvz,
+  1922	            ba=b_or_ba,
+  1923	            z_out=a_or_z_out,
+  1924	            core_attn_out=core_attn_out,
+  1925	        )
+  1926	    else:
+  1927	        self._forward_core(
+  1928	            mixed_qkv=qkv_or_qkvz,
+  1929	            b=b_or_ba,
+  1930	            a=a_or_z_out,
+  1931	            core_attn_out=core_attn_out,
+  1932	        )
+  1933	
+  1934	
+  1935	direct_register_custom_op(
+  1936	    op_name="qwen_gdn_attention_core",
+  1937	    op_func=qwen_gdn_attention_core,
+  1938	    mutates_args=["a_or_z_out", "core_attn_out"],
+  1939	)
+  1940	
+  1941	
+  1942	@eager_break_during_capture
+  1943	def qwen_gdn_attention_core_fused_norm_packed(
+  1944	    mixed_qkvz: torch.Tensor,
+  1945	    ba: torch.Tensor,
+  1946	    core_attn_out: torch.Tensor,
+  1947	    layer_name: LayerNameType,
+  1948	) -> None:
+  1949	    layer_name = _resolve_layer_name(layer_name)
+  1950	    forward_context: ForwardContext = get_forward_context()
+  1951	    self = forward_context.no_compile_layers[layer_name]
+  1952	    self._forward_core_fused_norm_packed(
+  1953	        mixed_qkvz=mixed_qkvz,
+  1954	        ba=ba,
+  1955	        core_attn_out=core_attn_out,
+  1956	    )
+  1957	
+  1958	
+  1959	direct_register_custom_op(
+  1960	    op_name="qwen_gdn_attention_core_fused_norm_packed",
+  1961	    op_func=qwen_gdn_attention_core_fused_norm_packed,
+  1962	    mutates_args=["core_attn_out"],
+  1963	)
+== entrypoints/llm.py:857-879
+   857	    def get_metrics(self) -> list["Metric"]:
+   858	        """Return a snapshot of aggregated metrics from Prometheus.
+   859	
+   860	        Returns:
+   861	            A `MetricSnapshot` instance capturing the current state
+   862	            of all aggregated metrics from Prometheus.
+   863	
+   864	        Note:
+   865	            This method is only available with the V1 LLM engine.
+   866	
+   867	        """
+   868	        return self.llm_engine.get_metrics()
+   869	
+   870	    def init_weight_transfer_engine(
+   871	        self, request: WeightTransferInitRequest | dict
+   872	    ) -> None:
+   873	        """Initialize weight transfer for RL training.
+   874	
+   875	        Args:
+   876	            request: Weight transfer initialization request with backend-specific info
+   877	
+   878	        """
+   879	        init_info_dict = (
+== v1/engine/llm_engine.py:398-408
+   398	    def get_metrics(self) -> list[Metric]:
+   399	        assert self.log_stats, "Stat logging disabled"
+   400	        return get_metrics_snapshot()
+   401	
+   402	    @property
+   403	    def tokenizer(self) -> TokenizerLike | None:
+   404	        return self.renderer.tokenizer
+   405	
+   406	    def get_tokenizer(self) -> TokenizerLike:
+   407	        return self.renderer.get_tokenizer()
+   408	
+== v1/engine/llm_engine.py:306-340
+   306	    def step(self) -> list[RequestOutput | PoolingRequestOutput]:
+   307	        if self.should_execute_dummy_batch:
+   308	            self.should_execute_dummy_batch = False
+   309	            self.engine_core.execute_dummy_batch()
+   310	            return []
+   311	
+   312	        # 1) Get EngineCoreOutput from the EngineCore.
+   313	        with record_function_or_nullcontext("llm_engine step: get_output"):
+   314	            outputs = self.engine_core.get_output()
+   315	
+   316	        # 2) Process EngineCoreOutputs.
+   317	        with record_function_or_nullcontext("llm_engine step: process_outputs"):
+   318	            iteration_stats = (
+   319	                IterationStats() if self.log_stats and outputs.outputs else None
+   320	            )
+   321	            processed_outputs = self.output_processor.process_outputs(
+   322	                outputs.outputs,
+   323	                engine_core_timestamp=outputs.timestamp,
+   324	                iteration_stats=iteration_stats,
+   325	            )
+   326	            self.output_processor.update_scheduler_stats(outputs.scheduler_stats)
+   327	
+   328	        # 3) Abort any reqs that finished due to stop strings.
+   329	        with record_function_or_nullcontext("llm_engine step: abort_requests"):
+   330	            self.engine_core.abort_requests(processed_outputs.reqs_to_abort)
+   331	
+   332	        # 4) Record stats
+   333	        with record_function_or_nullcontext("llm_engine step: record_stats"):
+   334	            if self.logger_manager is not None and outputs.scheduler_stats is not None:
+   335	                # Record even when this step produced no request outputs.
+   336	                self.logger_manager.record(
+   337	                    scheduler_stats=outputs.scheduler_stats,
+   338	                    iteration_stats=iteration_stats,
+   339	                    mm_cache_stats=self.renderer.stat_mm_cache(),
+   340	                )
+== v1/metrics/loggers.py:500-530
+   500	        )
+   501	        self.perf_metrics_prom = self._perf_metrics_cls(
+   502	            vllm_config, labelnames, per_engine_labelvalues
+   503	        )
+   504	
+   505	        #
+   506	        # Scheduler state
+   507	        #
+   508	        gauge_scheduler_running = self._gauge_cls(
+   509	            name="vllm:num_requests_running",
+   510	            documentation="Number of requests in model execution batches.",
+   511	            multiprocess_mode="mostrecent",
+   512	            labelnames=labelnames,
+   513	        )
+   514	        self.gauge_scheduler_running = create_metric_per_engine(
+   515	            gauge_scheduler_running, per_engine_labelvalues
+   516	        )
+   517	
+   518	        gauge_scheduler_waiting = self._gauge_cls(
+   519	            name="vllm:num_requests_waiting",
+   520	            documentation="Number of requests waiting to be processed.",
+   521	            multiprocess_mode="mostrecent",
+   522	            labelnames=labelnames,
+   523	        )
+   524	        self.gauge_scheduler_waiting = create_metric_per_engine(
+   525	            gauge_scheduler_waiting, per_engine_labelvalues
+   526	        )
+   527	
+   528	        gauge_waiting_by_reason = self._gauge_cls(
+   529	            name="vllm:num_requests_waiting_by_reason",
+   530	            documentation=(
+== v1/metrics/loggers.py:570-590
+   570	                for idx in engine_indexes
+   571	            }
+   572	
+   573	        # Setting default values
+   574	        self.record_sleep_state()
+   575	
+   576	        gauge_kv_cache_usage = self._gauge_cls(
+   577	            name="vllm:kv_cache_usage_perc",
+   578	            documentation="KV-cache usage. 1 means 100 percent usage.",
+   579	            multiprocess_mode="mostrecent",
+   580	            labelnames=labelnames,
+   581	        )
+   582	        self.gauge_kv_cache_usage = create_metric_per_engine(
+   583	            gauge_kv_cache_usage, per_engine_labelvalues
+   584	        )
+   585	
+   586	        if envs.VLLM_COMPUTE_NANS_IN_LOGITS:
+   587	            counter_corrupted_requests = self._counter_cls(
+   588	                name="vllm:corrupted_requests",
+   589	                documentation=(
+   590	                    "Corrupted requests, in terms of total number of requests "
+== v1/metrics/loggers.py:670-690
+   670	            counter_mm_cache_hits, per_engine_labelvalues
+   671	        )
+   672	
+   673	        #
+   674	        # Counters
+   675	        #
+   676	        counter_num_preempted_reqs = self._counter_cls(
+   677	            name="vllm:num_preemptions",
+   678	            documentation="Cumulative number of preemption from the engine.",
+   679	            labelnames=labelnames,
+   680	        )
+   681	        self.counter_num_preempted_reqs = create_metric_per_engine(
+   682	            counter_num_preempted_reqs, per_engine_labelvalues
+   683	        )
+   684	
+   685	        counter_prompt_tokens = self._counter_cls(
+   686	            name="vllm:prompt_tokens",
+   687	            documentation="Number of prefill tokens processed.",
+   688	            labelnames=labelnames,
+   689	        )
+   690	        self.counter_prompt_tokens = create_metric_per_engine(
+159:        self.num_preemptions += iteration_stats.num_preempted_reqs
+508:        gauge_scheduler_running = self._gauge_cls(
+514:        self.gauge_scheduler_running = create_metric_per_engine(
+515:            gauge_scheduler_running, per_engine_labelvalues
+576:        gauge_kv_cache_usage = self._gauge_cls(
+582:        self.gauge_kv_cache_usage = create_metric_per_engine(
+583:            gauge_kv_cache_usage, per_engine_labelvalues
+676:        counter_num_preempted_reqs = self._counter_cls(
+681:        self.counter_num_preempted_reqs = create_metric_per_engine(
+682:            counter_num_preempted_reqs, per_engine_labelvalues
+1036:            self.gauge_scheduler_running[engine_idx].set(
+1050:            self.gauge_kv_cache_usage[engine_idx].set(scheduler_stats.kv_cache_usage)
+1123:        self.counter_num_preempted_reqs[engine_idx].inc(
+1124:            iteration_stats.num_preempted_reqs
+== v1/metrics/reader.py:1-80
+     1	# SPDX-License-Identifier: Apache-2.0
+     2	# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
+     3	
+     4	from dataclasses import dataclass
+     5	
+     6	from prometheus_client import REGISTRY
+     7	from prometheus_client import Metric as PromMetric
+     8	from prometheus_client.samples import Sample
+     9	
+    10	
+    11	@dataclass
+    12	class Metric:
+    13	    """A base class for prometheus metrics.
+    14	
+    15	    Each metric may be associated with key=value labels, and
+    16	    in some cases a single vLLM instance may have multiple
+    17	    metrics with the same name but different sets of labels.
+    18	    """
+    19	
+    20	    name: str
+    21	    labels: dict[str, str]
+    22	
+    23	
+    24	@dataclass
+    25	class Counter(Metric):
+    26	    """A monotonically increasing integer counter."""
+    27	
+    28	    value: int
+    29	
+    30	
+    31	@dataclass
+    32	class Vector(Metric):
+    33	    """An ordered array of integer counters.
+    34	
+    35	    This type - which doesn't exist in Prometheus - models one very
+    36	    specific metric, vllm:spec_decode_num_accepted_tokens_per_pos.
+    37	    """
+    38	
+    39	    values: list[int]
+    40	
+    41	
+    42	@dataclass
+    43	class Gauge(Metric):
+    44	    """A numerical value that can go up or down."""
+    45	
+    46	    value: float
+    47	
+    48	
+    49	@dataclass
+    50	class Histogram(Metric):
+    51	    """Observations recorded in configurable buckets.
+    52	
+    53	    Buckets are represented by a dictionary. The key is
+    54	    the upper limit of the bucket, and the value is the
+    55	    observed count in that bucket. A '+Inf' key always
+    56	    exists.
+    57	
+    58	    The count property is the total count across all
+    59	    buckets, identical to the count of the '+Inf' bucket.
+    60	
+    61	    The sum property is the total sum of all observed
+    62	    values.
+    63	    """
+    64	
+    65	    count: int
+    66	    sum: float
+    67	    buckets: dict[str, int]
+    68	
+    69	
+    70	def get_metrics_snapshot() -> list[Metric]:
+    71	    """An API for accessing in-memory Prometheus metrics.
+    72	
+    73	    Example:
+    74	        >>> for metric in llm.get_metrics():
+    75	        ...     if isinstance(metric, Counter):
+    76	        ...         print(f"{metric} = {metric.value}")
+    77	        ...     elif isinstance(metric, Gauge):
+    78	        ...         print(f"{metric} = {metric.value}")
+    79	        ...     elif isinstance(metric, Histogram):
+    80	        ...         print(f"{metric}")
+== v1/core/kv_cache_utils.py:2440-2475
+  2440	            )
+  2441	    return cfg
+  2442	
+  2443	
+  2444	def get_kv_cache_capacity(
+  2445	    vllm_config: VllmConfig, kv_cache_config: KVCacheConfig
+  2446	) -> tuple[int, float]:
+  2447	    """Get the group-aware KV cache token capacity and max concurrency."""
+  2448	    max_model_len = vllm_config.model_config.max_model_len
+  2449	    max_concurrency = get_max_concurrency_for_kv_cache_config(
+  2450	        vllm_config, kv_cache_config
+  2451	    )
+  2452	    return int(max_concurrency * max_model_len), max_concurrency
+  2453	
+  2454	
+  2455	def update_kv_cache_capacity(
+  2456	    vllm_config: VllmConfig, kv_cache_config: KVCacheConfig
+  2457	) -> None:
+  2458	    """Store and log the resolved KV cache capacity."""
+  2459	    num_tokens, max_concurrency = get_kv_cache_capacity(vllm_config, kv_cache_config)
+  2460	    vllm_config.cache_config.kv_cache_size_tokens = num_tokens
+  2461	    vllm_config.cache_config.kv_cache_max_concurrency = max_concurrency
+  2462	    max_model_len = vllm_config.model_config.max_model_len
+  2463	    device_type = vllm_config.device_config.device_type
+  2464	    logger.info_once(
+  2465	        "%s KV cache size: %s tokens, "
+  2466	        "Maximum concurrency for %s tokens per request: %.2fx",
+  2467	        "GPU" if device_type == "cuda" else device_type.upper(),
+  2468	        f"{num_tokens:,}",
+  2469	        f"{max_model_len:,}",
+  2470	        max_concurrency,
+  2471	    )
+  2472	
+  2473	
+  2474	def _max_memory_usage_bytes_from_groups(
+  2475	    vllm_config: VllmConfig,
+/usr/local/lib/python3.12/dist-packages/vllm/v1/simple_kv_offload/manager.py:290:        # so its size is the total GPU KV cache size.
+22:    split_decodes_and_prefills,
+29:    def get_name() -> str:
+33:    def get_builder_cls() -> type["GDNAttentionMetadataBuilder"]:
+37:    def is_ssm(cls) -> bool:
+45:    num_decodes: int
+46:    num_decode_tokens: int
+47:    num_spec_decodes: int
+48:    num_spec_decode_tokens: int
+53:    spec_query_start_loc: torch.Tensor | None = None  # shape: [num_spec_decodes + 1,]
+54:    non_spec_query_start_loc: torch.Tensor | None = (
+55:        None  # shape: [batch - num_spec_decodes + 1,]
+58:    spec_state_indices_tensor: torch.Tensor | None = None  # shape: [batch, num_spec]
+59:    non_spec_state_indices_tensor: torch.Tensor | None = (
+60:        None  # shape: [batch - num_spec_decodes,]
+62:    spec_sequence_masks: torch.Tensor | None = None  # shape: [batch,]
+63:    spec_sequence_masks_cpu: torch.Tensor | None = None  # shape: [batch,]
+64:    spec_token_indx: torch.Tensor | None = None
+65:    non_spec_token_indx: torch.Tensor | None = None
+68:    uniform_spec_sequence_length: int | None = None  # None for ragged batches
+85:    kv_cache_spec: MambaSpec
+90:    def __init__(
+92:        kv_cache_spec: MambaSpec,
+97:        super().__init__(kv_cache_spec, layer_names, vllm_config, device)
+99:        self.speculative_config = vllm_config.speculative_config
+107:        if self.speculative_config:
+108:            assert self.speculative_config.num_speculative_tokens is not None
+109:            self.num_spec: int = self.speculative_config.num_speculative_tokens
+111:            self.num_spec = 0
+112:        self.use_spec_decode: bool = self.num_spec > 0
+113:        self._init_reorder_batch_threshold(1, self.use_spec_decode)
+131:        self.decode_cudagraph_max_bs: int = (
+132:            self.vllm_config.scheduler_config.max_num_seqs * (self.num_spec + 1)
+135:            self.decode_cudagraph_max_bs = min(
+136:                self.decode_cudagraph_max_bs,
+140:        self.spec_state_indices_tensor: torch.Tensor = torch.empty(
+141:            (self.decode_cudagraph_max_bs, self.num_spec + 1),
+145:        self.non_spec_state_indices_tensor: torch.Tensor = torch.empty(
+146:            (self.decode_cudagraph_max_bs,),
+150:        self.spec_sequence_masks: torch.Tensor = torch.empty(
+151:            (self.decode_cudagraph_max_bs,),
+155:        self.spec_token_indx: torch.Tensor = torch.empty(
+156:            (self.decode_cudagraph_max_bs * (self.num_spec + 1),),
+160:        self.non_spec_token_indx: torch.Tensor = torch.empty(
+161:            (self.decode_cudagraph_max_bs * (self.num_spec + 1),),
+165:        self.spec_query_start_loc: torch.Tensor = torch.empty(
+166:            (self.decode_cudagraph_max_bs + 1,),
+170:        self.non_spec_query_start_loc: torch.Tensor = torch.empty(
+171:            (self.decode_cudagraph_max_bs + 1,),
+176:            (self.decode_cudagraph_max_bs,),
+181:    def _build_chunk_metadata(
+223:    def build(  # type: ignore[override]
+228:        num_decode_draft_tokens_cpu: torch.Tensor | None = None,
+243:                self.kv_cache_spec,
+247:        uniform_spec_sequence_length = None
+248:        spec_sequence_masks_cpu: torch.Tensor | None = None
+249:        if not self.use_spec_decode or num_decode_draft_tokens_cpu is None:
+250:            spec_sequence_masks = None
+251:            num_spec_decodes = 0
+253:            spec_sequence_masks_cpu = num_decode_draft_tokens_cpu >= 0
+254:            num_spec_decodes = spec_sequence_masks_cpu.sum().item()

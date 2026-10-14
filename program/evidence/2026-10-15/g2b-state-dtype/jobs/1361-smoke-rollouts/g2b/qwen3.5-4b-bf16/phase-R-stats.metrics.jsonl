@@ -1,0 +1,9 @@
+{"generation_tokens": 0.0, "kv_usage": 0.0, "preemptions": 0.0, "prompt_tokens": 0.0, "running": 0.0, "t": 0.0, "waiting": 0.0}
+{"generation_tokens": 868.0, "kv_usage": 0.007037394784048523, "preemptions": 0.0, "prompt_tokens": 1473.0, "running": 12.0, "t": 0.5003, "waiting": 0.0}
+{"generation_tokens": 2140.0, "kv_usage": 0.00745135918311024, "preemptions": 0.0, "prompt_tokens": 1473.0, "running": 12.0, "t": 1.0035, "waiting": 0.0}
+{"generation_tokens": 3412.0, "kv_usage": 0.008279287981233563, "preemptions": 0.0, "prompt_tokens": 1473.0, "running": 12.0, "t": 1.5081, "waiting": 0.0}
+{"generation_tokens": 4672.0, "kv_usage": 0.00869325238029528, "preemptions": 0.0, "prompt_tokens": 1473.0, "running": 12.0, "t": 2.0092, "waiting": 0.0}
+{"generation_tokens": 5932.0, "kv_usage": 0.00993514557748032, "preemptions": 0.0, "prompt_tokens": 1473.0, "running": 12.0, "t": 2.5131, "waiting": 0.0}
+{"generation_tokens": 7192.0, "kv_usage": 0.010349109976542037, "preemptions": 0.0, "prompt_tokens": 1473.0, "running": 12.0, "t": 3.0177, "waiting": 0.0}
+{"generation_tokens": 8440.0, "kv_usage": 0.010349109976542037, "preemptions": 0.0, "prompt_tokens": 1473.0, "running": 12.0, "t": 3.5204, "waiting": 0.0}
+{"generation_tokens": 9216.0, "kv_usage": 0.0, "preemptions": 0.0, "prompt_tokens": 1473.0, "running": 0.0, "t": 3.8364, "waiting": 0.0}

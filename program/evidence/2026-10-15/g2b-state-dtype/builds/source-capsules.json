@@ -1,0 +1,40 @@
+{
+  "4555c647": {
+    "archive": "/home/kevin/cotcodec-runs/stage0/g2b-state-dtype/capsule/source-4555c647.tar.gz",
+    "archive_format": "normalized-worktree-tar+gzip-mtime-zero",
+    "archive_sha256": "50f87660bd421e3b0ff785e1db1d17d9b2df1fff0570ee0a3203dab4aeecc788",
+    "archive_sha256_recomputed": "50f87660bd421e3b0ff785e1db1d17d9b2df1fff0570ee0a3203dab4aeecc788",
+    "data_excluded": true,
+    "file_count": 11425,
+    "file_manifest_sha256": "c977299eeaaa70336708f9ad0cbe2be61927d2bc443b82808d5734b8bc6f089b",
+    "git_sha": "4555c647cc39651d45feafc288a6072b0f72bde3",
+    "git_tree": "659a77d869b82aa76332d39e63adc551e1cf2bf9",
+    "metadata_normalized": true,
+    "mode": "discovery",
+    "omitted_symlinks_sha256": "083d40f19e2e1aa87c37fc80cf422ceb7e9b7761cf452663d8080d9fa72f5a52",
+    "receipt_sha256": "1b139e5ea1988d1e2d99ca5311aec933139355d85f6dfb2c3f002f8433d5c9c3",
+    "schema_version": 3,
+    "selected_ref": "HEAD",
+    "uv_lock_sha256": "4721104d055ec9d7488f82831c24b7e080124f27e9b850abd51c91024629b60f",
+    "worktree_clean": true
+  },
+  "ef7ee50c": {
+    "archive": "/home/kevin/cotcodec-runs/stage0/g2b-state-dtype/capsule/source-ef7ee50c.tar.gz",
+    "archive_format": "normalized-worktree-tar+gzip-mtime-zero",
+    "archive_sha256": "9b4d30a890c2f13b2e32f08b9802db0ae7418374b1dc7dccd76830f36c1a7039",
+    "archive_sha256_recomputed": "9b4d30a890c2f13b2e32f08b9802db0ae7418374b1dc7dccd76830f36c1a7039",
+    "data_excluded": true,
+    "file_count": 11423,
+    "file_manifest_sha256": "689a13edf5495ce4bd4bfb6228a06164e05d13de7ef970e3982acec662175bd0",
+    "git_sha": "ef7ee50cb8145f55e776d7695fa4ef6985d165af",
+    "git_tree": "ef461d831ea28525bea09689ad021febd1d988bd",
+    "metadata_normalized": true,
+    "mode": "discovery",
+    "omitted_symlinks_sha256": "083d40f19e2e1aa87c37fc80cf422ceb7e9b7761cf452663d8080d9fa72f5a52",
+    "receipt_sha256": "0ef68f370ea2aef5a3a950b72014f5ba2717f4255c39e86cd47ae69964bc2cda",
+    "schema_version": 3,
+    "selected_ref": "HEAD",
+    "uv_lock_sha256": "4721104d055ec9d7488f82831c24b7e080124f27e9b850abd51c91024629b60f",
+    "worktree_clean": true
+  }
+}

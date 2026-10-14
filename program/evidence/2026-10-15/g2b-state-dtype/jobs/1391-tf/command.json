@@ -1,0 +1,15 @@
+[
+  "python",
+  "scripts/run_g2b_teacher_force.py",
+  "run",
+  "--evidence",
+  "/inputs/study-artifact.json",
+  "--expected-evidence-sha256",
+  "c5bbd08f4178ea2c48b812a6f859b7b71bc59dd4fb85dc18f0f02608b4feb092",
+  "--model",
+  "qwen3.5-9b",
+  "--output-dir",
+  "/outputs/g2btf",
+  "--allocation-minutes",
+  "26"
+]
