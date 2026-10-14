@@ -544,7 +544,7 @@ def gpu_memory_used_mib() -> list[int]:
 
 def start_gpu_sampler(out: Path) -> subprocess.Popen[bytes] | None:
     query = ("timestamp,index,power.draw,clocks.sm,clocks.mem,utilization.gpu,memory.used,"
-             "temperature.gpu,clocks_throttle_reasons.active")  # fmt: skip
+             "temperature.gpu")  # fmt: skip
     try:
         handle = (out / "gpu-samples.csv").open("wb")
         return subprocess.Popen(
@@ -617,8 +617,10 @@ def run_main(args: argparse.Namespace) -> int:
         state["signal_at"] = time.time()
         child = state["child"]
         if child is not None and child.poll() is None:
+            # The worker only (not its group): it stops its pass, saves it and shuts its engine
+            # down; the group is killed after a grace period if it has not exited.
             with contextlib.suppress(ProcessLookupError):
-                os.killpg(child.pid, signal.SIGTERM)
+                os.kill(child.pid, signal.SIGTERM)
 
     signal.signal(signal.SIGUSR1, on_signal)
     signal.signal(signal.SIGTERM, on_signal)
