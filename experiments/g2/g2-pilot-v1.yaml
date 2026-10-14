@@ -1,0 +1,99 @@
+# G2 exploratory pilot (D104): train-inference log-prob mismatch of a Gated-DeltaNet hybrid
+# (Qwen3.5-4B) against a dense control (Qwen3-8B), by token position.
+#
+# EXPLORATORY. Not a registered experiment: no preregistration, no decision rule, no
+# confirmatory claim. It is the executable pilot of the G2 gauntlet wave (D104) and is capped
+# at 0.5 physical GPU-h in all, image builds included.
+#
+# Two Slurm jobs on the docker-research lane, one per image:
+#   1. scripts/run_g2_rollouts.py in the cotcodec-vllm cu129 overlay (vLLM 0.31.0): sampled
+#      rollouts with vLLM's sampled-token log-probs (decode path), then a prefill recompute of
+#      every rollout with prompt_logprobs (the R5 arm: vLLM prefill vs vLLM decode).
+#   2. scripts/run_g2_teacher_force.py in the research image (torch 2.11, transformers 5.15,
+#      flash-linear-attention 0.5.2): the same token sequences teacher-forced through the
+#      HF+FLA trainer path in bf16 (R1: FLA chunk GDN; R3: FLA fused_recurrent GDN) and an
+#      fp32 reference (R4: torch-native chunked GDN, fp32 weights and activations, TF32 off).
+# scripts/analyze_g2_pilot.py (CPU) joins them and bins the mismatch by position and entropy.
+schema_version: 1
+experiment_id: g2-pilot-v1
+claim_level: exploratory
+
+# Declared before the run. Every prompt is sampled once per seed (per-request vLLM seed); the
+# engine seed is the first one. The dense control is sampled with the first seed only (budget).
+seeds: [42, 43, 44]
+
+prompts:
+  file: experiments/g2/prompts-math500-l5-64.jsonl
+  sha256: "2492b1c0147b118e8644e2e2581211169b18875ced290a149b24f9acc4ea4dd7"
+  count: 64
+  source:
+    dataset: HuggingFaceH4/MATH-500
+    file: test.jsonl
+    revision: "6e4ed1a2a79af7d8630a6b768ec859cb5af4d3be"
+    sha256: "35dc41080a3680858b27fa7e0533d2d547825316fc5dafe5d316f4ccc5a06132"
+    bytes: 446564
+    license: MIT  # MATH (Hendrycks et al.) via openai/prm800k's MATH-500 split
+    selection: "level 5 only (134), sorted by unique_id, random.Random(42).sample(range(134), 64), re-sorted"
+  # Qwen's math prompt; rendered with each model's own chat template, thinking on.
+  user_suffix: "\nPlease reason step by step, and put your final answer within \\boxed{}."
+  enable_thinking: true
+
+models:
+  qwen3.5-4b:
+    family: gdn-attention-hybrid
+    revision: "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a"
+    receipt_root: cotcodec-receipts
+    rollout_seeds: [42, 43, 44]
+    vllm_extra:
+      limit_mm_per_prompt: {image: 0, video: 0}
+    hf_class: Qwen3_5ForConditionalGeneration
+    tf_paths: [r1_fla_chunk_bf16, r3_fla_recurrent_bf16, r4_torch_fp32]
+  qwen3-8b:
+    family: dense-transformer
+    revision: "b968826d9c46dd6066d109eabc6255188de91218"
+    receipt_root: cotcodec-receipts-cpu-lane
+    rollout_seeds: [42]
+    vllm_extra: {}
+    hf_class: Qwen3ForCausalLM
+    tf_paths: [r1_fla_chunk_bf16, r4_torch_fp32]  # dense: r1 is plain HF bf16 (no GDN layer)
+
+# Rollout sampling: RL-style pure sampling. logprobs: 0 returns the sampled token's log-prob
+# only; logprobs_mode raw_logprobs (vLLM's default) is the log-softmax of the raw fp32 logits.
+sampling:
+  temperature: 1.0
+  top_p: 1.0
+  top_k: 0
+  max_tokens: 16384
+  logprobs: 0
+
+engine:
+  dtype: bfloat16
+  max_model_len: 17408
+  gpu_memory_utilization: 0.80
+  max_num_seqs: 192
+  max_num_batched_tokens: 4096
+  enable_prefix_caching: false
+  logprobs_mode: raw_logprobs
+
+# R5: the full sequence (prompt + completion) as a prompt, max_tokens 1, prompt_logprobs 0.
+prefill_arm:
+  prompt_logprobs: 0
+
+teacher_force:
+  # R4 (fp32) runs on the first seed's rollouts only (budget); R1 and R3 run on every rollout.
+  fp32_seeds: [42]
+  lm_head_chunk: 2048
+  # Entropy is computed from each path's full-vocabulary distribution in fp32.
+
+# Slurm limits (minutes, 1 H100 each). The drivers stop starting work before the limit.
+budget:
+  total_physical_gpu_hours: 0.5
+  rollout_minutes: 14
+  teacher_force_minutes: 12
+
+analysis:
+  position_bin: 1024
+  entropy_edges: [0.0, 0.01, 0.1, 0.5, 1.0, 2.0, 1.0e9]
+  ratio_band: [0.8, 1.25]
+  bootstrap_reps: 2000
+  bootstrap_seed: 42

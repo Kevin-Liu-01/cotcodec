@@ -168,6 +168,7 @@ models:
     publication_eligible: true
     roles:
     - q1-throughput-stand-in
+    - g2-dense-control
     metadata_files:
     - LICENSE
     - README.md
@@ -188,7 +189,12 @@ models:
     blocker: >-
       Registered for its config and tokenizer only. It has Dr. Kernel-8B's layer shapes
       (decision D5), so its dummy-weight throughput stands in for the unlicensed Q1 policy.
-      No weight download is planned.
+    weights_fetch: >-
+      2026-10-14: full BF16 weights fetched under D1 by the GPU-less fetch lane as the dense
+      control of the G2 pilot (D104; experiments/g2/g2-pilot-v1.yaml) and the size-matched
+      dense control D104 names for G2 and AM1. The full-snapshot receipt is written to the
+      lane's own receipt root (cotcodec-receipts-cpu-lane), so the earlier metadata receipt
+      is not overwritten.
   qwen3.5-27b-fp8:
     backend: huggingface
     repo_id: Qwen/Qwen3.5-27B-FP8
