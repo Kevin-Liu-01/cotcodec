@@ -43,7 +43,29 @@ REPLACED = (
 ADDED = ("## What changed from v4, and why",
          "## Fixed screen coordinates in every v5 check and capture step (D94's process gap)",
          "## v5 development: step 0 and the confirmation (a pre-freeze gate)",
-         "## Disclosures (v5)")  # fmt: skip
+         "## Disclosures (v5)",
+         "## v5's review log")  # fmt: skip
+# v5's own files of record at the digests the development confirmation ran (Slurm 1278 and 1291,
+# D98; harness/ and infra/ unchanged since), and step 0's result at its pinned digest. The status
+# fill re-fills the table from the tree, so without these a change to one of them after the
+# confirmation would pass unnoticed (the round's pre-freeze audit, D98). v4's files and
+# harness/q2 are fixed by v4's frozen table.
+V5_CONFIRMED = {
+    "harness/s2_locale/ap_delta_v5.py":
+        "fee65229fa7148b1d8a436cf62bd3dd6e5545d2c1186ed91b694f96c0237ba1e",
+    "harness/s2_locale/lane_v5.py":
+        "864060628b3813cf7c4bff81b4ce8a669ba17e0c13a62965101399ef77b30b37",
+    "harness/s2_locale/canary_v5/suite_cells-ER.json":
+        "464c9ab2aecf11c5e6405afac3a3f5ef8d5fa6f33b286bfcbd960624f049f070",
+    "harness/s2_locale/canary_v5/suite_cells-AR.json":
+        "b81b63c6973fd21598965c1fd06247401c63e8c6bf979c2fc15e74ac3dfa4726",
+    "infra/slurm/host-single-node/s2v5-apdelta.sbatch":
+        "df6b936db2291864884bbb2f1a028c4cf12bf417ebd608b367ce2c2fbd918bb7",
+    "infra/slurm/host-single-node/s2v5-vm.sbatch":
+        "ccc0fcd542ce2dd33e779e9fae3b6410d5d8c1f5db1896454d12fcc42f5d6514",
+    "program/evidence/2026-10-13/s2v5-step0/step0-result.json":
+        "18d8b910175ffe084a20f6a3e6963e71e205cfd170d4fcd24d16c0633f85e5d6",
+}  # fmt: skip
 
 
 def _chunks(text: str) -> dict[str, str]:
@@ -95,7 +117,7 @@ def test_v5_is_v4_with_exactly_the_listed_sections_changed():
     v4, v5 = _chunks(V4.read_text(encoding="utf-8")), _chunks(REG.read_text(encoding="utf-8"))
     for prefix in VERBATIM:
         assert _one(v5, prefix) == _one(v4, prefix), prefix
-    assert sorted(v5) == sorted([*v4, *ADDED]), "the section list is v4's plus v5's four"
+    assert sorted(v5) == sorted([*v4, *ADDED]), "the section list is v4's plus v5's five"
     for prefix in REPLACED:
         assert _one(v5, prefix) != _one(v4, prefix), prefix
     # Kill criteria: only K1's row
@@ -218,6 +240,19 @@ def test_code_and_inputs_of_record_table_is_the_tree():
     assert {f: table[f] for f in v4} == v4
     for f in pins_table_v5.V5_FILES:
         assert f in table
+
+
+def test_v5s_own_files_are_the_files_the_confirmation_ran():
+    """After the confirmation, a re-fill of the table cannot absorb a change to v5's own files: each
+    holds the digest the confirmation ran, in the tree and in the table (D98)."""
+    assert set(V5_CONFIRMED) == set(pins_table_v5.V5_FILES)
+    table = pins_table_v5.read(REG.read_text(encoding="utf-8"))
+    for f, sha in V5_CONFIRMED.items():
+        assert hashlib.sha256((ROOT / f).read_bytes()).hexdigest() == sha, f
+        assert table[f] == sha, f
+    assert V5_CONFIRMED[V.STEP0_RESULT] == V.STEP0_RESULT_SHA256
+    for cell, sha in V.CELLS_SHA256.items():
+        assert V5_CONFIRMED[V.CELLS_FILES[cell]] == sha, cell
 
 
 def test_code_of_record_includes_the_shared_code_the_lanes_import():
