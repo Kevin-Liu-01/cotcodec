@@ -5614,3 +5614,45 @@ they say so.)
   it says and does not" section; per-token data, lane records, build and fetch receipts,
   manifests, operator log). Raw outputs stay on the host under
   `~/cotcodec-runs/stage0/g2-pilot/` with SHA-256 in the README.
+
+## 2026-10-15 — G2b exploratory: a bf16 GDN recurrent state in vLLM 0.31.0, concurrency and train-inference mismatch (branch `stage0/g2b-state-dtype`, not merged)
+
+- EXPLORATORY measurement (no preregistration, no decision rule, no confirmatory claim) that
+  follows D105's float32-state finding and the G2 pilot (D104). Config
+  `experiments/g2/g2b-state-dtype-v1.yaml`; new entry points `scripts/run_g2b_rollouts.py`
+  (vLLM overlay: long rollouts, saturation waves, paired prefill), `scripts/run_g2b_teacher_force.py`
+  (research overlay: HF+FLA unpacked, a verl-style packed varlen path, fp32 reference) and
+  `scripts/analyze_g2b_state_dtype.py` (CPU), with `harness/g2b_state_dtype.py` and
+  `tests/test_g2b_state_dtype.py` (15 pass). The G2 pilot's scripts came in by merging
+  `stage0/g2-pilot` (with its request-id and float entropy-edge fixes).
+- The setting, read from the image (CPU jobs 1354, 1355): `--mamba-ssm-cache-dtype`
+  (`MambaDType` allows auto, float32, float16, bfloat16; `config/cache.py:61`); "auto" copies the
+  checkpoint's float32. The trainer (FLA 0.5.2) accumulates the running state in fp32 and stores
+  bf16 per-chunk snapshots.
+- GPU jobs (jobs ran 2026-10-14 22:21-23:00 UTC; the directory follows the requested date):
+  builds 1357, 1358, 1379; smokes 1361, 1364, 1366 (failed after r1: a list-unpacking bug in the
+  packed check, fixed in `4555c647`) and 1382; per model and state dtype, phase R (72 long
+  reasoning rollouts, 24 MATH-500 L5 prompts x seeds 42/43/44, up to 32K tokens) and phase S
+  (one fixed-length wave per seed): 1368/1370 (4B), 1372/1374 (9B), 1376/1378 (35B-A3B on one
+  GPU); paired prefill 1385, 1389; teacher forcing 1387, 1391. **1.8386 physical GPU-h of the 3.0
+  cap.** CPU: source checks, selftests 1356, 1359, 1380, analyses 1392, 1398, 1399, a
+  reproduction check 1400.
+- Readings (exploratory, one stack, 72 rollouts per arm and model):
+  - (a) bf16 halves the state (49.1 to 25.1 MiB; 61.4 to 31.4 on the MoE) and the hybrid block
+    (528 to 272 tokens), doubling the block pool. Saturation waves: 1.33x (4B), 1.38x (9B; 114
+    preemptions per wave to 0) and 1.37x (one-GPU MoE; peak running 51 to 99). The gain shrinks
+    with length; the 4B/9B pools never filled in the long rollouts.
+  - (b) Rollout vs trainer mean |dlogp| rises from 0.0077 to 0.0357 (4B) and 0.0074 to 0.0365
+    (9B), k3 18-21x, and grows +1.3e-3 / +1.5e-3 per 1K within sequences (fp32 flat): 1.25x at
+    0-1K, about 7-8x at 28-32K, in every entropy bin. vLLM prefill in bf16 stays at 1.05x and
+    the bf16 decode is as far from the fp32 reference, so the drift is decode-time state rounding.
+  - The bf16 rollouts reason longer: 9B 35 of 72 hit the 32K cap vs 7; paired over (prompt,
+    seed) bf16 ran longer 47-10 (4B) and 56-9 (9B), sign test p 7.5e-7 and 2.0e-9; tails are not
+    loops; accuracy among ended rollouts is similar.
+  - Packed varlen teacher forcing equals unpacked (4B exactly on 942,608 tokens; 9B mean
+    1.7e-5); the fp32-state arm reproduces the pilot (0.0077, k3 2.7e-4) and stays flat to 32K.
+- Evidence: `program/evidence/2026-10-15/g2b-state-dtype/` (README with tables, figure, spread,
+  "what it says and does not", problems; seed-42 per-token subsets, rollout texts, lane records,
+  manifests, build and source-check records). Full per-token files, rollout token arrays and the
+  prefill and teacher-forcing arrays stay on the host under `~/cotcodec-runs/stage0/g2b-state-dtype/`
+  with SHA-256. Next: a float16-state arm and a forced-block control.

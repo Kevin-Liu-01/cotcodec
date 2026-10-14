@@ -1,0 +1,83 @@
+{
+  "allocation_minutes": 9.0,
+  "arm": "bf16",
+  "claim_level": "exploratory",
+  "deadline_source": "job.env started_at",
+  "deadline_utc": "2026-10-14T22:31:38Z",
+  "experiment_id": "g2b-state-dtype-v1",
+  "finished_at": "2026-10-14T22:27:49Z",
+  "job": "rollouts",
+  "model": "qwen3.5-4b",
+  "plan": {
+    "engine_kwargs": {
+      "disable_log_stats": false,
+      "dtype": "bfloat16",
+      "enable_prefix_caching": false,
+      "gpu_memory_utilization": 0.9,
+      "limit_mm_per_prompt": {
+        "image": 0,
+        "video": 0
+      },
+      "logprobs_mode": "raw_logprobs",
+      "mamba_ssm_cache_dtype": "bfloat16",
+      "max_model_len": 33536,
+      "max_num_batched_tokens": 8192,
+      "max_num_seqs": 512,
+      "model": "/model-cache/cotcodec-models/qwen3.5-4b",
+      "seed": 42,
+      "tokenizer": "/model-cache/cotcodec-models/qwen3.5-4b",
+      "trust_remote_code": false
+    },
+    "rollout_max_tokens": 768,
+    "rollout_requests": 12,
+    "saturation_requests_per_wave": {
+      "42": 64,
+      "43": 64,
+      "44": 64
+    },
+    "state_dtype": "bfloat16"
+  },
+  "signal": null,
+  "smoke": true,
+  "started_at": "2026-10-14T22:26:16Z",
+  "state_dtype": "bfloat16",
+  "tf_input_sequences": 12,
+  "tf_input_sha256": "3cc5472ce0c2761d78ff72520b68e2bca320895da75f3dc3854105f6de08a838",
+  "verification": {
+    "artifact_root_sha256": "3b8a075149bffe4dea784db5b4b37bc0896688cba0b3de7d8d0f6e8ae6157b9e",
+    "mode": "full",
+    "model_id": "qwen3.5-4b",
+    "receipt": "/model-cache/cotcodec-receipts/qwen3.5-4b.json",
+    "receipt_sha256": "75ebfc531acdcbc0c39bbf83ee7bf5267a3ddf02c4fafdf6181624612a0d3082",
+    "repo_id": "Qwen/Qwen3.5-4B",
+    "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+    "total_bytes": 9342907469,
+    "verified_by": "lane (model-verification.txt)"
+  },
+  "worker": {
+    "argv": [
+      "/usr/local/bin/python",
+      "/workspace/cotcodec/scripts/run_g2b_rollouts.py",
+      "worker",
+      "--model",
+      "qwen3.5-4b",
+      "--state-dtype",
+      "bfloat16",
+      "--output-dir",
+      "/outputs/g2b",
+      "--deadline",
+      "1792017098.000",
+      "--smoke"
+    ],
+    "exit": 0,
+    "gpu_memory_after_mib": [
+      0
+    ],
+    "started_at": "2026-10-14T22:26:19Z",
+    "wall_s": 90.0,
+    "worker_done": {
+      "exit": 0,
+      "utc": "2026-10-14T22:27:45Z"
+    }
+  }
+}

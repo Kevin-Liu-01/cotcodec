@@ -1,0 +1,8 @@
+7386bdcc1f5efd47e8710372471b80e1d294146e012258e4af3ca2e541a7bc47  ./qwen3.5-4b-bf16/phase-R-stats.npz
+c35c7494affcc420acc7f698aab5a575a60917733a46fc1a7d75bf5382166d7c  ./qwen3.5-4b-bf16/phase-S42-stats.npz
+fac84f0204f11e775e063d6c4e23d8869906761c9ae77edcfae623ad6a414432  ./qwen3.5-4b-bf16/phase-S43-stats.npz
+7707a56d5bbca09b811e78af6a247344daa6a6a95c378d0bc2c05925db0e42c3  ./qwen3.5-4b-bf16/phase-S44-stats.npz
+8a0332dcb7d6ac7b3f6747debf91798c2b440929ddb2e277dd3980de5ac9df21  ./qwen3.5-4b-bf16/texts.jsonl.gz
+1dcda2ecfcb86013f84ce3cf8649922a299b11126d9d200003c3ecf0bb864a18  ./qwen3.5-4b-bf16/tf-sequences.json
+d2516fb583e631c06b0c07fde169166fd586f00b887aa896df650e9e6be3b94f  ./qwen3.5-4b-bf16/tokens.npz
+2761ba24c13c8c4899a2ef4ccd271e370c0cd2a2bb1c407d210264c8f2622c8d  ./tf-input.json

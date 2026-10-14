@@ -1,0 +1,2 @@
+c2d77fd0a2c7828a451d7bfa876007c6a333fb8374ff2908b1ed6631ad63d34f  ./tf-qwen3.5-4b-sequences.json
+a855fb4f441a658e1a52ff21fe7d2952bbcccc838a5591509b146e9bd0c87ffb  ./tf-qwen3.5-4b.npz

@@ -1,0 +1,3 @@
+W1014 22:25:07.277000 1 torch/utils/cpp_extension.py:178] No CUDA runtime is found, using CUDA_HOME='/usr/local/cuda'
+W1014 22:25:14.719000 1 torch/utils/cpp_extension.py:178] No CUDA runtime is found, using CUDA_HOME='/usr/local/cuda'
+{"overlay_image_id": "sha256:f86cd2c181940e9db5c49930750d6bcd496e532af2fa0401024675d372592ff1", "status": "PASS"}
