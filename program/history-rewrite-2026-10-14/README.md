@@ -59,3 +59,15 @@ Registrations frozen after the rewrite record post-rewrite ids.
 `python scripts/verify_history_map.py verify program/history-rewrite-2026-10-14/commit-map.tsv --expect-changed 55`
 rebuilds each old commit object from its rewritten commit and hashes it. Every row except the
 55 must reproduce its old id exactly (874 of 874 at the time of the rewrite).
+
+## Supplement: local-only branch commits (added 2026-10-14, D100)
+
+`commit-map-local-supplement.tsv` maps the 11 commits of the local branch `stage0/s2-v5`
+(S2 v5's draft, step 0 and confirmation) that had not been pushed before the purge. They were
+rewritten in place on the Mac with the same command, and v5's evidence names some of their
+pre-purge ids, for example step 0's `31854bc6` and the confirmation's `f24557aa`. Verify the
+two maps together:
+`cat commit-map.tsv commit-map-local-supplement.tsv > combined.tsv`, then
+`python scripts/verify_history_map.py verify combined.tsv --expect-changed 55`. It reports
+940 rows: 885 old ids rebuilt exactly (all 11 supplement rows among them) and the same 55
+tree-changed commits as above.

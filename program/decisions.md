@@ -2234,3 +2234,35 @@ employer-internal inventory and an early `gate_b.py` (Kevin, 2026-10-14).**
     are untouched and remain Kevin's call.
 - Reversal: none. Restoring the old history would publish all three items
   again; the pre-rewrite history is kept privately.
+
+**D100. The commit-map supplement; S2 v5 (`s2-arabic-cua-locale-v5`) is
+signed off for the freeze.**
+- (1) The map supplement. The public map from the purge (D99) covers the 929
+  commits that were on GitHub. S2 v5's 11 branch commits were local-only, so
+  they were rewritten in place on the Mac and are not in it. v5's evidence
+  names some of their pre-purge ids (step 0's `31854bc6`, the confirmation's
+  `f24557aa`). `program/history-rewrite-2026-10-14/commit-map-local-supplement.tsv`
+  adds those 11 rows, taken from the private full map. The two maps verify
+  together: 940 rows, 885 rebuilt exactly (all 11 supplement rows among them),
+  and the same 55 tree-changed commits. Every recorded id now resolves.
+- (2) Sign-off. Under D80 (iv), D94, D96 and D98, v5 is signed off for the
+  freeze:
+  - The single change to the measurement: A6's Writer targets on ER and AR,
+    with D94's consequence for K1.
+  - The confirmation passed (D98), and the audit's blocking text is fixed.
+  - The purge ran first (D99). After it, main was merged into the branch: the
+    pins printed "unchanged", and harness/'s tree is still `896c46a8...`.
+  - A freeze rehearsal passed on a scratch clone at merge `8f6d4386`:
+    - row 22, `check-chain` PASS (22 rows), `verify` PASS;
+    - the freeze commit changes only the ledger;
+    - every targeted S2 v4 and v5 test file passes;
+    - all 49 K1 manifests render and validate, identical to v4's apart from id
+      fields and A6's cells on ER and AR;
+    - the census renders 1,322 slots, identical to v4's, under v5's id;
+    - the confirmation manifest is refused after the freeze.
+  - The status fill rewrites the draft-only passages and cites post-purge ids,
+    while the sections copied from v4 keep v4's frozen ids.
+  - After the freeze, as registered: `lane_v5 submit --dry-run` on the host
+    before the census; K1's 49 jobs; the census; the oracle and K0; then
+    Phase 1's executor addendum only if K0 and K1 pass.
+  - v5 is S2's last registration, and any failure is an honest exit.
