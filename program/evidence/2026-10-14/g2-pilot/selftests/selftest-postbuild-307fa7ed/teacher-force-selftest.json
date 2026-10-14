@@ -1,0 +1,40 @@
+
+==========
+== CUDA ==
+==========
+
+CUDA Version 12.8.1
+
+Container image Copyright (c) 2016-2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+This container image and its contents are governed by the NVIDIA Deep Learning Container License.
+By pulling and using the container, you accept the terms and conditions of this license:
+https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license
+
+A copy of this license is made available in this container at /NGC-DL-CONTAINER-LICENSE for your convenience.
+
+WARNING: The NVIDIA Driver was not detected.  GPU functionality will not be available.
+   Use the NVIDIA Container Toolkit to start this container with GPU support; see
+   https://docs.nvidia.com/datacenter/cloud-native/ .
+
+{
+  "dense_scorer_max_abs_logp_diff": 0.0,
+  "fla_import": [
+    "chunk_gated_delta_rule",
+    "fused_recurrent_gated_delta_rule",
+    "naive_chunk_gated_delta_rule",
+    "naive_recurrent_gated_delta_rule"
+  ],
+  "gdn_calls_per_forward": 3,
+  "gdn_describe": {
+    "original": "transformers.models.qwen3_5.modeling_qwen3_5.torch_chunk_gated_delta_rule",
+    "stock_resolution": "fla.ops.gated_delta_rule.chunk.chunk_gated_delta_rule",
+    "torch_chunk": "transformers.models.qwen3_5.modeling_qwen3_5.torch_chunk_gated_delta_rule"
+  },
+  "ok": true,
+  "scorer_max_abs_entropy_diff": 0.0,
+  "scorer_max_abs_logp_diff": 0.0,
+  "torch": "2.11.0+cu128",
+  "torch_chunk_vs_recurrent_max_abs": 3.5762786865234375e-07,
+  "transformers": "5.15.0"
+}

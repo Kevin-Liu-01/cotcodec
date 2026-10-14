@@ -5579,3 +5579,85 @@ they say so.)
   (`tests/test_inference_baseline.py`: 10 passed).
 - Evidence: `program/evidence/2026-10-14/inference-baseline/` (`gdn-state-dtype/`,
   `corrections/`, regenerated `analysis/`, README).
+
+## 2026-10-14 — G2 exploratory pilot: GDN-hybrid train-inference mismatch by position (branch `stage0/g2-pilot`, not merged)
+
+- EXPLORATORY executable pilot of G2 (D104), the gauntlet's pilot; no preregistration, no
+  confirmatory claim. Config `experiments/g2/g2-pilot-v1.yaml`; new entry points
+  `scripts/run_g2_rollouts.py` (cotcodec-vllm cu129 overlay, vLLM 0.31.0),
+  `scripts/run_g2_teacher_force.py` (research source overlay: torch 2.11, transformers 5.15,
+  FLA 0.5.2) and `scripts/analyze_g2_pilot.py` (CPU), with `harness/g2_pilot.py` and
+  `tests/test_g2_pilot.py`.
+- Dense control: Qwen3-8B (`b968826d`, Apache-2.0) fetched in full under D1 by the GPU-less
+  lane (job 1333, 16.4 GB, artifact root `325ab760...`), its receipt in the lane's own
+  receipt root so the earlier metadata receipt stands. Prompts: 64 MATH-500 level-5 problems
+  (MIT, `6e4ed1a2`), seeded selection.
+- GPU jobs, each on a queue with no inference-baseline job: builds 1334, 1335, 1339, 1340;
+  rollouts 1337 (attempt 1, no data: `LLM.enqueue` returns internal request ids, outputs carry
+  external ones, so all 192 finished rollouts were dropped; the worker then hung at exit;
+  cancelled after 00:12:52 by the lane's records) and 1342 (attempt 2, fixed: own ids via
+  `LLMEngine.add_request`, DELTA streaming, bounded exit); teacher forcing 1352. **0.4402
+  physical GPU-h of the 0.5 cap** (corrected 2026-10-14 from 0.4372, which took attempt 1
+  from an uncommitted RunTime of 00:12:41). CPU: selftests 1331, 1332, 1338, 1343; fetch 1333
+  (the CPU jobs 1331-1333 ran beside the baseline's GPU jobs g and h).
+- Scope run, cut by attempt 1's cost: 24 prompts; Qwen3.5-4B x seeds 42/43/44 (72 rollouts),
+  Qwen3-8B x seed 42 (24); 120 s of generation per model (41 of 72 hybrid rollouts cut at
+  about 11.5K tokens); r1 (HF+FLA chunk bf16, unpacked, batch 1: the dossier's R2) on all,
+  R3 (FLA fused_recurrent) and R4 (fp32 reference) on seed 42; the dossier's packed R1, R5
+  (vLLM prefill) and the common-text arm not run. Prompts are MATH-500 level 5, not the
+  dossier's DAPO-Math.
+- Readings (exploratory; corrected 2026-10-14, see the next entry): Qwen3.5-4B rollout vs
+  trainer mean |dlogp| 0.0076, p99 0.11, k3 2.7e-4, 0.03% of ratios outside [0.8, 1.25]; up
+  about 12% over the first 3K positions as token entropy rises, then flat to 11.5K. Position
+  slope with entropy-bin fixed effects -5.2e-5 per 1K [-6.8e-5, -3.5e-5] (first written
+  +1.3e-5 [-2.3e-5, +4.9e-5] from string-binned entropies); within sequences +2.4e-5
+  [-2.8e-5, +7.5e-5]. vLLM decode and the trainer sit about equally far from fp32 (0.0073,
+  0.0076; the fp32 reference has no second implementation); swapping chunk for
+  fused_recurrent GDN changes the mismatch by under 1%, but every bf16 pair sits at the same
+  floor (about 0.0075), so the swap does not show the kernel has no effect. Qwen3-8B (not
+  size-matched, different text, one seed): 0.0123, p99 0.19, falling with position; it cannot
+  carry a hybrid-vs-dense comparison, and the pilot does not evaluate kill criterion 1 (first
+  written "reads as the null"; withdrawn). The p99 tail is nearly constant across bins (an
+  untested bf16-logit explanation; an fp32 LM-head arm would test it).
+- Evidence: `program/evidence/2026-10-14/g2-pilot/` (README with tables, figure and a "what
+  it says and does not" section; per-token data, lane records, build and fetch receipts,
+  manifests, operator log). Raw outputs stay on the host under
+  `~/cotcodec-runs/stage0/g2-pilot/` with SHA-256 in the README.
+
+## 2026-10-14 — G2 pilot corrected after an independent check (branch `stage0/g2-pilot`, not merged; exploratory)
+
+- An independent checker reproduced the analysis byte for byte, recomputed it from the raw job
+  outputs on the host, and found one high, one medium and several low problems. All are fixed
+  in the README, `analysis/`, the figure, `program/state.json` and the entry above. Raw
+  records and `data/per-token.npz` are unchanged and no GPU job ran; the analysis reran on
+  the host from the committed `per-token.npz` and reproduces byte for byte
+  (`corrections/analysis-rerun.txt`).
+- Entropy binning (high). The config's top entropy edge `1.0e9` loads through PyYAML (YAML
+  1.1) as a string, so numpy binned entropies as text: 24.1% of the hybrid's and 24.9% of the
+  dense model's tokens were misbinned. Corrected, the hybrid's slope within entropy bins is
+  -5.16e-5 per 1K [-6.85e-5, -3.47e-5] (all seeds, dec vs r1; per seed -6.2e-5, -5.8e-5,
+  -3.5e-5, each CI excluding 0), not the null first reported; the dense model's is -2.4e-4
+  (first -3.3e-4). With 6, 20 and 50 entropy quantile bins it is -4.7e-5 to -5.4e-5. So the
+  raw early rise follows the entropy profile, and at fixed entropy the mismatch falls
+  slightly with position. The edge is now `1.0e+9`, `harness.g2_pilot.numeric_edges` refuses
+  non-numeric edges in `load_config` and in the analysis, and new tests fail on string edges
+  (`tests/test_g2_pilot.py`: 15 passed, locally and on the host).
+- Kill criterion 1 (medium). The "reads as the null" reading is withdrawn. Slopes per 1K
+  (hybrid, all seeds): pooled +7.6e-5 [+2.2e-5, +1.3e-4]; entropy fixed effects -5.16e-5
+  [-6.85e-5, -3.47e-5]; sequence fixed effects (new) +2.4e-5 [-2.8e-5, +7.5e-5];
+  sequence-by-entropy-bin -4.95e-5 [-6.76e-5, -3.01e-5]. The dense control (Qwen3-8B against
+  the 4B, different text, one seed) cannot carry a hybrid-vs-dense comparison.
+- Low items, now stated in the README: composition vs position (41 of 72 hybrid rollouts cut
+  at about 11.5K); the bf16-vs-bf16 noise floor under the chunk-vs-recurrent attribution; the
+  fp32 reference has no second implementation; dense-control comparability; the deviations
+  from the dossier (MATH-500 level 5, not DAPO-Math; r1 is the unpacked batch-1 HF forward,
+  the dossier's R2); attempt 1's GPU-h from the lane's records (0.2144; pilot total 0.4402);
+  the CPU jobs 1331-1333 beside the baseline's jobs g and h (also noted in the baseline
+  README); the miles PR #3597 aggregate is "consistent with", not "matched"; and the
+  `models/registry.yaml` qwen3-8b note now that its full weights are fetched.
+- Main merged into the branch first; `program/state.json`'s GPU-h ledger keeps every row from
+  both (77 rows) and `gpu_hours_spent_this_program` is the ledger sum, 20.8466.
+- The README opens with "Main takeaways (corrected)". Code: `scripts/analyze_g2_pilot.py`
+  (numeric bins, within-sequence slopes, entropy-standardized curve, by-entropy tables),
+  `harness/g2_pilot.py`, `experiments/g2/g2-pilot-v1.yaml`, `tests/test_g2_pilot.py`,
+  `program/evidence/2026-10-14/g2-pilot/corrections/robustness_checks.py`.

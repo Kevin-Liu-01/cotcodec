@@ -43,7 +43,10 @@ for whatever gains actual results"; D80). Under that delegation:
   acceleration for inference and RL.
   - The sweep (D104) picked **G2** as the lead: the train-inference mismatch
     of GDN hybrids (Qwen3.5) by token position, vLLM vs HF+FLA, about 3 GPU-h.
-    Its exploratory pilot is running (`stage0/g2-pilot`).
+    Its exploratory pilot has run (0.44 GPU-h; `stage0/g2-pilot`, corrected
+    after an independent check, not merged): at 4B up to 11.5K the raw rise
+    follows token entropy, and at fixed entropy the mismatch falls slightly.
+    See `program/evidence/2026-10-14/g2-pilot/README.md`.
   - **AM1** is the memory lead: exact credit tables for agent memory on
     LongMemEval.
   - An exploratory inference baseline on the H100s is running

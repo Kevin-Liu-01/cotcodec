@@ -542,7 +542,12 @@ online runs 128, and offline runs have no HTTP or streaming layer.
 - **Concurrent jobs.** Jobs a-f ran at the same time on one node. Each had disjoint GPUs and CPU
   sets, but host memory bandwidth, PCIe and disk were shared, and contention was not measured.
   Start-up times may include some contention, but the TP 4 engines took 164-182 s with only one
-  other start-up beside them.
+  other start-up beside them. Jobs g (20:33:23-20:42:00Z) and h (20:33:26-20:38:13Z) also ran
+  beside three CPU-only jobs of the G2 pilot: two selftests (8 CPUs each, submitted 20:35:55Z
+  and 20:36:34Z, about a minute each) and the 16.4 GB Qwen3-8B fetch with per-file SHA-256
+  (20:36:56-20:37:53Z). They shared host CPU, memory bandwidth, disk and network; that
+  contention was not measured either (added 2026-10-14 from the G2 pilot's independent check;
+  `program/evidence/2026-10-14/g2-pilot/README.md`).
 - **Synthetic prompts.** The random dataset's prompts are runs of consecutive token ids. MoE
   routing, and so the MoE's bandwidth estimate, may differ on natural text, and the uniform-
   routing estimate is likely high for the MoE at large batch. The one-GPU MoE's chat-128

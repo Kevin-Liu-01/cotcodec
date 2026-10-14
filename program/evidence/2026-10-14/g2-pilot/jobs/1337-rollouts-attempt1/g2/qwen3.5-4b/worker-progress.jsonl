@@ -1,0 +1,6 @@
+{"end_of_turn_id": 248046, "engine_kwargs": {"dtype": "bfloat16", "enable_prefix_caching": false, "gpu_memory_utilization": 0.8, "limit_mm_per_prompt": {"image": 0, "video": 0}, "logprobs_mode": "raw_logprobs", "max_model_len": 17408, "max_num_batched_tokens": 4096, "max_num_seqs": 192, "model": "/model-cache/cotcodec-models/qwen3.5-4b", "seed": 42, "tokenizer": "/model-cache/cotcodec-models/qwen3.5-4b", "trust_remote_code": false}, "event": "engine-start", "model": "qwen3.5-4b", "utc": "2026-10-14T20:44:02Z"}
+{"event": "engine-ready", "init_s": 72.1, "model": "qwen3.5-4b", "utc": "2026-10-14T20:45:14Z"}
+{"event": "rollouts-start", "model": "qwen3.5-4b", "requests": 192, "utc": "2026-10-14T20:45:14Z"}
+{"aborted": 0, "event": "rollouts-done", "finished": 0, "model": "qwen3.5-4b", "steps": 20786, "stopped_by": null, "unmatched": 192, "utc": "2026-10-14T20:51:44Z", "wall_s": 389.87}
+{"event": "prefill-skipped", "model": "qwen3.5-4b", "remaining_s": 142.9, "signal": null, "utc": "2026-10-14T20:51:44Z"}
+{"event": "saved", "model": "qwen3.5-4b", "prefilled": 0, "sequences": 0, "tokens": 0, "utc": "2026-10-14T20:51:44Z"}

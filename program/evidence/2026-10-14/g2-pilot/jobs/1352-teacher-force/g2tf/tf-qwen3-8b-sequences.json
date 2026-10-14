@@ -1,0 +1,122 @@
+[
+  {
+    "prompt_index": 1,
+    "seed": 42,
+    "sequence_id": "qwen3-8b/p001/s42"
+  },
+  {
+    "prompt_index": 2,
+    "seed": 42,
+    "sequence_id": "qwen3-8b/p002/s42"
+  },
+  {
+    "prompt_index": 5,
+    "seed": 42,
+    "sequence_id": "qwen3-8b/p005/s42"
+  },
+  {
+    "prompt_index": 6,
+    "seed": 42,
+    "sequence_id": "qwen3-8b/p006/s42"
+  },
+  {
+    "prompt_index": 8,
+    "seed": 42,
+    "sequence_id": "qwen3-8b/p008/s42"
+  },
+  {
+    "prompt_index": 13,
+    "seed": 42,
+    "sequence_id": "qwen3-8b/p013/s42"
+  },
+  {
+    "prompt_index": 14,
+    "seed": 42,
+    "sequence_id": "qwen3-8b/p014/s42"
+  },
+  {
+    "prompt_index": 15,
+    "seed": 42,
+    "sequence_id": "qwen3-8b/p015/s42"
+  },
+  {
+    "prompt_index": 17,
+    "seed": 42,
+    "sequence_id": "qwen3-8b/p017/s42"
+  },
+  {
+    "prompt_index": 27,
+    "seed": 42,
+    "sequence_id": "qwen3-8b/p027/s42"
+  },
+  {
+    "prompt_index": 32,
+    "seed": 42,
+    "sequence_id": "qwen3-8b/p032/s42"
+  },
+  {
+    "prompt_index": 34,
+    "seed": 42,
+    "sequence_id": "qwen3-8b/p034/s42"
+  },
+  {
+    "prompt_index": 35,
+    "seed": 42,
+    "sequence_id": "qwen3-8b/p035/s42"
+  },
+  {
+    "prompt_index": 37,
+    "seed": 42,
+    "sequence_id": "qwen3-8b/p037/s42"
+  },
+  {
+    "prompt_index": 38,
+    "seed": 42,
+    "sequence_id": "qwen3-8b/p038/s42"
+  },
+  {
+    "prompt_index": 43,
+    "seed": 42,
+    "sequence_id": "qwen3-8b/p043/s42"
+  },
+  {
+    "prompt_index": 47,
+    "seed": 42,
+    "sequence_id": "qwen3-8b/p047/s42"
+  },
+  {
+    "prompt_index": 51,
+    "seed": 42,
+    "sequence_id": "qwen3-8b/p051/s42"
+  },
+  {
+    "prompt_index": 53,
+    "seed": 42,
+    "sequence_id": "qwen3-8b/p053/s42"
+  },
+  {
+    "prompt_index": 56,
+    "seed": 42,
+    "sequence_id": "qwen3-8b/p056/s42"
+  },
+  {
+    "prompt_index": 58,
+    "seed": 42,
+    "sequence_id": "qwen3-8b/p058/s42"
+  },
+  {
+    "prompt_index": 61,
+    "seed": 42,
+    "sequence_id": "qwen3-8b/p061/s42"
+  },
+  {
+    "prompt_index": 62,
+    "seed": 42,
+    "sequence_id": "qwen3-8b/p062/s42"
+  },
+  {
+    "prompt_index": 63,
+    "seed": 42,
+    "sequence_id": "qwen3-8b/p063/s42"
+  }
+]

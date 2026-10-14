@@ -1,0 +1,11 @@
+2026-10-14T20:35:55Z pre-image CPU selftest submitted (research image sha256:500f3b027173a2d772b7d6ea00ea667dbe1bc956df51e3c2c4455d9c08a2714b)
+2026-10-14T20:36:34Z pre-image CPU selftest 2 submitted (USER/LOGNAME and inductor cache env added)
+2026-10-14T20:36:55Z fetch job 1333 submitted (qwen3-8b full weights under D1, receipt dir cotcodec-receipts-cpu-lane, source e35c28ff)
+2026-10-14T20:42:09Z vLLM overlay build job 1334 submitted (git cd1692c5, archive c3b4e6dc, 1 H100, limit 5 min)
+2026-10-14T20:42:09Z research source-overlay build job 1335 submitted (base cotcodec-research ed5d5a93 500f3b02, 1 H100, limit 8 min)
+2026-10-14T20:43:35Z rollouts job submitted: 1337
+2026-10-14T20:56:33Z job 1337 cancelled by operator: worker hung at exit after saving 0 sequences (all 192 outputs unmatched to request ids)
+2026-10-14T21:00:38Z vLLM overlay build job 1339 submitted (git 307fa7ed, archive 6c93dc46, 1 H100, limit 5 min)
+2026-10-14T21:00:38Z research source-overlay build job 1340 submitted (base cotcodec-research ed5d5a93 500f3b02, 1 H100, limit 8 min)
+2026-10-14T21:02:12Z rollouts attempt 2 submitted: 1342
+2026-10-14T21:09:44Z teacher-force job submitted: 1352

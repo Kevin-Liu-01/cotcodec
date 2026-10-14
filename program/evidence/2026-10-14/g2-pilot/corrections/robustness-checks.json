@@ -1,0 +1,172 @@
+{
+  "qwen3-8b": {
+    "calibration": {
+      "mean_entropy_r1": 0.2666574193118543,
+      "mean_neg_logp_decode": 0.2663978755790225
+    },
+    "comparison": "dec_vs_r1",
+    "early_rise": {
+      "higher_mean_abs_in_bin_2_than_bin_0": 15,
+      "higher_mean_entropy_in_bin_2_than_bin_0": 21,
+      "sequences_covering_bins_0_and_2": 24,
+      "sequences_per_1k_bin": [
+        24,
+        24,
+        24,
+        19,
+        17,
+        15,
+        13,
+        11,
+        9,
+        8,
+        6,
+        6
+      ]
+    },
+    "entropy_quantile_slopes_per_1k": {
+      "20_quantile_bins": {
+        "within_entropy_bins": [
+          -0.00024365177248063727,
+          -0.0003641624107322867,
+          -0.0001610678658932395
+        ],
+        "within_sequence_x_entropy_bin": [
+          -0.0002959320920223111,
+          -0.00044832967763509536,
+          -0.00019034592191548462
+        ]
+      },
+      "50_quantile_bins": {
+        "within_entropy_bins": [
+          -0.00024245319334195896,
+          -0.00036376909441979913,
+          -0.00016028631745515222
+        ],
+        "within_sequence_x_entropy_bin": [
+          -0.0002967241260211086,
+          -0.0004494811306694839,
+          -0.00019221748062990367
+        ]
+      },
+      "6_quantile_bins": {
+        "within_entropy_bins": [
+          -0.00022364572675335435,
+          -0.0003361505235255737,
+          -0.00014486922563375902
+        ],
+        "within_sequence_x_entropy_bin": [
+          -0.0002735053640962659,
+          -0.0004144446985969634,
+          -0.00017319586185535166
+        ]
+      }
+    },
+    "string_edge_misbinning": {
+      "edge_array_dtype": "<U32",
+      "share_of_tokens_misbinned": 0.24942968050164227,
+      "tokens_per_bin_numeric_edges": [
+        91423,
+        15002,
+        21616,
+        24448,
+        14448,
+        513
+      ],
+      "tokens_per_bin_text_edges": [
+        53904,
+        15002,
+        21616,
+        24448,
+        15537,
+        36943
+      ]
+    },
+    "subset": "all_seeds"
+  },
+  "qwen3.5-4b": {
+    "calibration": {
+      "mean_entropy_r1": 0.38708908781618445,
+      "mean_neg_logp_decode": 0.3883777930191717
+    },
+    "comparison": "dec_vs_r1",
+    "early_rise": {
+      "higher_mean_abs_in_bin_2_than_bin_0": 46,
+      "higher_mean_entropy_in_bin_2_than_bin_0": 51,
+      "sequences_covering_bins_0_and_2": 72,
+      "sequences_per_1k_bin": [
+        72,
+        72,
+        72,
+        72,
+        70,
+        63,
+        57,
+        53,
+        48,
+        47,
+        46,
+        41
+      ]
+    },
+    "entropy_quantile_slopes_per_1k": {
+      "20_quantile_bins": {
+        "within_entropy_bins": [
+          -5.3270919568955985e-05,
+          -7.026936756335866e-05,
+          -3.606380563911546e-05
+        ],
+        "within_sequence_x_entropy_bin": [
+          -5.025059117279185e-05,
+          -6.842385529635459e-05,
+          -3.078504666782568e-05
+        ]
+      },
+      "50_quantile_bins": {
+        "within_entropy_bins": [
+          -5.420245235134452e-05,
+          -7.10023182239029e-05,
+          -3.7169011479045256e-05
+        ],
+        "within_sequence_x_entropy_bin": [
+          -5.15986751692615e-05,
+          -6.983488925759768e-05,
+          -3.173184043620809e-05
+        ]
+      },
+      "6_quantile_bins": {
+        "within_entropy_bins": [
+          -4.732116141608505e-05,
+          -6.378045942743925e-05,
+          -3.0665962501111546e-05
+        ],
+        "within_sequence_x_entropy_bin": [
+          -4.4298337551774125e-05,
+          -6.155699213906188e-05,
+          -2.603158884928229e-05
+        ]
+      }
+    },
+    "string_edge_misbinning": {
+      "edge_array_dtype": "<U32",
+      "share_of_tokens_misbinned": 0.2411284484128619,
+      "tokens_per_bin_numeric_edges": [
+        308537,
+        79734,
+        92709,
+        96296,
+        81105,
+        21207
+      ],
+      "tokens_per_bin_text_edges": [
+        170167,
+        79734,
+        92709,
+        96296,
+        73825,
+        166857
+      ]
+    },
+    "subset": "all_seeds"
+  }
+}
