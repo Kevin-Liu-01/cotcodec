@@ -37,12 +37,11 @@ for whatever gains actual results"; D80). Under that delegation:
 - Successor E is frozen (row 19; sign-off D85; freeze `f6144d6b`). Its four
   sessions (about 42 h, 6.77 cap-GPU-h) are running on `ops/q2-successor-e`.
   Other host work runs only in its gaps.
-- S2 v4 (row 21) failed K1 as registered (D93), because of an instrument
-  defect (D94, D96). S2 v5 changes only A6's Writer targets on the mirrored
-  images. Its development confirmation passed (D98). It is **frozen as row 22**
-  (D100; freeze `7c963f51`), and Phase 0 is running on `ops/s2-v5`: K1's 49
-  jobs, then the census, the oracle and K0. It is S2's last registration: any
-  failure is an honest exit.
+- S2 is given up (D103): v5 (row 22) was stopped during Phase 0 K1 by Kevin's
+  decision, with no result. L1 (D102) was dropped during discovery.
+- **New directions (D103):** agent-memory causality, and GPU memory and
+  acceleration for inference and RL. A question sweep is running, and the top
+  candidates then go through the gauntlet.
 - The public-history purge ran (D99). Old commit ids resolve through
   `program/history-rewrite-2026-10-14/` (the map plus an 11-row supplement,
   D100). No GitHub Support request (D101).
@@ -58,7 +57,7 @@ See `pending_decisions_for_kevin` in `program/state.json`.
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
 `uv run python scripts/preregister.py check-chain`, 22 rows). Decisions taken
-on Kevin's behalf are D1-D101 in `program/decisions.md`. GPU-hours are in
+on Kevin's behalf are D1-D103 in `program/decisions.md`. GPU-hours are in
 `program/state.json` (`gpu_hours_ledger`, physical hours): 10.37 in total.
 
 | Registration | Outcome | Evidence |

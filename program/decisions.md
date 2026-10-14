@@ -2310,3 +2310,35 @@ Kevin chose the direction offered first.
 - S2 v5's Phase 0 continues alongside, as S2's last registration.
 - Host order. S2's CPU jobs and this candidate's GPU jobs alternate on an
   empty queue.
+
+**D103. L1 and S2 are dropped. The program turns to agent-memory causality,
+and to GPU memory and acceleration for inference and RL.** On 2026-10-14
+Kevin wrote: "eh this sucks. lets do research associated with better problems
+in memory (like agent memory causal-nness) and actual hardware memory and gpu
+acceleration for inference/rl".
+- L1 (D102) is dropped. Its gauntlet wave 1 was stopped during discovery, and
+  nothing of it was committed.
+- S2 is given up. Asked whether to keep S2 v5, Kevin wrote: "if its unlikely to
+  result in anything menawhile, gibve up". S2 v5's own synthesis put the chance
+  of an interpretable result at about 0.3, and the question is niche, so it is
+  stopped.
+  - Phase 0 K1 job 1309 was cancelled at about 18:41Z. Its lane stopped on
+    TERM, with 0 labelled containers left; the job is not counted.
+  - The K1 jobs collected before the stop all passed their checks in the
+    interim readings (`program/evidence/2026-10-14/s2v5-phase0-run/README.md`).
+  - No K1 verdict, census, oracle or K0 was run, and S2 v5 (row 22) ends with
+    no result.
+  - The records stand as committed. Nothing frozen changes.
+- The new directions:
+  - (1) Agent memory and its causal role: does what an agent stores and
+    retrieves actually cause its later behaviour, and how would that be
+    measured? The legacy program's D17 causal-memory holdout was occupied by
+    CMP (arXiv 2610.02070), which the sweep must account for.
+  - (2) Hardware memory and GPU acceleration for inference and RL: KV-cache
+    and HBM pressure, memory-bandwidth-bound decoding, rollout throughput and
+    train-rollout overlap for RL, measured on the 8×H100 node.
+- Next. A question sweep sources and verifies candidates in both areas against
+  primary sources, and judges rank them. The top candidates then go through
+  the research gauntlet. Everything runs one agent at a time (Kevin's Mac),
+  and the H100 node is used for real measurements as early as the gauntlet
+  allows.
