@@ -421,6 +421,34 @@ def position_contrast(
     return rows
 
 
+def shared_prefix_rows(data: dict[str, np.ndarray], width: int) -> list[dict[str, Any]]:
+    """On the shared prefix of paired rollouts (identical tokens and context in both arms), per
+    position bin: |decode bf16 - decode fp32|, |decode bf16 - r1| and |decode fp32 - r1|, where
+    decode fp32 - r1 = d_dec - d_pair on the bf16 arm's tokens."""
+
+    if "d_pair" not in data:
+        return []
+    valid = np.isfinite(data["d_pair"]) & np.isfinite(data["d_dec"])
+    pair, dec_b = data["d_pair"][valid], data["d_dec"][valid]
+    dec_f = dec_b - pair
+    bins = data["position"][valid] // width
+    seq = data["seq"][valid]
+    rows = []
+    for index in np.unique(bins):
+        m = bins == index
+        rows.append(
+            {
+                "start": int(index * width),
+                "tokens": int(m.sum()),
+                "sequences": int(len(np.unique(seq[m]))),
+                "bf16_minus_fp32_decode": float(np.abs(pair[m]).mean()),
+                "bf16_decode_vs_r1": float(np.abs(dec_b[m]).mean()),
+                "fp32_decode_vs_r1": float(np.abs(dec_f[m]).mean()),
+            }
+        )
+    return rows
+
+
 def analyze_model(raw: dict[str, np.ndarray], settings: dict[str, Any]) -> dict[str, Any]:
     if "position" not in raw:
         raw = dict(raw, position=token_positions(raw["offsets"], raw["prompt_len"]))
@@ -481,6 +509,7 @@ def analyze_model(raw: dict[str, np.ndarray], settings: dict[str, Any]) -> dict[
         result["position_contrast"][f"{a_key}_vs_{b_key}"] = position_contrast(
             data, a_key, b_key, seq_prompt, int(settings["position_bin"]), reps, seed
         )
+    result["shared_prefix_by_position"] = shared_prefix_rows(data, 256)
     prefix = raw["common_prefix"][seq_arm == 1]
     result["shared_prefix"] = {
         "pairs": int((raw["partner"][seq_arm == 1] >= 0).sum()),
@@ -1023,15 +1052,21 @@ def plot(result: dict[str, Any], output: Path) -> None:
     import matplotlib.pyplot as plt
 
     colors = {"fp32": "#1f77b4", "bf16": "#d62728"}
-    fig, axes = plt.subplots(2, 3, figsize=(17, 9.5), gridspec_kw={"hspace": 0.38, "wspace": 0.26})
+    model_colors = {"qwen3.5-4b": "#2ca02c", "qwen3.5-9b": "#9467bd", "qwen3.6-35b-a3b": "#8c564b"}
+    fig, axes = plt.subplots(3, 3, figsize=(18, 14.5), gridspec_kw={"hspace": 0.42, "wspace": 0.27})
     models = list(result["mismatch"])
+
+    def rows_of(block: dict[str, Any] | None) -> list[dict[str, Any]]:
+        return [r for r in (block or {}).get("by_position", []) if r["tokens"] >= 200]
+
+    # Row 1: rollout vs trainer by position, per model; other paths.
     for col, model_id in enumerate(models[:2]):
         ax = axes[0, col]
         for arm in ARMS:
             block = result["mismatch"][model_id]["subsets"].get(f"{arm}/all", {}).get("dec_vs_r1")
-            if not block:
+            rows = rows_of(block)
+            if not rows:
                 continue
-            rows = [r for r in block["by_position"] if r["tokens"] >= 200]
             x = [r["start"] / 1000 + 0.5 for r in rows]
             ax.plot(
                 x,
@@ -1056,40 +1091,61 @@ def plot(result: dict[str, Any], output: Path) -> None:
                 color=colors[arm],
                 label=f"{arm}, entropy-standardized",
             )
-        ax.set_title(f"{model_id}: rollout vs trainer by position (all seeds)", fontsize=9)
+        ax.set_title(
+            f"{model_id}: rollout vs trainer by position (72 rollouts per arm)", fontsize=9
+        )
         ax.set_xlabel("absolute token position (K), 1K bins")
         ax.set_ylabel("mean |Δ log p| per token")
         ax.grid(True, alpha=0.3)
         ax.legend(fontsize=7)
     ax = axes[0, 2]
-    styles = {"pre_vs_r1": "-", "r2_vs_r1": "--", "pre32_vs_pre16": ":"}
-    for model_id, marker in zip(models[:2], ["o", "s"], strict=False):
+    zero_notes = []
+    for model_id in models[:2]:
         subsets = result["mismatch"][model_id]["subsets"]
-        for name, style in styles.items():
-            block = subsets.get("both/all", {}).get(name) or subsets.get("fp32/all", {}).get(name)
-            if not block:
-                continue
-            rows = [r for r in block["by_position"] if r["tokens"] >= 200]
-            ax.plot(
-                [r["start"] / 1000 + 0.5 for r in rows],
-                [r["mean_abs"] for r in rows],
-                style,
-                marker=marker,
-                ms=2.5,
-                label=f"{model_id} {name}",
-            )
-    ax.set_yscale("log")
-    ax.set_title(
-        "other paths: prefill vs trainer, packed vs unpacked, prefill fp32 vs bf16 state",
-        fontsize=9,
-    )
+        series = [
+            ("fp32/all", "pre_vs_r1", "-", "fp32 prefill vs trainer"),
+            ("bf16/all", "pre_vs_r1", "--", "bf16 prefill vs trainer"),
+            ("both/all", "pre32_vs_pre16", ":", "prefill fp32 vs bf16 state"),
+        ]
+        for subset, name, style, label in series:
+            rows = rows_of(subsets.get(subset, {}).get(name))
+            if rows:
+                ax.plot(
+                    [r["start"] / 1000 + 0.5 for r in rows],
+                    [r["mean_abs"] for r in rows],
+                    style,
+                    color=model_colors.get(model_id),
+                    lw=1.2,
+                    label=f"{model_id} {label}",
+                )
+        packed = subsets.get("both/all", {}).get("r2_vs_r1")
+        if packed:
+            rows = rows_of(packed)
+            if packed["max_abs"] == 0:
+                zero_notes.append(
+                    f"{model_id}: packed = unpacked on all {packed['tokens']:,} tokens"
+                )
+            elif rows:
+                ax.plot(
+                    [r["start"] / 1000 + 0.5 for r in rows],
+                    [r["mean_abs"] for r in rows],
+                    "-.",
+                    color=model_colors.get(model_id),
+                    lw=1,
+                    label=f"{model_id} packed vs unpacked",
+                )
+    if zero_notes:
+        ax.text(0.02, 0.02, "\n".join(zero_notes), transform=ax.transAxes, fontsize=7, va="bottom")
+    ax.set_ylim(bottom=0)
+    ax.set_title("trainer-side and prefill paths (no decode)", fontsize=9)
     ax.set_xlabel("absolute token position (K), 1K bins")
     ax.set_ylabel("mean |Δ log p| per token")
-    ax.grid(True, which="both", alpha=0.3)
+    ax.grid(True, alpha=0.3)
     ax.legend(fontsize=6)
+    # Row 2: saturation waves.
     sat = result.get("saturation", {})
-    ax = axes[1, 0]
     names = [m for m in sat if all(a in sat[m] for a in ARMS)]
+    ax = axes[1, 0]
     for k, model_id in enumerate(names):
         for arm_index, arm in enumerate(ARMS):
             waves = [
@@ -1109,29 +1165,37 @@ def plot(result: dict[str, Any], output: Path) -> None:
             ax.plot([xpos] * len(waves), waves, "k.", ms=4)
     ax.set_xticks(range(len(names)), names, fontsize=8)
     ax.set_ylabel("output tokens per second")
-    ax.set_title("saturation waves (phase S), dots: one wave per seed", fontsize=9)
+    ax.set_title("saturation waves (phase S); dots: one wave per seed", fontsize=9)
     ax.legend(fontsize=7)
     ax.grid(True, axis="y", alpha=0.3)
     ax = axes[1, 1]
     for k, model_id in enumerate(names):
         for arm_index, arm in enumerate(ARMS):
-            peaks = [
-                w["peak_running"]
-                for w in sat[model_id][arm]["waves"].values()
-                if w.get("peak_running") is not None
-            ]
+            waves = list(sat[model_id][arm]["waves"].values())
+            mean_running = np.mean(
+                [w["mean_running"] for w in waves if w.get("mean_running") is not None]
+            )
+            pre = [w.get("preemptions_delta") for w in waves]
             xpos = k + (arm_index - 0.5) * 0.35
             ax.bar(
                 xpos,
-                max(peaks) if peaks else 0,
+                mean_running,
                 width=0.33,
                 color=colors[arm],
                 alpha=0.6,
                 label=arm if k == 0 else None,
             )
+            ax.text(
+                xpos,
+                mean_running,
+                f"{int(np.mean(pre))}\npre.",
+                ha="center",
+                va="bottom",
+                fontsize=6,
+            )
     ax.set_xticks(range(len(names)), names, fontsize=8)
-    ax.set_ylabel("peak running sequences (vLLM gauge)")
-    ax.set_title("concurrency reached in phase S", fontsize=9)
+    ax.set_ylabel("mean running sequences per wave (vLLM gauge)")
+    ax.set_title("concurrency during phase S; labels: preemptions per wave", fontsize=9)
     ax.legend(fontsize=7)
     ax.grid(True, axis="y", alpha=0.3)
     ax = axes[1, 2]
@@ -1143,7 +1207,7 @@ def plot(result: dict[str, Any], output: Path) -> None:
             s["metric_t"],
             s["metric_running"],
             "-" if job["arm"] == "bf16" else "--",
-            color={"qwen3.5-4b": "#2ca02c", "qwen3.5-9b": "#9467bd"}.get(job["model"], "#8c564b"),
+            color=model_colors.get(job["model"], "#333333"),
             lw=1,
             label=f"{job['model']} {job['arm']}",
         )
@@ -1152,12 +1216,105 @@ def plot(result: dict[str, Any], output: Path) -> None:
     ax.set_title("running sequences during one saturation wave", fontsize=9)
     ax.legend(fontsize=6)
     ax.grid(True, alpha=0.3)
-    fig.suptitle(
-        "g2b-state-dtype-v1 (EXPLORATORY): GDN state fp32 vs bf16 in vLLM 0.31.0; bands: 95% "
-        "bootstrap over sequences",
-        fontsize=10,
+    # Row 3: how rollouts ended; mismatch by entropy; shared-prefix paired decode difference.
+    ax = axes[2, 0]
+    for job in result.get("throughput_jobs", []):
+        recs = job.get("rollouts") or []
+        if job["model"] not in models or not recs:
+            continue
+        observed = max(r["completion_len"] for r in recs)
+        grid = np.arange(0, observed + 1, 256)
+        ended = np.asarray([r["completion_len"] for r in recs if r["finish_reason"] == "stop"])
+        alive = [1 - float((ended < g).sum()) / len(recs) for g in grid]
+        ax.plot(
+            grid / 1000,
+            alive,
+            "-" if job["arm"] == "bf16" else "--",
+            color=model_colors.get(job["model"]),
+            label=f"{job['model']} {job['arm']}",
+        )
+    ax.set_xlabel("completion length (K tokens)")
+    ax.set_ylabel("share of rollouts without EOS yet")
+    ax.set_title(
+        "phase R: rollouts still running by length (cap 32K; 4B bf16 cut at 31.8K)", fontsize=9
     )
-    fig.savefig(output, dpi=120, bbox_inches="tight")
+    ax.set_ylim(0, 1.02)
+    ax.grid(True, alpha=0.3)
+    ax.legend(fontsize=7)
+    ax = axes[2, 1]
+    for model_id, marker in zip(models[:2], ["o", "s"], strict=False):
+        for arm in ARMS:
+            block = result["mismatch"][model_id]["subsets"].get(f"{arm}/all", {}).get("dec_vs_r1")
+            if not block:
+                continue
+            rows = block["by_entropy"]
+            ax.plot(
+                range(len(rows)),
+                [r["mean_abs"] for r in rows],
+                "-" if arm == "bf16" else "--",
+                marker=marker,
+                ms=4,
+                color=colors[arm],
+                label=f"{model_id} {arm}",
+            )
+            ax.set_xticks(
+                range(len(rows)),
+                [ap.entropy_label(r["entropy_lo"], r["entropy_hi"]) for r in rows],
+                fontsize=7,
+            )
+    ax.set_yscale("log")
+    ax.set_title("rollout vs trainer by r1 entropy (float edges, nats)", fontsize=9)
+    ax.set_ylabel("mean |Δ log p| per token")
+    ax.grid(True, which="both", alpha=0.3)
+    ax.legend(fontsize=7)
+    ax = axes[2, 2]
+    for model_id in models[:2]:
+        rows = [
+            r
+            for r in result["mismatch"][model_id].get("shared_prefix_by_position", [])
+            if r["tokens"] >= 200
+        ]
+        if not rows:
+            continue
+        x = [(r["start"] + 128) / 1000 for r in rows]
+        color = model_colors.get(model_id)
+        ax.plot(
+            x,
+            [r["bf16_minus_fp32_decode"] for r in rows],
+            "-o",
+            ms=3,
+            color=color,
+            label=f"{model_id}: decode bf16 vs decode fp32",
+        )
+        ax.plot(
+            x,
+            [r["bf16_decode_vs_r1"] for r in rows],
+            "--",
+            color=color,
+            label=f"{model_id}: decode bf16 vs trainer",
+        )
+        ax.plot(
+            x,
+            [r["fp32_decode_vs_r1"] for r in rows],
+            ":",
+            color=color,
+            label=f"{model_id}: decode fp32 vs trainer",
+        )
+    ax.set_title(
+        "identical tokens in both arms: shared prefix of paired rollouts (256-token bins)",
+        fontsize=9,
+    )
+    ax.set_xlabel("absolute token position (K)")
+    ax.set_ylabel("mean |Δ log p| per token")
+    ax.set_ylim(bottom=0)
+    ax.grid(True, alpha=0.3)
+    ax.legend(fontsize=6)
+    fig.suptitle(
+        "g2b-state-dtype-v1 (EXPLORATORY): GDN recurrent state fp32 (vLLM default) vs bf16 in vLLM "
+        "0.31.0 on one H100; bands: 95% bootstrap over sequences",
+        fontsize=11,
+    )
+    fig.savefig(output, dpi=110, bbox_inches="tight")
     plt.close(fig)
 
 
