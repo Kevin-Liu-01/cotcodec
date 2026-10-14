@@ -2266,3 +2266,47 @@ signed off for the freeze.**
     before the census; K1's 49 jobs; the census; the oracle and K0; then
     Phase 1's executor addendum only if K0 and K1 pass.
   - v5 is S2's last registration, and any failure is an honest exit.
+
+**D101. No GitHub Support request; the outward items are shelved; the
+program focuses on research.** On 2026-10-14 Kevin wrote: "dont contact
+github support and wth is the outward semds, these shouldnt actually affect
+research".
+- No GitHub Support request is filed. D99's purge stands as done. GitHub may
+  keep serving the old commits by id until its own garbage collection runs.
+  That is accepted.
+- The drafted outward items are shelved:
+  - the OSWorld key report and the xlang-ai issue;
+  - the Letta disclosure;
+  - the licence request;
+  - the host-administrator request;
+  - publication.
+  They stay in the private archive (`outward-2026-10-12/`). Nothing is sent,
+  and they are not raised again unless Kevin asks.
+- None of them gates any experiment. The papers keep their "not disclosed,
+  not published" status lines.
+
+**D102. New lead direction: are OSWorld leaderboard gaps within measurement
+noise?** On 2026-10-14 Kevin said he does not think the program has found
+anything important yet. The assessment he was given agreed:
+- the results so far are careful but narrow:
+  - E's bounded harness null on two small models;
+  - checker defects that move no observed agent score;
+  - a re-hosting caveat (R04);
+- the node has been badly under-used: about 25 GPU-h in eight days.
+Kevin chose the direction offered first.
+- The question. For strong open computer-use agents at 7B-72B, measure on
+  OSWorld, with repeated sessions:
+  - rerun noise;
+  - checker error;
+  - the environment drift found in R04.
+  Then compare that total noise with the score gaps between published
+  leaderboard entries.
+- What would matter. If typical claimed improvements fall inside measurement
+  noise, the result bears on everyone who reports OSWorld numbers.
+- Process. It runs the research gauntlet (`.claude/rules/research-gauntlet-loop.md`),
+  because it will exceed 8 GPU-h. Admission below 100 is allowed under D92.
+  The first step is a pilot of at most 8 GPU-h, and the full study uses the
+  node properly.
+- S2 v5's Phase 0 continues alongside, as S2's last registration.
+- Host order. S2's CPU jobs and this candidate's GPU jobs alternate on an
+  empty queue.
