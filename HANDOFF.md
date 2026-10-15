@@ -56,7 +56,13 @@ for whatever gains actual results"; D80). Under that delegation:
     **G2c (D109):** the number format drives the drift, not the layout. fp16
     state keeps the 1.3-1.4x throughput at about 2x fp32's off-policy gap.
   - AM1 step 0 (D107): bit-exact reader replay works; exact credit tables are
-    cheap.
+    cheap. AM1 dev pilot (D111): memories interact, and leave-one-out credit
+    picks the wrong memories. **AM1 is frozen (row 23)**, and its confirmatory
+    run on 347 held-out questions is running (`ops/am1`).
+  - The G2-RL gauntlet (does the state precision of rollouts change RL
+    training?) is running.
+  - The node also hosts LaMa and ROSE inference for another of Kevin's
+    projects through 2026-10-20 (D110).
 - The public-history purge ran (D99). Old commit ids resolve through
   `program/history-rewrite-2026-10-14/` (the map plus an 11-row supplement,
   D100). No GitHub Support request (D101).
@@ -71,8 +77,8 @@ See `pending_decisions_for_kevin` in `program/state.json`.
 
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
-`uv run python scripts/preregister.py check-chain`, 22 rows). Decisions taken
-on Kevin's behalf are D1-D109 in `program/decisions.md`. GPU-hours are in
+`uv run python scripts/preregister.py check-chain`, 23 rows). Decisions taken
+on Kevin's behalf are D1-D111 in `program/decisions.md`. GPU-hours are in
 `program/state.json` (`gpu_hours_ledger`, physical hours): 10.37 in total.
 
 | Registration | Outcome | Evidence |
