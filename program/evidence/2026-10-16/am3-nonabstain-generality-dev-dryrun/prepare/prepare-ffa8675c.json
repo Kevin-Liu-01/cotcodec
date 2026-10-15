@@ -1,0 +1,25 @@
+{
+  "artifact_bytes": 186699,
+  "artifact_sha256": "f1c241baeaeddcd5690daa22337612843b049059c354fe25fe348947e346a0f5",
+  "by_type": {
+    "knowledge-update": 6,
+    "multi-session": 12,
+    "single-session-user": 6,
+    "temporal-reasoning": 6
+  },
+  "dev_retrieved_pool_check": {
+    "questions": 63,
+    "retrieved_pools_identical": 63
+  },
+  "matches_config_pins": false,
+  "max_full_pool_prompt_chars": 4363,
+  "question_ids_sha256": "e08d46ccab4604e4e0bd61ff1d140f0e0648b43070c70d63bc968d3ac1aa0513",
+  "questions": 30,
+  "summary_sha256": "cf7ecb51b4edb3ac449b0fe63e2f002e8bd9f59c5be39cfb1c65dd60d37c0e1b",
+  "twin_membership": {
+    "absent": 1,
+    "development": 4,
+    "heldout-confirmatory": 22,
+    "step0-demo-excluded": 3
+  }
+}

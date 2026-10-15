@@ -1,0 +1,12 @@
+2026-10-15T10:58:46Z clean checkout of ffa8675c17252815f5059633452ab17b163bdee7 (tree e5953ed5) from bundle d53e90ac; git archive sha256 95fbe9fb06e156428061e9fbe0147011440b1827834fd7274e27b56d47f77850
+2026-10-15T10:59:50Z abstention artifact f1c241baeaeddcd5 built at ffa8675c (CPU)
+2026-10-15T11:06:34Z clean checkout of eae156cf715541e45eb63866dd4ae50db5938250 (tree f4e34f97) from bundle e267e851; git archive sha256 24caad5ebfb771843be00b1f119b647f3d32785b7f939e2a8aca3ee55713ff17
+2026-10-15T11:06:59Z capsule 9cd8e794618662d228a1e669e8d813a3ec11fc42c315bd7bf726146f0cf91ae6 (git eae156cf)
+2026-10-15T11:07:00Z vLLM overlay build job 1467 submitted (git eae156cf, archive 9cd8e794, 1 H100, limit 5 min)
+2026-10-15T11:09:27Z vLLM overlay build 1467 COMPLETED 0:0 (RunTime 00:01:05): sha256:a8571a4150585cbb31432a2f3b1e88d53315315df8500f6904d50bed14394584
+2026-10-15T11:09:27Z post-build CPU selftest 1468 submitted (population development, image a8571a41, git eae156cf, no GRES)
+2026-10-15T11:09:27Z post-build CPU selftest 1469 submitted (population abstention, image a8571a41, git eae156cf, no GRES)
+2026-10-15T11:10:05Z am3g development GPU job submit: 1471 (git eae156cf, image a8571a41, artifact 15567cf1, 1 H100, limit 25 min)
+2026-10-15T11:20:48Z am3g development GPU job 1471 COMPLETED 0:0 (RunTime 00:10:18 on 1 H100 = 0.1717 GPU-h); steps rd-qwen3-8b, rd-olmo2 (batch-invariant), rd-qwen35-9b-default, judge32, judge8 complete; rd-olmo2-default not needed; judge items 2869 (2555 reader, 314 validation and calibration)
+2026-10-15T11:24:26Z clean checkout of 95c3ef5a3cb78539af03e29a2b766bb3f7df5ee2 (tree 9bb934f2) from bundle f8d072a5; git archive sha256 06712f2a463366bf5af966d189f3448e7002e2b3e8a2ec11c37442bc4e2bf3d1
+2026-10-15T11:29:14Z clean checkout of ea678a99162685ed29e7d444d79b93659ae9f097 (tree 36a42d97) from bundle 8f18f31a; git archive sha256 70c50e1448436582de209df2f6db5934892c1ed791a34f8001eb22c4aba732f4
