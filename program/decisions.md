@@ -2939,3 +2939,36 @@ for OLMo-2. Next: one held-out registration, `am5-ablated-cost-v1`.**
   - A blind hand check covers every switched reply the judge calls correct,
     and a seeded sample of the rest.
   - These ablated held-out pools have never been given to a model.
+
+**D122. New direction from Kevin (2026-10-15): run 700B-1T open models (such as
+Kimi) on a normal computer. The sweep is done and verified; next is a gauntlet
+for G2 on the H100 host.**
+- Kevin asked whether very large open models can be made small enough to run on
+  a normal computer, and said: "use the h100s". All model work runs on the H100
+  host (8x80 GB, 1.77 TB RAM). His 128 GB M5 Max is only the target spec.
+- Sweep (`program/evidence/2026-10-16/local-frontier-moe-sweep/DOSSIER.md`):
+  five research angles, a synthesis, and three rounds of independent
+  verification. 46 findings were applied in round 1 and 23 in round 2, and
+  the confirmation pass found 22 of the 23 fixed. Its answer:
+  - A 700B-class model streams on a 128 GB M5 Max today. The ds4 maintainer
+    measured GLM 5.3 (753B) at IQ2_XXS at 4.1-5.1 tok/s.
+  - The best in-memory option is DeepSeek V4 Flash 0731 at about 2 bits (86.7
+    GB), at a measured 39 tok/s decode. Its cost on real tasks is unmeasured.
+  - Kimi K2.6 at about 2.6 bits (340.5 GB) would stream at an estimated
+    1.5-5.8 tok/s. No maintained Mac streamer supports Kimi.
+  - A Kimi of 100 GB or less needs 64-74% of its experts removed. Kimi K3
+    pruning evidence suggests that would leave at most a coding specialist.
+- Reference model. Kimi-K2.6 (595 GB INT4, revision 7eb5002f) is on the
+  host with receipts. Its remote code must be reviewed before it runs. A full
+  GPU load needs all 8 GPUs, so it waits until GPU 0 is freed after
+  2026-10-21.
+- Research gaps, in order:
+  - G2 (OPEN): Kimi K2 routing traces and expert-cache hit rates, and whether
+    a host-side emulator reproduces ds4's measured streaming speeds and then
+    predicts Kimi's. About 13-51 GPU-h, mostly runnable on GPUs 1-7.
+  - G4 (PARTLY_DONE): the task cost of V4 Flash at about 2 bits.
+  - G5 (PARTLY_DONE): Kimi with top-6 and top-4 routing.
+  - G1 (PARTLY_DONE): a Kimi of 100 GB or less as a coding specialist.
+  - G3 (conditional on G1).
+- G2 exceeds 8 GPU-h and is a new direction, so a research-gauntlet wave runs
+  first (`.claude/rules/research-gauntlet-loop.md`).
