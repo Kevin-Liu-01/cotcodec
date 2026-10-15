@@ -166,7 +166,7 @@ analysis:
 
 # The confirmatory job (2 H100). The pilot found that compiled batch-invariant replay is exact
 # only for the same compiled kernels (inductor's timing-based autotune chose a different reduction
-# block in one of five fresh compiles and changed 3.1% of replies, 0.25% of judged cells), while
+# block in one of four fresh compiles and changed 3.1% of replies, 0.25% of judged cells), while
 # enforce_eager replay was bit-exact across GPUs, processes, jobs, orders and an in-engine
 # replicate, for the reader and the Qwen3-32B judge, at 1.06x the compiled reader pass's wall time
 # (program/evidence/2026-10-15/am1-dev-pilot/README.md, jobs 1435 and 1441). So every vLLM worker

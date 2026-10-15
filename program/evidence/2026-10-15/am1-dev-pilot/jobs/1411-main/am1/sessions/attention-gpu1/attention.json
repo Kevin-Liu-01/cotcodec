@@ -1,0 +1,5438 @@
+{
+  "attn_implementation": "eager",
+  "dtype": "bfloat16",
+  "gpu": {
+    "CUDA_VISIBLE_DEVICES": "1",
+    "name": "NVIDIA H100 80GB HBM3",
+    "pci_bus_id": 98,
+    "uuid": "34c1e8e2-bec3-3ce7-c1be-618cb05ca896"
+  },
+  "model_id": "qwen3-8b",
+  "pools": [
+    {
+      "arm": "gold",
+      "prompt_tokens": 661,
+      "question_id": "031748ae",
+      "question_index": 0,
+      "reply_tokens": 34,
+      "request_index": 529,
+      "spans": [
+        [
+          38,
+          100
+        ],
+        [
+          100,
+          174
+        ],
+        [
+          174,
+          290
+        ],
+        [
+          290,
+          329
+        ],
+        [
+          330,
+          383
+        ],
+        [
+          383,
+          479
+        ],
+        [
+          479,
+          519
+        ],
+        [
+          519,
+          574
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 674,
+      "question_id": "031748ae",
+      "question_index": 0,
+      "reply_tokens": 34,
+      "request_index": 255,
+      "spans": [
+        [
+          38,
+          87
+        ],
+        [
+          87,
+          173
+        ],
+        [
+          173,
+          247
+        ],
+        [
+          247,
+          314
+        ],
+        [
+          314,
+          430
+        ],
+        [
+          430,
+          480
+        ],
+        [
+          480,
+          537
+        ],
+        [
+          537,
+          587
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 707,
+      "question_id": "0977f2af",
+      "question_index": 1,
+      "reply_tokens": 14,
+      "request_index": 1077,
+      "spans": [
+        [
+          38,
+          149
+        ],
+        [
+          149,
+          188
+        ],
+        [
+          188,
+          232
+        ],
+        [
+          232,
+          288
+        ],
+        [
+          288,
+          384
+        ],
+        [
+          384,
+          424
+        ],
+        [
+          425,
+          568
+        ],
+        [
+          568,
+          631
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 654,
+      "question_id": "0977f2af",
+      "question_index": 1,
+      "reply_tokens": 6,
+      "request_index": 803,
+      "spans": [
+        [
+          38,
+          81
+        ],
+        [
+          81,
+          136
+        ],
+        [
+          136,
+          184
+        ],
+        [
+          184,
+          262
+        ],
+        [
+          262,
+          368
+        ],
+        [
+          368,
+          431
+        ],
+        [
+          431,
+          481
+        ],
+        [
+          481,
+          578
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 533,
+      "question_id": "09ba9854",
+      "question_index": 2,
+      "reply_tokens": 28,
+      "request_index": 1625,
+      "spans": [
+        [
+          38,
+          101
+        ],
+        [
+          101,
+          153
+        ],
+        [
+          153,
+          202
+        ],
+        [
+          202,
+          240
+        ],
+        [
+          240,
+          288
+        ],
+        [
+          288,
+          348
+        ],
+        [
+          348,
+          402
+        ],
+        [
+          402,
+          452
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 559,
+      "question_id": "09ba9854",
+      "question_index": 2,
+      "reply_tokens": 23,
+      "request_index": 1351,
+      "spans": [
+        [
+          38,
+          96
+        ],
+        [
+          96,
+          146
+        ],
+        [
+          146,
+          194
+        ],
+        [
+          194,
+          245
+        ],
+        [
+          245,
+          319
+        ],
+        [
+          319,
+          361
+        ],
+        [
+          361,
+          415
+        ],
+        [
+          415,
+          478
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 727,
+      "question_id": "0a34ad58",
+      "question_index": 3,
+      "reply_tokens": 6,
+      "request_index": 2173,
+      "spans": [
+        [
+          38,
+          100
+        ],
+        [
+          100,
+          158
+        ],
+        [
+          158,
+          243
+        ],
+        [
+          243,
+          302
+        ],
+        [
+          302,
+          382
+        ],
+        [
+          382,
+          565
+        ],
+        [
+          565,
+          609
+        ],
+        [
+          609,
+          649
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 657,
+      "question_id": "0a34ad58",
+      "question_index": 3,
+      "reply_tokens": 6,
+      "request_index": 1899,
+      "spans": [
+        [
+          38,
+          106
+        ],
+        [
+          106,
+          165
+        ],
+        [
+          165,
+          210
+        ],
+        [
+          210,
+          261
+        ],
+        [
+          261,
+          315
+        ],
+        [
+          315,
+          422
+        ],
+        [
+          422,
+          508
+        ],
+        [
+          508,
+          579
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 638,
+      "question_id": "0bb5a684",
+      "question_index": 4,
+      "reply_tokens": 20,
+      "request_index": 2721,
+      "spans": [
+        [
+          38,
+          134
+        ],
+        [
+          134,
+          232
+        ],
+        [
+          232,
+          283
+        ],
+        [
+          283,
+          312
+        ],
+        [
+          312,
+          404
+        ],
+        [
+          404,
+          458
+        ],
+        [
+          458,
+          485
+        ],
+        [
+          486,
+          552
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 847,
+      "question_id": "0bb5a684",
+      "question_index": 4,
+      "reply_tokens": 21,
+      "request_index": 2447,
+      "spans": [
+        [
+          38,
+          134
+        ],
+        [
+          134,
+          232
+        ],
+        [
+          232,
+          334
+        ],
+        [
+          334,
+          430
+        ],
+        [
+          430,
+          527
+        ],
+        [
+          527,
+          619
+        ],
+        [
+          619,
+          673
+        ],
+        [
+          673,
+          761
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 642,
+      "question_id": "0bc8ad93",
+      "question_index": 5,
+      "reply_tokens": 6,
+      "request_index": 3269,
+      "spans": [
+        [
+          38,
+          113
+        ],
+        [
+          113,
+          209
+        ],
+        [
+          209,
+          286
+        ],
+        [
+          286,
+          332
+        ],
+        [
+          332,
+          413
+        ],
+        [
+          413,
+          440
+        ],
+        [
+          441,
+          508
+        ],
+        [
+          508,
+          563
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 871,
+      "question_id": "0bc8ad93",
+      "question_index": 5,
+      "reply_tokens": 20,
+      "request_index": 2995,
+      "spans": [
+        [
+          38,
+          123
+        ],
+        [
+          123,
+          235
+        ],
+        [
+          235,
+          348
+        ],
+        [
+          348,
+          441
+        ],
+        [
+          441,
+          524
+        ],
+        [
+          524,
+          601
+        ],
+        [
+          601,
+          739
+        ],
+        [
+          739,
+          792
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 686,
+      "question_id": "10e09553",
+      "question_index": 6,
+      "reply_tokens": 19,
+      "request_index": 3817,
+      "spans": [
+        [
+          38,
+          107
+        ],
+        [
+          107,
+          201
+        ],
+        [
+          201,
+          280
+        ],
+        [
+          280,
+          341
+        ],
+        [
+          341,
+          373
+        ],
+        [
+          374,
+          455
+        ],
+        [
+          455,
+          510
+        ],
+        [
+          510,
+          598
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 654,
+      "question_id": "10e09553",
+      "question_index": 6,
+      "reply_tokens": 25,
+      "request_index": 3543,
+      "spans": [
+        [
+          38,
+          111
+        ],
+        [
+          111,
+          205
+        ],
+        [
+          205,
+          259
+        ],
+        [
+          259,
+          301
+        ],
+        [
+          301,
+          343
+        ],
+        [
+          343,
+          390
+        ],
+        [
+          390,
+          478
+        ],
+        [
+          478,
+          566
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 658,
+      "question_id": "1e043500",
+      "question_index": 7,
+      "reply_tokens": 16,
+      "request_index": 4365,
+      "spans": [
+        [
+          38,
+          79
+        ],
+        [
+          79,
+          180
+        ],
+        [
+          180,
+          270
+        ],
+        [
+          270,
+          324
+        ],
+        [
+          324,
+          394
+        ],
+        [
+          394,
+          499
+        ],
+        [
+          499,
+          552
+        ],
+        [
+          552,
+          585
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 633,
+      "question_id": "1e043500",
+      "question_index": 7,
+      "reply_tokens": 16,
+      "request_index": 4091,
+      "spans": [
+        [
+          38,
+          78
+        ],
+        [
+          78,
+          126
+        ],
+        [
+          126,
+          182
+        ],
+        [
+          182,
+          228
+        ],
+        [
+          228,
+          308
+        ],
+        [
+          308,
+          421
+        ],
+        [
+          421,
+          470
+        ],
+        [
+          470,
+          560
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 651,
+      "question_id": "1faac195",
+      "question_index": 8,
+      "reply_tokens": 8,
+      "request_index": 4913,
+      "spans": [
+        [
+          38,
+          71
+        ],
+        [
+          71,
+          118
+        ],
+        [
+          118,
+          194
+        ],
+        [
+          194,
+          242
+        ],
+        [
+          242,
+          360
+        ],
+        [
+          360,
+          445
+        ],
+        [
+          445,
+          496
+        ],
+        [
+          496,
+          583
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 674,
+      "question_id": "1faac195",
+      "question_index": 8,
+      "reply_tokens": 19,
+      "request_index": 4639,
+      "spans": [
+        [
+          38,
+          74
+        ],
+        [
+          74,
+          111
+        ],
+        [
+          111,
+          172
+        ],
+        [
+          172,
+          258
+        ],
+        [
+          258,
+          305
+        ],
+        [
+          305,
+          464
+        ],
+        [
+          464,
+          533
+        ],
+        [
+          533,
+          606
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 937,
+      "question_id": "22d2cb42",
+      "question_index": 9,
+      "reply_tokens": 14,
+      "request_index": 5461,
+      "spans": [
+        [
+          38,
+          126
+        ],
+        [
+          126,
+          189
+        ],
+        [
+          189,
+          481
+        ],
+        [
+          481,
+          513
+        ],
+        [
+          513,
+          650
+        ],
+        [
+          650,
+          728
+        ],
+        [
+          728,
+          835
+        ],
+        [
+          835,
+          868
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 673,
+      "question_id": "22d2cb42",
+      "question_index": 9,
+      "reply_tokens": 19,
+      "request_index": 5187,
+      "spans": [
+        [
+          38,
+          138
+        ],
+        [
+          138,
+          233
+        ],
+        [
+          233,
+          289
+        ],
+        [
+          289,
+          354
+        ],
+        [
+          354,
+          396
+        ],
+        [
+          396,
+          442
+        ],
+        [
+          442,
+          505
+        ],
+        [
+          505,
+          604
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 531,
+      "question_id": "25e5aa4f",
+      "question_index": 10,
+      "reply_tokens": 13,
+      "request_index": 6009,
+      "spans": [
+        [
+          38,
+          97
+        ],
+        [
+          97,
+          166
+        ],
+        [
+          166,
+          189
+        ],
+        [
+          190,
+          232
+        ],
+        [
+          232,
+          268
+        ],
+        [
+          269,
+          369
+        ],
+        [
+          369,
+          395
+        ],
+        [
+          396,
+          458
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 620,
+      "question_id": "25e5aa4f",
+      "question_index": 10,
+      "reply_tokens": 6,
+      "request_index": 5735,
+      "spans": [
+        [
+          38,
+          100
+        ],
+        [
+          100,
+          180
+        ],
+        [
+          180,
+          232
+        ],
+        [
+          232,
+          310
+        ],
+        [
+          310,
+          356
+        ],
+        [
+          356,
+          414
+        ],
+        [
+          414,
+          475
+        ],
+        [
+          475,
+          547
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 667,
+      "question_id": "2788b940",
+      "question_index": 11,
+      "reply_tokens": 11,
+      "request_index": 6557,
+      "spans": [
+        [
+          38,
+          83
+        ],
+        [
+          83,
+          159
+        ],
+        [
+          159,
+          220
+        ],
+        [
+          220,
+          276
+        ],
+        [
+          276,
+          362
+        ],
+        [
+          362,
+          425
+        ],
+        [
+          425,
+          493
+        ],
+        [
+          493,
+          594
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 626,
+      "question_id": "2788b940",
+      "question_index": 11,
+      "reply_tokens": 35,
+      "request_index": 6283,
+      "spans": [
+        [
+          38,
+          105
+        ],
+        [
+          105,
+          158
+        ],
+        [
+          159,
+          212
+        ],
+        [
+          213,
+          260
+        ],
+        [
+          260,
+          301
+        ],
+        [
+          301,
+          366
+        ],
+        [
+          366,
+          437
+        ],
+        [
+          437,
+          553
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 610,
+      "question_id": "2a1811e2",
+      "question_index": 12,
+      "reply_tokens": 45,
+      "request_index": 7105,
+      "spans": [
+        [
+          38,
+          87
+        ],
+        [
+          87,
+          123
+        ],
+        [
+          124,
+          218
+        ],
+        [
+          218,
+          286
+        ],
+        [
+          286,
+          333
+        ],
+        [
+          333,
+          394
+        ],
+        [
+          394,
+          473
+        ],
+        [
+          473,
+          526
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 706,
+      "question_id": "2a1811e2",
+      "question_index": 12,
+      "reply_tokens": 46,
+      "request_index": 6831,
+      "spans": [
+        [
+          38,
+          132
+        ],
+        [
+          132,
+          241
+        ],
+        [
+          241,
+          312
+        ],
+        [
+          312,
+          386
+        ],
+        [
+          386,
+          465
+        ],
+        [
+          465,
+          535
+        ],
+        [
+          535,
+          589
+        ],
+        [
+          589,
+          622
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 756,
+      "question_id": "2b8f3739",
+      "question_index": 13,
+      "reply_tokens": 42,
+      "request_index": 7653,
+      "spans": [
+        [
+          38,
+          141
+        ],
+        [
+          141,
+          214
+        ],
+        [
+          214,
+          242
+        ],
+        [
+          243,
+          332
+        ],
+        [
+          332,
+          383
+        ],
+        [
+          383,
+          468
+        ],
+        [
+          468,
+          571
+        ],
+        [
+          571,
+          678
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 740,
+      "question_id": "2b8f3739",
+      "question_index": 13,
+      "reply_tokens": 19,
+      "request_index": 7379,
+      "spans": [
+        [
+          38,
+          104
+        ],
+        [
+          104,
+          162
+        ],
+        [
+          162,
+          239
+        ],
+        [
+          239,
+          301
+        ],
+        [
+          301,
+          398
+        ],
+        [
+          398,
+          463
+        ],
+        [
+          463,
+          570
+        ],
+        [
+          570,
+          662
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 598,
+      "question_id": "35a27287",
+      "question_index": 14,
+      "reply_tokens": 6,
+      "request_index": 8201,
+      "spans": [
+        [
+          38,
+          91
+        ],
+        [
+          91,
+          125
+        ],
+        [
+          126,
+          195
+        ],
+        [
+          195,
+          272
+        ],
+        [
+          272,
+          328
+        ],
+        [
+          328,
+          393
+        ],
+        [
+          393,
+          451
+        ],
+        [
+          451,
+          524
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 537,
+      "question_id": "35a27287",
+      "question_index": 14,
+      "reply_tokens": 6,
+      "request_index": 7927,
+      "spans": [
+        [
+          38,
+          73
+        ],
+        [
+          73,
+          108
+        ],
+        [
+          108,
+          164
+        ],
+        [
+          164,
+          225
+        ],
+        [
+          225,
+          283
+        ],
+        [
+          283,
+          381
+        ],
+        [
+          381,
+          420
+        ],
+        [
+          420,
+          463
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 684,
+      "question_id": "37f165cf",
+      "question_index": 15,
+      "reply_tokens": 6,
+      "request_index": 8749,
+      "spans": [
+        [
+          38,
+          89
+        ],
+        [
+          89,
+          166
+        ],
+        [
+          166,
+          221
+        ],
+        [
+          221,
+          288
+        ],
+        [
+          288,
+          327
+        ],
+        [
+          328,
+          431
+        ],
+        [
+          431,
+          532
+        ],
+        [
+          532,
+          607
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 801,
+      "question_id": "37f165cf",
+      "question_index": 15,
+      "reply_tokens": 6,
+      "request_index": 8475,
+      "spans": [
+        [
+          38,
+          141
+        ],
+        [
+          141,
+          218
+        ],
+        [
+          218,
+          280
+        ],
+        [
+          280,
+          363
+        ],
+        [
+          363,
+          422
+        ],
+        [
+          422,
+          502
+        ],
+        [
+          502,
+          623
+        ],
+        [
+          623,
+          724
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 786,
+      "question_id": "3c1045c8",
+      "question_index": 16,
+      "reply_tokens": 41,
+      "request_index": 9297,
+      "spans": [
+        [
+          38,
+          184
+        ],
+        [
+          184,
+          265
+        ],
+        [
+          265,
+          330
+        ],
+        [
+          330,
+          409
+        ],
+        [
+          409,
+          498
+        ],
+        [
+          498,
+          587
+        ],
+        [
+          587,
+          669
+        ],
+        [
+          669,
+          710
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 961,
+      "question_id": "3c1045c8",
+      "question_index": 16,
+      "reply_tokens": 19,
+      "request_index": 9023,
+      "spans": [
+        [
+          38,
+          119
+        ],
+        [
+          119,
+          350
+        ],
+        [
+          350,
+          535
+        ],
+        [
+          535,
+          611
+        ],
+        [
+          611,
+          652
+        ],
+        [
+          652,
+          707
+        ],
+        [
+          707,
+          796
+        ],
+        [
+          796,
+          885
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 621,
+      "question_id": "4f54b7c9",
+      "question_index": 17,
+      "reply_tokens": 13,
+      "request_index": 9845,
+      "spans": [
+        [
+          38,
+          104
+        ],
+        [
+          104,
+          130
+        ],
+        [
+          131,
+          218
+        ],
+        [
+          218,
+          244
+        ],
+        [
+          244,
+          334
+        ],
+        [
+          334,
+          385
+        ],
+        [
+          385,
+          447
+        ],
+        [
+          447,
+          546
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 854,
+      "question_id": "4f54b7c9",
+      "question_index": 17,
+      "reply_tokens": 13,
+      "request_index": 9571,
+      "spans": [
+        [
+          38,
+          125
+        ],
+        [
+          125,
+          201
+        ],
+        [
+          201,
+          282
+        ],
+        [
+          282,
+          342
+        ],
+        [
+          342,
+          451
+        ],
+        [
+          451,
+          566
+        ],
+        [
+          566,
+          665
+        ],
+        [
+          665,
+          779
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 595,
+      "question_id": "545bd2b5",
+      "question_index": 18,
+      "reply_tokens": 17,
+      "request_index": 10393,
+      "spans": [
+        [
+          38,
+          65
+        ],
+        [
+          65,
+          154
+        ],
+        [
+          154,
+          229
+        ],
+        [
+          229,
+          265
+        ],
+        [
+          265,
+          332
+        ],
+        [
+          332,
+          404
+        ],
+        [
+          404,
+          458
+        ],
+        [
+          458,
+          521
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 899,
+      "question_id": "545bd2b5",
+      "question_index": 18,
+      "reply_tokens": 22,
+      "request_index": 10119,
+      "spans": [
+        [
+          38,
+          144
+        ],
+        [
+          144,
+          215
+        ],
+        [
+          215,
+          345
+        ],
+        [
+          345,
+          475
+        ],
+        [
+          475,
+          594
+        ],
+        [
+          594,
+          686
+        ],
+        [
+          686,
+          753
+        ],
+        [
+          753,
+          825
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 596,
+      "question_id": "60d45044",
+      "question_index": 19,
+      "reply_tokens": 11,
+      "request_index": 10941,
+      "spans": [
+        [
+          38,
+          110
+        ],
+        [
+          110,
+          145
+        ],
+        [
+          145,
+          179
+        ],
+        [
+          180,
+          252
+        ],
+        [
+          252,
+          312
+        ],
+        [
+          312,
+          421
+        ],
+        [
+          421,
+          502
+        ],
+        [
+          502,
+          527
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 756,
+      "question_id": "60d45044",
+      "question_index": 19,
+      "reply_tokens": 13,
+      "request_index": 10667,
+      "spans": [
+        [
+          38,
+          148
+        ],
+        [
+          148,
+          234
+        ],
+        [
+          234,
+          292
+        ],
+        [
+          292,
+          384
+        ],
+        [
+          384,
+          444
+        ],
+        [
+          444,
+          535
+        ],
+        [
+          535,
+          636
+        ],
+        [
+          636,
+          687
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 598,
+      "question_id": "61f8c8f8",
+      "question_index": 20,
+      "reply_tokens": 20,
+      "request_index": 11489,
+      "spans": [
+        [
+          38,
+          96
+        ],
+        [
+          96,
+          169
+        ],
+        [
+          169,
+          248
+        ],
+        [
+          248,
+          313
+        ],
+        [
+          313,
+          347
+        ],
+        [
+          348,
+          387
+        ],
+        [
+          388,
+          474
+        ],
+        [
+          474,
+          518
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 596,
+      "question_id": "61f8c8f8",
+      "question_index": 20,
+      "reply_tokens": 20,
+      "request_index": 11215,
+      "spans": [
+        [
+          38,
+          71
+        ],
+        [
+          71,
+          152
+        ],
+        [
+          152,
+          215
+        ],
+        [
+          215,
+          283
+        ],
+        [
+          283,
+          368
+        ],
+        [
+          368,
+          416
+        ],
+        [
+          416,
+          481
+        ],
+        [
+          481,
+          515
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 696,
+      "question_id": "6a27ffc2",
+      "question_index": 21,
+      "reply_tokens": 19,
+      "request_index": 12037,
+      "spans": [
+        [
+          38,
+          98
+        ],
+        [
+          98,
+          158
+        ],
+        [
+          158,
+          223
+        ],
+        [
+          223,
+          299
+        ],
+        [
+          299,
+          391
+        ],
+        [
+          391,
+          480
+        ],
+        [
+          480,
+          555
+        ],
+        [
+          555,
+          618
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 810,
+      "question_id": "6a27ffc2",
+      "question_index": 21,
+      "reply_tokens": 19,
+      "request_index": 11763,
+      "spans": [
+        [
+          38,
+          115
+        ],
+        [
+          115,
+          212
+        ],
+        [
+          212,
+          307
+        ],
+        [
+          307,
+          399
+        ],
+        [
+          399,
+          481
+        ],
+        [
+          481,
+          554
+        ],
+        [
+          554,
+          629
+        ],
+        [
+          629,
+          732
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 706,
+      "question_id": "71017277",
+      "question_index": 22,
+      "reply_tokens": 6,
+      "request_index": 12585,
+      "spans": [
+        [
+          38,
+          138
+        ],
+        [
+          138,
+          228
+        ],
+        [
+          228,
+          270
+        ],
+        [
+          270,
+          358
+        ],
+        [
+          358,
+          400
+        ],
+        [
+          400,
+          475
+        ],
+        [
+          475,
+          601
+        ],
+        [
+          601,
+          633
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 626,
+      "question_id": "71017277",
+      "question_index": 22,
+      "reply_tokens": 6,
+      "request_index": 12311,
+      "spans": [
+        [
+          38,
+          124
+        ],
+        [
+          124,
+          188
+        ],
+        [
+          188,
+          254
+        ],
+        [
+          254,
+          316
+        ],
+        [
+          316,
+          372
+        ],
+        [
+          372,
+          436
+        ],
+        [
+          436,
+          502
+        ],
+        [
+          502,
+          554
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 590,
+      "question_id": "75832dbd",
+      "question_index": 23,
+      "reply_tokens": 6,
+      "request_index": 13133,
+      "spans": [
+        [
+          38,
+          92
+        ],
+        [
+          92,
+          168
+        ],
+        [
+          168,
+          195
+        ],
+        [
+          196,
+          258
+        ],
+        [
+          258,
+          329
+        ],
+        [
+          329,
+          380
+        ],
+        [
+          380,
+          407
+        ],
+        [
+          407,
+          515
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 572,
+      "question_id": "75832dbd",
+      "question_index": 23,
+      "reply_tokens": 6,
+      "request_index": 12859,
+      "spans": [
+        [
+          38,
+          96
+        ],
+        [
+          96,
+          150
+        ],
+        [
+          150,
+          199
+        ],
+        [
+          199,
+          256
+        ],
+        [
+          256,
+          321
+        ],
+        [
+          321,
+          376
+        ],
+        [
+          376,
+          435
+        ],
+        [
+          435,
+          497
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 625,
+      "question_id": "81507db6",
+      "question_index": 24,
+      "reply_tokens": 13,
+      "request_index": 13681,
+      "spans": [
+        [
+          38,
+          83
+        ],
+        [
+          83,
+          163
+        ],
+        [
+          163,
+          274
+        ],
+        [
+          274,
+          363
+        ],
+        [
+          363,
+          436
+        ],
+        [
+          436,
+          476
+        ],
+        [
+          476,
+          511
+        ],
+        [
+          511,
+          551
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 640,
+      "question_id": "81507db6",
+      "question_index": 24,
+      "reply_tokens": 13,
+      "request_index": 13407,
+      "spans": [
+        [
+          38,
+          133
+        ],
+        [
+          133,
+          167
+        ],
+        [
+          167,
+          229
+        ],
+        [
+          229,
+          287
+        ],
+        [
+          287,
+          367
+        ],
+        [
+          367,
+          456
+        ],
+        [
+          456,
+          529
+        ],
+        [
+          529,
+          566
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 1022,
+      "question_id": "86b68151",
+      "question_index": 25,
+      "reply_tokens": 11,
+      "request_index": 14229,
+      "spans": [
+        [
+          38,
+          103
+        ],
+        [
+          103,
+          145
+        ],
+        [
+          145,
+          260
+        ],
+        [
+          260,
+          561
+        ],
+        [
+          561,
+          668
+        ],
+        [
+          668,
+          775
+        ],
+        [
+          775,
+          868
+        ],
+        [
+          868,
+          951
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 602,
+      "question_id": "86b68151",
+      "question_index": 25,
+      "reply_tokens": 11,
+      "request_index": 13955,
+      "spans": [
+        [
+          38,
+          112
+        ],
+        [
+          112,
+          152
+        ],
+        [
+          152,
+          233
+        ],
+        [
+          233,
+          316
+        ],
+        [
+          316,
+          393
+        ],
+        [
+          393,
+          448
+        ],
+        [
+          448,
+          482
+        ],
+        [
+          482,
+          531
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 662,
+      "question_id": "89941a94",
+      "question_index": 26,
+      "reply_tokens": 28,
+      "request_index": 14777,
+      "spans": [
+        [
+          38,
+          76
+        ],
+        [
+          76,
+          152
+        ],
+        [
+          152,
+          192
+        ],
+        [
+          192,
+          237
+        ],
+        [
+          237,
+          306
+        ],
+        [
+          306,
+          392
+        ],
+        [
+          392,
+          513
+        ],
+        [
+          513,
+          578
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 921,
+      "question_id": "89941a94",
+      "question_index": 26,
+      "reply_tokens": 23,
+      "request_index": 14503,
+      "spans": [
+        [
+          38,
+          112
+        ],
+        [
+          112,
+          198
+        ],
+        [
+          198,
+          286
+        ],
+        [
+          286,
+          350
+        ],
+        [
+          350,
+          481
+        ],
+        [
+          481,
+          602
+        ],
+        [
+          602,
+          712
+        ],
+        [
+          712,
+          837
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 559,
+      "question_id": "8a137a7f",
+      "question_index": 27,
+      "reply_tokens": 12,
+      "request_index": 15325,
+      "spans": [
+        [
+          38,
+          111
+        ],
+        [
+          111,
+          156
+        ],
+        [
+          156,
+          202
+        ],
+        [
+          202,
+          306
+        ],
+        [
+          306,
+          355
+        ],
+        [
+          355,
+          395
+        ],
+        [
+          395,
+          449
+        ],
+        [
+          449,
+          486
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 642,
+      "question_id": "8a137a7f",
+      "question_index": 27,
+      "reply_tokens": 12,
+      "request_index": 15051,
+      "spans": [
+        [
+          38,
+          89
+        ],
+        [
+          89,
+          162
+        ],
+        [
+          162,
+          242
+        ],
+        [
+          242,
+          306
+        ],
+        [
+          306,
+          386
+        ],
+        [
+          386,
+          447
+        ],
+        [
+          448,
+          516
+        ],
+        [
+          516,
+          569
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 724,
+      "question_id": "8c18457d",
+      "question_index": 28,
+      "reply_tokens": 42,
+      "request_index": 15873,
+      "spans": [
+        [
+          38,
+          136
+        ],
+        [
+          136,
+          164
+        ],
+        [
+          164,
+          223
+        ],
+        [
+          223,
+          324
+        ],
+        [
+          324,
+          391
+        ],
+        [
+          391,
+          456
+        ],
+        [
+          456,
+          565
+        ],
+        [
+          565,
+          632
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 748,
+      "question_id": "8c18457d",
+      "question_index": 28,
+      "reply_tokens": 44,
+      "request_index": 15599,
+      "spans": [
+        [
+          38,
+          80
+        ],
+        [
+          80,
+          146
+        ],
+        [
+          146,
+          245
+        ],
+        [
+          245,
+          349
+        ],
+        [
+          349,
+          414
+        ],
+        [
+          414,
+          480
+        ],
+        [
+          480,
+          589
+        ],
+        [
+          589,
+          656
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 583,
+      "question_id": "8ebdbe50",
+      "question_index": 29,
+      "reply_tokens": 11,
+      "request_index": 16421,
+      "spans": [
+        [
+          38,
+          93
+        ],
+        [
+          93,
+          159
+        ],
+        [
+          159,
+          193
+        ],
+        [
+          194,
+          274
+        ],
+        [
+          274,
+          361
+        ],
+        [
+          361,
+          418
+        ],
+        [
+          418,
+          473
+        ],
+        [
+          473,
+          514
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 683,
+      "question_id": "8ebdbe50",
+      "question_index": 29,
+      "reply_tokens": 12,
+      "request_index": 16147,
+      "spans": [
+        [
+          38,
+          106
+        ],
+        [
+          106,
+          186
+        ],
+        [
+          186,
+          238
+        ],
+        [
+          238,
+          288
+        ],
+        [
+          288,
+          363
+        ],
+        [
+          363,
+          448
+        ],
+        [
+          448,
+          503
+        ],
+        [
+          503,
+          614
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 657,
+      "question_id": "8fb83627",
+      "question_index": 30,
+      "reply_tokens": 11,
+      "request_index": 16969,
+      "spans": [
+        [
+          38,
+          111
+        ],
+        [
+          111,
+          193
+        ],
+        [
+          193,
+          261
+        ],
+        [
+          261,
+          319
+        ],
+        [
+          319,
+          407
+        ],
+        [
+          407,
+          456
+        ],
+        [
+          456,
+          505
+        ],
+        [
+          505,
+          585
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 629,
+      "question_id": "8fb83627",
+      "question_index": 30,
+      "reply_tokens": 11,
+      "request_index": 16695,
+      "spans": [
+        [
+          38,
+          84
+        ],
+        [
+          84,
+          137
+        ],
+        [
+          137,
+          225
+        ],
+        [
+          225,
+          274
+        ],
+        [
+          274,
+          315
+        ],
+        [
+          315,
+          405
+        ],
+        [
+          405,
+          485
+        ],
+        [
+          485,
+          557
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 829,
+      "question_id": "945e3d21",
+      "question_index": 31,
+      "reply_tokens": 15,
+      "request_index": 17517,
+      "spans": [
+        [
+          38,
+          122
+        ],
+        [
+          122,
+          208
+        ],
+        [
+          208,
+          275
+        ],
+        [
+          275,
+          436
+        ],
+        [
+          436,
+          497
+        ],
+        [
+          497,
+          600
+        ],
+        [
+          600,
+          654
+        ],
+        [
+          654,
+          755
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 862,
+      "question_id": "945e3d21",
+      "question_index": 31,
+      "reply_tokens": 15,
+      "request_index": 17243,
+      "spans": [
+        [
+          38,
+          122
+        ],
+        [
+          122,
+          206
+        ],
+        [
+          206,
+          321
+        ],
+        [
+          321,
+          482
+        ],
+        [
+          482,
+          546
+        ],
+        [
+          546,
+          645
+        ],
+        [
+          645,
+          696
+        ],
+        [
+          696,
+          788
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 711,
+      "question_id": "993da5e2",
+      "question_index": 32,
+      "reply_tokens": 20,
+      "request_index": 18065,
+      "spans": [
+        [
+          38,
+          147
+        ],
+        [
+          147,
+          219
+        ],
+        [
+          219,
+          279
+        ],
+        [
+          279,
+          377
+        ],
+        [
+          377,
+          440
+        ],
+        [
+          440,
+          496
+        ],
+        [
+          497,
+          571
+        ],
+        [
+          571,
+          631
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 883,
+      "question_id": "993da5e2",
+      "question_index": 32,
+      "reply_tokens": 21,
+      "request_index": 17791,
+      "spans": [
+        [
+          38,
+          147
+        ],
+        [
+          147,
+          213
+        ],
+        [
+          213,
+          293
+        ],
+        [
+          293,
+          391
+        ],
+        [
+          391,
+          487
+        ],
+        [
+          487,
+          561
+        ],
+        [
+          561,
+          667
+        ],
+        [
+          667,
+          803
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 796,
+      "question_id": "a06e4cfe",
+      "question_index": 33,
+      "reply_tokens": 20,
+      "request_index": 18613,
+      "spans": [
+        [
+          38,
+          136
+        ],
+        [
+          136,
+          204
+        ],
+        [
+          204,
+          278
+        ],
+        [
+          278,
+          341
+        ],
+        [
+          341,
+          562
+        ],
+        [
+          562,
+          595
+        ],
+        [
+          595,
+          634
+        ],
+        [
+          635,
+          719
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 718,
+      "question_id": "a06e4cfe",
+      "question_index": 33,
+      "reply_tokens": 20,
+      "request_index": 18339,
+      "spans": [
+        [
+          38,
+          88
+        ],
+        [
+          89,
+          143
+        ],
+        [
+          143,
+          166
+        ],
+        [
+          167,
+          262
+        ],
+        [
+          262,
+          345
+        ],
+        [
+          345,
+          443
+        ],
+        [
+          443,
+          556
+        ],
+        [
+          556,
+          641
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 677,
+      "question_id": "a2f3aa27",
+      "question_index": 34,
+      "reply_tokens": 35,
+      "request_index": 19161,
+      "spans": [
+        [
+          38,
+          84
+        ],
+        [
+          84,
+          137
+        ],
+        [
+          137,
+          190
+        ],
+        [
+          190,
+          317
+        ],
+        [
+          317,
+          413
+        ],
+        [
+          413,
+          511
+        ],
+        [
+          511,
+          570
+        ],
+        [
+          570,
+          606
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 654,
+      "question_id": "a2f3aa27",
+      "question_index": 34,
+      "reply_tokens": 12,
+      "request_index": 18887,
+      "spans": [
+        [
+          38,
+          89
+        ],
+        [
+          89,
+          143
+        ],
+        [
+          143,
+          209
+        ],
+        [
+          209,
+          264
+        ],
+        [
+          264,
+          312
+        ],
+        [
+          312,
+          439
+        ],
+        [
+          439,
+          490
+        ],
+        [
+          490,
+          583
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 680,
+      "question_id": "a346bb18",
+      "question_index": 35,
+      "reply_tokens": 13,
+      "request_index": 19709,
+      "spans": [
+        [
+          38,
+          135
+        ],
+        [
+          135,
+          182
+        ],
+        [
+          182,
+          247
+        ],
+        [
+          247,
+          337
+        ],
+        [
+          337,
+          382
+        ],
+        [
+          382,
+          448
+        ],
+        [
+          448,
+          559
+        ],
+        [
+          559,
+          605
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 613,
+      "question_id": "a346bb18",
+      "question_index": 35,
+      "reply_tokens": 6,
+      "request_index": 19435,
+      "spans": [
+        [
+          38,
+          135
+        ],
+        [
+          135,
+          167
+        ],
+        [
+          168,
+          241
+        ],
+        [
+          241,
+          286
+        ],
+        [
+          286,
+          340
+        ],
+        [
+          340,
+          402
+        ],
+        [
+          402,
+          450
+        ],
+        [
+          450,
+          538
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 696,
+      "question_id": "b3c15d39",
+      "question_index": 36,
+      "reply_tokens": 15,
+      "request_index": 20257,
+      "spans": [
+        [
+          38,
+          159
+        ],
+        [
+          159,
+          196
+        ],
+        [
+          196,
+          244
+        ],
+        [
+          244,
+          319
+        ],
+        [
+          319,
+          380
+        ],
+        [
+          380,
+          456
+        ],
+        [
+          456,
+          552
+        ],
+        [
+          552,
+          615
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 710,
+      "question_id": "b3c15d39",
+      "question_index": 36,
+      "reply_tokens": 32,
+      "request_index": 19983,
+      "spans": [
+        [
+          38,
+          177
+        ],
+        [
+          177,
+          298
+        ],
+        [
+          298,
+          336
+        ],
+        [
+          336,
+          375
+        ],
+        [
+          375,
+          471
+        ],
+        [
+          471,
+          535
+        ],
+        [
+          535,
+          585
+        ],
+        [
+          585,
+          629
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 891,
+      "question_id": "b6025781",
+      "question_index": 37,
+      "reply_tokens": 6,
+      "request_index": 20805,
+      "spans": [
+        [
+          38,
+          109
+        ],
+        [
+          109,
+          193
+        ],
+        [
+          193,
+          244
+        ],
+        [
+          244,
+          598
+        ],
+        [
+          598,
+          646
+        ],
+        [
+          646,
+          720
+        ],
+        [
+          720,
+          757
+        ],
+        [
+          757,
+          815
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 683,
+      "question_id": "b6025781",
+      "question_index": 37,
+      "reply_tokens": 6,
+      "request_index": 20531,
+      "spans": [
+        [
+          38,
+          83
+        ],
+        [
+          83,
+          159
+        ],
+        [
+          159,
+          207
+        ],
+        [
+          207,
+          256
+        ],
+        [
+          256,
+          312
+        ],
+        [
+          312,
+          400
+        ],
+        [
+          400,
+          503
+        ],
+        [
+          503,
+          607
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 629,
+      "question_id": "b9cfe692",
+      "question_index": 38,
+      "reply_tokens": 32,
+      "request_index": 21353,
+      "spans": [
+        [
+          38,
+          87
+        ],
+        [
+          87,
+          164
+        ],
+        [
+          164,
+          207
+        ],
+        [
+          208,
+          274
+        ],
+        [
+          274,
+          355
+        ],
+        [
+          355,
+          386
+        ],
+        [
+          386,
+          431
+        ],
+        [
+          431,
+          542
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 722,
+      "question_id": "b9cfe692",
+      "question_index": 38,
+      "reply_tokens": 32,
+      "request_index": 21079,
+      "spans": [
+        [
+          38,
+          115
+        ],
+        [
+          115,
+          196
+        ],
+        [
+          196,
+          321
+        ],
+        [
+          321,
+          409
+        ],
+        [
+          409,
+          463
+        ],
+        [
+          463,
+          492
+        ],
+        [
+          493,
+          552
+        ],
+        [
+          552,
+          635
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 619,
+      "question_id": "ba358f49",
+      "question_index": 39,
+      "reply_tokens": 6,
+      "request_index": 21901,
+      "spans": [
+        [
+          38,
+          92
+        ],
+        [
+          92,
+          176
+        ],
+        [
+          176,
+          228
+        ],
+        [
+          228,
+          278
+        ],
+        [
+          278,
+          313
+        ],
+        [
+          313,
+          402
+        ],
+        [
+          402,
+          460
+        ],
+        [
+          460,
+          545
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 1123,
+      "question_id": "ba358f49",
+      "question_index": 39,
+      "reply_tokens": 6,
+      "request_index": 21627,
+      "spans": [
+        [
+          38,
+          109
+        ],
+        [
+          109,
+          193
+        ],
+        [
+          193,
+          271
+        ],
+        [
+          271,
+          360
+        ],
+        [
+          360,
+          425
+        ],
+        [
+          425,
+          525
+        ],
+        [
+          525,
+          645
+        ],
+        [
+          645,
+          1049
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 637,
+      "question_id": "bb7c3b45",
+      "question_index": 40,
+      "reply_tokens": 14,
+      "request_index": 22449,
+      "spans": [
+        [
+          38,
+          79
+        ],
+        [
+          80,
+          155
+        ],
+        [
+          155,
+          206
+        ],
+        [
+          206,
+          268
+        ],
+        [
+          268,
+          329
+        ],
+        [
+          329,
+          401
+        ],
+        [
+          401,
+          475
+        ],
+        [
+          475,
+          564
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 686,
+      "question_id": "bb7c3b45",
+      "question_index": 40,
+      "reply_tokens": 14,
+      "request_index": 22175,
+      "spans": [
+        [
+          38,
+          96
+        ],
+        [
+          96,
+          185
+        ],
+        [
+          185,
+          260
+        ],
+        [
+          260,
+          339
+        ],
+        [
+          339,
+          414
+        ],
+        [
+          414,
+          469
+        ],
+        [
+          469,
+          524
+        ],
+        [
+          524,
+          613
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 1036,
+      "question_id": "c8090214",
+      "question_index": 41,
+      "reply_tokens": 43,
+      "request_index": 22997,
+      "spans": [
+        [
+          38,
+          135
+        ],
+        [
+          135,
+          238
+        ],
+        [
+          238,
+          279
+        ],
+        [
+          279,
+          352
+        ],
+        [
+          352,
+          408
+        ],
+        [
+          408,
+          806
+        ],
+        [
+          806,
+          903
+        ],
+        [
+          903,
+          956
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 853,
+      "question_id": "c8090214",
+      "question_index": 41,
+      "reply_tokens": 43,
+      "request_index": 22723,
+      "spans": [
+        [
+          38,
+          141
+        ],
+        [
+          141,
+          274
+        ],
+        [
+          274,
+          384
+        ],
+        [
+          384,
+          471
+        ],
+        [
+          471,
+          539
+        ],
+        [
+          539,
+          636
+        ],
+        [
+          636,
+          702
+        ],
+        [
+          702,
+          773
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 607,
+      "question_id": "caf03d32",
+      "question_index": 42,
+      "reply_tokens": 6,
+      "request_index": 23545,
+      "spans": [
+        [
+          38,
+          88
+        ],
+        [
+          88,
+          138
+        ],
+        [
+          138,
+          192
+        ],
+        [
+          192,
+          276
+        ],
+        [
+          276,
+          351
+        ],
+        [
+          351,
+          438
+        ],
+        [
+          438,
+          494
+        ],
+        [
+          494,
+          529
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 657,
+      "question_id": "caf03d32",
+      "question_index": 42,
+      "reply_tokens": 22,
+      "request_index": 23271,
+      "spans": [
+        [
+          38,
+          232
+        ],
+        [
+          233,
+          289
+        ],
+        [
+          289,
+          324
+        ],
+        [
+          324,
+          372
+        ],
+        [
+          372,
+          417
+        ],
+        [
+          417,
+          461
+        ],
+        [
+          461,
+          519
+        ],
+        [
+          519,
+          579
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 640,
+      "question_id": "d682f1a2",
+      "question_index": 43,
+      "reply_tokens": 25,
+      "request_index": 24093,
+      "spans": [
+        [
+          38,
+          119
+        ],
+        [
+          119,
+          186
+        ],
+        [
+          186,
+          237
+        ],
+        [
+          237,
+          286
+        ],
+        [
+          287,
+          349
+        ],
+        [
+          349,
+          425
+        ],
+        [
+          425,
+          470
+        ],
+        [
+          470,
+          566
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 665,
+      "question_id": "d682f1a2",
+      "question_index": 43,
+      "reply_tokens": 22,
+      "request_index": 23819,
+      "spans": [
+        [
+          38,
+          105
+        ],
+        [
+          105,
+          194
+        ],
+        [
+          194,
+          268
+        ],
+        [
+          268,
+          353
+        ],
+        [
+          353,
+          406
+        ],
+        [
+          406,
+          455
+        ],
+        [
+          455,
+          515
+        ],
+        [
+          515,
+          591
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 1049,
+      "question_id": "e493bb7c",
+      "question_index": 44,
+      "reply_tokens": 21,
+      "request_index": 24641,
+      "spans": [
+        [
+          38,
+          106
+        ],
+        [
+          106,
+          244
+        ],
+        [
+          244,
+          299
+        ],
+        [
+          299,
+          414
+        ],
+        [
+          414,
+          457
+        ],
+        [
+          457,
+          519
+        ],
+        [
+          519,
+          663
+        ],
+        [
+          663,
+          972
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 802,
+      "question_id": "e493bb7c",
+      "question_index": 44,
+      "reply_tokens": 24,
+      "request_index": 24367,
+      "spans": [
+        [
+          38,
+          83
+        ],
+        [
+          83,
+          163
+        ],
+        [
+          163,
+          301
+        ],
+        [
+          301,
+          402
+        ],
+        [
+          402,
+          517
+        ],
+        [
+          517,
+          631
+        ],
+        [
+          631,
+          672
+        ],
+        [
+          672,
+          725
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 817,
+      "question_id": "eac54adc",
+      "question_index": 45,
+      "reply_tokens": 19,
+      "request_index": 25189,
+      "spans": [
+        [
+          38,
+          124
+        ],
+        [
+          124,
+          182
+        ],
+        [
+          182,
+          249
+        ],
+        [
+          249,
+          303
+        ],
+        [
+          303,
+          368
+        ],
+        [
+          368,
+          582
+        ],
+        [
+          582,
+          631
+        ],
+        [
+          631,
+          737
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 1145,
+      "question_id": "eac54adc",
+      "question_index": 45,
+      "reply_tokens": 6,
+      "request_index": 24915,
+      "spans": [
+        [
+          38,
+          84
+        ],
+        [
+          84,
+          159
+        ],
+        [
+          159,
+          692
+        ],
+        [
+          692,
+          740
+        ],
+        [
+          740,
+          805
+        ],
+        [
+          805,
+          899
+        ],
+        [
+          899,
+          990
+        ],
+        [
+          990,
+          1064
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 654,
+      "question_id": "eace081b",
+      "question_index": 46,
+      "reply_tokens": 10,
+      "request_index": 25737,
+      "spans": [
+        [
+          38,
+          201
+        ],
+        [
+          201,
+          260
+        ],
+        [
+          260,
+          315
+        ],
+        [
+          315,
+          382
+        ],
+        [
+          382,
+          431
+        ],
+        [
+          431,
+          505
+        ],
+        [
+          505,
+          535
+        ],
+        [
+          536,
+          580
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 627,
+      "question_id": "eace081b",
+      "question_index": 46,
+      "reply_tokens": 16,
+      "request_index": 25463,
+      "spans": [
+        [
+          38,
+          85
+        ],
+        [
+          85,
+          180
+        ],
+        [
+          180,
+          265
+        ],
+        [
+          265,
+          314
+        ],
+        [
+          314,
+          363
+        ],
+        [
+          363,
+          433
+        ],
+        [
+          433,
+          481
+        ],
+        [
+          481,
+          553
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 601,
+      "question_id": "edced276",
+      "question_index": 47,
+      "reply_tokens": 19,
+      "request_index": 26285,
+      "spans": [
+        [
+          38,
+          121
+        ],
+        [
+          121,
+          162
+        ],
+        [
+          162,
+          198
+        ],
+        [
+          198,
+          251
+        ],
+        [
+          251,
+          337
+        ],
+        [
+          337,
+          419
+        ],
+        [
+          419,
+          463
+        ],
+        [
+          463,
+          523
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 741,
+      "question_id": "edced276",
+      "question_index": 47,
+      "reply_tokens": 15,
+      "request_index": 26011,
+      "spans": [
+        [
+          38,
+          121
+        ],
+        [
+          121,
+          237
+        ],
+        [
+          237,
+          300
+        ],
+        [
+          300,
+          389
+        ],
+        [
+          389,
+          447
+        ],
+        [
+          447,
+          533
+        ],
+        [
+          533,
+          585
+        ],
+        [
+          585,
+          663
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 632,
+      "question_id": "f0e564bc",
+      "question_index": 48,
+      "reply_tokens": 22,
+      "request_index": 26833,
+      "spans": [
+        [
+          38,
+          98
+        ],
+        [
+          98,
+          188
+        ],
+        [
+          188,
+          248
+        ],
+        [
+          248,
+          292
+        ],
+        [
+          292,
+          408
+        ],
+        [
+          408,
+          472
+        ],
+        [
+          472,
+          507
+        ],
+        [
+          507,
+          552
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 799,
+      "question_id": "f0e564bc",
+      "question_index": 48,
+      "reply_tokens": 22,
+      "request_index": 26559,
+      "spans": [
+        [
+          38,
+          128
+        ],
+        [
+          128,
+          206
+        ],
+        [
+          206,
+          266
+        ],
+        [
+          266,
+          318
+        ],
+        [
+          319,
+          383
+        ],
+        [
+          383,
+          506
+        ],
+        [
+          506,
+          624
+        ],
+        [
+          624,
+          720
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 722,
+      "question_id": "f523d9fe",
+      "question_index": 49,
+      "reply_tokens": 29,
+      "request_index": 27381,
+      "spans": [
+        [
+          38,
+          104
+        ],
+        [
+          104,
+          182
+        ],
+        [
+          182,
+          249
+        ],
+        [
+          249,
+          346
+        ],
+        [
+          347,
+          409
+        ],
+        [
+          409,
+          474
+        ],
+        [
+          474,
+          533
+        ],
+        [
+          533,
+          612
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 855,
+      "question_id": "f523d9fe",
+      "question_index": 49,
+      "reply_tokens": 24,
+      "request_index": 27107,
+      "spans": [
+        [
+          38,
+          104
+        ],
+        [
+          104,
+          237
+        ],
+        [
+          238,
+          297
+        ],
+        [
+          298,
+          397
+        ],
+        [
+          398,
+          495
+        ],
+        [
+          496,
+          569
+        ],
+        [
+          570,
+          682
+        ],
+        [
+          682,
+          745
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 642,
+      "question_id": "gpt4_1d80365e",
+      "question_index": 50,
+      "reply_tokens": 6,
+      "request_index": 27929,
+      "spans": [
+        [
+          38,
+          91
+        ],
+        [
+          91,
+          167
+        ],
+        [
+          167,
+          257
+        ],
+        [
+          257,
+          318
+        ],
+        [
+          318,
+          356
+        ],
+        [
+          357,
+          423
+        ],
+        [
+          423,
+          512
+        ],
+        [
+          512,
+          565
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 691,
+      "question_id": "gpt4_1d80365e",
+      "question_index": 50,
+      "reply_tokens": 6,
+      "request_index": 27655,
+      "spans": [
+        [
+          38,
+          65
+        ],
+        [
+          66,
+          142
+        ],
+        [
+          142,
+          244
+        ],
+        [
+          244,
+          348
+        ],
+        [
+          348,
+          440
+        ],
+        [
+          440,
+          475
+        ],
+        [
+          475,
+          525
+        ],
+        [
+          525,
+          614
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 675,
+      "question_id": "gpt4_2312f94c",
+      "question_index": 51,
+      "reply_tokens": 11,
+      "request_index": 28477,
+      "spans": [
+        [
+          38,
+          119
+        ],
+        [
+          119,
+          181
+        ],
+        [
+          181,
+          210
+        ],
+        [
+          210,
+          240
+        ],
+        [
+          240,
+          361
+        ],
+        [
+          361,
+          435
+        ],
+        [
+          435,
+          524
+        ],
+        [
+          524,
+          592
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 707,
+      "question_id": "gpt4_2312f94c",
+      "question_index": 51,
+      "reply_tokens": 11,
+      "request_index": 28203,
+      "spans": [
+        [
+          38,
+          128
+        ],
+        [
+          128,
+          160
+        ],
+        [
+          160,
+          281
+        ],
+        [
+          281,
+          341
+        ],
+        [
+          341,
+          430
+        ],
+        [
+          430,
+          498
+        ],
+        [
+          498,
+          550
+        ],
+        [
+          550,
+          624
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 830,
+      "question_id": "gpt4_2ba83207",
+      "question_index": 52,
+      "reply_tokens": 26,
+      "request_index": 29025,
+      "spans": [
+        [
+          38,
+          139
+        ],
+        [
+          139,
+          232
+        ],
+        [
+          232,
+          339
+        ],
+        [
+          339,
+          389
+        ],
+        [
+          389,
+          487
+        ],
+        [
+          487,
+          542
+        ],
+        [
+          542,
+          623
+        ],
+        [
+          623,
+          754
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 676,
+      "question_id": "gpt4_2ba83207",
+      "question_index": 52,
+      "reply_tokens": 6,
+      "request_index": 28751,
+      "spans": [
+        [
+          38,
+          96
+        ],
+        [
+          96,
+          172
+        ],
+        [
+          172,
+          226
+        ],
+        [
+          226,
+          278
+        ],
+        [
+          278,
+          334
+        ],
+        [
+          334,
+          432
+        ],
+        [
+          432,
+          497
+        ],
+        [
+          497,
+          600
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 680,
+      "question_id": "gpt4_2f584639",
+      "question_index": 53,
+      "reply_tokens": 34,
+      "request_index": 29573,
+      "spans": [
+        [
+          38,
+          83
+        ],
+        [
+          83,
+          194
+        ],
+        [
+          194,
+          289
+        ],
+        [
+          289,
+          390
+        ],
+        [
+          390,
+          444
+        ],
+        [
+          444,
+          491
+        ],
+        [
+          491,
+          554
+        ],
+        [
+          554,
+          599
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 898,
+      "question_id": "gpt4_2f584639",
+      "question_index": 53,
+      "reply_tokens": 34,
+      "request_index": 29299,
+      "spans": [
+        [
+          38,
+          107
+        ],
+        [
+          107,
+          218
+        ],
+        [
+          218,
+          300
+        ],
+        [
+          300,
+          407
+        ],
+        [
+          407,
+          508
+        ],
+        [
+          508,
+          622
+        ],
+        [
+          622,
+          774
+        ],
+        [
+          774,
+          817
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 692,
+      "question_id": "gpt4_4929293a",
+      "question_index": 54,
+      "reply_tokens": 8,
+      "request_index": 30121,
+      "spans": [
+        [
+          38,
+          121
+        ],
+        [
+          121,
+          203
+        ],
+        [
+          203,
+          246
+        ],
+        [
+          247,
+          360
+        ],
+        [
+          360,
+          437
+        ],
+        [
+          437,
+          491
+        ],
+        [
+          491,
+          575
+        ],
+        [
+          575,
+          616
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 758,
+      "question_id": "gpt4_4929293a",
+      "question_index": 54,
+      "reply_tokens": 8,
+      "request_index": 29847,
+      "spans": [
+        [
+          38,
+          91
+        ],
+        [
+          91,
+          163
+        ],
+        [
+          163,
+          245
+        ],
+        [
+          245,
+          329
+        ],
+        [
+          329,
+          405
+        ],
+        [
+          405,
+          478
+        ],
+        [
+          478,
+          577
+        ],
+        [
+          577,
+          682
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 799,
+      "question_id": "gpt4_4cd9eba1",
+      "question_index": 55,
+      "reply_tokens": 50,
+      "request_index": 30669,
+      "spans": [
+        [
+          38,
+          134
+        ],
+        [
+          134,
+          233
+        ],
+        [
+          233,
+          314
+        ],
+        [
+          314,
+          384
+        ],
+        [
+          384,
+          482
+        ],
+        [
+          482,
+          527
+        ],
+        [
+          527,
+          636
+        ],
+        [
+          636,
+          715
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 685,
+      "question_id": "gpt4_4cd9eba1",
+      "question_index": 55,
+      "reply_tokens": 24,
+      "request_index": 30395,
+      "spans": [
+        [
+          38,
+          134
+        ],
+        [
+          134,
+          200
+        ],
+        [
+          200,
+          299
+        ],
+        [
+          299,
+          375
+        ],
+        [
+          375,
+          427
+        ],
+        [
+          427,
+          470
+        ],
+        [
+          470,
+          547
+        ],
+        [
+          547,
+          601
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 677,
+      "question_id": "gpt4_59c863d7",
+      "question_index": 56,
+      "reply_tokens": 64,
+      "request_index": 31217,
+      "spans": [
+        [
+          38,
+          133
+        ],
+        [
+          133,
+          171
+        ],
+        [
+          171,
+          224
+        ],
+        [
+          224,
+          276
+        ],
+        [
+          276,
+          353
+        ],
+        [
+          353,
+          449
+        ],
+        [
+          449,
+          540
+        ],
+        [
+          540,
+          605
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 688,
+      "question_id": "gpt4_59c863d7",
+      "question_index": 56,
+      "reply_tokens": 47,
+      "request_index": 30943,
+      "spans": [
+        [
+          38,
+          133
+        ],
+        [
+          133,
+          187
+        ],
+        [
+          187,
+          244
+        ],
+        [
+          244,
+          306
+        ],
+        [
+          306,
+          362
+        ],
+        [
+          362,
+          455
+        ],
+        [
+          455,
+          532
+        ],
+        [
+          532,
+          616
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 932,
+      "question_id": "gpt4_68e94288",
+      "question_index": 57,
+      "reply_tokens": 6,
+      "request_index": 31765,
+      "spans": [
+        [
+          38,
+          152
+        ],
+        [
+          152,
+          227
+        ],
+        [
+          227,
+          313
+        ],
+        [
+          313,
+          426
+        ],
+        [
+          426,
+          536
+        ],
+        [
+          536,
+          628
+        ],
+        [
+          628,
+          702
+        ],
+        [
+          702,
+          858
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 638,
+      "question_id": "gpt4_68e94288",
+      "question_index": 57,
+      "reply_tokens": 18,
+      "request_index": 31491,
+      "spans": [
+        [
+          38,
+          76
+        ],
+        [
+          76,
+          140
+        ],
+        [
+          140,
+          209
+        ],
+        [
+          209,
+          278
+        ],
+        [
+          278,
+          338
+        ],
+        [
+          338,
+          388
+        ],
+        [
+          388,
+          486
+        ],
+        [
+          486,
+          564
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 531,
+      "question_id": "gpt4_7a0daae1",
+      "question_index": 58,
+      "reply_tokens": 6,
+      "request_index": 32313,
+      "spans": [
+        [
+          38,
+          73
+        ],
+        [
+          73,
+          195
+        ],
+        [
+          195,
+          226
+        ],
+        [
+          226,
+          274
+        ],
+        [
+          274,
+          329
+        ],
+        [
+          329,
+          385
+        ],
+        [
+          385,
+          416
+        ],
+        [
+          416,
+          450
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 679,
+      "question_id": "gpt4_7a0daae1",
+      "question_index": 58,
+      "reply_tokens": 6,
+      "request_index": 32039,
+      "spans": [
+        [
+          38,
+          160
+        ],
+        [
+          160,
+          222
+        ],
+        [
+          222,
+          277
+        ],
+        [
+          277,
+          331
+        ],
+        [
+          331,
+          395
+        ],
+        [
+          395,
+          483
+        ],
+        [
+          483,
+          534
+        ],
+        [
+          534,
+          598
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 690,
+      "question_id": "gpt4_7ddcf75f",
+      "question_index": 59,
+      "reply_tokens": 19,
+      "request_index": 32861,
+      "spans": [
+        [
+          38,
+          136
+        ],
+        [
+          136,
+          198
+        ],
+        [
+          198,
+          256
+        ],
+        [
+          256,
+          325
+        ],
+        [
+          325,
+          408
+        ],
+        [
+          408,
+          450
+        ],
+        [
+          450,
+          555
+        ],
+        [
+          555,
+          610
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 606,
+      "question_id": "gpt4_7ddcf75f",
+      "question_index": 59,
+      "reply_tokens": 17,
+      "request_index": 32587,
+      "spans": [
+        [
+          38,
+          125
+        ],
+        [
+          125,
+          160
+        ],
+        [
+          161,
+          244
+        ],
+        [
+          244,
+          314
+        ],
+        [
+          314,
+          362
+        ],
+        [
+          362,
+          431
+        ],
+        [
+          431,
+          462
+        ],
+        [
+          462,
+          526
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 1030,
+      "question_id": "gpt4_7de946e7",
+      "question_index": 60,
+      "reply_tokens": 37,
+      "request_index": 33409,
+      "spans": [
+        [
+          38,
+          133
+        ],
+        [
+          133,
+          355
+        ],
+        [
+          356,
+          389
+        ],
+        [
+          389,
+          436
+        ],
+        [
+          436,
+          554
+        ],
+        [
+          554,
+          656
+        ],
+        [
+          656,
+          756
+        ],
+        [
+          756,
+          951
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 809,
+      "question_id": "gpt4_7de946e7",
+      "question_index": 60,
+      "reply_tokens": 43,
+      "request_index": 33135,
+      "spans": [
+        [
+          38,
+          109
+        ],
+        [
+          109,
+          204
+        ],
+        [
+          204,
+          322
+        ],
+        [
+          322,
+          450
+        ],
+        [
+          450,
+          550
+        ],
+        [
+          550,
+          612
+        ],
+        [
+          612,
+          686
+        ],
+        [
+          686,
+          730
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 798,
+      "question_id": "gpt4_7fce9456",
+      "question_index": 61,
+      "reply_tokens": 23,
+      "request_index": 33957,
+      "spans": [
+        [
+          38,
+          89
+        ],
+        [
+          89,
+          185
+        ],
+        [
+          185,
+          316
+        ],
+        [
+          316,
+          413
+        ],
+        [
+          413,
+          462
+        ],
+        [
+          462,
+          574
+        ],
+        [
+          574,
+          658
+        ],
+        [
+          658,
+          717
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 691,
+      "question_id": "gpt4_7fce9456",
+      "question_index": 61,
+      "reply_tokens": 6,
+      "request_index": 33683,
+      "spans": [
+        [
+          38,
+          83
+        ],
+        [
+          83,
+          136
+        ],
+        [
+          136,
+          179
+        ],
+        [
+          179,
+          275
+        ],
+        [
+          275,
+          376
+        ],
+        [
+          376,
+          473
+        ],
+        [
+          473,
+          534
+        ],
+        [
+          534,
+          610
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "gold",
+      "prompt_tokens": 1169,
+      "question_id": "gpt4_b0863698",
+      "question_index": 62,
+      "reply_tokens": 16,
+      "request_index": 34505,
+      "spans": [
+        [
+          38,
+          112
+        ],
+        [
+          112,
+          340
+        ],
+        [
+          341,
+          393
+        ],
+        [
+          393,
+          445
+        ],
+        [
+          445,
+          527
+        ],
+        [
+          527,
+          923
+        ],
+        [
+          923,
+          1007
+        ],
+        [
+          1007,
+          1093
+        ]
+      ],
+      "status": "ok"
+    },
+    {
+      "arm": "retrieved",
+      "prompt_tokens": 767,
+      "question_id": "gpt4_b0863698",
+      "question_index": 62,
+      "reply_tokens": 15,
+      "request_index": 34231,
+      "spans": [
+        [
+          38,
+          100
+        ],
+        [
+          100,
+          186
+        ],
+        [
+          186,
+          283
+        ],
+        [
+          283,
+          362
+        ],
+        [
+          362,
+          419
+        ],
+        [
+          419,
+          518
+        ],
+        [
+          518,
+          605
+        ],
+        [
+          605,
+          691
+        ]
+      ],
+      "status": "ok"
+    }
+  ],
+  "shape": [
+    126,
+    36,
+    32,
+    8
+  ],
+  "wall_s": 15.1
+}

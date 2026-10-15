@@ -1,7 +1,7 @@
 # AM1 development pilot, eager-mode replay check (EXPLORATORY): memcredit-study-v1-eager.
 #
 # The A/A diagnostic (job 1435, memcredit-study-v1-aa) found that compiled batch-invariant replay
-# is exact only for the same compiled kernels (one of five fresh compiles of job 1411 autotuned a
+# is exact only for the same compiled kernels (one of four fresh compiles, job 1411's GPU 0, autotuned a
 # different inductor reduction block and changed 3.1% of replies), while enforce_eager passes on
 # two GPUs agreed bit for bit, at 1.07x the compiled pass's wall time and no compile. Its eager
 # passes were canonical only. This check tests eager replay under what the registration needs, on

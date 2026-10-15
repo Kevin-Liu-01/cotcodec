@@ -1,0 +1,211 @@
+{
+  "judge_cross_gpu": {
+    "ci95_bits": [
+      0.9978797655775986,
+      1.0
+    ],
+    "ci95_tokens": [
+      0.9978797655775986,
+      1.0
+    ],
+    "differing_examples": [],
+    "differing_total": 0,
+    "gpu_other": {
+      "CUDA_VISIBLE_DEVICES": "1",
+      "name": "NVIDIA H100 80GB HBM3",
+      "pci_bus_id": 98,
+      "uuid": "34c1e8e2-bec3-3ce7-c1be-618cb05ca896"
+    },
+    "gpu_ref": {
+      "CUDA_VISIBLE_DEVICES": "0",
+      "name": "NVIDIA H100 80GB HBM3",
+      "pci_bus_id": 97,
+      "uuid": "b23c3b4d-5413-4d75-cad3-74be85f8d058"
+    },
+    "identical_tokens": 1738,
+    "identical_tokens_and_logprob_bits": 1738,
+    "n_common": 1738,
+    "other": "judge32-gpu1",
+    "rate_bits": 1.0,
+    "rate_tokens": 1.0,
+    "ref": "judge32-gpu0",
+    "requests_other": 1738,
+    "requests_ref": 1738,
+    "text_differs_total": 0
+  },
+  "reader_cross_gpu": {
+    "ci95_bits": [
+      0.13007327096610583,
+      0.13728079934491366
+    ],
+    "ci95_tokens": [
+      0.9673927658658672,
+      0.9710632401923904
+    ],
+    "differing_examples": [
+      {
+        "first_diff": 25,
+        "other_len": 34,
+        "ref_len": 31,
+        "request_index": 14,
+        "text_differs": true
+      },
+      {
+        "first_diff": 2,
+        "other_len": 27,
+        "ref_len": 27,
+        "request_index": 21,
+        "text_differs": true
+      },
+      {
+        "first_diff": 14,
+        "other_len": 34,
+        "ref_len": 28,
+        "request_index": 38,
+        "text_differs": true
+      },
+      {
+        "first_diff": 2,
+        "other_len": 28,
+        "ref_len": 34,
+        "request_index": 46,
+        "text_differs": true
+      },
+      {
+        "first_diff": 2,
+        "other_len": 28,
+        "ref_len": 32,
+        "request_index": 50,
+        "text_differs": true
+      },
+      {
+        "first_diff": 21,
+        "other_len": 27,
+        "ref_len": 28,
+        "request_index": 52,
+        "text_differs": true
+      },
+      {
+        "first_diff": 2,
+        "other_len": 34,
+        "ref_len": 33,
+        "request_index": 55,
+        "text_differs": true
+      },
+      {
+        "first_diff": 2,
+        "other_len": 28,
+        "ref_len": 28,
+        "request_index": 60,
+        "text_differs": true
+      },
+      {
+        "first_diff": 21,
+        "other_len": 28,
+        "ref_len": 27,
+        "request_index": 93,
+        "text_differs": true
+      },
+      {
+        "first_diff": 2,
+        "other_len": 27,
+        "ref_len": 28,
+        "request_index": 125,
+        "text_differs": true
+      },
+      {
+        "first_diff": 24,
+        "other_len": 34,
+        "ref_len": 33,
+        "request_index": 126,
+        "text_differs": true
+      },
+      {
+        "first_diff": 2,
+        "other_len": 32,
+        "ref_len": 28,
+        "request_index": 146,
+        "text_differs": true
+      },
+      {
+        "first_diff": 2,
+        "other_len": 32,
+        "ref_len": 32,
+        "request_index": 147,
+        "text_differs": true
+      },
+      {
+        "first_diff": 2,
+        "other_len": 27,
+        "ref_len": 27,
+        "request_index": 149,
+        "text_differs": true
+      },
+      {
+        "first_diff": 2,
+        "other_len": 29,
+        "ref_len": 29,
+        "request_index": 177,
+        "text_differs": true
+      },
+      {
+        "first_diff": 14,
+        "other_len": 27,
+        "ref_len": 31,
+        "request_index": 217,
+        "text_differs": true
+      },
+      {
+        "first_diff": 2,
+        "other_len": 29,
+        "ref_len": 29,
+        "request_index": 241,
+        "text_differs": true
+      },
+      {
+        "first_diff": 2,
+        "other_len": 28,
+        "ref_len": 34,
+        "request_index": 265,
+        "text_differs": true
+      },
+      {
+        "first_diff": 22,
+        "other_len": 29,
+        "ref_len": 27,
+        "request_index": 294,
+        "text_differs": true
+      },
+      {
+        "first_diff": 2,
+        "other_len": 33,
+        "ref_len": 33,
+        "request_index": 297,
+        "text_differs": true
+      }
+    ],
+    "differing_total": 1061,
+    "gpu_other": {
+      "CUDA_VISIBLE_DEVICES": "1",
+      "name": "NVIDIA H100 80GB HBM3",
+      "pci_bus_id": 98,
+      "uuid": "34c1e8e2-bec3-3ce7-c1be-618cb05ca896"
+    },
+    "gpu_ref": {
+      "CUDA_VISIBLE_DEVICES": "0",
+      "name": "NVIDIA H100 80GB HBM3",
+      "pci_bus_id": 97,
+      "uuid": "b23c3b4d-5413-4d75-cad3-74be85f8d058"
+    },
+    "identical_tokens": 33463,
+    "identical_tokens_and_logprob_bits": 4614,
+    "n_common": 34524,
+    "other": "reader-gpu1",
+    "rate_bits": 0.13364615919360445,
+    "rate_tokens": 0.9692677557641062,
+    "ref": "reader-gpu0",
+    "requests_other": 34524,
+    "requests_ref": 34524,
+    "text_differs_total": 1061
+  }
+}

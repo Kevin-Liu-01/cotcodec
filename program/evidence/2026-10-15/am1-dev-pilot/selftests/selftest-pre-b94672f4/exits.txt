@@ -1,0 +1,4 @@
+image sha256:51540dd50e0ec28c2cb4a77b51a70ba4767d58edf0fc6673ff1c81678210c2a3 src /home/kevin/cotcodec-runs/stage0/am1-study/checkout
+study selftest exit 0
+study plan exit 0
+pytest exit 1

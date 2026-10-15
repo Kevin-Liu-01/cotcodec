@@ -1,0 +1,36 @@
+{
+  "experiment_id": "memcredit-study-v1",
+  "split": "development",
+  "questions": 63,
+  "pools": 126,
+  "reader_requests": 34524,
+  "by_kind": {
+    "table": 32256,
+    "swap": 2016,
+    "reorder": 252
+  },
+  "validation_items": 188,
+  "phases": [
+    {
+      "id": "reader",
+      "workers": [
+        "reader-gpu0",
+        "reader-gpu1"
+      ]
+    },
+    {
+      "id": "judge",
+      "workers": [
+        "judge32-gpu0",
+        "judge32-gpu1"
+      ]
+    },
+    {
+      "id": "extra",
+      "workers": [
+        "judge8-gpu0",
+        "attention-gpu1"
+      ]
+    }
+  ]
+}

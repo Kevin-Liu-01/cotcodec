@@ -1,0 +1,15 @@
+2026-10-15T00:06:34Z pre-image CPU selftest 1404 submitted (src b94672f4 mounted into vLLM overlay 51540dd5, no GRES)
+2026-10-15T00:08:02Z vLLM overlay build job 1405 submitted (git b94672f4, archive 5866114e, 1 H100, limit 5 min)
+2026-10-15T00:11:40Z vLLM overlay build 1405 JobState=COMPLETED (RunTime=00:01:07): sha256:13e85fa7c4d12267560caea33ad81e7b89fd6aeae9555f87bd6dd9e8aed664a1
+2026-10-15T00:11:40Z post-build CPU selftest 1408 submitted (baked b94672f4 in sha256:13e85fa7, no GRES)
+2026-10-15T00:11:52Z main job submitted: 1411 (git b94672f4, image 13e85fa7, artifact 15567cf1, 2 H100, limit 40 min)
+2026-10-15T00:38:49Z main job 1411 COMPLETED 0:0 (RunTime 00:26:45 on 2 H100 = 0.8917 GPU-h; lane finished_at 2026-10-15T00:38:37Z)
+2026-10-15T00:53:55Z vLLM overlay build job 1432 submitted (git 5aa1f35a, archive a97dd19f, 1 H100, limit 5 min)
+2026-10-15T00:55:07Z vLLM overlay build 1432 JobState=COMPLETED (RunTime=00:01:02): sha256:93f45a6e24cb3d598f1d604b060b8678bf174c80cbdc559eb6e40590823d0529
+2026-10-15T00:55:08Z A/A diagnostic job submitted: 1435 (git 5aa1f35a, image 93f45a6e, artifact 15567cf1, 2 H100, limit 22 min)
+2026-10-15T00:55:08Z post-build CPU selftest 1436 submitted (baked 5aa1f35a in 93f45a6e, no GRES)
+2026-10-15T01:06:19Z A/A diagnostic job 1435 COMPLETED 0:0 (RunTime 00:11:04 on 2 H100 = 0.3689 GPU-h)
+2026-10-15T01:08:01Z vLLM overlay build job 1439 submitted (git a3365b8f, archive 86ca0200, 1 H100, limit 5 min)
+2026-10-15T01:09:18Z vLLM overlay build 1439 JobState=COMPLETED (RunTime=00:01:09): sha256:a821739ed4839a8aa09d8e28e73f0182eadf9e13e19bc280e1312c0611b13c86
+2026-10-15T01:09:19Z eager check job submitted: 1441 (git a3365b8f, image a821739e, artifact 15567cf1, 2 H100, limit 14 min)
+2026-10-15T01:14:40Z eager check job 1441 COMPLETED 0:0 (RunTime 00:05:07 on 2 H100 = 0.1706 GPU-h)

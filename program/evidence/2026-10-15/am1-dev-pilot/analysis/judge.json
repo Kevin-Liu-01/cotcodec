@@ -1,0 +1,163 @@
+{
+  "hand_check": {
+    "containment": {
+      "accuracy": 0.725,
+      "agree": 87,
+      "kappa": 0.4453781512605042
+    },
+    "n": 120,
+    "primary": {
+      "accuracy": 0.975,
+      "agree": 117,
+      "ci95": [
+        0.9286768058430956,
+        0.9948144250416822
+      ],
+      "false_no": 1,
+      "false_yes": 2,
+      "kappa": 0.95
+    },
+    "secondary": {
+      "accuracy": 0.9083333333333333,
+      "agree": 109,
+      "ci95": [
+        0.8419014588041673,
+        0.9533477303447748
+      ],
+      "false_no": 0,
+      "false_yes": 11,
+      "kappa": 0.8171745152354571
+    }
+  },
+  "items": 1738,
+  "reader_items": {
+    "n": 1550,
+    "primary_vs_containment": {
+      "agree": 1230,
+      "kappa": 0.44206597569837375,
+      "n": 1550
+    },
+    "primary_vs_secondary": {
+      "agree": 1460,
+      "kappa": 0.8649974741462904,
+      "n": 1550
+    },
+    "primary_well_formed": 1550,
+    "primary_yes": 447,
+    "secondary_well_formed": 1550
+  },
+  "table_cells": {
+    "n": 34524,
+    "primary_vs_containment_agree": 31342,
+    "primary_vs_secondary_agree": 31450,
+    "primary_vs_secondary_n": 34524
+  },
+  "validation": {
+    "validation:idk": {
+      "primary": {
+        "accuracy": 1.0,
+        "by_type": {
+          "knowledge-update": "11/11",
+          "multi-session": "18/18",
+          "single-session-assistant": "1/1",
+          "single-session-preference": "5/5",
+          "single-session-user": "9/9",
+          "temporal-reasoning": "19/19"
+        },
+        "ci95": [
+          0.9431276476679837,
+          1.0
+        ],
+        "correct": 63,
+        "n": 63
+      },
+      "secondary": {
+        "accuracy": 0.8412698412698413,
+        "by_type": {
+          "knowledge-update": "9/11",
+          "multi-session": "18/18",
+          "single-session-assistant": "0/1",
+          "single-session-preference": "5/5",
+          "single-session-user": "9/9",
+          "temporal-reasoning": "12/19"
+        },
+        "ci95": [
+          0.7274019825071563,
+          0.9211661892477654
+        ],
+        "correct": 53,
+        "n": 63
+      }
+    },
+    "validation:other-answer": {
+      "primary": {
+        "accuracy": 0.9354838709677419,
+        "by_type": {
+          "knowledge-update": "11/11",
+          "multi-session": "17/18",
+          "single-session-preference": "5/5",
+          "single-session-user": "9/9",
+          "temporal-reasoning": "16/19"
+        },
+        "ci95": [
+          0.8429719159624258,
+          0.9821433028363526
+        ],
+        "correct": 58,
+        "n": 62
+      },
+      "secondary": {
+        "accuracy": 0.9193548387096774,
+        "by_type": {
+          "knowledge-update": "11/11",
+          "multi-session": "16/18",
+          "single-session-preference": "5/5",
+          "single-session-user": "9/9",
+          "temporal-reasoning": "16/19"
+        },
+        "ci95": [
+          0.8217474068677664,
+          0.9732953832041691
+        ],
+        "correct": 57,
+        "n": 62
+      }
+    },
+    "validation:reference": {
+      "primary": {
+        "accuracy": 0.9206349206349206,
+        "by_type": {
+          "knowledge-update": "11/11",
+          "multi-session": "18/18",
+          "single-session-assistant": "1/1",
+          "single-session-preference": "0/5",
+          "single-session-user": "9/9",
+          "temporal-reasoning": "19/19"
+        },
+        "ci95": [
+          0.8244240502751521,
+          0.9737276593559743
+        ],
+        "correct": 58,
+        "n": 63
+      },
+      "secondary": {
+        "accuracy": 0.9206349206349206,
+        "by_type": {
+          "knowledge-update": "11/11",
+          "multi-session": "18/18",
+          "single-session-assistant": "1/1",
+          "single-session-preference": "0/5",
+          "single-session-user": "9/9",
+          "temporal-reasoning": "19/19"
+        },
+        "ci95": [
+          0.8244240502751521,
+          0.9737276593559743
+        ],
+        "correct": 58,
+        "n": 63
+      }
+    }
+  }
+}
