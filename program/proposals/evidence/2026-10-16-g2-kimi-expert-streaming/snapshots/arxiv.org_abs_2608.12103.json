@@ -1,0 +1,32 @@
+{
+ "url": "https://arxiv.org/abs/2608.12103",
+ "fetched_at": "2026-10-15T23:50:12Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43546,
+ "raw_sha256": "25931ac90f74933cae9af2e11a4b14e7bfa3bd3045e7bccb942eb0c35bd44c85",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "Who Should Own the Expert Cache? Kernel-Managed Tiering for Trillion-Parameter MoE Inference",
+  "authors": [
+   "Si, Yuan",
+   "Lin, Yufeng",
+   "Li, Daming",
+   "Zhang, Jialu"
+  ],
+  "citation_date": "2026/08/12",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 12 Aug 2026 14:24:09 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Sun, 30 Aug 2026 05:28:09 UTC"
+   }
+  ],
+  "abstract": "Mixture-of-experts models whose expert pools exceed DRAM capacity require a weight-residency tier. Existing systems manage it in user space with expert-granular placement, frequency-based admission, and explicit pinning. We evaluate whether the operating system page cache can instead serve as the expert tier, using router traces from three MoE models with 128 to 896 experts per layer; the trillion-parameter production model's traces are replayed natively against its full 1.45 TB expert pool on GH200 hardware. Capacity is enforced by three independent mechanisms. Iteration time varies smoothly with cache size (run-to-run spread <=4%), and device traffic follows the same trend. Under severe pressure the outcome depends on reclaim: device traffic rises above miss demand only when MGLRU, the tested kernels' default, is combined with balloon-style, mostly mlocked memory, a result reproduced on two machines; cgroup limits and mem= boots show no such behavior, so balloon-based studies can overstate low-capacity device traffic by about 2x. At equal enforced memory, kernel recency serves essentially the same demand as an oracle static-frequency policy computed from the replay trace. In the pread-based replay the oracle-pinned arena stays 1.09-1.11x faster, a gap that is the cost of the page-cache hit and reclaim path, but its static table degrades under domain shift while recency remains stable. At 64.7% measured recall, router lookahead changes median time by 0.3% when delivered as kernel readahead advice; perfect one-layer advice gains 5.0% through the same interface and nothing through blocking reads. End-to-end at ample capacity, enabling page-cache admission speeds steady decode by 1.09-1.10x in a production CUDA engine with token-identical outputs. These measurements favor kernel-managed eviction, with model knowledge applied to admission and predictive advice.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

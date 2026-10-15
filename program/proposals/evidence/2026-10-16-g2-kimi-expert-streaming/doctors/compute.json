@@ -1,0 +1,20 @@
+{
+ "name": "Compute",
+ "status": "FAIL",
+ "evidence": {
+  "image": "research base and vLLM base digests only; no llama.cpp image",
+  "manifest": null,
+  "container_smoke": "NOT_RUN",
+  "slurm_dry_run": "NOT_RUN",
+  "pilot_cap_gpu_h": 7.45,
+  "pilot_expected_gpu_h": 4.07,
+  "full_study_gpu_h": [
+   15.32,
+   40.95
+  ],
+  "full_study_cap": 50,
+  "downloads_GB": 707.54,
+  "arithmetic": "compute/caps-g2stream.json"
+ },
+ "remediation": "P0 and P0b (image, dump tool, policy port), manifests, dry runs and test-only runs before a freeze; Kevin's download go-ahead (compute/attestations-not-run.md)"
+}

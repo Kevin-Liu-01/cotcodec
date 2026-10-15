@@ -1,0 +1,35 @@
+{
+ "url": "https://arxiv.org/abs/2608.16157",
+ "fetched_at": "2026-10-15T23:50:12Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42706,
+ "raw_sha256": "e3bfab550390d42376035c2b4a830fc2d3d0b7f615f4b2d2f7deb99d4a9fdaeb",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "FreeToken: Efficient Edge-Native MoE Serving with Bandwidth-Adaptive Execution",
+  "authors": [
+   "Yang, Shuo",
+   "Fan, Xiaoze",
+   "Pan, Melissa",
+   "Xi, Haocheng",
+   "Wang, Zhe",
+   "Sun, Shanlin",
+   "Keutzer, Kurt",
+   "Han, Song",
+   "Zaharia, Matei",
+   "Xu, Chenfeng",
+   "Stoica, Ion"
+  ],
+  "citation_date": "2026/08/17",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 17 Aug 2026 06:22:53 UTC"
+   }
+  ],
+  "abstract": "Frontier open-weight models are increasingly available, but serving them still largely assumes datacenter infrastructure. We present FreeToken, an edge-native MoE serving system that treats a personal machine not as a small GPU, but as a unified, elastic inference platform. FreeToken co-designs the full serving stack, including model layout and loading, expert residency, CPU--GPU execution, agentic state reuse, and runtime memory management, around two realities of local AI: agent workloads continuously change their execution pattern, and edge hardware exposes heterogeneous resources whose balance differs from machine to machine. Rather than committing to a fixed offloading strategy, FreeToken continuously maps computation and model state onto the resources actually available. FreeToken supports more than 20 MoE models and real coding and tool-using agents across hardware ranging from an 8GB laptop GPU to a single workstation GPU. More importantly, it changes what these machines can practically serve, from a 35B model on a laptop to a 284B model on a gaming desktop and the 753B GLM-5.2 on a single workstation GPU. FreeToken turns open weights into deployable local software, making the machines users already own a practical platform for frontier-scale intelligence. We release the system at this http URL.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

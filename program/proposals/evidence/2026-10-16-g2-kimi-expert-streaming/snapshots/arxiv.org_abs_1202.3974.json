@@ -1,0 +1,27 @@
+{
+ "url": "https://arxiv.org/abs/1202.3974",
+ "fetched_at": "2026-10-15T23:50:10Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 40587,
+ "raw_sha256": "99be48245a5e09e863611798e6071003166af54f0872eb2735c8460bee0b6bad",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "A versatile and accurate approximation for LRU cache performance",
+  "authors": [
+   "Fricker, Christine",
+   "Robert, Philippe",
+   "Roberts, James"
+  ],
+  "citation_date": "2012/02/17",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Fri, 17 Feb 2012 17:29:12 UTC"
+   }
+  ],
+  "abstract": "In a 2002 paper, Che and co-authors proposed a simple approach for estimating the hit rates of a cache operating the least recently used (LRU) replacement policy. The approximation proves remarkably accurate and is applicable to quite general distributions of object popularity. This paper provides a mathematical explanation for the success of the approximation, notably in configurations where the intuitive arguments of Che, et al clearly do not apply. The approximation is particularly useful in evaluating the performance of current proposals for an information centric network where other approaches fail due to the very large populations of cacheable objects to be taken into account and to their complex popularity law, resulting from the mix of different content types and the filtering effect induced by the lower layers in a cache hierarchy.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

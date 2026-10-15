@@ -1,0 +1,127 @@
+{
+ "pilot": {
+  "jobs": [
+   {
+    "job": "P0 simulator, emulator, ds4-policy port, unit tests (Mac or host CPU)",
+    "gpus": 0,
+    "limit_h": 0,
+    "cap_gpu_h": 0,
+    "expected_gpu_h": 0,
+    "conditional": false,
+    "arithmetic": "CPU only"
+   },
+   {
+    "job": "P0b llama.cpp b11669 image build and dump-tool CPU test (host CPU lane)",
+    "gpus": 0,
+    "limit_h": 0,
+    "cap_gpu_h": 0,
+    "expected_gpu_h": 0,
+    "conditional": false,
+    "arithmetic": "CPU only, no GRES"
+   },
+   {
+    "job": "P1 validation traces GLM 5.3 IQ2_XXS and V4 Flash Vision-Exp MXFP4, plus 32 matched GLM sessions (host CPU lane)",
+    "gpus": 0,
+    "limit_h": 0,
+    "cap_gpu_h": 0,
+    "expected_gpu_h": 0,
+    "conditional": false,
+    "arithmetic": "CPU only, no GRES; about 27K exact-input tokens and about 180K matched-session tokens; wall 3-12 h (unmeasured CPU rate)"
+   },
+   {
+    "job": "P1-gpu fallback: same traces on 3 GPUs if the CPU route fails to load or exceeds 12 h wall",
+    "gpus": 3,
+    "limit_h": 0.65,
+    "cap_gpu_h": 1.95,
+    "expected_gpu_h": null,
+    "conditional": true,
+    "arithmetic": "GLM 5.3 (211 GB) on 3 GPUs 0.4 h + V4 Flash (156 GB) on 3 GPUs 0.25 h"
+   },
+   {
+    "job": "P2 Kimi K2.6 UD-Q2_K_XL traces on GPUs 1-5",
+    "gpus": 5,
+    "limit_h": 1.0,
+    "cap_gpu_h": 5.0,
+    "expected_gpu_h": 3.77,
+    "conditional": false,
+    "arithmetic": "prefill 608,000 tokens at (600, 1500) tok/s, decode 120,576 tokens at (60, 150) tok/s, load (5, 15) min: wall 0.42-1.09 h"
+   },
+   {
+    "job": "P3 llama.cpp GPU expert-cache fidelity check (PR #29887), experts in host RAM",
+    "gpus": 1,
+    "limit_h": 0.5,
+    "cap_gpu_h": 0.5,
+    "expected_gpu_h": 0.3,
+    "conditional": false,
+    "arithmetic": "4 sessions x 512 decode tokens at 5-10 tok/s plus CPU-expert prefill of about 16K tokens and load"
+   }
+  ],
+  "cap_gpu_h": 7.45,
+  "expected_gpu_h": 4.07,
+  "line": 8.0,
+  "tokens": {
+   "sessions": 64,
+   "prefill": 464000,
+   "decode": 96000,
+   "seeded_decode": 24576,
+   "repass": 144000
+  }
+ },
+ "full": {
+  "steps_gpu_h": {
+   "F0 vLLM routed-experts capture smoke on Qwen3.6-35B-A3B (1 GPU)": [
+    0.5,
+    0.5
+   ],
+   "F1 INT4 TP8 generation with --enable-return-routed-experts (256 sessions)": [
+    3.78,
+    12.52
+   ],
+   "F2 INT4 teacher-forced re-pass of 64 sessions (decode against prefill routing)": [
+    0.11,
+    0.56
+   ],
+   "F3 Q2 teacher-forced on the INT4 token sequences (INT4 against Q2 equivalence), 5 GPUs": [
+    2.49,
+    6.44
+   ],
+   "F4 GLM 5.3 matched sessions for the speed ratio R, 3 GPUs (0 if on the CPU lane)": [
+    3.44,
+    9.93
+   ],
+   "F5 Q2 decode traces at top-6 and top-4 (G5 input), 64 sessions each, 5 GPUs": [
+    4.0,
+    8.0
+   ],
+   "F6 optional Q8_K_XL numerics arm (594.5 GB download), GPUs 1-7 plus RAM": [
+    1.0,
+    3.0
+   ],
+   "F7 cache simulation, 1 against 4 streams, Belady, emulator": [
+    0,
+    0
+   ]
+  },
+  "total_gpu_h": [
+   15.32,
+   40.95
+  ],
+  "proposed_cap_gpu_h": 50,
+  "tokens": {
+   "sessions": 256,
+   "decode": 384000,
+   "prefill": 1856000
+  }
+ },
+ "downloads_GB": {
+  "pilot": {
+   "GLM-5.3 IQ2_XXS (antirez/glm-5.3-gguf@1434dad1)": 211.08,
+   "DeepSeek-V4-Flash-Vision-Exp MXFP4 (antirez/deepseek-v4-gguf@f71f23d5)": 155.98,
+   "Kimi-K2.6 UD-Q2_K_XL (unsloth/Kimi-K2.6-GGUF@47c7cab1)": 340.48
+  },
+  "pilot_total": 707.54,
+  "full_optional": {
+   "Kimi-K2.6 UD-Q8_K_XL": 594.54
+  }
+ }
+}

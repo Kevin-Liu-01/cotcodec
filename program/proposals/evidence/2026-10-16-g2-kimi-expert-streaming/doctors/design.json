@@ -1,0 +1,49 @@
+{
+ "name": "Design",
+ "status": "PASS",
+ "self_assessed": true,
+ "protocol": "K-Dense experimental-design and statistical-power (design before data; one calibration row; operating characteristics by simulation)",
+ "evidence": {
+  "calibrated_constants": [
+   "B from CAL-B, a prompt-independent whole-pool append"
+  ],
+  "frozen_null": {
+   "G": 1.415,
+   "mean_abs_log_err": 0.3469
+  },
+  "primary_contrasts": [
+   "K1 1.625",
+   "K2 1.249",
+   "K3 1.352"
+  ],
+  "fidelity_strata": [
+   "EXACT",
+   "PROBABLE",
+   "CANDIDATE"
+  ],
+  "gates": [
+   "G1 dump fidelity",
+   "G2 input fidelity",
+   "G3 runtime correctness",
+   "G4 resume"
+  ],
+  "kill_criteria": [
+   "KC1-KC5 (registration section 7.3)"
+  ],
+  "falsifiers": [
+   "PR1",
+   "PR2",
+   "PR3",
+   "PR4",
+   "PR5",
+   "PR7"
+  ],
+  "unit_tests_all_pass": {
+   "42": true,
+   "43": true,
+   "44": true
+  },
+  "operating_characteristics": "compute/sim-g2stream.json"
+ },
+ "remediation": "Identification refuter; pre-freeze audit of the registration"
+}

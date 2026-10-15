@@ -1,0 +1,5 @@
+unit tests {'42': True, '43': True, '44': True} 60s
+rho calibration done 71s
+readout oc done 318s
+cold start done 441s
+wrote program/proposals/evidence/2026-10-16-g2-kimi-expert-streaming/compute/sim-g2stream.json 447.1s

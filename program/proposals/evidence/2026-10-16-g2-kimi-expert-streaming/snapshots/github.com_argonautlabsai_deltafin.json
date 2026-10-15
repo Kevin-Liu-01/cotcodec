@@ -1,0 +1,13 @@
+{
+ "url": "https://github.com/argonautlabsai/deltafin",
+ "fetched_at": "2026-10-15T23:50:35Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 360757,
+ "raw_sha256": "ab2b7261954a4fc5746130d46c29ebccb0d38d02b132740d6131aaf5c1d52925",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "html_title": "GitHub - argonautlabsai/deltafin: ARGODRIVE Deltafin: Kimi K3 (2.8T MoE) streamed from SSDs on Apple Silicon — fork of gavamedia/deltafin with the ARGODRIVE storage work and benchmark package · GitHub"
+ }
+}

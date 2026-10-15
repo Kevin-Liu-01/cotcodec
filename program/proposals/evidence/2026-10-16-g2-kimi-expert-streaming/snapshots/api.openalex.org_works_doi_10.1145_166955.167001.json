@@ -1,0 +1,13 @@
+{
+ "url": "https://api.openalex.org/works/doi:10.1145/166955.167001",
+ "fetched_at": "2026-10-15T23:52:43Z",
+ "http_status": 200,
+ "content_type": "application/json",
+ "raw_bytes": 14696,
+ "raw_sha256": "d068f6b061605bd91b88757486d5c9e8d79db22324495eb5886c2018cc44da64",
+ "raw_stored": false,
+ "primary": false,
+ "extract": {
+  "html_title": ""
+ }
+}

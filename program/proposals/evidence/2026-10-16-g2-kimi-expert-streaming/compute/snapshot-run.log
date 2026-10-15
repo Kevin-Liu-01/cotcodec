@@ -1,0 +1,38 @@
+200 https://artificialanalysis.ai/models/comparisons/deepseek-v4-flash-vs-kimi-k2-6 DeepSeek V4 Flash 0731 (Max) vs Kimi K2.6 (Reasoning): Model Comparison | Artifi
+200 https://arxiv.org/abs/1202.3974 A versatile and accurate approximation for LRU cache performance
+200 https://arxiv.org/abs/1509.03118 Execution-Cache-Memory Performance Model: Introduction and Validation
+200 https://arxiv.org/abs/2510.05497 Patterns behind Chaos: Forecasting Data Movement for Efficient Large-Scale MoE L
+200 https://arxiv.org/abs/2608.07911 Reproducible Evaluation of MoE Expert Caching: Replay Semantics, Workload Contam
+200 https://arxiv.org/abs/2608.12103 Who Should Own the Expert Cache? Kernel-Managed Tiering for Trillion-Parameter M
+200 https://arxiv.org/abs/2608.16157 FreeToken: Efficient Edge-Native MoE Serving with Bandwidth-Adaptive Execution
+200 https://arxiv.org/abs/2609.14864 GGUF-Metadata Prediction of Single-Sequence llama.cpp Throughput Across Three Sy
+200 https://arxiv.org/abs/2609.18063 The Other Half of the Memory Wall: Serving 35B MoEs from SSD with Trained Routin
+200 https://arxiv.org/abs/2609.18110 SSD-LLaMA: SSD-Native Inference for Trillion-Parameter MoE at 1+ Token/s on a Co
+200 https://arxiv.org/abs/2609.29032 Paging the Experts: A Reproducible Characterization of Flash-Backed MoE Inferenc
+403 https://doi.org/10.1145/107971.107981 Just a moment...
+403 https://doi.org/10.1145/166955.167001 Just a moment...
+403 https://doi.org/10.1145/379240.565338 Attention Required! | Cloudflare
+200 https://doi.org/10.5281/zenodo.21856981 Quantization as Cache Amplification: Trillion-Parameter Mixture-of-Experts Infer
+200 https://github.com/Anemll/anemll-flash-llama.cpp GitHub - Anemll/anemll-flash-llama.cpp: Flash-MoE sidecar slot-bank runtime for 
+200 https://github.com/Anemll/anemll-flash-llama.cpp/blob/master/docs/moe-bank-modeling-workflow.md anemll-flash-llama.cpp/docs/moe-bank-modeling-workflow.md at master · Anemll/ane
+200 https://github.com/antirez/ds4 GitHub - antirez/ds4: DeepSeek 4 Flash and PRO local inference engine for Metal,
+200 https://github.com/antirez/ds4/blob/main/QA_BEFORE_RELEASES.md ds4/QA_BEFORE_RELEASES.md at main · antirez/ds4 · GitHub
+200 https://github.com/antirez/ds4/blob/main/docs/SSD_STREAMING.md ds4/docs/SSD_STREAMING.md at main · antirez/ds4 · GitHub
+200 https://github.com/antirez/ds4/blob/main/ds4.c ds4/ds4.c at main · antirez/ds4 · GitHub
+200 https://github.com/antirez/ds4/blob/main/ds4_bench.c ds4/ds4_bench.c at main · antirez/ds4 · GitHub
+200 https://github.com/antirez/ds4/blob/main/ds4_cuda.cu ds4/ds4_cuda.cu at main · antirez/ds4 · GitHub
+200 https://github.com/antirez/ds4/blob/main/ds4_metal.m ds4/ds4_metal.m at main · antirez/ds4 · GitHub
+200 https://github.com/argonautlabsai/deltafin GitHub - argonautlabsai/deltafin: ARGODRIVE Deltafin: Kimi K3 (2.8T MoE) streame
+200 https://github.com/ggml-org/llama.cpp/pull/29887 llama : add a GPU cache for MoE experts kept in host memory by am17an · Pull Req
+200 https://github.com/ggml-org/llama.cpp/tree/b11669 GitHub - ggml-org/llama.cpp at b11669 · GitHub
+200 https://github.com/rita-aga/mlx-turboquant-moe-streaming GitHub - rita-aga/mlx-turboquant-moe-streaming: Run trillion-parameter MoE model
+200 https://github.com/vllm-project/vllm/blob/v0.31.0/vllm/model_executor/layers/fused_moe/routed_experts_capturer.py vllm/vllm/model_executor/layers/fused_moe/routed_experts_capturer.py at v0.31.0 
+200 https://huggingface.co/antirez/deepseek-v4-gguf antirez/deepseek-v4-gguf · Hugging Face
+200 https://huggingface.co/antirez/glm-5.3-gguf antirez/glm-5.3-gguf · Hugging Face
+200 https://huggingface.co/datasets/0xSero/kimi-k2.6-reap-observations-v1 0xSero/kimi-k2.6-reap-observations-v1 · Datasets at Hugging Face
+200 https://huggingface.co/datasets/allenai/WildChat-1M allenai/WildChat-1M · Datasets at Hugging Face
+200 https://huggingface.co/datasets/core12345/MoE_expert_selection_trace core12345/MoE_expert_selection_trace · Datasets at Hugging Face
+200 https://huggingface.co/moonshotai/Kimi-K2.6 moonshotai/Kimi-K2.6 · Hugging Face
+200 https://huggingface.co/unsloth/Kimi-K2.6-GGUF unsloth/Kimi-K2.6-GGUF · Hugging Face
+200 https://themenonlab.blog/blog/kimi-k2-1t-macbook-rustane Running a 1 Trillion Parameter Model on a MacBook Pro: The Kimi-K2 Story
+200 https://www.lmsys.org/blog/2026-08-29-sglang-ssd-expert-pack Running DeepSeek-V4-Flash and Kimi-K3 on Consumer Hardware with SSD Expert Pack 

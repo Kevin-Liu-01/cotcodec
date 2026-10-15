@@ -1,0 +1,647 @@
+{
+ "schema_version": 1,
+ "proposal": "program/proposals/2026-10-16-g2-kimi-expert-streaming.md",
+ "proposal_sha256": "fb34e6ae927abc039290e3b56a0f4bc8454de3343da5015218b256ae1d3a935c",
+ "draft_registration": {
+  "path": "program/preregistrations/g2-kimi-expert-streaming-v1.md",
+  "sha256": "b86c3d7066e4a1f1a2b2bf0daeffad1678d5f9ca8ea6d50a8fb28106902564ed",
+  "status": "DRAFT"
+ },
+ "source_snapshots": [
+  {
+   "url": "https://api.openalex.org/works/doi:10.1145/107971.107981",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:52:42Z",
+   "raw_sha256": "72c02f40d9f4af5edd2d845170bb0191507bc0bf7973a103bbe2883316879aee",
+   "raw_bytes": 13629,
+   "primary": false,
+   "artifact": "snapshots/api.openalex.org_works_doi_10.1145_107971.107981.json",
+   "sha256": "145687c54bf1b5a303bab8e8459d41de9a9f2a95e9fbc7eff68d150a93273bea"
+  },
+  {
+   "url": "https://api.openalex.org/works/doi:10.1145/166955.167001",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:52:43Z",
+   "raw_sha256": "d068f6b061605bd91b88757486d5c9e8d79db22324495eb5886c2018cc44da64",
+   "raw_bytes": 14696,
+   "primary": false,
+   "artifact": "snapshots/api.openalex.org_works_doi_10.1145_166955.167001.json",
+   "sha256": "0c1e40831727440e1ec761ef8adf8d8292b511f38eb28eb9301fd38e1be0d9c9"
+  },
+  {
+   "url": "https://api.openalex.org/works/doi:10.1145/379240.565338",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:52:43Z",
+   "raw_sha256": "173e1831fbf2c8648098ba323d18808d464afb448f8f9517dc7230d7db4a6fdd",
+   "raw_bytes": 13555,
+   "primary": false,
+   "artifact": "snapshots/api.openalex.org_works_doi_10.1145_379240.565338.json",
+   "sha256": "1f8e0092624dd8022ee4e436867524ab70123c6a07aacda5daeed105a3dcc450"
+  },
+  {
+   "url": "https://artificialanalysis.ai/models/comparisons/deepseek-v4-flash-vs-kimi-k2-6",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:09Z",
+   "raw_sha256": "f4a0da7aeae9c8ecdd741df895ee1803bba4334d5c27da9a475ad26021beab74",
+   "raw_bytes": 1512445,
+   "primary": false,
+   "artifact": "snapshots/artificialanalysis.ai_models_comparisons_deepseek-v4-flash-vs-kimi-k2-6.json",
+   "sha256": "135fca2534423dec8a78088f6d5d1d2b5a8bbfc14d55c546f40da77d0d6b7bb4"
+  },
+  {
+   "url": "https://arxiv.org/abs/1202.3974",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:10Z",
+   "raw_sha256": "99be48245a5e09e863611798e6071003166af54f0872eb2735c8460bee0b6bad",
+   "raw_bytes": 40587,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_1202.3974.json",
+   "sha256": "c47e294d9d010b56905400ee51495a4b90e1eee5fcc687e72663a794b61a78b1"
+  },
+  {
+   "url": "https://arxiv.org/abs/1509.03118",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:10Z",
+   "raw_sha256": "c3e05e0c978fe9481e2d93c14a42f7ea5e1fa920831b62e7e8625d61acf0cb58",
+   "raw_bytes": 40176,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_1509.03118.json",
+   "sha256": "67b83e7673cfde2f96a62f4d887a8f78ad4375aff151d553ebf3007107b3e136"
+  },
+  {
+   "url": "https://arxiv.org/abs/2510.05497",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:11Z",
+   "raw_sha256": "8bbf99ec708c441f9e2ccb3428f87ae9edaab05f0ea0d312f09c8b078b21dd76",
+   "raw_bytes": 44366,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2510.05497.json",
+   "sha256": "52c504983148a21b3c02c2dc6b61c57f3f0957187cfea853cf7e345307c1184a"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.07911",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:11Z",
+   "raw_sha256": "c798a91685580ceda60b54a04d5f999d07e3a62e2964006ded380e6bef6ccca3",
+   "raw_bytes": 45262,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2608.07911.json",
+   "sha256": "0567fbc2479107902df160cc43cd05cc8bea005f068446c30a0581dd6d20673e"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.12103",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:12Z",
+   "raw_sha256": "25931ac90f74933cae9af2e11a4b14e7bfa3bd3045e7bccb942eb0c35bd44c85",
+   "raw_bytes": 43546,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2608.12103.json",
+   "sha256": "437b9f91cb0c2de69fb1aab506bc8a22f4f677285f347d5a4c10136faebf6e6d"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.16157",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:12Z",
+   "raw_sha256": "e3bfab550390d42376035c2b4a830fc2d3d0b7f615f4b2d2f7deb99d4a9fdaeb",
+   "raw_bytes": 42706,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2608.16157.json",
+   "sha256": "4c7c6bdc0e158e85a5914973f349302e542e12a35156e8aa39d3ef2b8231acc2"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.14864",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:13Z",
+   "raw_sha256": "39c29542a599f0edd16310fe67659f4d41f9d49a2dae519e65ddfae56c0dfc55",
+   "raw_bytes": 41002,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2609.14864.json",
+   "sha256": "433686d805a974542c17583b06e3fae1412c0f8fa9d7f5af49d6c3c7131b6a4c"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.18063",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:13Z",
+   "raw_sha256": "e5088f1fb7a406f35521cd48cd89bf6d06148c7958fc429b36b9c1ae4a3c05d3",
+   "raw_bytes": 41437,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2609.18063.json",
+   "sha256": "a172f853938f0b02b273588c4cac752e7bc0747b790f1210d2a3bf33dce415f1"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.18110",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:13Z",
+   "raw_sha256": "531537200975438345f3ea63e4549bacda86a09d6abb0baadfcddc5600e0797f",
+   "raw_bytes": 42136,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2609.18110.json",
+   "sha256": "5c913475a7d7c5ab5503c28025e21b925c8408771d3fc92fb47ee7a2a8fa64bf"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.29032",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:14Z",
+   "raw_sha256": "76808d253ba83791b816b7c5ba091a8f09b6edff5dcc27e06185187cce531baa",
+   "raw_bytes": 41824,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2609.29032.json",
+   "sha256": "c2f59d447e7a26f085b227d68bf5c9e7924c42e4ae775062e066e1aaa0a7951b"
+  },
+  {
+   "url": "https://doi.org/10.5281/zenodo.21856981",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:22Z",
+   "raw_sha256": "1094202152131ec26da38b2393d72590a9140d8028661df68570366a6e7aa903",
+   "raw_bytes": 89608,
+   "primary": false,
+   "artifact": "snapshots/doi.org_10.5281_zenodo.21856981.json",
+   "sha256": "a5f58eaf086b90bdba2d004b458e5ad9321b558e3ec40208a32fd422c87a4d59"
+  },
+  {
+   "url": "https://github.com/Anemll/anemll-flash-llama.cpp",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:23Z",
+   "raw_sha256": "6f21e42279e0e4c9e44f76db3617802b66ada8efa83e1db9956264d5d62ca947",
+   "raw_bytes": 797084,
+   "primary": true,
+   "artifact": "snapshots/github.com_Anemll_anemll-flash-llama.cpp.json",
+   "sha256": "8e92a832116a7d6edba8e1a0004a76fc9736607a91cf5832ffaba992d5e89362"
+  },
+  {
+   "url": "https://github.com/Anemll/anemll-flash-llama.cpp/blob/master/docs/moe-bank-modeling-workflow.md",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:24Z",
+   "raw_sha256": "732f646ed5d8a18cd99d4dea47ec05dd0aa4e4f8839ea167c63eef311568f609",
+   "raw_bytes": 280130,
+   "primary": true,
+   "artifact": "snapshots/github.com_Anemll_anemll-flash-llama.cpp_blob_master_docs_moe-bank-modeling-workflow.md.json",
+   "sha256": "1b0abaf57558abe0cdac8d615d162cf841fd523b50d6c152b0f4987d315290f4"
+  },
+  {
+   "url": "https://github.com/antirez/ds4",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:26Z",
+   "raw_sha256": "4cc180774824ae2e9ab8629addff5015319e7e094e93fabbb7a6ee4dd9203768",
+   "raw_bytes": 506611,
+   "primary": true,
+   "artifact": "snapshots/github.com_antirez_ds4.json",
+   "sha256": "f4e9de9e51484aa1bb238bdf5693d15f38c9654c4ba83f812f9fa8a14a614494"
+  },
+  {
+   "url": "https://github.com/antirez/ds4/blob/main/QA_BEFORE_RELEASES.md",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:27Z",
+   "raw_sha256": "1a7a5c3a05c94e3599e6da24a5a04637924573c0e8837ec05384648cdfd10341",
+   "raw_bytes": 852654,
+   "primary": true,
+   "artifact": "snapshots/github.com_antirez_ds4_blob_main_QA_BEFORE_RELEASES.md.json",
+   "sha256": "87e48994d94ddc89c69f97002418d364076a0ae1f452e423bb67810fe0f3735a"
+  },
+  {
+   "url": "https://github.com/antirez/ds4/blob/main/docs/SSD_STREAMING.md",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:28Z",
+   "raw_sha256": "740de333fd6065e4518959340ab7df9d4430bd7fb7b3060ad9a8164c8ceaf8db",
+   "raw_bytes": 246054,
+   "primary": true,
+   "artifact": "snapshots/github.com_antirez_ds4_blob_main_docs_SSD_STREAMING.md.json",
+   "sha256": "4208a92860bb523155f938f96fb05863aa417b95f0befefc2aca87bce0651514"
+  },
+  {
+   "url": "https://github.com/antirez/ds4/blob/main/ds4.c",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:29Z",
+   "raw_sha256": "7f70b24221c38650f4d65514347474ccdfcd8a235cd490425384c83a0b7611e0",
+   "raw_bytes": 212298,
+   "primary": true,
+   "artifact": "snapshots/github.com_antirez_ds4_blob_main_ds4.c.json",
+   "sha256": "6b893ade80ac0d47d9c7b8d57aa65d028ef722adfa8875ad2b4349d75541ee92"
+  },
+  {
+   "url": "https://github.com/antirez/ds4/blob/main/ds4_bench.c",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:31Z",
+   "raw_sha256": "aef9e35e4b132499587e61c2fc0cf76aad26ef5cad88003ad3cd2212c83d1385",
+   "raw_bytes": 792811,
+   "primary": true,
+   "artifact": "snapshots/github.com_antirez_ds4_blob_main_ds4_bench.c.json",
+   "sha256": "b6aee9922538a5d7c785dc5df40fdc90c6bb41dd360d9b224ebfafb1531965b3"
+  },
+  {
+   "url": "https://github.com/antirez/ds4/blob/main/ds4_cuda.cu",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:33Z",
+   "raw_sha256": "f30454f4d0b4a6db2efeee1b1b87aeb95c9af4601cd727c7f302e819ed879e2c",
+   "raw_bytes": 215294,
+   "primary": true,
+   "artifact": "snapshots/github.com_antirez_ds4_blob_main_ds4_cuda.cu.json",
+   "sha256": "349ebaf828613d25e65016bea9dcc8b21502e2b4bfe91dd191c18955e9d27782"
+  },
+  {
+   "url": "https://github.com/antirez/ds4/blob/main/ds4_metal.m",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:34Z",
+   "raw_sha256": "8e50c99e7c2980c81ce01849c7c7516e8283ce2a8930fd9eea028a4ab8f92a4c",
+   "raw_bytes": 212482,
+   "primary": true,
+   "artifact": "snapshots/github.com_antirez_ds4_blob_main_ds4_metal.m.json",
+   "sha256": "29426b09b815266924c4d8b4fbe8a6acd982e4daefae42efa49f4a798ac0eb6e"
+  },
+  {
+   "url": "https://github.com/argonautlabsai/deltafin",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:35Z",
+   "raw_sha256": "ab2b7261954a4fc5746130d46c29ebccb0d38d02b132740d6131aaf5c1d52925",
+   "raw_bytes": 360757,
+   "primary": true,
+   "artifact": "snapshots/github.com_argonautlabsai_deltafin.json",
+   "sha256": "6f9576babaa0f4342d26d18fa9fe01e6c49d9abae6f6498890eef3e669795ba9"
+  },
+  {
+   "url": "https://github.com/ggml-org/llama.cpp/pull/29887",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:38Z",
+   "raw_sha256": "b402b5608da7350f9d1e3b4275927177d4352a32f3dbbe14a188f56dbaf88251",
+   "raw_bytes": 777055,
+   "primary": true,
+   "artifact": "snapshots/github.com_ggml-org_llama.cpp_pull_29887.json",
+   "sha256": "27ead855195f959a7004d4d42746412d0181a00a59fc0a575069c642c9f2ace5"
+  },
+  {
+   "url": "https://github.com/ggml-org/llama.cpp/tree/b11669",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:38Z",
+   "raw_sha256": "2e6114af5c78d77c1b48c04bdd0ca193c0ea14586dda41a57ba3024ecc660aef",
+   "raw_bytes": 436405,
+   "primary": true,
+   "artifact": "snapshots/github.com_ggml-org_llama.cpp_tree_b11669.json",
+   "sha256": "c5a9b4d01bba75da7fff7c5622b4e0df52eef8d76b39f0e27c4df664b3d389ea"
+  },
+  {
+   "url": "https://github.com/rita-aga/mlx-turboquant-moe-streaming",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:40Z",
+   "raw_sha256": "7e624efe711aa54828d59c03390504bdb23425e5bac68001833b86f8667b944e",
+   "raw_bytes": 286625,
+   "primary": true,
+   "artifact": "snapshots/github.com_rita-aga_mlx-turboquant-moe-streaming.json",
+   "sha256": "14133a2bdba292e93ad563c4a04e806406927f4ab29b73b32f249b949d00cc22"
+  },
+  {
+   "url": "https://github.com/vllm-project/vllm/blob/v0.31.0/vllm/model_executor/layers/fused_moe/routed_experts_capturer.py",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:41Z",
+   "raw_sha256": "228006a7814f48d3e2492d146293aaf59c28d2d1635dea45d3e8b433c8fabebc",
+   "raw_bytes": 375376,
+   "primary": true,
+   "artifact": "snapshots/github.com_vllm-project_vllm_blob_v0.31.0_vllm_model_executor_layers_fused_moe_routed_experts_capturer.py.json",
+   "sha256": "d08e71d469e0dd6fd33e16bbe52e7f459e39d28ff32b432bc0a73e900c45787a"
+  },
+  {
+   "url": "https://huggingface.co/antirez/deepseek-v4-gguf",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:41Z",
+   "raw_sha256": "cc6344bb25e7654ead0fed4c96f3c68b7e202f5c7c784e527813c65b68956e03",
+   "raw_bytes": 246230,
+   "primary": true,
+   "artifact": "snapshots/huggingface.co_antirez_deepseek-v4-gguf.json",
+   "sha256": "5a001bfe29f517572b46775e0c61b17a60d215eeae24438acc3080eb0cf62377"
+  },
+  {
+   "url": "https://huggingface.co/antirez/glm-5.3-gguf",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:42Z",
+   "raw_sha256": "ec0fff2617112cd54b9b476d8c3a4addb57fb5469653a72f3042d19a47ca2c47",
+   "raw_bytes": 195328,
+   "primary": true,
+   "artifact": "snapshots/huggingface.co_antirez_glm-5.3-gguf.json",
+   "sha256": "4888ec3263035d7aca55e7e46cc50a7349d004ddc77012a78165487cff867497"
+  },
+  {
+   "url": "https://huggingface.co/datasets/0xSero/kimi-k2.6-reap-observations-v1",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:42Z",
+   "raw_sha256": "c3083f6a6352ac7011a7b5b72a67c50f19d5082084199a0d86d29552bfc8b3ad",
+   "raw_bytes": 366621,
+   "primary": true,
+   "artifact": "snapshots/huggingface.co_datasets_0xSero_kimi-k2.6-reap-observations-v1.json",
+   "sha256": "97b63a9b32d569eb030783bef66d33b96ddd4cf51a6d536ce112f03f820e570a"
+  },
+  {
+   "url": "https://huggingface.co/datasets/allenai/WildChat-1M",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:43Z",
+   "raw_sha256": "991b7d129bb3b519c581b385fdef9058913b20ab7f527eea3cae5a4bd196f29e",
+   "raw_bytes": 1152523,
+   "primary": true,
+   "artifact": "snapshots/huggingface.co_datasets_allenai_WildChat-1M.json",
+   "sha256": "dfd3c2481a4701e7b15bbae003aceec19b2a24e2271637e497f6c3fe30f599c9"
+  },
+  {
+   "url": "https://huggingface.co/datasets/core12345/MoE_expert_selection_trace",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:44Z",
+   "raw_sha256": "9f4bb658d9dea37da8e5ef96cecfe84fa7186116703f0cbec9fca64a773a1a79",
+   "raw_bytes": 119993,
+   "primary": true,
+   "artifact": "snapshots/huggingface.co_datasets_core12345_MoE_expert_selection_trace.json",
+   "sha256": "e6b674dc319c0b3252a414240f0baf127b5d8791bca62c8117c1999a2d55a9a1"
+  },
+  {
+   "url": "https://huggingface.co/moonshotai/Kimi-K2.6",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:45Z",
+   "raw_sha256": "fe367c349768146c71fe8dde1650ee3646008836b4594f3db0013e3f933633d8",
+   "raw_bytes": 469631,
+   "primary": true,
+   "artifact": "snapshots/huggingface.co_moonshotai_Kimi-K2.6.json",
+   "sha256": "733dac43ef4763f7b4e8f18cd2ba62db8fc7e1b66b23f8938f73d821736e94e1"
+  },
+  {
+   "url": "https://huggingface.co/unsloth/Kimi-K2.6-GGUF",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:45Z",
+   "raw_sha256": "a20c89ab5806de50a4f6d58200f439f47e041d7140bb90f9e4b7582eb7819091",
+   "raw_bytes": 320105,
+   "primary": true,
+   "artifact": "snapshots/huggingface.co_unsloth_Kimi-K2.6-GGUF.json",
+   "sha256": "86128f9ed31ffb6ba1fd852ace968364db8326102781d64f02e0605437fc9522"
+  },
+  {
+   "url": "https://themenonlab.blog/blog/kimi-k2-1t-macbook-rustane",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:46Z",
+   "raw_sha256": "f511b458be3eaa5731c84a7a621dec72b3941db2197343208ed8525b896223c3",
+   "raw_bytes": 37744,
+   "primary": false,
+   "artifact": "snapshots/themenonlab.blog_blog_kimi-k2-1t-macbook-rustane.json",
+   "sha256": "125513829f1c78b513a6790527d12cfd4e0bf4b69fa0fb66e9c9b946886eec4f"
+  },
+  {
+   "url": "https://www.lmsys.org/blog/2026-08-29-sglang-ssd-expert-pack",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T23:50:47Z",
+   "raw_sha256": "6535ed6cdee7a9ed856c4bd02feb5c889af0bda96646591c866faab288a3da99",
+   "raw_bytes": 167342,
+   "primary": false,
+   "artifact": "snapshots/www.lmsys.org_blog_2026-08-29-sglang-ssd-expert-pack.json",
+   "sha256": "2a2d1ad09e3b71c4d3664ac575de56fdf730d5caf93b7322b3d554bbb91cfc17"
+  }
+ ],
+ "query_log": {
+  "artifact": "query-log.json",
+  "sha256": "058468206262b645497d88090093eb0693403a8b991bb7bf52930d2d2f812861"
+ },
+ "reviews": [],
+ "reviews_status": "not run: the blind critic, the refute-first triad and both reviewers follow this synthesis; no trusted Ed25519 store exists (D24)",
+ "compute": {
+  "scope": "g2-kimi-expert-streaming-v1 is a DRAFT pilot registration. No llama.cpp image, dump tool, manifest or host attestation exists; only CPU simulations on synthetic data and arithmetic on published numbers were run (compute/attestations-not-run.md).",
+  "image_digest": "docker.io/nvidia/cuda:12.8.1-cudnn-devel-ubuntu24.04@sha256:24c8e3581ea6330038b0d374920721983312627f8adbfcf390bdb4b399d280ed",
+  "image_scope": "research base on which the pilot's llama.cpp b11669 image is built at P0b; the full study's INT4 route uses docker.io/vllm/vllm-openai@sha256:b18abb2df97b8f798e81862bd93f872ea18613372e2c3adc0cc2ac21e66ac12f",
+  "real_model_loop": false,
+  "benchmark_adapter": null,
+  "manifest": null,
+  "manifest_scope": "no manifest is rendered; the llama.cpp image id does not exist",
+  "container_smoke": {
+   "label": "container_smoke",
+   "status": "NOT_RUN",
+   "return_code": null,
+   "artifact": "compute/attestations-not-run.md",
+   "sha256": "5abe393ae1ed6cd7a2998e7e7ff6befaf317d86e499a11b4a32e6941be09639b"
+  },
+  "slurm_test": {
+   "label": "slurm_test",
+   "status": "NOT_RUN",
+   "return_code": null,
+   "artifact": "compute/attestations-not-run.md",
+   "sha256": "5abe393ae1ed6cd7a2998e7e7ff6befaf317d86e499a11b4a32e6941be09639b"
+  },
+  "provenance_verification": {
+   "label": "provenance_verification",
+   "status": "NOT_RUN",
+   "return_code": null,
+   "artifact": "compute/attestations-not-run.md",
+   "sha256": "5abe393ae1ed6cd7a2998e7e7ff6befaf317d86e499a11b4a32e6941be09639b"
+  },
+  "executable_pilot": null,
+  "executable_pilot_scope": "none run; the gauntlet's host rule allowed only the open-weight reviewer's lane job",
+  "pilot_caps_gpu_h": {
+   "total": 7.45,
+   "expected": 4.07,
+   "line": 8.0,
+   "jobs": [
+    {
+     "job": "P0 simulator, emulator, ds4-policy port, unit tests (Mac or host CPU)",
+     "cap": 0,
+     "conditional": false,
+     "arithmetic": "CPU only"
+    },
+    {
+     "job": "P0b llama.cpp b11669 image build and dump-tool CPU test (host CPU lane)",
+     "cap": 0,
+     "conditional": false,
+     "arithmetic": "CPU only, no GRES"
+    },
+    {
+     "job": "P1 validation traces GLM 5.3 IQ2_XXS and V4 Flash Vision-Exp MXFP4, plus 32 matched GLM sessions (host CPU lane)",
+     "cap": 0,
+     "conditional": false,
+     "arithmetic": "CPU only, no GRES; about 27K exact-input tokens and about 180K matched-session tokens; wall 3-12 h (unmeasured CPU rate)"
+    },
+    {
+     "job": "P1-gpu fallback: same traces on 3 GPUs if the CPU route fails to load or exceeds 12 h wall",
+     "cap": 1.95,
+     "conditional": true,
+     "arithmetic": "GLM 5.3 (211 GB) on 3 GPUs 0.4 h + V4 Flash (156 GB) on 3 GPUs 0.25 h"
+    },
+    {
+     "job": "P2 Kimi K2.6 UD-Q2_K_XL traces on GPUs 1-5",
+     "cap": 5.0,
+     "conditional": false,
+     "arithmetic": "prefill 608,000 tokens at (600, 1500) tok/s, decode 120,576 tokens at (60, 150) tok/s, load (5, 15) min: wall 0.42-1.09 h"
+    },
+    {
+     "job": "P3 llama.cpp GPU expert-cache fidelity check (PR #29887), experts in host RAM",
+     "cap": 0.5,
+     "conditional": false,
+     "arithmetic": "4 sessions x 512 decode tokens at 5-10 tok/s plus CPU-expert prefill of about 16K tokens and load"
+    }
+   ]
+  },
+  "full_study_gpu_h": {
+   "range": [
+    15.32,
+    40.95
+   ],
+   "proposed_cap": 50
+  },
+  "downloads_GB": {
+   "pilot": {
+    "GLM-5.3 IQ2_XXS (antirez/glm-5.3-gguf@1434dad1)": 211.08,
+    "DeepSeek-V4-Flash-Vision-Exp MXFP4 (antirez/deepseek-v4-gguf@f71f23d5)": 155.98,
+    "Kimi-K2.6 UD-Q2_K_XL (unsloth/Kimi-K2.6-GGUF@47c7cab1)": 340.48
+   },
+   "pilot_total": 707.54,
+   "full_optional": {
+    "Kimi-K2.6 UD-Q8_K_XL": 594.54
+   }
+  },
+  "supplementary_cpu_evidence": [
+   {
+    "label": "cache-policy simulators (LRU, LFU, ds4 decayed hotness, static, Belady; event-atomic), unit tests, readout and validation-rule operating characteristics (seeds 42-44, synthetic)",
+    "script": {
+     "artifact": "compute/sim_g2stream.py",
+     "sha256": "20cf33e2e0dd1272d05289a870ea8e0ea4f003c8de51fccdad07f362346b445a"
+    },
+    "output": {
+     "artifact": "compute/sim-g2stream.json",
+     "sha256": "bff49e4b983279c66598d598e075ad7eb896f4a64ccdbfab50e03ee1bb19a573"
+    },
+    "stdout": {
+     "artifact": "compute/sim-g2stream.stdout",
+     "sha256": "95c6f053e49a99e543b7f705fcf64ea0afa80669900fc3828b3b120fe024d8eb"
+    }
+   },
+   {
+    "label": "identification arithmetic on ds4's published targets: B from the whole-pool append, the frozen null, Kimi sensitivity",
+    "script": {
+     "artifact": "compute/identification_g2stream.py",
+     "sha256": "138417f2b7464f13d4310e300daa1d019db742e4157741f8f7e1c4b56d994ba7"
+    },
+    "output": {
+     "artifact": "compute/identification-g2stream.json",
+     "sha256": "792ca38eb8e579e671dc646a166804bbd437e1c06b24dcc60276bce539d22531"
+    },
+    "stdout": {
+     "artifact": "compute/identification-g2stream.stdout",
+     "sha256": "82582d98b4a5165a7c8084c7a28bad77081309ba262a83e43f2f8368dd030ab9"
+    },
+    "input": {
+     "artifact": "compute/ds4-targets.json",
+     "sha256": "81ac35f7d3bb0c0090b765eb7e32a19431e5f8a1a043e94bd3c81506bacbedc9"
+    }
+   },
+   {
+    "label": "cap arithmetic for the pilot and the full study",
+    "script": {
+     "artifact": "compute/caps_g2stream.py",
+     "sha256": "b78305674a75253f478e13dbfc83de933241e4b8c0de12f0c8a2466e7c6458b6"
+    },
+    "output": {
+     "artifact": "compute/caps-g2stream.json",
+     "sha256": "4faebe5222244925e9463b1e2afb4f7ee9a8191653b3474ff9601ad347a66a70"
+    },
+    "stdout": {
+     "artifact": "compute/caps-g2stream.stdout",
+     "sha256": "7845da05e145659b2fff78e3e720ca89e536b3684aacd69dce0d494f0902c8f6"
+    }
+   }
+  ]
+ },
+ "doctors": [
+  {
+   "name": "Source",
+   "status": "PASS",
+   "artifact": "doctors/source.json",
+   "sha256": "c036c8fbbe9f9c32dc7ea3846ef247abeaa8c8d524806f946068ed24b8d6fcb4"
+  },
+  {
+   "name": "Citation",
+   "status": "PASS",
+   "artifact": "doctors/citation.json",
+   "sha256": "ea3ffb4b657b1e5b959af1badddd49b79dc71f9b1c73759f179c3d957c85f05e"
+  },
+  {
+   "name": "Novelty",
+   "status": "FAIL",
+   "artifact": "doctors/novelty.json",
+   "sha256": "e478cd31229f972439c8c72c4ee7625dd7f91d80c7248c2f607b134e7f6c9f69"
+  },
+  {
+   "name": "Design",
+   "status": "PASS",
+   "artifact": "doctors/design.json",
+   "sha256": "f1ac3e9a206f172440cfbfddce68aefb990873b512c79eef90a83fb1efa43a32"
+  },
+  {
+   "name": "Compute",
+   "status": "FAIL",
+   "artifact": "doctors/compute.json",
+   "sha256": "44e1980c61f325e83bac545f1f89aa2e775325b8026df689e0a7b06de75f8c47"
+  },
+  {
+   "name": "Safety",
+   "status": "PASS",
+   "artifact": "doctors/safety.json",
+   "sha256": "b25c7fb11096a95e33cc23734d2b33f6cd35c2fc49cafba376d1994eb2a32099"
+  }
+ ],
+ "audit_log": null,
+ "audit_log_status": "no gauntlet row yet; the recorder appends program/gauntlet/2026-10-16-g2-kimi-expert-streaming.jsonl after the reviewers score",
+ "blind_discrimination_packet": {
+  "paragraphs": [
+   {
+    "artifact": "blind/paragraph-51dde768.txt",
+    "sha256": "51dde768e65029ee5254ced8a50dca3fd093c77a88bd46d49026279e7bfc63ff"
+   },
+   {
+    "artifact": "blind/paragraph-e78479f1.txt",
+    "sha256": "e78479f1c2f6324b89cb2b4db7aa692d7e45fa3b0eab6407a70e368f24410578"
+   }
+  ],
+  "roles": {
+   "artifact": "compute/blind-roles.json",
+   "sha256": "f3698670f6e288e24a235ef6f9304d409b591fdbf1d3a2164a1aac0b8ec25ae2",
+   "note": "recorder only; never shown to the critic"
+  }
+ },
+ "source_reads_by_synthesis": {
+  "ds4_commit": "90aa4b560a1dec1590f2c60648af404aa40b1188",
+  "anemll_commit": "a809594fd2035979ad2b7ef23398127c1d07e891",
+  "orx_full_text": [
+   "2608.12103",
+   "2608.07911",
+   "2510.05497",
+   "2609.14864",
+   "2608.16157"
+  ]
+ },
+ "budget_ledger": {
+  "declared": {
+   "queries": 150,
+   "wall_minutes": 720,
+   "tokens": 10000000,
+   "dollars": 150,
+   "waves": 3,
+   "gpu_hours": 0.5
+  },
+  "queries": {
+   "frontier": 37,
+   "kill_shot": 17,
+   "cross_domain": 26,
+   "asset_cost": 2,
+   "synthesis": 0,
+   "total_counted": 82,
+   "declared": 150,
+   "reserved_for_refuters": 30,
+   "remaining_after_synthesis": 68,
+   "orx_discover_records": 57
+  },
+  "gpu_hours_used_by_synthesis": 0.0,
+  "host_jobs_submitted_by_synthesis": 0,
+  "tokens_wall_dollars": "metered by the orchestrator over the whole wave"
+ },
+ "evidence_root_sha256": "bfd888380d9f2afcf0905b0beacf552d9c65e54efd022211812a2743623c6166",
+ "direction_doctor_run": {
+  "command": "uv run python scripts/research_direction_doctor.py program/proposals/2026-10-16-g2-kimi-expert-streaming.md",
+  "status": "FAIL",
+  "acceptedScore": 0,
+  "hardCaps": [
+   89
+  ],
+  "evidence_root_at_run": "bfd888380d9f2afcf0905b0beacf552d9c65e54efd022211812a2743623c6166",
+  "artifact": "doctors/direction-doctor-output.json",
+  "sha256": "ff6149b0bed1a7084b12b287472308033f1313b0de9bcaa12a89c0c9bca0cbe0"
+ }
+}

@@ -1,0 +1,12 @@
+{
+ "name": "Safety",
+ "status": "PASS",
+ "evidence": {
+  "licences": "Kimi K2.6 modified MIT; GLM-5.3 Licence (upstream; antirez repo untagged); V4 Flash MIT; ds4 MIT (read and ported with attribution); datasets ODC-BY, Apache-2.0, CC-BY-4.0, MIT; unlicensed sets excluded",
+  "r570": "stock llama.cpp at a pinned tag in a digest-pinned image; one reviewed CPU-side dump tool, no GPU kernel; ds4 never run",
+  "host": "GPUs among 1-7 only; GPU 0 and D110 jobs untouched; no sudo; ~/cotcodec untouched",
+  "public_repo": "aggregates and hashes only; no host addresses, credentials or conversation text",
+  "outward_actions": "none; downloads await Kevin's go-ahead"
+ },
+ "remediation": "none"
+}

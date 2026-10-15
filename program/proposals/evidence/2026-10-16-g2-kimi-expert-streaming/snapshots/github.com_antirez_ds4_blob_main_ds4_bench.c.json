@@ -1,0 +1,13 @@
+{
+ "url": "https://github.com/antirez/ds4/blob/main/ds4_bench.c",
+ "fetched_at": "2026-10-15T23:50:31Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 792811,
+ "raw_sha256": "aef9e35e4b132499587e61c2fc0cf76aad26ef5cad88003ad3cd2212c83d1385",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "html_title": "ds4/ds4_bench.c at main · antirez/ds4 · GitHub"
+ }
+}

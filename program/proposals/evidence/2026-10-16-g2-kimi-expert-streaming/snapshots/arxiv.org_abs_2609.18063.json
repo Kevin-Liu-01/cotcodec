@@ -1,0 +1,33 @@
+{
+ "url": "https://arxiv.org/abs/2609.18063",
+ "fetched_at": "2026-10-15T23:50:13Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41437,
+ "raw_sha256": "e5088f1fb7a406f35521cd48cd89bf6d06148c7958fc429b36b9c1ae4a3c05d3",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "The Other Half of the Memory Wall: Serving 35B MoEs from SSD with Trained Routing Prediction",
+  "authors": [
+   "Lin, Yu",
+   "Wang, Yiming",
+   "Cai, Runyuan",
+   "Liu, Hanze",
+   "Zeng, Xiaodong"
+  ],
+  "citation_date": "2026/09/16",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 16 Sep 2026 03:09:04 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Thu, 17 Sep 2026 16:03:07 UTC"
+   }
+  ],
+  "abstract": "Mixture-of-experts (MoE) inference on consumer hardware is bounded by weight memory: a 35B-class model is 19.5GB at 4-bit, and sparsity shrinks the compute per token, not the bytes that must be held. Naive offloading to SSD does not help on its own, because layer N+1's experts must be chosen before layer N's output exists, so the reads cannot start early enough to hide behind compute. We present Edge0, a streaming MoE inference engine that closes the gap with a prerouter: a per-layer head predicts the next layer's routing one token ahead, and the prediction is consumed as the routing itself, so the staged expert set equals the routed set and nothing is dropped. An unmerged recovery LoRA, trained on the student path, pays back the quality lost to int4 quantization and routing replacement. On a single 24GB machine, Edge0 serves a 35B MoE at 20tok/s inside 3GiB of peak active memory, within a few points of its fp16 teacher on average across five public benchmarks. An 8B tier runs on the same framework, and the framework, checkpoints, and adapters are open source.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

@@ -1,0 +1,13 @@
+{
+ "url": "https://github.com/antirez/ds4/blob/main/docs/SSD_STREAMING.md",
+ "fetched_at": "2026-10-15T23:50:28Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 246054,
+ "raw_sha256": "740de333fd6065e4518959340ab7df9d4430bd7fb7b3060ad9a8164c8ceaf8db",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "html_title": "ds4/docs/SSD_STREAMING.md at main · antirez/ds4 · GitHub"
+ }
+}

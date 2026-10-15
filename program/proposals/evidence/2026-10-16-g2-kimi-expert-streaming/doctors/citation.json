@@ -1,0 +1,429 @@
+{
+ "name": "Citation",
+ "status": "PASS",
+ "protocol": "ARS academic-pipeline claim_verification_protocol (claim registry, locators, verdicts, first-party labels)",
+ "claims": [
+  {
+   "claim_id": "C01",
+   "claim": "Kimi K2.6 text model: 61 layers (first dense), 384 routed experts, 8 active plus 1 shared, MLA; INT4 group-32 routed experts, other weights BF16; modified MIT, ungated",
+   "source": "https://huggingface.co/moonshotai/Kimi-K2.6",
+   "date": "2026-05-19 (rev 7eb5002f)",
+   "read_level": "repository, code, release or dataset record",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C02",
+   "claim": "Unsloth K2.6 GGUF repository at rev 47c7cab1, ungated; UD-Q2_K_XL 340.48 GB, routed pool 331.14 GB, 6.90 GB routed and 8.53 GB non-routed read per token (header range reads)",
+   "source": "https://huggingface.co/unsloth/Kimi-K2.6-GGUF",
+   "date": "2026-04-22; headers read 2026-10-15",
+   "read_level": "repository, code, release or dataset record",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C03",
+   "claim": "Kimi-K2-Thinking per-token per-layer expert selections released (MMLU, MMLU_ZH, SimpleQA, LiveCodeBench, H4; decode at most 128); K2 next-layer and next-token top-20% conditional mass 56% and 53%; no hit rates",
+   "source": "https://arxiv.org/abs/2510.05497",
+   "date": "2025-10-07 (v5 2026-05-12)",
+   "read_level": "full text read by a discovery cell and re-read by the synthesis owner",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C04",
+   "claim": "The trace dataset is gated (auto) and has no licence tag",
+   "source": "https://huggingface.co/datasets/core12345/MoE_expert_selection_trace",
+   "date": "modified 2026-05-16",
+   "read_level": "repository, code, release or dataset record",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C05",
+   "claim": "K2.6 INT4 REAP observer outputs: per-layer expert-frequency summaries over raw-text categories; Apache-2.0",
+   "source": "https://huggingface.co/datasets/0xSero/kimi-k2.6-reap-observations-v1",
+   "date": "modified 2026-04-28 (rev 88f8625e)",
+   "read_level": "repository, code, release or dataset record",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C06",
+   "claim": "Kimi-K2.5 UD-TQ1_0 on an M5 Max 128 GB, one prompt, 100 tokens, cold: top-8 with 64 slots per layer 2.2 tokens/s at 67.2% hits; top-4 3.2-3.3 tokens/s at 55.6-76.4% (banks 16-256); 3.28 MB per pread at about 4.7 GB/s",
+   "source": "https://github.com/Anemll/anemll-flash-llama.cpp",
+   "date": "README at a809594f, accessed 2026-10-15",
+   "read_level": "first-party page, README or blog",
+   "verdict": "FIRST-PARTY",
+   "snapshot_http_status": 200,
+   "note": "first-party; not replicated"
+  },
+  {
+   "claim_id": "C07",
+   "claim": "Anemll's counters are consistent with its hit rates once each miss is three tensor reads (19,755 reads ≈ 6,600 misses ≈ 1.08 per layer call)",
+   "source": "https://github.com/Anemll/anemll-flash-llama.cpp",
+   "date": "same",
+   "read_level": "this synthesis's desk arithmetic on published numbers, committed in the bundle",
+   "verdict": "DESK-ARITHMETIC",
+   "snapshot_http_status": 200,
+   "note": "arithmetic on published numbers; reproducible from the named bundle file"
+  },
+  {
+   "claim_id": "C08",
+   "claim": "Anemll bank-modeling workflow: traces, per-layer static, global static and refillable-LRU simulation, runtime-anchor calibration; Kimi-K2.5 geometry 60 routed layers, 384 experts, 232.58 GiB sidecar; no estimator outputs published",
+   "source": "https://github.com/Anemll/anemll-flash-llama.cpp/blob/master/docs/moe-bank-modeling-workflow.md",
+   "date": "2026-03-31",
+   "read_level": "first-party page, README or blog",
+   "verdict": "FIRST-PARTY",
+   "snapshot_http_status": 200,
+   "note": "first-party; not replicated"
+  },
+  {
+   "claim_id": "C09",
+   "claim": "Decode-only traces: K3 299 accepted tokens per domain, DeepSeek-V3 300 steps by a llama.cpp evaluation callback; K3 reuse after 1 token 32-36% and within 64 tokens 80-82%; fair 60/40 windows; LRU 44% against Belady 62% (K3, 32 per layer); DeepSeek-V3 LRU 48% against static 35%; batch-4 78% falls to 64% at 25% of the pool",
+   "source": "https://arxiv.org/abs/2608.12103",
+   "date": "2026-08-12 (v2 2026-08-30)",
+   "read_level": "full text read by a discovery cell and re-read by the synthesis owner",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C10",
+   "claim": "The same study measures raw device reads at 27.0 GB/s cold and 61.4 GB/s warm against 29.6 GB/s in replay, and does not model time from bandwidth constants",
+   "source": "https://arxiv.org/abs/2608.12103",
+   "date": "2026-08-30",
+   "read_level": "full text read by a discovery cell and re-read by the synthesis owner",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C11",
+   "claim": "Event-atomic replay; sequential replay inflates LRU by 27.4%; one-template probe sets move effects by 19.4-31.9 points; union-to-capacity ratio must be reported",
+   "source": "https://arxiv.org/abs/2608.07911",
+   "date": "2026-08-04 (v4 2026-08-25)",
+   "read_level": "full text read by a discovery cell and re-read by the synthesis owner",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C12",
+   "claim": "Agentic workloads at RTX 5090 capacity: global LRU misses 16% (Qwen3.6-35B-A3B, 37% cached) and 39% (V4-Flash, 11% cached); no Kimi support",
+   "source": "https://arxiv.org/abs/2608.16157",
+   "date": "2026-08-17",
+   "read_level": "full text read by a discovery cell and re-read by the synthesis owner",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C13",
+   "claim": "GGUF-metadata decode prediction: held-out MAPE 13.1% and 14.4% on two Apple M4 Max systems, 36.1% on an RTX 5080; prefill model failed (68-76% at 16K on Apple)",
+   "source": "https://arxiv.org/abs/2609.14864",
+   "date": "2026-09-14",
+   "read_level": "full text read by a discovery cell and re-read by the synthesis owner",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C14",
+   "claim": "A 1,045.8B configuration projected at 1.81 tokens/s from measured host terms and a cache model validated on OLMoE; no trillion-parameter model executed",
+   "source": "https://doi.org/10.5281/zenodo.21856981",
+   "date": "2026-08-09",
+   "read_level": "abstract or report only",
+   "verdict": "VERIFIED-ABSTRACT",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C15",
+   "claim": "Kimi-K2.7-Code streamed at 0.89-1.03 tokens/s on an RTX 5090; a VRAM hit rate is given only for V4-Flash (80.1% with 22 GiB)",
+   "source": "https://arxiv.org/abs/2609.18110",
+   "date": "2026-09-16",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C16",
+   "claim": "Unique-key VRAM hit rates for V4-Flash (54.2%, 46.4%) and Kimi K3 (17.0%, 22.7%); no K2",
+   "source": "https://www.lmsys.org/blog/2026-08-29-sglang-ssd-expert-pack",
+   "date": "2026-08-29",
+   "read_level": "first-party page, README or blog",
+   "verdict": "FIRST-PARTY",
+   "snapshot_http_status": 200,
+   "note": "first-party; not replicated"
+  },
+  {
+   "claim_id": "C17",
+   "claim": "An iPhone flash-backed MoE: LRU 0.00% at 512 MiB against 38.58% at 576 MiB; recorded phone sequences differ from a Python reference in all five cases",
+   "source": "https://arxiv.org/abs/2609.29032",
+   "date": "2026-09-24",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C18",
+   "claim": "Single-shot Mac SSD-streaming benchmarks spread ±40% and up to 2.3x across sessions (16 GB M2)",
+   "source": "https://arxiv.org/abs/2609.18063",
+   "date": "2026-09-16 (v2 2026-09-17)",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C19",
+   "claim": "ds4 M5 Max streaming table (V4 Flash Vision-Exp 300/263 prefill and 11.9/19.3 generation, single run, 86.2 GiB cache; GLM-5.3-Flash Q4_K three-run medians); generation includes the first-token wait; \"workload references, not a speed guarantee\"",
+   "source": "https://github.com/antirez/ds4/blob/main/docs/SSD_STREAMING.md",
+   "date": "2026-09-06 (90aa4b56)",
+   "read_level": "first-party page, README or blog",
+   "verdict": "FIRST-PARTY",
+   "snapshot_http_status": 200,
+   "note": "first-party; not replicated"
+  },
+  {
+   "claim_id": "C20",
+   "claim": "ds4 QA at 90aa4b56: GLM 5.3 16 GiB references 12.59 prefill (463 tokens) and 6.14 generation (apple prompt), medians of three after a warm-up; paired whole-layer and selected-address appends with identical logits; the 35.36 GiB condition on two machines; minimum available memory per run",
+   "source": "https://github.com/antirez/ds4/blob/main/QA_BEFORE_RELEASES.md",
+   "date": "2026-09-06",
+   "read_level": "first-party page, README or blog",
+   "verdict": "FIRST-PARTY",
+   "snapshot_http_status": 200,
+   "note": "first-party; not replicated"
+  },
+  {
+   "claim_id": "C21",
+   "claim": "ds4 Metal expert cache at 90aa4b56: route hotness counted per selection, halved every 16 decode tokens; lowest-hotness victim with recency tie-break; current selection and in-flight entries protected",
+   "source": "https://github.com/antirez/ds4/blob/main/ds4_metal.m",
+   "date": "2026-09-06",
+   "read_level": "repository, code, release or dataset record",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C22",
+   "claim": "ds4 opens the model with plain `open()` and streams experts with `pread` and `F_RDADVISE`; no `F_NOCACHE` anywhere in `ds4.c` or `ds4_metal.m` at 90aa4b56",
+   "source": "https://github.com/antirez/ds4/blob/main/ds4.c",
+   "date": "2026-09-06",
+   "read_level": "repository, code, release or dataset record",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C23",
+   "claim": "ds4-bench generation rate = generated tokens ÷ time from the end of prefill, so it includes the first decode step",
+   "source": "https://github.com/antirez/ds4/blob/main/ds4_bench.c",
+   "date": "2026-09-06",
+   "read_level": "repository, code, release or dataset record",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C24",
+   "claim": "ds4's CUDA streaming cache is LRU over slots; its hotness reset is a stub",
+   "source": "https://github.com/antirez/ds4/blob/main/ds4_cuda.cu",
+   "date": "2026-10-05",
+   "read_level": "repository, code, release or dataset record",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C25",
+   "claim": "ds4's README discloses strong assistance from AI coding agents",
+   "source": "https://github.com/antirez/ds4",
+   "date": "accessed 2026-10-15",
+   "read_level": "first-party page, README or blog",
+   "verdict": "FIRST-PARTY",
+   "snapshot_http_status": 200,
+   "note": "first-party; not replicated"
+  },
+  {
+   "claim_id": "C26",
+   "claim": "Kimi-K2 at 1.7 tokens/s on an M4 Max 128 GB (rustane); `F_NOCACHE` raised 1.15 to 1.68 because the page cache evicted backbone weights",
+   "source": "https://themenonlab.blog/blog/kimi-k2-1t-macbook-rustane",
+   "date": "2026-03-25",
+   "read_level": "first-party page, README or blog",
+   "verdict": "FIRST-PARTY",
+   "snapshot_http_status": 200,
+   "note": "first-party; not replicated"
+  },
+  {
+   "claim_id": "C27",
+   "claim": "Kimi-K2-Instruct 4-bit at 0.5 tokens/s on a 128 GB M3 Max with an MLX pread streamer",
+   "source": "https://github.com/rita-aga/mlx-turboquant-moe-streaming",
+   "date": "2026-03-26",
+   "read_level": "first-party page, README or blog",
+   "verdict": "FIRST-PARTY",
+   "snapshot_http_status": 200,
+   "note": "first-party; not replicated"
+  },
+  {
+   "claim_id": "C28",
+   "claim": "Kimi K3 at 1.0015 tokens/s steady decode on an M5 Max 128 GB from four SSDs",
+   "source": "https://github.com/argonautlabsai/deltafin",
+   "date": "2026-09-08",
+   "read_level": "first-party page, README or blog",
+   "verdict": "FIRST-PARTY",
+   "snapshot_http_status": 200,
+   "note": "first-party; not replicated"
+  },
+  {
+   "claim_id": "C29",
+   "claim": "llama.cpp GPU LRU cache for MoE experts kept in host memory; hit rates logged at exit; merged 2026-10-07",
+   "source": "https://github.com/ggml-org/llama.cpp/pull/29887",
+   "date": "2026-10-07",
+   "read_level": "repository, code, release or dataset record",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C30",
+   "claim": "llama.cpp b11669 supports `deepseek2`, `glm-dsa` and `deepseek4`; every MoE layer emits a tensor named `ffn_moe_topk-` plus the layer index; the stock evaluation callback prints three edge values per dimension",
+   "source": "https://github.com/ggml-org/llama.cpp/tree/b11669",
+   "date": "2026-10-15",
+   "read_level": "repository, code, release or dataset record",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C31",
+   "claim": "vLLM v0.31.0 has `--enable-return-routed-experts` (per-request routed expert ids)",
+   "source": "https://github.com/vllm-project/vllm/blob/v0.31.0/vllm/model_executor/layers/fused_moe/routed_experts_capturer.py",
+   "date": "v0.31.0",
+   "read_level": "repository, code, release or dataset record",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C32",
+   "claim": "Intelligence Index v4.3.2: Kimi K2.6 27, DeepSeek V4 Flash 0731 34, GLM-5.3 45",
+   "source": "https://artificialanalysis.ai/models/comparisons/deepseek-v4-flash-vs-kimi-k2-6",
+   "date": "accessed 2026-10-15",
+   "read_level": "first-party page, README or blog",
+   "verdict": "FIRST-PARTY",
+   "snapshot_http_status": 200,
+   "note": "first-party; not replicated"
+  },
+  {
+   "claim_id": "C33",
+   "claim": "GLM-5.3 IQ2_XXS (antirez, rev 1434dad1): 211,075,860,864 bytes, SHA-256 059b36ac, no licence tag on the repository (upstream GLM-5.3 Licence)",
+   "source": "https://huggingface.co/antirez/glm-5.3-gguf",
+   "date": "2026-08-31",
+   "read_level": "repository, code, release or dataset record",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C34",
+   "claim": "DeepSeek-V4-Flash Vision-Exp MXFP4 (antirez, rev f71f23d5): 155,976,459,136 bytes; MIT",
+   "source": "https://huggingface.co/antirez/deepseek-v4-gguf",
+   "date": "2026-08-31",
+   "read_level": "repository, code, release or dataset record",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C35",
+   "claim": "Workload licences by Hub tag: WildChat-1M ODC-BY; oasst2, bigcodebench, BFCL, ToolACE, LongBench-v2 and narrativeqa Apache-2.0; SWE-agent-trajectories CC-BY-4.0; SWE-smith-trajectories and longmemeval-cleaned MIT",
+   "source": "https://huggingface.co/datasets/allenai/WildChat-1M",
+   "date": "read 2026-10-15",
+   "read_level": "repository, code, release or dataset record",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C36",
+   "claim": "Che's approximation is accurate for LRU under general popularity laws",
+   "source": "https://arxiv.org/abs/1202.3974",
+   "date": "2012-02-17",
+   "read_level": "abstract or report only",
+   "verdict": "VERIFIED-ABSTRACT",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C37",
+   "claim": "Cold-start references dominate short trace samples (miss ratio 0.40 against 0.02 overall); DOI 10.1145/107971.107981; cited through its OpenAlex record because the DOI page returns 403 to scripted fetches",
+   "source": "https://api.openalex.org/works/doi:10.1145/107971.107981",
+   "date": "1991",
+   "read_level": "abstract or report only",
+   "verdict": "VERIFIED-ABSTRACT",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C38",
+   "claim": "A simulator calibrated on microbenchmarks reached under 20% error only on held-out macro workloads; DOI 10.1145/379240.565338; cited through its OpenAlex record because the DOI page returns 403 to scripted fetches",
+   "source": "https://api.openalex.org/works/doi:10.1145/379240.565338",
+   "date": "2001",
+   "read_level": "abstract or report only",
+   "verdict": "VERIFIED-ABSTRACT",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C39",
+   "claim": "Trace-driven simulation misleads when event order depends on timing (multi-stream); DOI 10.1145/166955.167001; cited through its OpenAlex record because the DOI page returns 403 to scripted fetches",
+   "source": "https://api.openalex.org/works/doi:10.1145/166955.167001",
+   "date": "1993",
+   "read_level": "abstract or report only",
+   "verdict": "VERIFIED-ABSTRACT",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C40",
+   "claim": "The ECM model states its overlap hypothesis explicitly and validates data volumes separately from time",
+   "source": "https://arxiv.org/abs/1509.03118",
+   "date": "2015-09-10",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C41",
+   "claim": "Kimi-K2.6 INT4 is on the host with a receipt cross-checked against the Hub (96 files, 595,204,999,341 bytes)",
+   "source": "program/evidence/2026-10-16/kimi-k26-fetch/README.md",
+   "date": "2026-10-15",
+   "read_level": "this program's committed measurement",
+   "verdict": "COMMITTED-MEASUREMENT",
+   "snapshot_http_status": null
+  },
+  {
+   "claim_id": "M1",
+   "claim": "The whole-layer appends (30.8, 34.4, 34.9 s for 16, 43, 114 tokens) are full passes over 186.86 GB, so B for whole-layer reads is about 5.4-6.1 GB/s (6.08 with 16-token compute removed)",
+   "source": "compute/identification-g2stream.json",
+   "date": "2026-10-15",
+   "read_level": "this synthesis's desk arithmetic on published numbers, committed in the bundle",
+   "verdict": "DESK-ARITHMETIC",
+   "snapshot_http_status": null,
+   "note": "arithmetic on published numbers; reproducible from the named bundle file"
+  },
+  {
+   "claim_id": "M2",
+   "claim": "With that B and e = 0.61, the dossier null (A6 + A7) under-predicts 10 of 11 generation rows (G = 1.415) and predicts a ratio of 1 for every within-run contrast (observed 1.25-1.63); with B free in 5.85-10.6 GB/s its interval contains 9 of 11",
+   "source": "compute/identification-g2stream.json",
+   "date": "2026-10-15",
+   "read_level": "this synthesis's desk arithmetic on published numbers, committed in the bundle",
+   "verdict": "DESK-ARITHMETIC",
+   "snapshot_http_status": null,
+   "note": "arithmetic on published numbers; reproducible from the named bundle file"
+  },
+  {
+   "claim_id": "M3",
+   "claim": "The four simulators pass Che's approximation within 0.01, LRU inclusion, ds4-without-hotness ≡ LRU, and Belady ≥ every online policy, on seeds 42-44",
+   "source": "compute/sim-g2stream.json",
+   "date": "2026-10-15",
+   "read_level": "this synthesis's desk arithmetic on published numbers, committed in the bundle",
+   "verdict": "DESK-ARITHMETIC",
+   "snapshot_http_status": null,
+   "note": "arithmetic on published numbers; reproducible from the named bundle file"
+  }
+ ],
+ "summary": {
+  "claims": 44,
+  "first_party": 10,
+  "desk": 4,
+  "snapshots_http_200": 40
+ },
+ "corrections_after_rereading": [
+  "kill-shot cell: Anemll's hit rates are consistent with its counters once each miss is three tensor reads (C07)",
+  "dossier S51 (1.7 tokens/s, engine not stated) is the rustane report (C26)",
+  "dossier G2 status 'No Kimi K2 trace exists' is false (C03, C05, C08)"
+ ],
+ "remediation": "Replace first-party ds4 and Anemll numbers when replicated"
+}

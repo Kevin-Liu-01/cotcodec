@@ -1,0 +1,13 @@
+{
+ "url": "https://doi.org/10.5281/zenodo.21856981",
+ "fetched_at": "2026-10-15T23:50:22Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 89608,
+ "raw_sha256": "1094202152131ec26da38b2393d72590a9140d8028661df68570366a6e7aa903",
+ "raw_stored": false,
+ "primary": false,
+ "extract": {
+  "html_title": "Quantization as Cache Amplification: Trillion-Parameter Mixture-of-Experts Inference on a Commodity Laptop | Zenodo"
+ }
+}

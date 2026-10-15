@@ -1,0 +1,25 @@
+{
+ "url": "https://arxiv.org/abs/2609.29032",
+ "fetched_at": "2026-10-15T23:50:14Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41824,
+ "raw_sha256": "76808d253ba83791b816b7c5ba091a8f09b6edff5dcc27e06185187cce531baa",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "Paging the Experts: A Reproducible Characterization of Flash-Backed MoE Inference on iPhone",
+  "authors": [
+   "Shams, Musa"
+  ],
+  "citation_date": "2026/09/24",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 24 Sep 2026 05:05:28 UTC"
+   }
+  ],
+  "abstract": "Sparse activation reduces mixture-of-experts computation without eliminating the need to store all experts. We present Routide, a Swift/MLX runtime that executes the text path of a pinned public Qwen3.6-35B-A3B quantized checkpoint while keeping expert weights in iPhone storage and a byte-budgeted subset in memory. We characterize cache-policy sensitivity, numerical comparison boundaries, and measurement limits. Across five recorded 128-token workloads, fixed-route replay gives 0.00% demand hits with a 512 MiB LRU cache, 18.80% with seeded random eviction at the same budget, and 38.58% with 576 MiB LRU. The apparent capacity cliff is therefore a policy/workload interaction, not a universal memory requirement. Same-runtime Mac controls preserve generated sequences across eviction and asynchronous prefetch, including 2,560 exact token comparisons and 10,334 speculative loads. In contrast, complete resident-Python versus recorded-phone sequences disagree on all five tested cases, precluding a general numerical equivalence claim. Two separately scoped iOS 27 memory protocols observe sampled process-footprint peaks of 1.87-2.32 GiB on short prompts and 2.39-2.73 GiB on one longer prompt. We retain a thermal stopping event, negative timing comparisons, and a single qualified whole-device power estimate. These results establish bounded feasibility and identify limitations that a deployment claim must not hide.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
