@@ -5978,3 +5978,20 @@ they say so.)
   (D24, D92) whatever any wave scores.
 - Audit row 1 of `program/gauntlet/2026-10-15-g2rl-state-precision-rl.jsonl`, row hash
   `dc36ee2497e3023f104d6d3ac8d936456cae444274a50f1d40a4297dcb25dcc9`.
+
+## 2026-10-15 — `am1-keepset-search-v1` (CONFIRMATORY, frozen, ledger row 24; CPU only): H-A INCONCLUSIVE (6 of 7 SEARCH_BETTER), H-C NONABSTAIN_HELPS (+0.112, 39 vs 0); verified
+
+- Drafted from D115, with two independent pre-freeze checks (round 1: one blocker and three
+  majors fixed; round 2: the measured bootstrap size was added). H-B was made descriptive (D116).
+  Fill `4b89e8eb`, freeze `72d50162`.
+- The registered run took 71 s on the host CPU from an export of `72d50162`. All validity checks
+  passed: `values_hex` 694 of 694, joins 190,156 of 190,156.
+- H-A (retrieved, B = 4, 251 tables): A1-A6 SEARCH_BETTER. Greedy backward at 26 calls is
+  NOT_SEPARATED, with upper bound +0.0014, so the verdict is INCONCLUSIVE.
+- H-C: nonabstain-BM25 0.571 against BM25 top 4 0.458, +0.112 [0.081, 0.147], 39 against 0,
+  p 3.6e-12; median 1 read.
+- Descriptive: BM25 top 4 is 0.066 behind all 8, as D116 expected. Nonabstain-BM25 is 0.046
+  ahead of all 8 (p 0.033), which is not a test.
+- A fresh verifier reproduced the features and outputs byte for byte and recomputed every
+  headline number independently.
+- Evidence: `program/evidence/2026-10-16/am1-keepset-search/RESULTS.md`.

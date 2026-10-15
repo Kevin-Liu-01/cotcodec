@@ -1,0 +1,25 @@
+Using CPython 3.14.6
+Creating virtual environment at: .venv
+Installed 50 packages in 42ms
+{
+ "features": "~/cotcodec-runs/stage0/am1-keepset-search-v1/private/features-heldout-1458.json.gz",
+ "pools": 694,
+ "sha256": "8d4753f9cedc0e3dc033fb8f708d320984d615ea697aa405723c9525d7c0dc00",
+ "validation": {
+  "distinct_replies_reproduced": 694,
+  "failures": [],
+  "joins_agree_requests": 190156,
+  "judge_items": 10230,
+  "passed": true,
+  "reader_finish": {
+   "length": 755,
+   "stop": 176909
+  },
+  "requests": 190156,
+  "table_requests": 177664,
+  "table_requests_labelled": 177664,
+  "tables": 694,
+  "values_hex_reproduced": 694
+ }
+}
+exit 0

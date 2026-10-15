@@ -1,0 +1,28 @@
+{
+ "H-A": {
+  "arm": "retrieved",
+  "bounds_within_mc_margin": [],
+  "classifications": {
+   "A1": "SEARCH_BETTER",
+   "A2": "SEARCH_BETTER",
+   "A3": "SEARCH_BETTER",
+   "A4": "SEARCH_BETTER",
+   "A5": "SEARCH_BETTER",
+   "A6": "SEARCH_BETTER",
+   "A7": "NOT_SEPARATED"
+  },
+  "gold_arm_descriptive_label_no_decision": "INCONCLUSIVE",
+  "not_separated": [
+   "A7"
+  ],
+  "rule_better_at_equal_calls": [],
+  "rule_better_at_more_calls": [],
+  "verdict": "INCONCLUSIVE"
+ },
+ "H-C": {
+  "arm": "retrieved",
+  "gold_arm_descriptive_label_no_decision": "NONABSTAIN_HELPS",
+  "reading": "NONABSTAIN_HELPS"
+ }
+}
+exit 0

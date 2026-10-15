@@ -1,0 +1,167 @@
+{
+ "checks": [
+  {
+   "check": "AM1b per-table direct-search curve, B = 4 (70 points each)",
+   "compared": 89,
+   "identical": 89,
+   "passed": true
+  },
+  {
+   "check": "AM1b per-table greedy_backward, B = 4 (regret, calls and matched direct search; per seed, seeds 42-61, if sampled)",
+   "compared": 89,
+   "identical": 89,
+   "passed": true
+  },
+  {
+   "check": "AM1b per-table loo, B = 4 (regret, calls and matched direct search; per seed, seeds 42-61, if sampled)",
+   "compared": 89,
+   "identical": 89,
+   "passed": true
+  },
+  {
+   "check": "AM1b per-table msr_banzhaf_64, B = 4 (regret, calls and matched direct search; per seed, seeds 42-61, if sampled)",
+   "compared": 89,
+   "identical": 89,
+   "passed": true
+  },
+  {
+   "check": "AM1b per-table perm_shapley_16, B = 4 (regret, calls and matched direct search; per seed, seeds 42-61, if sampled)",
+   "compared": 89,
+   "identical": 89,
+   "passed": true
+  },
+  {
+   "check": "AM1b per-table random_keep_set, B = 4 (regret (0 calls))",
+   "compared": 89,
+   "identical": 89,
+   "passed": true
+  },
+  {
+   "check": "AM1b per-table retrieval_rank, B = 4 (regret (0 calls))",
+   "compared": 89,
+   "identical": 89,
+   "passed": true
+  },
+  {
+   "check": "AM1b per-table snipw_64, B = 4 (regret, calls and matched direct search; per seed, seeds 42-61, if sampled)",
+   "compared": 89,
+   "identical": 89,
+   "passed": true
+  },
+  {
+   "check": "AM1b results.json rows at B = 4 (mean, 95% and 99% intervals, rule minus direct at matched calls; direct search at 8, 9, 16, 26, 38, 64, 70 calls)",
+   "compared": 24,
+   "identical": 24,
+   "mismatches": [],
+   "passed": true
+  },
+  {
+   "check": "dry run (200 seeds): per-table leave-one-out, greedy backward and direct curve equal AM1b's",
+   "compared": 267,
+   "identical": 267,
+   "passed": true
+  },
+  {
+   "am1d_features_sha256_pinned": true,
+   "check": "AM1d features-1411 pools (pinned digest) equal this extract's pools",
+   "compared": 126,
+   "identical": 126,
+   "passed": true
+  },
+  {
+   "check": "AM1d extract validation record equals this extract's",
+   "compared": 1,
+   "identical": 1,
+   "passed": true
+  },
+  {
+   "check": "AM1d per-table: BM25 top 4, all 8, best 4-subset, oracle search at 8-70 calls, nonabstain@70 mask and u, stop-rule position and capped rows",
+   "compared": 126,
+   "identical": 126,
+   "passed": true
+  },
+  {
+   "check": "AM1d results.json accuracies and the nonabstain@70 - BM25 top 4 difference (mean and 95% interval; both arms; non-constant and all)",
+   "compared": 36,
+   "identical": 36,
+   "mismatches": [],
+   "passed": true
+  },
+  {
+   "check": "AM1d reply statistics (abstention counts, full-pool abstentions)",
+   "compared": 16,
+   "identical": 16,
+   "passed": true
+  },
+  {
+   "check": "AM1d stop-rule reads (mean and max uncapped reads, first answers at position 1)",
+   "compared": 4,
+   "identical": 4,
+   "passed": true
+  },
+  {
+   "check": "AM1d README: BM25 top 4 vs all 8, retrieved: 4 vs 0, exact p = 0.125",
+   "compared": 1,
+   "identical": 1,
+   "ours": [
+    4,
+    0,
+    0.125
+   ],
+   "passed": true,
+   "quoted": [
+    4,
+    0,
+    0.125
+   ]
+  },
+  {
+   "check": "AM1d README: nonabstain@70 vs all 8, retrieved: 5 vs 0, exact p = 0.0625",
+   "compared": 1,
+   "identical": 1,
+   "ours": [
+    5,
+    0,
+    0.0625
+   ],
+   "passed": true,
+   "quoted": [
+    5,
+    0,
+    0.0625
+   ]
+  },
+  {
+   "check": "AM1d README: nonabstain@70 vs BM25 top 4, retrieved: 1 table vs 0",
+   "compared": 1,
+   "identical": 1,
+   "ours": [
+    1,
+    0,
+    1.0
+   ],
+   "passed": true,
+   "quoted": [
+    1,
+    0,
+    1.0
+   ]
+  }
+ ],
+ "experiment": "am1-keepset-search-v1",
+ "inputs": {
+  "am1b": {
+   "per_table_sha256": "9e3facdc5fe919ae42348c10620338b531cca8a724ecda381fc3947f7921e125",
+   "results_sha256": "8e4ee280eb83ff2f7faaf1f9b8fa6ae2791e703503eec444f2a8985c8eb23df5"
+  },
+  "am1d": {
+   "features_1411_sha256": "cb678e3bdd5b55bd206a10816ac30eb5502530bc3c47e87d4213bb3f767b7fa5",
+   "per_table_sha256": "bfc8090effc8249d29956c60e3a695f201e7913d1ae2742da9329a17e8dcb33f",
+   "results_sha256": "47e8b392f4b69f7788ee644d75c2500dee213c9a8c3898b716a3e986bb68acc1"
+  },
+  "analysis_results_sha256": "aa5e0b2870105094309ec33189f3e6b6c927d47b660fc20d1c682e47ad372644",
+  "features_sha256": "48e9ffd4a5db0e7bb2369c8aef9db5a9fb939767cfeea6d7d8a9450a17c2ac85"
+ },
+ "passed": true,
+ "split": "development"
+}

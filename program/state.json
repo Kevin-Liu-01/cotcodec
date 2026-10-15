@@ -490,7 +490,8 @@
     "r04-checker-nuisance-invariance-v1",
     "q2-stage1-successor-e-v1",
     "q2-zinv-reserve-validation-v1",
-    "am1-memory-credit-v1"
+    "am1-memory-credit-v1",
+    "am1-keepset-search-v1"
   ],
   "infrastructure": {
     "serving_probe": "v1 and v2 done (1.15 GPU-h): cu129 vLLM works on R570; Q1 sampling within cap; Q2 ladder needs rescoping",
@@ -1535,6 +1536,13 @@
       "label": "COMPLETE, CONFIRMATORY, VERIFIED (fresh verifier after RESULTS: 11 of 11 outputs byte-identical, independent H2 reimplementation agrees; no gauntlet score, D111; agent hand labels, D9): every gate passes; H2 MISSPECIFIED for all five primary rules; program reading holds",
       "outcome": "347 held-out LongMemEval-S questions x 2 arms, Qwen3-8B reader, Qwen3-32B judge, job 1458: void no; G1 PASS (190,156 of 190,156 reader requests and 10,230 of 10,230 judge items bit-identical across GPUs and orders); K2 no (12.4%); K3 no; K4 251 non-constant retrieved tables; G2 PASS (322/322, 347/347, hand-check kappa 0.867 [0.767, 0.950]); B = 4 retrieved regret, 99%: leave-one-out 0.277 [0.223, 0.333], permutation Shapley-16 0.138 [0.096, 0.187], SNIPW-64 0.094 [0.058, 0.133], retrieval rank 0.343 [0.271, 0.418], raw attention 0.311 [0.235, 0.382], all MISSPECIFIED; LOO minus exact Shapley +0.233 [0.194, 0.273] (LOO loses more); exact Shapley 0.044 (95% [0.020, 0.072], 99% [0.012, 0.080]); program reading: per-memory deletion credit is misspecified for keep/evict decisions on this benchmark (this reader, this judge, BM25 user-turn pools, 4 of 8); second judge same verdicts; E1 +0.156 retrieved, +0.094 gold; AM2 non-gold ABOVE THE SWAP FLOOR +0.0099 [0.0026, 0.0170] (gold arm drives it); AM6 cross-fitted heads 0.890 vs best cheap 0.830 (neither reading holds)",
       "evidence": "program/evidence/2026-10-16/am1-confirmatory/RESULTS.md"
+    },
+    {
+      "registration": "am1-keepset-search-v1",
+      "date": "2026-10-15",
+      "label": "COMPLETE, CONFIRMATORY, VERIFIED (fresh verifier: features digest and all outputs byte-identical, independent recomputation exact; no gauntlet score, D115; H-B descriptive, D116): H-A INCONCLUSIVE (A1-A6 SEARCH_BETTER, A7 greedy backward NOT_SEPARATED); H-C NONABSTAIN_HELPS",
+      "outcome": "CPU only on AM1's 694 held-out tables and job 1458's reader pass (no GPU, no new model call): H-A retrieved B = 4, 251 tables, direct search minus rule: LOO@9 -0.151, SNIPW-64 equal calls -0.078, SNIPW-64 vs search@26 -0.049, MSR-Banzhaf-64@64 -0.076, MSR-64 vs search@26 -0.042, perm-Shapley-16 vs search@26 -0.096 (all SEARCH_BETTER), greedy backward@26 -0.032 upper bound +0.0014 (NOT_SEPARATED); H-C nonabstain-BM25 0.571 vs BM25 top 4 0.458 (+0.112 [0.081, 0.147], 39 vs 0, exact p 3.6e-12), median 1 read; descriptive: BM25 top 4 minus all 8 -0.066 (15 vs 38), nonabstain-BM25 minus all 8 +0.046 (33 vs 17, p 0.033)",
+      "evidence": "program/evidence/2026-10-16/am1-keepset-search/RESULTS.md"
     }
   ]
 }

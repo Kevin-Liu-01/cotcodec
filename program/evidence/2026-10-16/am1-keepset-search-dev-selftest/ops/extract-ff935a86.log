@@ -1,0 +1,24 @@
+Using CPython 3.14.6
+Creating virtual environment at: .venv
+Installed 50 packages in 44ms
+{
+ "features": "~/cotcodec-runs/stage0/am1ks-dev-selftest-ff935a86/private-ff935a86/features-development-1411.json.gz",
+ "pools": 126,
+ "sha256": "48e9ffd4a5db0e7bb2369c8aef9db5a9fb939767cfeea6d7d8a9450a17c2ac85",
+ "validation": {
+  "distinct_replies_reproduced": 126,
+  "failures": [],
+  "joins_agree_requests": 34524,
+  "judge_items": 1738,
+  "passed": true,
+  "reader_finish": {
+   "length": 18,
+   "stop": 32238
+  },
+  "requests": 34524,
+  "table_requests": 32256,
+  "table_requests_labelled": 32256,
+  "tables": 126,
+  "values_hex_reproduced": 126
+ }
+}
