@@ -10,10 +10,14 @@ descriptively to 38 tables; they are not verdicts.
   `839542c65332b908e1c80e9b5e9c09d9c23088e2dec4a54bf2e37dde4f0105d3`): 126 tables, 63
   development questions times 2 arms (gold, retrieved). The pilot's `h2.json` (SHA-256
   `89fc5f14ff73143a5aeafa83fa9c6164e901ef8bb0bcf6edbb9130e796bc99c2`) is read only to check the
-  bootstrap. **The confirmatory tables (`program/evidence/2026-10-16/am1-confirmatory/`) were not
-  opened, read or decoded** by this analysis or while preparing it. The script refuses any path
-  that contains `am1-confirmatory`. The held-out tables stay unused, so a later registration can
-  evaluate on them.
+  bootstrap. **No confirmatory data was opened.** That means the JSON and gz outputs under
+  `program/evidence/2026-10-16/am1-confirmatory/`, including `tables.json.gz` and `h2.json`. The
+  independent checker confirmed this from file access times. The confirmatory headline results
+  were known when AM1b was designed: they are in D112, and that directory's text files
+  (`README.md`, `RESULTS.md`, `analysis/tables.md`) were read during a text search. No AM1b
+  quantity was computed on held-out tables. The script refuses any path that contains
+  `am1-confirmatory`, and it pins its input digests. The held-out tables therefore remain
+  available for a later registration.
 - **Oracle utility.** Every rule here reads the judged correctness u(S) of the reader's answer
   given memory subset S, as AM1's rules do. Judging needs the reference answer. The curve
   therefore measures how well a rule attributes credit within one question when labels are
@@ -34,20 +38,24 @@ MISSPECIFIED (99% lower bound at most 0.05), at a deployable cost?
 - **The cheapest credit rule that is not MISSPECIFIED is SNIPW-16**, at 15.5 calls: 0.115, 99%
   [0.041, 0.217], INCONCLUSIVE. With 38 tables, INCONCLUSIVE covers true regrets from about 0.04
   to 0.2, so it is not evidence of adequacy.
-- **No credit rule beats direct search at equal calls, even on the point estimate.** Direct search
+- **No query-based credit rule beats direct search at equal calls in this cell, even on the point
+  estimate.** Direct search
   reads m random 4-subsets and keeps the best one. It loses 0.091 at 9 calls, against 0.214 for
-  leave-one-out at the same 9 calls, and 0.046 at 16 calls. At 38 calls its 99% upper bound is
-  0.050. At 70 calls (every 4-subset) it is exact. Exact credit reads 256 subsets and still loses
+  leave-one-out at the same 9 calls, and 0.046 at 16 calls. At about 38-39 calls its 99% upper bound
+  reaches 0.050 (0.0499 at 38 with bootstrap seed 42; other seeds move it to 39). At 70 calls (every 4-subset) it is exact. Exact credit reads 256 subsets and still loses
   0.079 (Shapley) or 0.031 (Banzhaf).
-- **Greedy selection (26 calls) is INCONCLUSIVE and does not beat direct search either.** Forward
-  selection loses 0.105 and backward elimination 0.079, against 0.024 for direct search at 26
-  calls.
+- **Greedy selection (26 calls) does not beat direct search either.** With ties broken by BM25
+  rank, forward selection loses 0.105 and backward elimination 0.079, both INCONCLUSIVE.
+  Direct search loses 0.024 at 26 calls. With uniform random ties, forward selection loses
+  0.156, 99% [0.067, 0.264], which is MISSPECIFIED (caveat 4).
 - **Among credit rules, sampled Banzhaf (SNIPW, MSR) lowers regret fastest per call.** It reaches
   about 0.04-0.05 at 57-64 calls and about 0.036 at 101-128 calls, near exact Banzhaf's 0.031.
   Permutation Shapley and KernelSHAP fall more slowly, to 0.06-0.08 at 120-190 calls, near exact
   Shapley's 0.079.
 - **Retrieval rank, at 0 calls, loses 0.132.** That is less than leave-one-out, leave-one-in and
-  every rule below 15 calls.
+  every rule below 15 calls. It also beats direct search at 0 calls (a random set) in all 8 cells,
+  with 95% intervals entirely below zero. Direct search needs about 8 calls to match it. A
+  direct search seeded by retrieval rank was not tried.
 
 ## Step 1: the decoding is validated
 
@@ -183,7 +191,7 @@ Direct search (a search baseline, not a credit rule), retrieved, B = 4:
 | 64 | 0.002 | [0.000, 0.007] | [0.000, 0.009] | ADEQUATE |
 | 70 | 0.000 | [0.000, 0.000] | [0.000, 0.000] | ADEQUATE |
 
-## Every cell (gold arm; B = 1, 2, 3)
+## Every cell (both arms; B = 1-4)
 
 Mean regret and label (M MISSPECIFIED, I INCONCLUSIVE, A ADEQUATE) in every cell.
 
@@ -257,13 +265,23 @@ Readings:
   - exact Banzhaf loses 0.046 and exact Shapley 0.078;
   - greedy forward and backward each lose 0.098;
   - direct search's 99% upper bound reaches 0.05 at 46 calls.
-- **The only exception to "direct search wins at equal calls"** is greedy forward at B = 2
-  (15 calls): gold -0.100 [-0.170, -0.025], retrieved -0.044 [-0.107, 0.028]. No credit rule's
+- **Exceptions to "direct search wins at equal calls" outside the primary cell.** On the point
+  estimate (95% intervals), these cells beat direct search:
+  - greedy forward at B = 2 (15 calls): gold -0.100 [-0.170, -0.025], retrieved -0.044
+    [-0.107, 0.028];
+  - gold B = 3, greedy forward: -0.048 [-0.141, 0.049];
+  - gold B = 2, leave-one-out: -0.002 [-0.105, 0.097];
+  - gold B = 2, MSR Banzhaf-8: -0.016 [-0.054, 0.025];
+  - retrieval rank at 0 calls in every cell (see the answer above).
+
+  Only greedy forward at gold B = 2 has a 95% interval below zero. No query-based credit rule's
   95% interval lies below direct search in any cell.
 
 ## Surprises and caveats
 
-1. **Direct search is the baseline to beat, and no credit rule beats it at equal calls.**
+1. **Direct search is the baseline to beat.** In the primary cell (retrieved, B = 4), no credit
+   rule beats it at equal calls. Elsewhere, a few cells beat it on the point estimate, listed
+   above.
    Exhaustive search over 4-subsets is exact at 70 calls, fewer than exact credit's 256. One
    credit vector ranks memories for every budget at once, whereas direct search answers one
    budget. Covering B = 1..4 by direct search takes up to 8 + 28 + 56 + 70 = 162 calls. A credit
@@ -275,15 +293,19 @@ Readings:
      average carries about ±0.016 of Monte Carlo noise here.
    - Permutation Shapley-16 agrees (0.095 against 0.097).
    - A registration that scores sampled rules should average more seeds.
-3. **Banzhaf-type estimators (SNIPW, MSR) are ahead of Shapley-type ones (permutation, KernelSHAP)
-   at every sampled size**, and their limit is lower (exact Banzhaf 0.031, exact Shapley 0.079).
-   AM1's pilot already showed the exact values. Here the order holds along the whole curve.
+3. **In the primary cell, Banzhaf-type estimators (SNIPW, MSR) are ahead of Shapley-type ones
+   (permutation, KernelSHAP) at every sampled size.** Their limit is also lower: exact Banzhaf
+   0.031, against exact Shapley 0.079. AM1's pilot already showed the exact values. The order is
+   not universal. At gold B = 2, exact Shapley (0.039) beats exact Banzhaf (0.052), and at B = 1
+   permutation Shapley sometimes beats SNIPW or MSR.
 4. **Greedy forward depends on tie-breaking.** It loses 0.105 with BM25-rank ties and 0.156 with
    uniform ties. With 0/1 utilities most single memories score 0, so the first step is mostly a
    tie. Backward elimination loses 0.079 with rank ties and 0.059 with uniform ties.
 5. **The harness's SNIPW uses float arithmetic.** In 265 of 12,460 SNIPW credit vectors (2.1%),
    rounding orders or ties memories differently from exact arithmetic. The mean absolute effect
-   on regret is about 0.0002 per draw. SNIPW is kept exactly as the harness computes it.
+   on regret is about 0.0002 per draw. SNIPW is kept exactly as the harness computes it. These
+   two numbers come from a one-off comparison with exact rational arithmetic, not from the
+   script or `results.json`. The independent checker reproduced them: 265 of 12,460, 0.00017.
 6. **Calls are not equal cost.** A 7-memory prompt (a leave-one-out call) costs more tokens than
    a 4-memory one (a direct-search call at B = 4). Token cost is not modelled.
 7. **Memoization assumes the reader replays deterministically.** Eager replay was bit-exact in
@@ -294,6 +316,9 @@ Readings:
 
 - **No deployable keep policy.** Every rule reads judged correctness, which needs the reference
   answer. Utilities that need no label were not tested.
+- **No robustness to noisy utilities.** Direct search picks the set that maximizes the same
+  noiseless u it is scored on. Under reader or judge noise it would suffer a winner's curse,
+  which averaging estimators largely avoid. The tables here are deterministic replays.
 - **No confirmed result.** These are 38 retrieved development tables, and the intervals are wide.
   AM1's thresholds were sized for about 209 tables, so the labels here are descriptive.
 - **No unbiased estimate for a chosen rule.** Picking the best rule or size from this curve and
@@ -338,3 +363,21 @@ both input digests. Two full runs gave byte-identical `results.json` and `per-ta
 - Code: `scripts/memcredit_cost_curve.py`. Tests: `tests/test_memcredit_cost_curve.py`, which
   covers the decoding against the committed regrets, memoized call counting, and the greedy and
   direct-search rules on hand-made toy tables.
+
+## Independent check
+
+A fresh checker reran the command above into a scratch directory. `results.json`,
+`per-table.json.gz` and `tables.md` were byte-identical to the committed copies. Its own code,
+which used only `harness/memcredit.py` for regret, reproduced every headline figure:
+- direct search at 9, 26 and 38 calls, by exact closed form and by Monte Carlo;
+- leave-one-out;
+- SNIPW-64, over 400 independent seeds;
+- greedy backward elimination.
+
+It found the direct-search comparison fair:
+- draws are made without replacement;
+- calls are counted the same way for every rule;
+- nothing leaks from the full table.
+
+Credit rules still lose to direct search at equal calls when they are also given BM25
+tie-breaking. Its wording corrections are applied in this file.
