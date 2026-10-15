@@ -27,9 +27,13 @@ of its pre-freeze dry run, which its section 15 summarises.
 | `cf9f9ebb`, `943348f4`, `8128800a` | the runbook rehearsal script, and two fixes to it |
 | `fc355d10` | pre-freeze check 1's fixes (code, scripts, tests, draft); the CPU parts rerun at it (section 9) |
 | `21eb1210` | the round-1 hand-label receipt, committed before the join |
+| `163f7b9c` | pre-freeze check 2's fixes (code, scripts, tests, draft); extract and analyze rerun at it (section 10) |
+| `31cc6998` | round 2's staging fix; analyze, the rehearsal and the staging at it (section 10) |
 
 Host root `~/cotcodec-runs/stage0/am5r-dev-dryrun/`, mode `dev` of every `ops/am5r/` script, from
-clean checkouts made by `am5r-checkout.sh` from Mac bundles. Slurm partition `research`. D110's
+clean checkouts made by `am5r-checkout.sh` from Mac bundles (round 2's two bundles were copied with
+rsync's delta transfer against the previous bundle; each one's SHA-256 on the host equals the
+Mac's). Slurm partition `research`. D110's
 `transcreate-lama` jobs held their own GPUs and were not touched. The first build attempt found
 two GPU jobs of another workstream of this program running (`g3-pilot-*`). The preflight refused
 it, and the build was submitted once they had ended (`ops/preflight.log`).
@@ -202,7 +206,7 @@ used, and no held-out output exists.
   and passed 61 of 61 (`rehearse-943348f4-fixed.log`): 56 inherited cases and 5 of this
   registration's.
 
-## 9. Round 1: pre-freeze check 1's fixes, and the CPU parts rerun at `fc355d10`
+## 9. Round 1: pre-freeze check 1's fixes, and the CPU parts rerun at `fc355d10` (its analysis outputs now in `round1-fc355d10/`)
 
 No GPU time and no model on held-out data. The GPU job's code (`run`, `worker` and what they call)
 changed only in `load_config` and `artifact_pin`: they now refuse a "PENDING" held-out pin, and one
@@ -242,15 +246,59 @@ held-out job's limit changed in the config (80 minutes), which the development j
   whose record does not say complete, and existing features; hand-sample refusing features of
   another job.
 
+## 10. Round 2: pre-freeze check 2's fixes, and the CPU parts rerun at `163f7b9c` and `31cc6998`
+
+No GPU time and no model on held-out data. The GPU job's code (`run`, `worker` and what they
+call) did not change in round 2. The fixes (`163f7b9c`): `analyze` uses a local port of AM5's
+`labelled_items` that records every use's judge label and flags an item whose uses' labels differ
+(left out of the hand-against-judge agreement and reported) instead of raising; the held-out
+`am5r-submit.sh` runs the freeze gate before the manifest and the dry run; the staging script
+skips what a job refused at its prolog or a worker that died before its pass did not write;
+`rerun-decision` treats a `summary.json` that does not parse as the named V2 error; the precedence
+covers the sensitivity blocks; `results.json`'s inputs carry the features' job id and
+rerun-decision digest. `31cc6998` fixed one more staging gap that the first staging at
+`163f7b9c` showed: a missing source (`extract-development-c16437bc.stderr`, set aside in round 1)
+left an empty `.gz` in the staged tree (97 files); the copy is now guarded, the staging refuses an
+empty or broken `.gz`, and the staging at `31cc6998` has 96 files.
+- **Extract** at `163f7b9c` (the round-1 features set aside on the host in `round1-fc355d10/`):
+  job 1507 with its rerun-rule record (`complete`); features `7b3f335e...`, which differ from
+  round 1's only in `code_sha256` (`logs/round2-host-run-163f7b9c.log`).
+- **The hand check** was not relabelled: the plan (`2bcd07af...`), the instructions and the
+  labeller prompt are unchanged, so round 1's receipt (`21eb1210`) and labels (`d21c25b9...`)
+  stand.
+- **Analyze** twice at `163f7b9c` and again twice at `31cc6998` (whose analysis code is the same;
+  the receipt commit logged), each pair byte-identical and the two pairs equal: `results.json`
+  `60079b6e...`, `per-table.json.gz` `fe2612ea...`, `tables.md` `c7a6043d...` and `power.json`
+  `cac6186f...` (the last three unchanged since round 1). `results.json` differs from round 1's
+  only by the new fields: every labelled item's `judge_by_use` and `judge_labels_differ` (none of
+  the 34 differs), the hand check's `judge_labels_differ` (0 items) and
+  `left_out_judge_labels_differ` (0), the sensitivity blocks' status ("read"), the inputs' job id
+  (1507) and rerun-decision digest, and the new code and features digests. Hand against judge 34 of
+  34, every reading as in round 1. `dryrun-compare`: 24 of 24 (`1e56bfba...`). The `163f7b9c` run
+  did not set `RECEIPT_COMMIT` (dev mode does not require it), so its log reads "none"; the
+  `31cc6998` run logs `21eb1210`.
+- **Tests.** The memcredit tests passed on the host, 229 at each commit;
+  `tests/test_memcredit_am5r.py` passed locally (70).
+- **The rehearsal** at `163f7b9c` and at `31cc6998`, each in a new host directory deleted
+  afterwards: 75 of 75 (`rehearsal/rehearse-163f7b9c.log`, `rehearsal/rehearse-31cc6998.log`), the
+  72 above and 3 for round 2: in reg mode, the held-out submit refused by the freeze gate before
+  the freeze, with no manifest, no dry run and no sbatch call; a `summary.json` that does not parse
+  decided as the named V2 error, with no record; the staging of a job refused at its prolog and of
+  a worker with no pass, with no empty `.gz` (checked at `31cc6998`).
+- **Staging** at `31cc6998`: 96 files, none containing any of the 3,989 texts searched.
+
 ## Files
 
-- `results.json`, `per-table.json.gz`, `tables.md`: the development analysis (text-free).
-- `dryrun-compare.json`: the comparison with AM5.
+- `results.json`, `per-table.json.gz`, `tables.md`: the development analysis (text-free), round 2.
+- `dryrun-compare.json`: the comparison with AM5, round 2.
 - `power.json`: section 9's operating characteristics.
 - `prepare/`: the held-out ablated artifact's text-free summary and the prepare output.
 - `precheck/`: the CPU precheck's comparison on job 1487.
 - `hand-check/`: the round-1 receipt and its text-free records, as committed before the join.
 - `round0-c16437bc/`: the first analysis (`c16437bc`) and its receipt, set aside in round 1.
+- `round1-fc355d10/`: round 1's `results.json`, `dryrun-compare.json` and analysis logs, set
+  aside in round 2 (its `per-table.json.gz`, `tables.md` and `power.json` equal the top-level
+  ones).
 - `jobs/1507-development/`, `builds/`, `selftests/`, `manifests/`, `ops/`, `logs/`: the lane and
   operator records, with every raw output's SHA-256 and the judge items with each response
   replaced by its SHA-256.

@@ -1262,7 +1262,8 @@
       "items": 34,
       "judge_no_hand_yes": 0,
       "judge_yes_hand_no": 0,
-      "kappa": 1.0
+      "kappa": 1.0,
+      "left_out_judge_labels_differ": 0
     },
     "decline_items": [],
     "decline_notes": {
@@ -1273,6 +1274,13 @@
     },
     "instructions_sha256": "1745340a5e05ebb149aaffee4beba23d2c13dc42b33d1872731defd09359a5c5",
     "items": 34,
+    "judge_labels_differ": {
+      "by_role": {},
+      "hand_label_1": 0,
+      "item_ids": [],
+      "items": 0,
+      "rule": "uses of one (question, reply digest) with different judge labels: left out of the hand-against-judge agreement, reported"
+    },
     "labeller": "an isolated agent (claude-opus-5-5), blind (D9: agent labels, not human)",
     "labeller_prompt_sha256": "98c35ceac9710033b095f01abe4a5fc98f6ed3a597b461e12a98ac213a7ae096",
     "labels_sha256": "d21c25b990241e987afab89bbcc93a6ffe62809f936e4db1ccff284b5bee3910",
@@ -1329,7 +1337,7 @@
       "scripts/memcredit_am3.py": "25f634edd29a23f2fdee12b0825013d624aa5305d49cf512f74fdf1827ea130f",
       "scripts/memcredit_am3g.py": "4bb0d42c09f9fca6e728a2487966bc13c08715672dce33316db195f6e7573e26",
       "scripts/memcredit_am5.py": "225e42e7d4f2e9a1ccfce1c4a826a04bcdb57511fea248f8009bf97467b6fa0b",
-      "scripts/memcredit_am5r.py": "35bab9f9a8fa647542f25d1f608afe49121c29618e22c89118534cd983a646fb",
+      "scripts/memcredit_am5r.py": "ccbc9f62a09d94c4af780a6e1ad8e3372c49d83b5ed5b3221cddc313e6183f39",
       "scripts/memcredit_analyze.py": "5444104d3c760b17f311656f4e0dbd50b2b154c89d806f1e4aa2ab6791fb0f34",
       "scripts/memcredit_cost_curve.py": "431f4cb21ccd398e1433e29a5b40c1a697d48b9aecc5fc728956f819e28c9bab",
       "scripts/memcredit_keepset_search.py": "3fbb804328bd310a6c8626f408d0d1b44a4624f06829a0762e3afc6134add584",
@@ -1337,8 +1345,9 @@
       "scripts/memcredit_step0.py": "57f2e4bbbd11bf750ff224852ba5dd19923ecb3decfde74d23a6913a7f9a7227",
       "scripts/memcredit_study.py": "f27ecd21e769655cddc1e9b06ee8f4c7c4ee8494348b4fc73dba7c68fdb66bb3"
     },
-    "features_sha256": "0f6984d4452103275da3f6a96f126a6374dc9b9e19ae5235c7ea6a86e5e9f249",
+    "features_sha256": "7b3f335ed40a82454641d04d7a0950335952094f36b19eb0db240f388f1d51f9",
     "gain_per_table_sha256": "0fc5635bad037588e521980536e4548eb51a6a3d9573e703b0f92010be72701e",
+    "job_id": "1507",
     "question_ids_sha256": "183ee4d3406786be721c4c846fa9f72f0fc2ae8c905dcb198eaaff17d78846fc",
     "readers": {
       "olmo-2-1124-7b-instruct": {
@@ -1390,6 +1399,7 @@
         "step": "rd-qwen35-9b-default"
       }
     },
+    "rerun_decision_sha256": "c9ed7feca3cf18b65c093a5885f8388294d9260da059ba0fe6f80fb645e4b6c7",
     "run": {
       "judge_items": {
         "from": [
@@ -1498,6 +1508,10 @@
       "hand": 0,
       "item_id": "r0000",
       "judge": 0,
+      "judge_by_use": [
+        0
+      ],
+      "judge_labels_differ": false,
       "question_id": "gpt4_68e94288",
       "question_type": "temporal-reasoning",
       "uses": [
@@ -1521,6 +1535,10 @@
       "hand": 0,
       "item_id": "r0001",
       "judge": 0,
+      "judge_by_use": [
+        0
+      ],
+      "judge_labels_differ": false,
       "question_id": "caf03d32",
       "question_type": "single-session-preference",
       "uses": [
@@ -1544,6 +1562,10 @@
       "hand": 1,
       "item_id": "r0002",
       "judge": 1,
+      "judge_by_use": [
+        1
+      ],
+      "judge_labels_differ": false,
       "question_id": "gpt4_b0863698",
       "question_type": "temporal-reasoning",
       "uses": [
@@ -1567,6 +1589,12 @@
       "hand": 0,
       "item_id": "r0003",
       "judge": 0,
+      "judge_by_use": [
+        0,
+        0,
+        0
+      ],
+      "judge_labels_differ": false,
       "question_id": "8ebdbe50",
       "question_type": "single-session-user",
       "uses": [
@@ -1608,6 +1636,10 @@
       "hand": 0,
       "item_id": "r0004",
       "judge": 0,
+      "judge_by_use": [
+        0
+      ],
+      "judge_labels_differ": false,
       "question_id": "caf03d32",
       "question_type": "single-session-preference",
       "uses": [
@@ -1631,6 +1663,10 @@
       "hand": 0,
       "item_id": "r0005",
       "judge": 0,
+      "judge_by_use": [
+        0
+      ],
+      "judge_labels_differ": false,
       "question_id": "caf03d32",
       "question_type": "single-session-preference",
       "uses": [
@@ -1654,6 +1690,10 @@
       "hand": 0,
       "item_id": "r0006",
       "judge": 0,
+      "judge_by_use": [
+        0
+      ],
+      "judge_labels_differ": false,
       "question_id": "gpt4_68e94288",
       "question_type": "temporal-reasoning",
       "uses": [
@@ -1677,6 +1717,10 @@
       "hand": 0,
       "item_id": "r0007",
       "judge": 0,
+      "judge_by_use": [
+        0
+      ],
+      "judge_labels_differ": false,
       "question_id": "gpt4_b0863698",
       "question_type": "temporal-reasoning",
       "uses": [
@@ -1702,6 +1746,10 @@
       "hand": 0,
       "item_id": "r0008",
       "judge": 0,
+      "judge_by_use": [
+        0
+      ],
+      "judge_labels_differ": false,
       "question_id": "b6025781",
       "question_type": "single-session-preference",
       "uses": [
@@ -1727,6 +1775,10 @@
       "hand": 0,
       "item_id": "r0009",
       "judge": 0,
+      "judge_by_use": [
+        0
+      ],
+      "judge_labels_differ": false,
       "question_id": "0bb5a684",
       "question_type": "temporal-reasoning",
       "uses": [
@@ -1752,6 +1804,10 @@
       "hand": 0,
       "item_id": "r0010",
       "judge": 0,
+      "judge_by_use": [
+        0
+      ],
+      "judge_labels_differ": false,
       "question_id": "caf03d32",
       "question_type": "single-session-preference",
       "uses": [
@@ -1775,6 +1831,10 @@
       "hand": 1,
       "item_id": "r0011",
       "judge": 1,
+      "judge_by_use": [
+        1
+      ],
+      "judge_labels_differ": false,
       "question_id": "gpt4_b0863698",
       "question_type": "temporal-reasoning",
       "uses": [
@@ -1798,6 +1858,10 @@
       "hand": 0,
       "item_id": "r0012",
       "judge": 0,
+      "judge_by_use": [
+        0
+      ],
+      "judge_labels_differ": false,
       "question_id": "f523d9fe",
       "question_type": "single-session-assistant",
       "uses": [
@@ -1821,6 +1885,10 @@
       "hand": 0,
       "item_id": "r0013",
       "judge": 0,
+      "judge_by_use": [
+        0
+      ],
+      "judge_labels_differ": false,
       "question_id": "b6025781",
       "question_type": "single-session-preference",
       "uses": [
@@ -1844,6 +1912,10 @@
       "hand": 0,
       "item_id": "r0014",
       "judge": 0,
+      "judge_by_use": [
+        0
+      ],
+      "judge_labels_differ": false,
       "question_id": "b6025781",
       "question_type": "single-session-preference",
       "uses": [
@@ -1867,6 +1939,10 @@
       "hand": 1,
       "item_id": "r0015",
       "judge": 1,
+      "judge_by_use": [
+        1
+      ],
+      "judge_labels_differ": false,
       "question_id": "a06e4cfe",
       "question_type": "single-session-user",
       "uses": [
@@ -1892,6 +1968,10 @@
       "hand": 0,
       "item_id": "r0016",
       "judge": 0,
+      "judge_by_use": [
+        0
+      ],
+      "judge_labels_differ": false,
       "question_id": "b6025781",
       "question_type": "single-session-preference",
       "uses": [
@@ -1915,6 +1995,10 @@
       "hand": 0,
       "item_id": "r0017",
       "judge": 0,
+      "judge_by_use": [
+        0
+      ],
+      "judge_labels_differ": false,
       "question_id": "gpt4_b0863698",
       "question_type": "temporal-reasoning",
       "uses": [
@@ -1938,6 +2022,10 @@
       "hand": 1,
       "item_id": "r0018",
       "judge": 1,
+      "judge_by_use": [
+        1
+      ],
+      "judge_labels_differ": false,
       "question_id": "b6025781",
       "question_type": "single-session-preference",
       "uses": [
@@ -1961,6 +2049,10 @@
       "hand": 0,
       "item_id": "r0019",
       "judge": 0,
+      "judge_by_use": [
+        0
+      ],
+      "judge_labels_differ": false,
       "question_id": "caf03d32",
       "question_type": "single-session-preference",
       "uses": [
@@ -1984,6 +2076,10 @@
       "hand": 0,
       "item_id": "r0020",
       "judge": 0,
+      "judge_by_use": [
+        0
+      ],
+      "judge_labels_differ": false,
       "question_id": "b6025781",
       "question_type": "single-session-preference",
       "uses": [
@@ -2007,6 +2103,10 @@
       "hand": 0,
       "item_id": "r0021",
       "judge": 0,
+      "judge_by_use": [
+        0
+      ],
+      "judge_labels_differ": false,
       "question_id": "gpt4_b0863698",
       "question_type": "temporal-reasoning",
       "uses": [
@@ -2030,6 +2130,10 @@
       "hand": 0,
       "item_id": "r0022",
       "judge": 0,
+      "judge_by_use": [
+        0
+      ],
+      "judge_labels_differ": false,
       "question_id": "8a137a7f",
       "question_type": "single-session-user",
       "uses": [
@@ -2055,6 +2159,10 @@
       "hand": 0,
       "item_id": "r0023",
       "judge": 0,
+      "judge_by_use": [
+        0
+      ],
+      "judge_labels_differ": false,
       "question_id": "b6025781",
       "question_type": "single-session-preference",
       "uses": [
@@ -2078,6 +2186,10 @@
       "hand": 0,
       "item_id": "r0024",
       "judge": 0,
+      "judge_by_use": [
+        0
+      ],
+      "judge_labels_differ": false,
       "question_id": "f523d9fe",
       "question_type": "single-session-assistant",
       "uses": [
@@ -2103,6 +2215,10 @@
       "hand": 0,
       "item_id": "r0025",
       "judge": 0,
+      "judge_by_use": [
+        0
+      ],
+      "judge_labels_differ": false,
       "question_id": "0bc8ad93",
       "question_type": "temporal-reasoning",
       "uses": [
@@ -2128,6 +2244,10 @@
       "hand": 1,
       "item_id": "r0026",
       "judge": 1,
+      "judge_by_use": [
+        1
+      ],
+      "judge_labels_differ": false,
       "question_id": "b6025781",
       "question_type": "single-session-preference",
       "uses": [
@@ -2153,6 +2273,10 @@
       "hand": 0,
       "item_id": "r0027",
       "judge": 0,
+      "judge_by_use": [
+        0
+      ],
+      "judge_labels_differ": false,
       "question_id": "b6025781",
       "question_type": "single-session-preference",
       "uses": [
@@ -2178,6 +2302,10 @@
       "hand": 0,
       "item_id": "r0028",
       "judge": 0,
+      "judge_by_use": [
+        0
+      ],
+      "judge_labels_differ": false,
       "question_id": "a346bb18",
       "question_type": "multi-session",
       "uses": [
@@ -2201,6 +2329,10 @@
       "hand": 1,
       "item_id": "r0029",
       "judge": 1,
+      "judge_by_use": [
+        1
+      ],
+      "judge_labels_differ": false,
       "question_id": "b6025781",
       "question_type": "single-session-preference",
       "uses": [
@@ -2224,6 +2356,10 @@
       "hand": 0,
       "item_id": "r0030",
       "judge": 0,
+      "judge_by_use": [
+        0
+      ],
+      "judge_labels_differ": false,
       "question_id": "3c1045c8",
       "question_type": "multi-session",
       "uses": [
@@ -2249,6 +2385,10 @@
       "hand": 0,
       "item_id": "r0031",
       "judge": 0,
+      "judge_by_use": [
+        0
+      ],
+      "judge_labels_differ": false,
       "question_id": "caf03d32",
       "question_type": "single-session-preference",
       "uses": [
@@ -2272,6 +2412,10 @@
       "hand": 0,
       "item_id": "r0032",
       "judge": 0,
+      "judge_by_use": [
+        0
+      ],
+      "judge_labels_differ": false,
       "question_id": "caf03d32",
       "question_type": "single-session-preference",
       "uses": [
@@ -2295,6 +2439,10 @@
       "hand": 0,
       "item_id": "r0033",
       "judge": 0,
+      "judge_by_use": [
+        0
+      ],
+      "judge_labels_differ": false,
       "question_id": "0bb5a684",
       "question_type": "temporal-reasoning",
       "uses": [
@@ -4264,7 +4412,8 @@
           "judge_reading": "NOT_SEPARATED",
           "reading": "NOT_SEPARATED"
         }
-      }
+      },
+      "status": "read"
     },
     "8": {
       "cap": 8,
@@ -4889,7 +5038,8 @@
           "judge_reading": "NOT_SEPARATED",
           "reading": "NOT_SEPARATED"
         }
-      }
+      },
+      "status": "read"
     },
     "decides": false,
     "excluded_type": "single-session-preference",

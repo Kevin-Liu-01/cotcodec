@@ -1,0 +1,39 @@
+== checkout 2026-10-15T22:56:19Z
+~/cotcodec-runs/stage0/am5r-dev-dryrun/bundles/am5r-163f7b9c.bundle is okay
+2026-10-15T22:56:23Z clean checkout of 163f7b9c999e8f0e96aa42668ad4239afa22e849 (tree de0b2f57) from bundle ea7b7dc5; git archive sha256 7f5a0986565cb8d1f541dd68820b07c4eaf7378502ed4af801e3cbfb9f5bccb7
+== set aside the round-1 features
+== extract 2026-10-15T22:56:23Z
+start 2026-10-15T22:56:24Z commit 163f7b9c999e8f0e96aa42668ad4239afa22e849 population development job 1507
+extract exit 0
+7b3f335ed40a82454641d04d7a0950335952094f36b19eb0db240f388f1d51f9  ~/cotcodec-runs/stage0/am5r-dev-dryrun/private/features-development.json.gz
+end 2026-10-15T22:56:24Z
+2026-10-15T22:56:24Z extract development job 1507 at 163f7b9c: extract exit 0
+== features compared with round 1's
+top-level keys that differ: ['code_sha256']
+== analyze 2026-10-15T22:56:24Z
+start 2026-10-15T22:56:24Z commit 163f7b9c999e8f0e96aa42668ad4239afa22e849 mode dev population development
+hand-label receipt commit none; labels d21c25b990241e98; plan 2bcd07af44ae049a
+analyze a exit 0
+analyze b exit 0
+analyze outputs byte-identical
+60079b6e044d90c77d6df3b94f2ce36dd4cc4b1b342ccaea4c422cf9bb2b9281  results.json
+fe2612ea150102739a12fa234ed90644476290fe45310299ead4939bf2a4f3e9  per-table.json.gz
+c7a6043d025863031678b3fc33785795fd1d37c90ef158b0e9c65b910bb28a28  tables.md
+7b3f335ed40a82454641d04d7a0950335952094f36b19eb0db240f388f1d51f9  ~/cotcodec-runs/stage0/am5r-dev-dryrun/private/features-development.json.gz
+dryrun-compare exit 0 ({"all_pass":true,"passed":24,"sha256":"1e56bfbafa234cf391ef6de31db7e7307aed159352bf4619b3c08ee508867012","total":24})
+power exit 0
+pytest exit 0 (229 passed in 12.89s)
+end 2026-10-15T22:56:43Z
+2026-10-15T22:56:43Z analyze dev at 163f7b9c: 5 commands exited 0; analyze outputs byte-identical
+== rehearsal 2026-10-15T22:56:43Z
+rehearsal 163f7b9c: 75 passed, 0 failed
+75
+rehearsal directory deleted
+no rehearsal directory left
+== stage 2026-10-15T22:57:08Z
+
+gzip: ~/cotcodec-runs/stage0/am5r-dev-dryrun/evidence-stage/logs/extract-development-c16437bc.stderr.gz: unexpected end of file
+texts searched: 3989; staged files containing one: 0
+staged: 97 files, 2.2M
+2026-10-15T22:57:10Z evidence staged for c16437bc (development:1507): 97 files, no text found
+== done 2026-10-15T22:57:10Z

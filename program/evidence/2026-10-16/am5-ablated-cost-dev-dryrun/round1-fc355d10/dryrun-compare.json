@@ -1,0 +1,128 @@
+{
+  "all_pass": true,
+  "checks": [
+    {
+      "check": "replies olmo-2-1124-7b-instruct vs job 1487 (tokens and finish)",
+      "compared": 4473,
+      "identical": 4473,
+      "identical_bits": 4473,
+      "pass": true
+    },
+    {
+      "check": "primary labels olmo-2-1124-7b-instruct vs job 1487 at every cell",
+      "pass": true
+    },
+    {
+      "check": "replies qwen3-8b vs job 1487 (tokens and finish)",
+      "compared": 4473,
+      "identical": 4473,
+      "identical_bits": 4473,
+      "pass": true
+    },
+    {
+      "check": "primary labels qwen3-8b vs job 1487 at every cell",
+      "pass": true
+    },
+    {
+      "check": "replies qwen3.5-9b vs job 1487 (tokens and finish)",
+      "compared": 4473,
+      "identical": 4473,
+      "identical_bits": 4473,
+      "pass": true
+    },
+    {
+      "check": "primary labels qwen3.5-9b vs job 1487 at every cell",
+      "pass": true
+    },
+    {
+      "check": "judge item replay vs job 1487 (validation items included)",
+      "compared": 460,
+      "identical": 460,
+      "pass": true
+    },
+    {
+      "check": "judge-items.json byte-identical to job 1487's",
+      "pass": true
+    },
+    {
+      "check": "feature pools qwen3-8b vs AM5's features",
+      "compared": 63,
+      "identical": 63,
+      "pass": true
+    },
+    {
+      "check": "feature pools olmo-2-1124-7b-instruct vs AM5's features",
+      "compared": 63,
+      "identical": 63,
+      "pass": true
+    },
+    {
+      "check": "feature pools qwen3.5-9b vs AM5's features",
+      "compared": 63,
+      "identical": 63,
+      "pass": true
+    },
+    {
+      "check": "AM5's analysis on these features: per-table.json.gz byte-identical to AM5's committed file",
+      "pass": true,
+      "sha256": "58bec8389e37e9a9b92c6c1038fbced721731b496fee0512108d197763e11f9c"
+    },
+    {
+      "check": "AM5's analysis on these features: results.json 'readers' equal to AM5's committed results",
+      "pass": true
+    },
+    {
+      "check": "AM5's analysis on these features: results.json 'leakage' equal to AM5's committed results",
+      "pass": true
+    },
+    {
+      "check": "AM5's analysis on these features: results.json 'leakage_by_type' equal to AM5's committed results",
+      "pass": true
+    },
+    {
+      "check": "AM5's analysis on these features: results.json 'judge_validation' equal to AM5's committed results",
+      "pass": true
+    },
+    {
+      "check": "AM5's analysis on these features: results.json 'labelled_items' equal to AM5's committed results",
+      "pass": true
+    },
+    {
+      "check": "AM5's analysis on these features with AM5's receipted labels: the hand check equal to AM5's committed one",
+      "pass": true
+    },
+    {
+      "check": "this registration's ablated block qwen3-8b (judge-based fields) equal to AM5's committed results",
+      "pass": true
+    },
+    {
+      "check": "gain counts qwen3-8b equal to AM5's original-pool gains (AM3)",
+      "pass": true
+    },
+    {
+      "check": "this registration's ablated block olmo-2-1124-7b-instruct (judge-based fields) equal to AM5's committed results",
+      "pass": true
+    },
+    {
+      "check": "gain counts olmo-2-1124-7b-instruct equal to AM5's original-pool gains (AM3)",
+      "pass": true
+    },
+    {
+      "check": "this registration's ablated block qwen3.5-9b (judge-based fields) equal to AM5's committed results",
+      "pass": true
+    },
+    {
+      "check": "gain counts qwen3.5-9b equal to AM5's original-pool gains (AM3)",
+      "pass": true
+    }
+  ],
+  "inputs": {
+    "am5_features_sha256": "16bbd3855a67cd789b77acae855c9962225bdb1326cef12fd5340a6d72eb0889",
+    "am5_hand_labels_sha256": "9da82b416383fb01fcd5b4f9c97f383f13625748e6dd299020fbd0fd96e5658c",
+    "am5_per_table_sha256": "58bec8389e37e9a9b92c6c1038fbced721731b496fee0512108d197763e11f9c",
+    "am5_results_sha256": "a0d5f35812c9165d81134b3cbf68299cdcbb4cb2d068c677987f6a8af2096bdb",
+    "features_sha256": "0f6984d4452103275da3f6a96f126a6374dc9b9e19ae5235c7ea6a86e5e9f249"
+  },
+  "passed": 24,
+  "total": 24
+}

@@ -1,0 +1,76 @@
+PASS bootstrap checkout at 31cc6998, clean
+PASS a bootstrap copy that differs from the commit's is refused
+PASS the image checks pass on the real development build record (c16437bc)
+PASS image capture prints exactly one line, the image id
+PASS IMAGE=$(am5r-image.sh) is the id itself
+PASS jobs.log records the image line whole
+PASS another base image is refused, nothing on stdout
+PASS another vLLM commit is refused
+PASS a malformed image-id.txt is refused
+PASS build submits, prints only its job id and records the attempt
+PASS a rebuild after a successful build is refused (round 1)
+PASS a second 'build' is refused although the failed build left no build root (check 3)
+PASS the rebuild after a build that failed before its root existed submits into -r2
+PASS a third attempt is refused
+PASS the image is read from the latest attempt (-r2)
+PASS job state saves the full scontrol record once the job ends (exit 0)
+PASS after scontrol forgets the job, the saved record is printed
+PASS job state exits 1 while a job runs
+PASS job state treats a state that is not terminal as running (exit 1, no record)
+PASS selftest refuses a two-line image id
+PASS selftest takes a valid image id and prints only its job id
+PASS submit refuses a malformed image id
+PASS a failed dry run stops submit before the test-only check and sbatch; no submit record
+PASS a failed test-only check stops submit; no submit record
+PASS check runs the dry run and test-only check and submits nothing
+PASS preflight ignores D110's transcreate-* jobs and prints nothing on stdout
+PASS submit refuses while a GPU job of this program is queued or running; no submit record
+PASS a failed sbatch keeps no submit record (the slot is not used); the output is kept as .tmp
+PASS a submitter output without a job id keeps no submit record
+PASS after those failures, submit succeeds, prints only the job id and records it
+PASS a second submit is refused
+PASS rerun is refused without the rerun rule's record (minor 2)
+PASS dev mode refuses to run the held-out population on a GPU (no sbatch call)
+PASS dev mode refuses to extract the held-out population
+PASS prepare-heldout refuses reg mode (the artifact is built before the freeze)
+PASS prepare-heldout refuses to rebuild an existing artifact
+PASS the held-out selftest (tokenizers only) submits in dev mode, before the freeze
+PASS reg mode: the held-out submit is refused by the freeze gate before the freeze, with no manifest, no dry run and no sbatch call (round 2)
+PASS rerun-decision refuses a job that has not ended (no scontrol record, no termination.env), and writes nothing (check 3)
+PASS a failed reader step is a rerun
+PASS a repeated rerun-decision is refused and leaves the record unchanged
+PASS a summary that is not a JSON object is a named V2 error with no record
+PASS rerun runs once the rule's record says rerun, and prints only the job id
+PASS the rerun's own rerun decision is void (V2)
+PASS a second rerun is refused
+PASS rerun rule: a hard stop on an incomplete job, even with a failed step and a signal -> no-rerun
+PASS rerun rule: a signal well before the limit, even with a step stopped late -> rerun
+PASS rerun rule: a signal within 300 s of the hard stop -> no-rerun
+PASS rerun rule: a step stopped by its time budget -> no-rerun
+PASS rerun rule: every essential step complete (OLMo-2 by its fallback) -> complete
+PASS rerun rule: a job that never started -> rerun
+PASS a summary.json that does not parse is a named V2 error with no record, not a rerun (round 2)
+PASS rerun-decision refuses a job with no saved scontrol record (round 1)
+PASS job state records a job scontrol forgot when the lane's termination record exists (exit 0) (round 1)
+PASS rerun-decision accepts the forgotten record and decides the job (round 1)
+PASS job state exits 2, recording nothing, for a forgotten job without a termination record (round 1)
+PASS extract refuses a job without a rerun-rule record (round 1)
+PASS extract refuses job 9601, whose rerun-rule record says no-rerun (round 1)
+PASS extract refuses job 9602, whose rerun-rule record says rerun (round 1)
+PASS extract refuses job 9606, whose rerun-rule record says rerun (round 1)
+PASS extract refuses to overwrite existing features, even for a complete job (round 1)
+PASS hand-sample refuses features of another job, writing no sample (round 1)
+PASS hand-sample draws the development sample
+PASS a repeated hand-sample is refused and leaves its record unchanged
+PASS the CLI launch claims the stage, meets the CLI's authentication failure and stops with exit 3
+PASS a stage already claimed is refused, from another work directory too
+PASS a CLI push outside the cli action is refused
+PASS the subagent push finds one transcript for the chunk, copies it unmodified and records the attempts
+PASS the merge audits the transcript (model, prompt, agent id, paths, times) and writes the final labels
+PASS a repeated hand-merge is refused and leaves its record unchanged
+PASS the transcripts' digest list is read-only after the merge
+PASS the receipt records the launch, attempts and agent ids, and carries the records staging copies
+PASS an extra transcript is visible (2 attempts for chunk 01) and voids the hand check: empty final labels, no repair
+PASS the receipt of the void stage records it
+PASS staging a job refused at its prolog and a worker with no pass stages what exists (round 2)
+rehearsal 31cc6998: 75 passed, 0 failed

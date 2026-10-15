@@ -938,6 +938,24 @@ config, which the development job does not use.
   and 11 cases for round 1 (the forgotten job, extract's refusals, hand-sample's job check, the
   refused rebuild).
 
+**Round 2 corrections, rerun on the CPU** (code at `163f7b9c`, and `31cc6998` for one more staging
+fix; no GPU, no model on held-out data; the GPU job's code did not change in round 2).
+- `extract` read job 1507 again at `163f7b9c` (round 1's features set aside on the host): features
+  `7b3f335e...`, differing from round 1's only in the code digest. The hand check was not
+  relabelled: its plan, instructions and prompt are unchanged, so round 1's receipt (`21eb1210`)
+  and labels stand.
+- `analyze` twice at `163f7b9c` and twice at `31cc6998`, all four byte-identical: `results.json`
+  `60079b6e...` differs from round 1's only by the new fields (each labelled item's judge label per
+  use and its flag, none of the 34 flagged; the sensitivity blocks' status; the inputs' job id and
+  rerun-decision digest); every reading, the per-pool table, `tables.md` and `power.json` are
+  unchanged; hand against judge 34 of 34; `dryrun-compare` 24 of 24. The memcredit tests 229 on
+  the host at each commit and `tests/test_memcredit_am5r.py` 70 locally.
+- The rehearsal at `163f7b9c` and at `31cc6998`, each in a new host directory deleted afterwards:
+  75 of 75, the 72 above and 3 for round 2 (the held-out submit refused by the freeze gate in reg
+  mode, an unparseable summary, the staging of a job refused at its prolog and of a worker with no
+  pass). The staging at `31cc6998`: 96 files, no text found. Record: the dry run's README,
+  section 10.
+
 Development also set: the construction and the outcome definition (AM5), the readers and engines
 (am3g), the 71 requests per pool, the development job's 13-minute limit and budgets (job 1487's
 timeline), and the held-out budgets (am3g's overhead model, section 11).
@@ -1173,3 +1191,22 @@ and the commit that carries this section; the CPU parts of the dry run were reru
 | m4 | The leakage counts were not in the disclosures or the licence. | Sections 1.2 and 7.1 ("What a licence amounts to"): 27 of 347 pools hold the answer string and 91 questions have it in a remaining user turn (crude); leakage can only lower the measured cost, which favours COST_BELOW_GAIN. |
 | m5 | The inputs directory was writable. | `chmod a-w` on the host's `~/cotcodec-runs/stage0/am5-ablated-cost-v1/inputs` (section 15); section 17 step 5 checks it. |
 | Info | Averaged power; the release wait; the hand plan's location; PENDING pins; a rebuild after a successful build; the staging pipeline; the rehearsal's cleanup; the mode-mismatch void. | Section 9 gives the power averaged over the development uncertainty (`predictive_power`, Jeffreys' prior: Qwen3-8B 0.98 COST_BELOW_GAIN, OLMo-2 0.15-0.24 and Qwen3.5-9B 0.25-0.37 for either direction) and says that NOT_SEPARATED is not evidence of equality. The budget model adds `run_step`'s 120 s release wait after every step; with it the residual path skipped judge32 under 70 minutes, so the limit is 80 minutes (caps 1.42 and 2.83 GPU-h) and judge32 starts and fits on every path (section 11; test). Section 8 says `hand-plan.json` sits in `R/hand/` and that the labeller gets only its chunk and the instructions. `load_config` no longer accepts "PENDING" for the held-out pins. `am5r-build.sh rebuild` refuses after a successful build (rehearsal case). `am5r-stage-evidence.sh`'s `$HOME` rewrite is pipefail-safe and covers the decompressed `.gz` files. The rehearsal removes `ablated-artifact.json`. The mode-mismatch void is kept for the whole run and disclosed (section 8): the mismatch means the environment that sets every step's mode is not the registered one, and the gated replay reader and the judge rest on it; it is am3g's rule, unchanged. |
+
+### Round 2
+
+Pre-freeze check 2 ran on `0c606da4` and found the file ready to freeze after fixes: no blocking
+item, one major (of low probability), three minor and several for information. It confirmed every
+round-1 fix in the code, the rehearsal (72 of 72), the time budget (judge32 keeps at least 653 s
+even with a cold cache), the gate with a scratch ledger row, a null simulation (every familywise
+false-directional rate at most 0.05) and blindness. The fixes are commits `163f7b9c` and
+`31cc6998` (code, operator scripts, tests, the rehearsal, this file) and the commit that carries
+this section; the CPU parts of the dry run were rerun (section 15). No model ran on the held-out
+artifact and round 2 used no GPU time.
+
+| Item | Finding | Disposition |
+|---|---|---|
+| M1 | `analyze` called AM5's `labelled_items`, which raises "one reply digest with two judge labels": two readers' replies can share a normalized digest yet differ in their stripped text, and the judge can label them differently (1 such key in 12,225 in am3g's held-out features), so the registered analysis could stop on held-out data. | A local port (`labelled_items`) records the judge's label of every use (`judge_by_use`), flags such an item (`judge_labels_differ`, `judge` None) and leaves it out of every hand-against-judge agreement count (overall, per role and the items' agreement), which report how many were left out and which; the hand label applies to all its uses as before. A test builds the case (two readers' top-4 replies "It is blue h05." and "It is blue, h05.", one digest, judged 1 and 0) and checks that AM5's function raises on it and the port does not. Sections 6.7, 8 and 14. |
+| m1 | `am5r-submit.sh` never ran the freeze gate. | For the held-out population it runs the checkout's `memcredit_am5r.gate('heldout')` right after the checkout check, before the manifest, the dry run and any submitter call, and stops with exit 2 when the gate refuses. Rehearsal case: in reg mode before the freeze the held-out submit is refused by the gate, with no manifest, no dry run and no sbatch call. Section 16. |
+| m2 | `am5r-stage-evidence.sh` failed for a job refused at its prolog (no `am5r/` directory) and for a worker that died before writing a pass (unmatched globs under `set -e`). | `shopt -s nullglob`; the summary and environment copies, the two `sha256sum` lines, the slurm output and the GPU samples are guarded with `[[ -f ]]`. The first staging at `163f7b9c` showed one more gap of the kind (a missing extract stderr left an empty `.gz`): that copy is guarded too, and the staging refuses an empty or broken `.gz` (`31cc6998`). Rehearsal case: a job with no `am5r/` directory and one whose worker wrote no pass stage what exists, with no empty `.gz`. |
+| m3 | `rerun-decision` read a `summary.json` that does not parse as a missing summary, which gives "rerun", while section 8 makes a summary that is not a JSON object a named V2 error. | A `summary.json` that does not parse (or does not decode) is now the same named V2 error; a missing one is still read as missing. Test and rehearsal case. Section 8. |
+| Info | The "GPU job's code is unchanged" wording; the licence wording; the precedence on the sensitivity blocks; the job-state wording; the inputs of `results.json`. | Section 15 (and the dry run's README) now say that round 1 changed `load_config` and `artifact_pin`, which `run` calls, only to refuse a "PENDING" pin and in one error message, so no new development GPU job was needed. Sections 2 and 7.1 say "raises accuracy" with a lost correct abstention and a gained correct answer weighted equally, and that Qwen3-8B's gains rest on the judge alone (am3g hand-checked OLMo-2's and Qwen3.5-9B's). The precedence (`apply_precedence`) now covers the two sensitivity blocks, so a void run shows no directional label there (test). Sections 8 and 16 and `am5r-job-state.sh` say that its exit 2 decides nothing while a job runs (the next poll recovers) and is VOID (V2) only for a GPU job that has ended, and that build and selftest jobs, which have no termination record, go on from the build root and `exits.txt`. `results.json`'s inputs carry the features' job id and rerun-decision digest (test). Section 16 re-pinned (`scripts/memcredit_am5r.py`, `tests/test_memcredit_am5r.py`, `am5r-job-state.sh`, `am5r-submit.sh`, `am5r-stage-evidence.sh`). |

@@ -1,0 +1,38 @@
+== checkout 2026-10-15T23:03:17Z
+~/cotcodec-runs/stage0/am5r-dev-dryrun/bundles/am5r-31cc6998.bundle is okay
+2026-10-15T23:03:22Z clean checkout of 31cc6998e08e2c15db8c0e61f1079ac3b059bb13 (tree f04ac994) from bundle 02f8cc6e; git archive sha256 ab050ba0af68476e015d71fb2e175bbdb8cb299c698e4c76edee7e6e44039e3b
+== code of the analysis unchanged since 163f7b9c:
+ ops/am5r/am5r-stage-evidence.sh                                   | 8 ++++++--
+ .../am5-ablated-cost-dev-dryrun/rehearsal/am5r-rehearse.sh        | 2 +-
+ program/preregistrations/am5-ablated-cost-v1.md                   | 2 +-
+ 3 files changed, 8 insertions(+), 4 deletions(-)
+== analyze 2026-10-15T23:03:22Z
+start 2026-10-15T23:03:22Z commit 31cc6998e08e2c15db8c0e61f1079ac3b059bb13 mode dev population development
+hand-label receipt commit 21eb121092bd0f393dd3d335540dc3e3cdf0ceac; labels d21c25b990241e98; plan 2bcd07af44ae049a
+analyze a exit 0
+analyze b exit 0
+analyze outputs byte-identical
+60079b6e044d90c77d6df3b94f2ce36dd4cc4b1b342ccaea4c422cf9bb2b9281  results.json
+fe2612ea150102739a12fa234ed90644476290fe45310299ead4939bf2a4f3e9  per-table.json.gz
+c7a6043d025863031678b3fc33785795fd1d37c90ef158b0e9c65b910bb28a28  tables.md
+7b3f335ed40a82454641d04d7a0950335952094f36b19eb0db240f388f1d51f9  ~/cotcodec-runs/stage0/am5r-dev-dryrun/private/features-development.json.gz
+dryrun-compare exit 0 ({"all_pass":true,"passed":24,"sha256":"1e56bfbafa234cf391ef6de31db7e7307aed159352bf4619b3c08ee508867012","total":24})
+power exit 0
+pytest exit 0 (229 passed in 10.19s)
+end 2026-10-15T23:03:37Z
+2026-10-15T23:03:37Z analyze dev at 31cc6998: 5 commands exited 0; analyze outputs byte-identical
+results.json equal to 163f7b9c's
+per-table.json.gz equal to 163f7b9c's
+tables.md equal to 163f7b9c's
+power.json equal to 163f7b9c's
+== rehearsal 2026-10-15T23:03:37Z
+rehearsal 31cc6998: 75 passed, 0 failed
+75
+rehearsal directory deleted
+no rehearsal directory left
+== stage 2026-10-15T23:04:03Z
+texts searched: 3989; staged files containing one: 0
+staged: 96 files, 2.2M
+2026-10-15T23:04:05Z evidence staged for c16437bc (development:1507): 96 files, no text found
+stage exit 0
+== done 2026-10-15T23:04:05Z
