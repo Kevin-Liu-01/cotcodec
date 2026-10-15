@@ -2,7 +2,7 @@
 
 **EXPLORATORY. DEVELOPMENT SPLIT ONLY. AM5 licenses nothing.**
 - **Questions.** The pilot's 63 development questions, the same 63 that AM3 and the am3g dry run
-  used. No held-out question and no `_abs` question was opened or given to a model.
+  used. No held-out question and no `_abs` question was used or given to a model (`prepare` parses the whole LongMemEval-S file to select the development ids).
 - **No test.** Every number is a description with an exact interval. Counts are small (63 pools
   per reader), so the intervals are wide.
 - **Decision.** D120: a held-out registration on the 347 questions follows only if this
@@ -42,7 +42,7 @@ reply does not abstain, up to K reads; otherwise it keeps BM25 top 4.
 
 | Check | Result |
 |---|---:|
-| LongMemEval `has_answer` turns, all questions | 126 |
+| LongMemEval `has_answer` turns, all 63 development questions | 126 |
 | of which inside the evidence sessions | 126 |
 | `has_answer` turns left in the ablated haystacks | **0** |
 | `has_answer` memories in the ablated pools | **0** |
@@ -95,7 +95,7 @@ reply does not abstain, up to K reads; otherwise it keeps BM25 top 4.
 | 1483 | cotcodec-vllm cu129 overlay build from the capsule of `6f681226` (image `112e45eb...`, provenance PASS) | 1 | 00:01:06 | 0.0183 |
 | 1484 | post-build CPU selftest (no GRES): prompts at most 1,148 / 1,077 / 1,164 tokens; judge items 302 | 0 | 00:00:16 | 0 |
 | 1487 | GPU job: readers 32.7, 34.0 and 58.5 s passes; judge 3.4 s on 460 items | 1 | 00:06:41 | 0.1114 |
-| | **total** | | | **0.1297** of D120's 0.5 |
+| | **total** | | | **0.1297** of the config's 0.5 cap (D120 estimated about 0.3; the config comment's "D120's budget" is wrong, and is left as run) |
 
 - **Run times.** These are `scontrol` RunTime. Slurm limits were 5 and 20 minutes, 0.42 GPU-h at
   the limits.
@@ -141,8 +141,10 @@ top-4 uses).
   - OLMo-2's non-abstaining top 4 on a temporal-reasoning question.
 - **No string leakage behind them.** None of the three pools holds a memory that contains the
   answer string, and none of the three questions has the answer string in a remaining user turn.
-  No string-level leakage explains them. The operator did not read the reply texts, which stay
-  on the host.
+  For the OLMo-2 single-session-user item, this rules out string-level leakage. For the other
+  two (a 72-token rubric and an 11-token answer), a whole-answer string check essentially cannot
+  match, so it is uninformative there. Those pools also share 5-7 of their 8 memories with the
+  original pools. The operator did not read the reply texts, which stay on the host.
 - **The cost.** It counts switched replies that are not correct, as a share of the 63 questions.
 
 | Reader | cost K = 8 (hand) [95%] | cost K = 70 (hand) [95%] |
@@ -157,6 +159,12 @@ The judge's cost equals the hand cost in every cell.
   single-session-preference questions, which are only 5 of the 63. Their reference is a rubric
   for a personalised suggestion. Without the evidence, a reader can still give a generic
   suggestion, and "I don't know" is not clearly the right reply there.
+- **Sensitivity without single-session-preference questions** (58 questions; the independent
+  checker's counts):
+  - cost at K = 8 is 0, 4 and 2 (Qwen3-8B, OLMo-2, Qwen3.5-9B);
+  - cost at K = 70 is 1, 7 and 2.
+  - Qwen3-8B's zero cost at K = 8 on all 63 rests on one preference switch that was judged
+    correct.
 
 ### The same questions with their evidence (AM3's committed records)
 
@@ -184,11 +192,11 @@ first answering position is at most K (AM4's crosscheck).
 
 ### Against the earlier cost measurements
 
-| Reader | AM5, K = 70 (hand), 63 ablated dev pools | `am3-nonabstain-generality-v1` H2 (judge; hand), 30 edited `_abs` questions | development gold-free proxy (am3g section 9) |
+| Reader | AM5 cost, K = 70 (hand), 63 ablated dev pools [AM5 switches] | `am3-nonabstain-generality-v1` H2 cost (judge; hand), 30 edited `_abs` questions | development gold-free proxy (am3g section 9): switch counts, not costs |
 |---|---|---|---|
-| Qwen3-8B | 1 (0.016) | 5; 5 (0.167) | 3 of 63 |
-| OLMo-2 | 9 (0.143) | 8; 8 (0.267) | 11 of 63 |
-| Qwen3.5-9B | 3 (0.048) | 1; 0 (0.000 by hand) | 4 of 63 |
+| Qwen3-8B | 1 (0.016) [2] | 5; 5 (0.167) | 3 of 63 |
+| OLMo-2 | 9 (0.143) [10] | 8; 8 (0.267) | 11 of 63 |
+| Qwen3.5-9B | 3 (0.048) [3] | 1; 0 (0.000 by hand) | 4 of 63 |
 
 - **The order of readers repeats.** OLMo-2 costs the most.
 - **The two Qwen readers.** For Qwen3-8B the evidence-absent cost is lower than on LongMemEval's
@@ -285,3 +293,23 @@ first answering position is at most K (AM4's crosscheck).
   as `~`.
 - **What stays on the host.** Raw replies, the judge items, the artifact, the features and the
   hand-check texts stay under `~/cotcodec-runs/stage0/am5-evidence-ablated/`.
+
+## Independent check
+
+A fresh checker reproduced every committed count with its own code on the host. That covered:
+- the ablated pools, rebuilt identically (63 of 63, every field);
+- the leakage counts;
+- the switch rates, the full-pool abstention counts, the reads, the costs and the judged-correct
+  counts;
+- the hand-judge agreement;
+- the original-pool comparison;
+- the GPU-hours.
+
+It confirmed four things:
+- the ported pipeline matches am3g's engine settings and prompts;
+- the labeller saw only the item fields, and its transcript audit passes;
+- the receipt commit precedes the join;
+- no text appears in the committed files.
+
+Its wording corrections are applied above: the preference sensitivity, the leakage wording, the
+comparison table's units, the budget attribution, and smaller nits.
