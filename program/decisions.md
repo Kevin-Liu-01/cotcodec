@@ -2702,3 +2702,41 @@ wave runs.**
   throughput at about 2x fp32's off-policy gap, and bf16 about 5x. Whether
   either gap matters for RL training stays open, and the gauntlet record
   holds the drafted design if that is ever wanted.
+
+**D115. AM1d (exploratory): no label-free signal beats BM25 top 4. Next: one
+CPU-only registration on the held-out tables, `am1-keepset-search-v1`.**
+- AM1d. It used development data only, run on the host CPU from pass 1411's
+  replies and log-probs (`program/evidence/2026-10-15/am1d-label-free/README.md`).
+  A fresh checker reproduced it byte for byte, including a fresh feature
+  extract, and its corrections are applied.
+- Findings (retrieved arm, keep 4 of 8, 38 non-constant tables):
+  - The reader's confidence is anti-informative. "I don't know" is its most
+    confident reply, 55% of 4-subset replies abstain, and within-table AUROC
+    is 0.33. Confidence and vote searches get worse with more calls.
+  - The only usable label-free signal is whether the reply abstains.
+    `nonabstain@70` (the best BM25-ranked non-abstaining 4-subset) gains
+    +0.026 [0.000, 0.079] over BM25 top 4, which is one table.
+  - BM25 top 4 is ahead of all 8 by +0.105, but that is 4 tables against 0
+    (exact p = 0.125). It is a lead.
+  - Oracle search shows the headroom: 0.928 at 16 calls against 0.842 for
+    BM25 top 4.
+- Development and held-out differ. AM1's held-out retrieval-rank regret at
+  B = 4 was 0.343, against 0.132 on development. Development leads may not
+  transfer, which is one more reason to test on held-out data.
+- Registration `am1-keepset-search-v1`. It runs CPU-only on the 694 held-out
+  tables and, for the label-free test, the held-out reader passes already on
+  the host. No new GPU job is needed.
+  - H-A (oracle utility): direct search at equal or fewer calls beats the
+    sampled credit rules and greedy selection at B = 4, retrieved arm.
+  - H-B: BM25 top 4 against all 8 in accuracy, over all 347 questions, by
+    an exact paired test.
+  - H-C (label-free, deployable): non-abstention BM25 search against BM25
+    top 4 in accuracy.
+  - It must disclose what is already known about the held-out tables from
+    AM1: the regrets of the five primary rules, exact Shapley and Banzhaf,
+    and the full-pool rate. It must also disclose that AM1b and AM1d shaped
+    its hypotheses.
+- Gauntlet ruling, as in D111. The registration is CPU-only, on data the
+  program already holds, and it continues a confirmed line rather than
+  opening a new mechanism, so no gauntlet wave runs. It carries no gauntlet
+  score, which is disclosed. Two independent pre-freeze checks are required.
