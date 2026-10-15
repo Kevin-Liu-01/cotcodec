@@ -1,0 +1,15 @@
+{
+ "name": "Novelty",
+ "status": "FAIL",
+ "evidence": {
+  "frontier_verdict": "NARROWED, not OCCUPIED",
+  "killshot_verdict": "NARROWED, not OCCUPIED",
+  "closest_prior": "arXiv 2510.19338 (Ring-linear), read in full by two cells and the synthesis owner",
+  "not_run": [
+   "blind closest-prior discrimination",
+   "novelty refuter"
+  ],
+  "open_risk": "trivial recombination of the FP16-paper factorial (2510.26788) with KV4-RL's cache lever (2610.14448)"
+ },
+ "remediation": "Run the blind critic on blind/ (order in compute/blind-roles.json, recorder only) and the novelty refuter within the query budget the orchestrator rules on"
+}

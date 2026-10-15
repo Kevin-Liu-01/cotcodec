@@ -1,0 +1,56 @@
+{
+ "url": "https://arxiv.org/abs/2510.19338",
+ "fetched_at": "2026-10-15T04:24:56Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 46648,
+ "raw_sha256": "e58196b53883219127fe8f1d84960be829639b009649f2d431e2851b1fa9572b",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "Every Attention Matters: An Efficient Hybrid Architecture for Long-Context Reasoning",
+  "authors": [
+   "Ling Team",
+   "Han, Bin",
+   "Tang, Caizhi",
+   "Liang, Chen",
+   "Zhang, Donghao",
+   "Yuan, Fan",
+   "Zhu, Feng",
+   "Gao, Jie",
+   "Hu, Jingyu",
+   "Li, Longfei",
+   "Li, Meng",
+   "Zhang, Mingyang",
+   "Jiang, Peijie",
+   "Jiao, Peng",
+   "Zhao, Qian",
+   "Yang, Qingyuan",
+   "Shen, Wenbo",
+   "Yang, Xinxing",
+   "Zhang, Yalin",
+   "Ren, Yankun",
+   "Zhao, Yao",
+   "Cao, Yibo",
+   "Sun, Yixuan",
+   "Zhang, Yue",
+   "Fang, Yuchen",
+   "Lin, Zibin",
+   "Cheng, Zixuan",
+   "Zhou, Jun"
+  ],
+  "citation_date": "2025/10/22",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 22 Oct 2025 07:59:38 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Thu, 23 Oct 2025 06:33:17 UTC"
+   }
+  ],
+  "abstract": "In this technical report, we present the Ring-linear model series, specifically including Ring-mini-linear-2.0 and Ring-flash-linear-2.0. Ring-mini-linear-2.0 comprises 16B parameters and 957M activations, while Ring-flash-linear-2.0 contains 104B parameters and 6.1B activations. Both models adopt a hybrid architecture that effectively integrates linear attention and softmax attention, significantly reducing I/O and computational overhead in long-context inference scenarios. Compared to a 32 billion parameter dense model, this series reduces inference cost to 1/10, and compared to the original Ring series, the cost is also reduced by over 50%. Furthermore, through systematic exploration of the ratio between different attention mechanisms in the hybrid architecture, we have identified the currently optimal model structure. Additionally, by leveraging our self-developed high-performance FP8 operator library-linghe, overall training efficiency has been improved by 50%. Benefiting from the high alignment between the training and inference engine operators, the models can undergo long-term, stable, and highly efficient optimization during the reinforcement learning phase, consistently maintaining SOTA performance across multiple challenging complex reasoning benchmarks.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

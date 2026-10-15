@@ -1,0 +1,17 @@
+{
+ "name": "Compute",
+ "status": "FAIL",
+ "evidence": {
+  "image": "base only (vLLM v0.31.0 digest); no verl overlay",
+  "manifest": null,
+  "container_smoke": "NOT_RUN",
+  "slurm_dry_run": "NOT_RUN",
+  "pilot_cap_gpu_h": 7.9167,
+  "full_design_central_gpu_h": {
+   "null_path": 641.6,
+   "changes_path": 1153.1
+  },
+  "arithmetic": "compute/caps-g2rl.json"
+ },
+ "remediation": "P0 build and selftests, manifests, dry runs and test-only runs before a freeze (compute/attestations-not-run.md)"
+}

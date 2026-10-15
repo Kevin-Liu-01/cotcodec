@@ -1,0 +1,13 @@
+{
+ "url": "https://yichuan-w.github.io/blog/GDN-train-inference-mismatch-asyncRL/",
+ "fetched_at": "2026-10-15T04:25:11Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 86908,
+ "raw_sha256": "b7547b9bc5daa5200d03cde71f315476110bd06903b01ffe206bd1ea64117859",
+ "raw_stored": false,
+ "primary": false,
+ "extract": {
+  "html_title": "Defending Against the Training–Inference Numeric Mismatch in RL (Especially Linear Attention) — and Whether It Helps Async RL - Yichuan Wang's Homepage"
+ }
+}

@@ -1,0 +1,39 @@
+{
+ "url": "https://arxiv.org/abs/2604.11554",
+ "fetched_at": "2026-10-15T04:24:56Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44673,
+ "raw_sha256": "1a017898bb8dd461fc2c866f4edc5649481e175ca84bf31804cc12edb270fbaf",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "Relax: An Asynchronous Reinforcement Learning Engine for Omni-Modal Post-Training at Scale",
+  "authors": [
+   "Zhang, Liujie",
+   "Ning, Benzhe",
+   "Yang, Rui",
+   "Yu, Xiaoyan",
+   "Li, Jiaxing",
+   "Wu, Lumeng",
+   "Liu, Jia",
+   "Li, Minghao",
+   "Chen, Weihang",
+   "Hu, Weiqi",
+   "Zhang, Lei"
+  ],
+  "citation_date": "2026/04/13",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 13 Apr 2026 14:42:03 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Tue, 14 Apr 2026 09:26:26 UTC"
+   }
+  ],
+  "abstract": "Reinforcement learning (RL) post-training has proven effective at unlocking reasoning, self-reflection, and tool-use capabilities in large language models. As models extend to omni-modal inputs and agentic multi-turn workflows, RL training systems face three interdependent challenges: heterogeneous data flows, operational robustness at scale, and the staleness -- throughput tradeoff. We present \\textbf{Relax} (Reinforcement Engine Leveraging Agentic X-modality), an open-source RL training engine that addresses these challenges through three co-designed architectural layers. First, an \\emph{omni-native architecture} builds multimodal support into the full stack -- from data preprocessing and modality-aware parallelism to inference generation -- rather than retrofitting it onto a text-centric pipeline. Second, each RL role runs as an independent, fault-isolated service that can be scaled, recovered, and upgraded without global coordination. Third, service-level decoupling enables asynchronous training via the TransferQueue data bus, where a single staleness parameter smoothly interpolates among on-policy, near-on-policy, and fully asynchronous execution. Relax achieves a 1.20$\\times$ end-to-end speedup over veRL on Qwen3-4B on-policy training. Its fully async mode delivers a 1.76$\\times$ speedup over colocate on Qwen3-4B and a 2.00$\\times$ speedup on Qwen3-Omni-30B, while all modes converge to the same reward level. Relax supports R3 (Rollout Routing Replay)~\\cite{ma2025r3} for MoE models with only 1.9\\% overhead, compared to 32\\% degradation in veRL under the same configuration. It further demonstrates stable omni-modal RL convergence on Qwen3-Omni across image, text, and audio, sustaining over 2{,}000 steps on video without degradation. Relax is available at this https URL.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

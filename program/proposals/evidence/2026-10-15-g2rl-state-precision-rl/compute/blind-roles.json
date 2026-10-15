@@ -1,0 +1,11 @@
+{
+ "note": "For the recorder only; never shown to the blind critic. Order for the critic: as listed in critic_order (seeded shuffle, seed 42).",
+ "critic_order": [
+  "paragraph-c53e285c.txt",
+  "paragraph-d3140801.txt"
+ ],
+ "roles": {
+  "paragraph-d3140801.txt": "proposal (G2-RL)",
+  "paragraph-c53e285c.txt": "closest prior: Ring-linear, arXiv 2510.19338 (Ling Team, 2025-10-22), Sections 5.2-5.2.2, read in full with orx paper --full by the synthesis owner"
+ }
+}

@@ -1,0 +1,31 @@
+{
+ "url": "https://arxiv.org/abs/1806.08295",
+ "fetched_at": "2026-10-15T04:24:55Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42182,
+ "raw_sha256": "1249a3c96b1d3ec477aac26939560b88a07785abe3d016ca17211a39cbbaed5b",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "How Many Random Seeds? Statistical Power Analysis in Deep Reinforcement Learning Experiments",
+  "authors": [
+   "Colas, Cédric",
+   "Sigaud, Olivier",
+   "Oudeyer, Pierre-Yves"
+  ],
+  "citation_date": "2018/06/21",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 21 Jun 2018 15:39:19 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Thu, 5 Jul 2018 06:50:33 UTC"
+   }
+  ],
+  "abstract": "Consistently checking the statistical significance of experimental results is one of the mandatory methodological steps to address the so-called \"reproducibility crisis\" in deep reinforcement learning. In this tutorial paper, we explain how the number of random seeds relates to the probabilities of statistical errors. For both the t-test and the bootstrap confidence interval test, we recall theoretical guidelines to determine the number of random seeds one should use to provide a statistically significant comparison of the performance of two algorithms. Finally, we discuss the influence of deviations from the assumptions usually made by statistical tests. We show that they can lead to inaccurate evaluations of statistical errors and provide guidelines to counter these negative effects. We make our code available to perform the tests.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

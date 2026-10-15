@@ -1,0 +1,12 @@
+{
+ "name": "Safety",
+ "status": "PASS",
+ "evidence": {
+  "licences": "Qwen3.5-4B Apache-2.0; DAPO-Math-17k Apache-2.0; MATH-500 recorded MIT (no Hub tag); AIME compilations Apache-2.0 or MIT (problems MAA copyright, evaluation only); verl, vLLM, Ray, Math-Verify Apache-2.0; FLA MIT; flash-attn BSD-3-Clause",
+  "r570": "stock libraries and reviewed Python only on GPUs; no custom kernels; no stochastic-rounding kernel written",
+  "host": "free GPUs only; no preemption of D110 or AM1 work; no sudo",
+  "public_repo": "no host addresses, credentials or private data",
+  "outward_actions": "none"
+ },
+ "remediation": "none"
+}

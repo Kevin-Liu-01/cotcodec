@@ -1,0 +1,13 @@
+{
+ "url": "https://github.com/verl-project/verl/issues/7438",
+ "fetched_at": "2026-10-15T04:25:06Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 317984,
+ "raw_sha256": "88ef470767f96d35ac6a744d0c179fed0aedce957a992fada0655ce97076b5de",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "html_title": "delta_sharded + one_step_off_policy fails with Qwen3.5 due to multimodal processor / ContinuousToken family mismatch · Issue #7438 · verl-project/verl · GitHub"
+ }
+}

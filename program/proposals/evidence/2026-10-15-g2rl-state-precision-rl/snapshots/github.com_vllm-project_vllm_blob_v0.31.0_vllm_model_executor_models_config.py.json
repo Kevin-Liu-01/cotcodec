@@ -1,0 +1,13 @@
+{
+ "url": "https://github.com/vllm-project/vllm/blob/v0.31.0/vllm/model_executor/models/config.py",
+ "fetched_at": "2026-10-15T04:25:08Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 913292,
+ "raw_sha256": "a12eaef8d6fa5983c922f0b4997ddb8e2431c75378690f6b65826804ea671ee1",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "html_title": "vllm/vllm/model_executor/models/config.py at v0.31.0 · vllm-project/vllm · GitHub"
+ }
+}

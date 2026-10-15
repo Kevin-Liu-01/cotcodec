@@ -1,0 +1,26 @@
+{
+ "url": "https://arxiv.org/abs/2609.20807",
+ "fetched_at": "2026-10-15T04:24:57Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 40826,
+ "raw_sha256": "477ebbb0c3c946610289064cb0b1590bd9dd8b81a93d9e65c003eb36eec842ad",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "Score Centering Stabilizes Off-policy Reinforcement Learning",
+  "authors": [
+   "Marek, Martin",
+   "Ryabinin, Max"
+  ],
+  "citation_date": "2026/09/17",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 17 Sep 2026 17:58:17 UTC"
+   }
+  ],
+  "abstract": "Reinforcement learning (RL) of large language models is notoriously sensitive to small differences between training and inference engines, often referred to as the training-inference mismatch (TIM). However, completely eliminating TIM is impractical, as it would come at a major cost to rollout efficiency. In this paper, we show that the instability of RL under TIM is primarily caused by drift: a persistent bias between training and inference engines that accumulates with every training step. We derive an additive \"score centering\" correction term that stabilizes RL under TIM by canceling drift. When training models from 0.6B to 30B parameters, score centering alone matches or outperforms methods based on importance sampling under quantization, with the gap growing as the mismatch becomes more severe. Because the correction is additive, score centering also composes with importance sampling -- their composition outperforms pure importance-sampling baselines in our staleness experiments.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

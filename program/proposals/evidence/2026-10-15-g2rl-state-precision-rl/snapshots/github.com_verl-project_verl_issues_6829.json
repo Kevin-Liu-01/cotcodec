@@ -1,0 +1,13 @@
+{
+ "url": "https://github.com/verl-project/verl/issues/6829",
+ "fetched_at": "2026-10-15T04:25:05Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 303245,
+ "raw_sha256": "0193bac55fb27adf7d512bafaf50346aac741b8f196039bcbc0716a35917f122",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "html_title": "Qwen3.5-4b ppo_kl != 0 · Issue #6829 · verl-project/verl · GitHub"
+ }
+}

@@ -1,0 +1,13 @@
+{
+ "url": "https://github.com/verl-project/verl/releases/tag/v0.9.1",
+ "fetched_at": "2026-10-15T04:25:08Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 399835,
+ "raw_sha256": "13eb1cf3b484db3911a6b73666837e2eed936fd457f80db97586350b9f18c741",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "html_title": "Release v0.9.1 · verl-project/verl · GitHub"
+ }
+}

@@ -1,0 +1,31 @@
+{
+ "url": "https://arxiv.org/abs/2510.26788",
+ "fetched_at": "2026-10-15T04:24:56Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41947,
+ "raw_sha256": "7b6d046d0182628231339218a4b8b252f22e6721115bb951f493ddd2c5a9a01e",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "Defeating the Training-Inference Mismatch via FP16",
+  "authors": [
+   "Qi, Penghui",
+   "Liu, Zichen",
+   "Zhou, Xiangxin",
+   "Pang, Tianyu",
+   "Du, Chao",
+   "Lee, Wee Sun",
+   "Lin, Min"
+  ],
+  "citation_date": "2025/10/30",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 30 Oct 2025 17:58:11 UTC"
+   }
+  ],
+  "abstract": "Reinforcement learning (RL) fine-tuning of large language models (LLMs) often suffers from instability due to the numerical mismatch between the training and inference policies. While prior work has attempted to mitigate this issue through algorithmic corrections or engineering alignments, we show that its root cause lies in the floating point precision itself. The widely adopted BF16, despite its large dynamic range, introduces large rounding errors that breaks the consistency between training and inference. In this work, we demonstrate that simply reverting to \\textbf{FP16} effectively eliminates this mismatch. The change is simple, fully supported by modern frameworks with only a few lines of code change, and requires no modification to the model architecture or learning algorithm. Our results suggest that using FP16 uniformly yields more stable optimization, faster convergence, and stronger performance across diverse tasks, algorithms and frameworks. We hope these findings motivate a broader reconsideration of precision trade-offs in RL fine-tuning.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

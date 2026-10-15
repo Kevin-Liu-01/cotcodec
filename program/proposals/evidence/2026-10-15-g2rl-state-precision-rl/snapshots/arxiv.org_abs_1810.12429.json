@@ -1,0 +1,28 @@
+{
+ "url": "https://arxiv.org/abs/1810.12429",
+ "fetched_at": "2026-10-15T04:24:55Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43103,
+ "raw_sha256": "9c961b750460f7bad8a414617aed295c7195e888f8f4c176613f6d9d3a9a7ec5",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "Breaking the Curse of Horizon: Infinite-Horizon Off-Policy Estimation",
+  "authors": [
+   "Liu, Qiang",
+   "Li, Lihong",
+   "Tang, Ziyang",
+   "Zhou, Dengyong"
+  ],
+  "citation_date": "2018/10/29",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 29 Oct 2018 22:03:58 UTC"
+   }
+  ],
+  "abstract": "We consider the off-policy estimation problem of estimating the expected reward of a target policy using samples collected by a different behavior policy. Importance sampling (IS) has been a key technique to derive (nearly) unbiased estimators, but is known to suffer from an excessively high variance in long-horizon problems. In the extreme case of in infinite-horizon problems, the variance of an IS-based estimator may even be unbounded. In this paper, we propose a new off-policy estimation method that applies IS directly on the stationary state-visitation distributions to avoid the exploding variance issue faced by existing this http URL key contribution is a novel approach to estimating the density ratio of two stationary distributions, with trajectories sampled from only the behavior distribution. We develop a mini-max loss function for the estimation problem, and derive a closed-form solution for the case of RKHS. We support our method with both theoretical and empirical analyses.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

@@ -1,0 +1,13 @@
+{
+ "url": "https://github.com/verl-project/verl/issues/8154",
+ "fetched_at": "2026-10-15T04:25:07Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 358005,
+ "raw_sha256": "f0cce47896dba88e820bc93c996592f50aa1a49aabb70120ff930dee28fa6ce3",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "html_title": "[Bug] FSDP BF16 model loading quantizes FP32 RoPE inv_freq and changes log probabilities · Issue #8154 · verl-project/verl · GitHub"
+ }
+}

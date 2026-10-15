@@ -1,0 +1,31 @@
+{
+ "url": "https://arxiv.org/abs/2602.01826",
+ "fetched_at": "2026-10-15T04:24:56Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42910,
+ "raw_sha256": "9a847b7e2ea25b0efedd0f254c8f207e3594eb5bf315a8dcc7c2e62e47d19843",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "Beyond Precision: Training-Inference Mismatch is an Optimization Problem and Simple LR Scheduling Fixes It",
+  "authors": [
+   "Zhang, Yaxiang",
+   "Li, Yingru",
+   "Liu, Jiacai",
+   "Xu, Jiawei",
+   "Li, Ziniu",
+   "Liu, Qian",
+   "Li, Haoyuan"
+  ],
+  "citation_date": "2026/02/02",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 2 Feb 2026 09:00:53 UTC"
+   }
+  ],
+  "abstract": "Reinforcement Learning (RL) for training Large Language Models is notoriously unstable. While recent studies attribute this to \"training inference mismatch stemming\" from inconsistent hybrid engines, standard remedies, such as Importance Sampling, might fail during extended training runs. In this work, we analyze this instability through the lens of optimization, demonstrating that gradient noise and training-inference mismatch escalate in tandem as training progresses. Meanwhile, we find that the mismatch can be effectively suppressed by shrinking the update size. Taken together, we deduce that the mismatch is not merely a static numerical discrepancy, but a dynamic failure coupled with the model's optimization. Based on this insight, we propose a simple yet effective solution: a specialized Learning Rate (LR) scheduler. Instead of pre-defined decay schedule in traditional LR scheduler, our method dynamically triggers LR decay based on response length, which we identify as a reliable early-warning signal for impending instability. Empirical evidence suggests that by reducing the learning rate as gradient noise rises, we can consistently stabilize RL training and keep the training-inference mismatch at a safe level.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

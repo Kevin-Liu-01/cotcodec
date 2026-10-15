@@ -1,0 +1,61 @@
+{
+ "url": "https://arxiv.org/abs/1507.02646",
+ "fetched_at": "2026-10-15T04:24:54Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42483,
+ "raw_sha256": "96bc44ee8d159088b3c3f558feca7b7b6bab92ca70b52ba190328d2b28e7aea8",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "Pareto Smoothed Importance Sampling",
+  "authors": [
+   "Vehtari, Aki",
+   "Simpson, Daniel",
+   "Gelman, Andrew",
+   "Yao, Yuling",
+   "Gabry, Jonah"
+  ],
+  "citation_date": "2015/07/09",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 9 Jul 2015 18:43:28 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Wed, 15 Jul 2015 18:37:17 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Fri, 23 Sep 2016 11:30:37 UTC"
+   },
+   {
+    "version": "v4",
+    "date": "Mon, 26 Sep 2016 08:34:49 UTC"
+   },
+   {
+    "version": "v5",
+    "date": "Sat, 21 Oct 2017 08:37:46 UTC"
+   },
+   {
+    "version": "v6",
+    "date": "Tue, 2 Jul 2019 13:56:16 UTC"
+   },
+   {
+    "version": "v7",
+    "date": "Tue, 23 Feb 2021 10:07:05 UTC"
+   },
+   {
+    "version": "v8",
+    "date": "Thu, 4 Aug 2022 12:27:49 UTC"
+   },
+   {
+    "version": "v9",
+    "date": "Wed, 13 Mar 2024 15:54:02 UTC"
+   }
+  ],
+  "abstract": "Importance weighting is a general way to adjust Monte Carlo integration to account for draws from the wrong distribution, but the resulting estimate can be highly variable when the importance ratios have a heavy right tail. This routinely occurs when there are aspects of the target distribution that are not well captured by the approximating distribution, in which case more stable estimates can be obtained by modifying extreme importance ratios. We present a new method for stabilizing importance weights using a generalized Pareto distribution fit to the upper tail of the distribution of the simulated importance ratios. The method, which empirically performs better than existing methods for stabilizing importance sampling estimates, includes stabilized effective sample size estimates, Monte Carlo error estimates, and convergence diagnostics. The presented Pareto $\\hat{k}$ finite sample convergence rate diagnostic is useful for any Monte Carlo estimator.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

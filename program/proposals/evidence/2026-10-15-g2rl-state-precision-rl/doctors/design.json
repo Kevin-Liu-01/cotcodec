@@ -1,0 +1,36 @@
+{
+ "name": "Design",
+ "status": "PASS",
+ "self_assessed": true,
+ "protocol": "K-Dense experimental-design and statistical-power (design before data; seed blocking; sample size by simulation from a stated minimum effect)",
+ "evidence": {
+  "manipulation": "mamba_ssm_cache_dtype only; everything else fixed",
+  "controls": [
+   "fp32 between-seed floor",
+   "A/A replicate batches (pilot)",
+   "decoupled correction",
+   "common fp32-state evaluator",
+   "in-run manipulation check"
+  ],
+  "gates": [
+   "G1 stack",
+   "G2 resume",
+   "G3 anchor",
+   "G4 manipulation",
+   "G5 floor",
+   "G6 cost"
+  ],
+  "kill_criteria": [
+   "K1-K6 (registration section 7)"
+  ],
+  "falsifiers": [
+   "PR1 (ratio below 2 stops)",
+   "PR5 (r_hat at least 0.8 falsifies the prefix-shift account)",
+   "F2 (TOST within 3 points with F1 holding)",
+   "F4 (BT equivalent to F)"
+  ],
+  "operating_characteristics": "compute/power-g2rl.json",
+  "excluded_arms_with_evidence": "compute/mismatch-by-cap.json"
+ },
+ "remediation": "Identification refuter; pre-freeze audit of the registration"
+}

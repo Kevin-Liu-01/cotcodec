@@ -1,0 +1,43 @@
+{
+ "name": "Source",
+ "status": "PASS",
+ "protocol": "K-Dense literature-review (PRISMA counts); orx retrieval rule (six or more discover queries per cell, closest priors read in full)",
+ "evidence": {
+  "backends_reached": [
+   "orx alphaXiv keyword and embedding",
+   "OpenAlex",
+   "GitHub API",
+   "Hugging Face API",
+   "web search"
+  ],
+  "counts": {
+   "orx_discover_by_cell": {
+    "frontier": 44,
+    "kill-shot": 25,
+    "cross-domain": 29
+   },
+   "orx_discover_by_mode": {
+    "orx discover keyword": 74,
+    "orx discover embedding": 14,
+    "orx discover openalex": 10
+   },
+   "orx_discover_total": 98,
+   "web_search_total": 8,
+   "github_search_total_approximate": 51,
+   "literature_searches": 106,
+   "all_searches_reaching_a_backend_approximate": 157,
+   "declared_query_budget": 150,
+   "refuter_reserve": 30,
+   "convention_note": "Counting literature searches only, 44 queries remain (reserve intact). Counting every search that reached a backend (the D75 convention), about 157 were used and the budget is exceeded before the refuters; the orchestrator rules on the convention."
+  },
+  "cutoff": "2026-10-15",
+  "degraded": [
+   "orx 0.2.2 outdated against 0.2.18 (ranking may differ)",
+   "OpenReview: bot challenge on every route (9LUInzhKZc UNVERIFIABLE_ACCESS)",
+   "X: HTTP 402; Notion blogs did not render; Wiley 403; Semantic Scholar 429",
+   "not searched: citation graphs, arXiv API, Reddit, Chinese-language sources, patents, ACL Anthology",
+   "GitHub code search incomplete"
+  ]
+ },
+ "remediation": "Semantic Scholar citer refresh for 2510.19338 and 2610.14448 through the host relay; a browser read of 9LUInzhKZc"
+}
