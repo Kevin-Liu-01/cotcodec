@@ -62,8 +62,8 @@ for all 8.
   (165 - 182)/347 = **-0.049**: all 8 is right on at least 17 more questions than BM25 top 4. The
   reading PRUNING_HELPS cannot occur. The development lead that motivated H-B (BM25 top 4 ahead of
   all 8 by +0.105 on the non-constant development tables, 4 tables against 0) is already reversed
-  in sign on the held-out tables. H-B is kept because D115 names it, and it is read as a test of
-  whether the reversal is detectable (section 7.2). At a net count of exactly 17, the exact test of
+  in sign on the held-out tables. **H-B is therefore descriptive (D116), not a hypothesis.** Its
+  exact test and intervals are reported (section 7.2), but they carry no decision. At a net count of exactly 17, the exact test of
   section 7.2 rejects unless there are more than 67 discordant pairs (25 or more questions where
   BM25 top 4 is right and all 8 wrong). On the gold arm the same arithmetic bounds the difference
   by (288 - 80 - 201)/347 = +0.020, which implies no direction.
@@ -136,7 +136,8 @@ AM1's reader and judge:
 - **H-A (oracle utility).** If the judged utility of a subset can be queried, does direct search
   over keep sets (read m distinct random 4-subsets, keep the best one read) lose less than the
   sampled and greedy credit rules at the same or fewer reader calls?
-- **H-B.** Does pruning the pool to BM25 top 4 change the reader's accuracy against keeping all 8?
+- **H-B (descriptive, D116).** How far does pruning the pool to BM25 top 4 move the reader's
+  accuracy against keeping all 8? Its sign is implied before the run (section 1.2).
 - **H-C (label-free, deployable).** Does keeping the best-BM25-ranked 4-subset whose reply does not
   abstain change accuracy against BM25 top 4?
 
@@ -146,10 +147,11 @@ exact expectations over the search's draws, on held-out tables.
 
 ## 3. What it decides and what it does not
 
-It decides H-A's verdict (SEARCH_DOMINATES, RULE_BEATS_SEARCH or INCONCLUSIVE), H-B's reading
-(PRUNING_HELPS, PRUNING_HURTS or NO_DETECTED_DIFFERENCE) and H-C's reading (NONABSTAIN_HELPS,
-NONABSTAIN_HURTS or NO_DETECTED_DIFFERENCE), all on the retrieved arm (section 7). The gold arm,
-the question types and every other number are descriptive.
+It decides H-A's verdict (SEARCH_DOMINATES, RULE_BEATS_SEARCH or INCONCLUSIVE) and H-C's reading
+(NONABSTAIN_HELPS, NONABSTAIN_HURTS or NO_DETECTED_DIFFERENCE), both on the retrieved arm
+(section 7). H-B is descriptive: its direction was implied by AM1's published figures before the
+run (section 1.2, D116). The gold arm, the question types and every other number are also
+descriptive.
 
 It does not decide:
 - which credit rule is best, or anything at B other than 4;
@@ -387,7 +389,10 @@ Shapley-16 at 26 calls, fewer than they read" (this reader, this judge, BM25 use
 names the comparisons not separated, and the others' classifications stand as reported. The gold
 arm's verdict under the same rule is descriptive.
 
-### 7.2 H-B: BM25 top 4 against all 8
+### 7.2 H-B (descriptive, D116): BM25 top 4 against all 8
+
+H-B carries no decision. The test and labels below are computed and reported as a description
+only. The reason is section 1.2: AM1's figures fixed its sign before the run.
 
 **Test.** The exact two-sided McNemar test on the discordant pairs of section 6.4: p = min(1,
 2 P(X ≤ min(b, c))), X ~ Binomial(b + c, 1/2), in exact rational arithmetic; p = 1 when b + c = 0.
@@ -437,8 +442,8 @@ every comparison, with the list of comparisons whose bounds lie within it
 
 ### 7.5 Multiplicity across hypotheses
 
-H-A, H-B and H-C answer different questions, and no claim is made from "any of" them, so each is
-read at its own alpha without a correction across them. H-A's family carries its own correction.
+H-A and H-C answer different questions, and no claim is made from "either of" them, so each is
+read at its own alpha without a correction across them. H-B is descriptive (D116). H-A's family carries its own correction.
 The secondary and descriptive readings carry none and license nothing.
 
 ## 8. Validity checks, void and kill rules
