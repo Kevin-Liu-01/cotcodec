@@ -1,0 +1,10 @@
+2026-10-15T03:17:37Z clean clone of 9ad36b10dcbd324647e4a98c3a150f954f7123f6 (tree 5c954d2d) from bundle 334c88fe; git archive of 9ad36b10 sha256 8806cd7b6c78030e9a6f958cf6894ad549c8635f17f0d3bed4fd0d66c1112204 equals the operator Mac git archive; 19 section-17 pins OK
+a46be5ed22ff177c4e789e0dde7197673cbc62ee1e894ed3dbb8e7c7e8de6077  /home/kevin/cotcodec-runs/stage0/am1-memory-credit-v1/capsule/source-9ad36b10.tar.gz
+2026-10-15T03:19:02Z vLLM overlay build job 1454 submitted (git 9ad36b10, archive a46be5ed, 1 H100, limit 5 min)
+2026-10-15T03:20:19Z held-out artifact built with the registered command: sha256 f23bca047dc7246c5a8db12f67a76a2ea36304d8669dc5c62ae6c42821f73eb7 (12669196 bytes, 347 questions); rebuilt identically
+2026-10-15T03:20:19Z vLLM overlay build 1454 JobState=COMPLETED ExitCode=0:0 (RunTime=00:01:02): sha256:abcd2b56eddd61ea7cc9243122ffa615bfcfdec4cc83e0bf257aa06e626ed0ee
+2026-10-15T03:20:19Z post-build CPU selftest 1455 submitted (baked 9ad36b10 in abcd2b56, held-out artifact f23bca04 mounted, no GRES)
+2026-10-15T03:23:22Z post-build CPU selftest 1455 COMPLETED (RunTime 00:02:20): study selftest exit 0 (190156 reader prompts fit, 694 of 694 pools memory spans, judge prompts fit, attention code ok), plan exit 0; host tests on the clone at 9ad36b10: 80 passed
+2026-10-15T03:23:39Z registered GPU job submitted: 1458 (git 9ad36b10, image abcd2b56, artifact f23bca04, 2 H100, limit 90 min)
+2026-10-15T04:12:14Z registered GPU job 1458 COMPLETED 0:0 (RunTime 00:45:49 on 2 H100 = 1.5272 GPU-h; lane 03:23:39Z-04:09:27Z, reason completed, no signal); phases reader, judge, extra complete; every worker exit 0; reader passes 190156 of 190156 each (GPU 0 canonical 1281.4 s, GPU 1 shuffled 2296.8 s, stopped_by none: no time cap); judge items 10230 (9190 reader, 1040 validation), judge32 both GPUs 10230 of 10230, judge8 10230 of 10230; attention 694 pools
+2026-10-15T04:12:14Z hand-check sample drawn (registered command, job 1458, no labels): cebfe1911deeab24f139beebf41bf327403014254dfd43ada4fb78f061ebf94c  hand-check-sample.jsonl

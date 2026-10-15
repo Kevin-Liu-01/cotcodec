@@ -1,0 +1,61 @@
+{
+  "batch_script_sha256": "2a10c9c72c22ab6dd5135061ff1b9b50977a468687180353d8cd7273acbaf1ec",
+  "command": [
+    "python",
+    "scripts/memcredit_study.py",
+    "run",
+    "--config",
+    "experiments/am1/am1-memory-credit-v1.yaml",
+    "--seeds",
+    "42",
+    "43",
+    "44",
+    "--output-dir",
+    "/outputs/am1",
+    "--allocation-minutes",
+    "90",
+    "--evidence",
+    "/inputs/study-artifact.json",
+    "--expected-evidence-sha256",
+    "f23bca047dc7246c5a8db12f67a76a2ea36304d8669dc5c62ae6c42821f73eb7"
+  ],
+  "container_profile": "vllm",
+  "cpus": 32,
+  "git_sha": "9ad36b10dcbd324647e4a98c3a150f954f7123f6",
+  "gpu_type": "h100",
+  "gpus": 2,
+  "image_id": "sha256:abcd2b56eddd61ea7cc9243122ffa615bfcfdec4cc83e0bf257aa06e626ed0ee",
+  "max_gpu_hours": 3.0,
+  "memory_gb": 256,
+  "minutes": 90,
+  "model": {
+    "artifact_root_sha256": "8fcd9106bfb1854a5b160c64a0ff3d3463208ab69854ae8c1cc26ba19dbf5714",
+    "cache_host_path": "/home/kevin/cotcodec-runs/hf-cache",
+    "model_id": "qwen3-32b",
+    "receipt_sha256": "06e4a7e981eee4f6c079fd6b02dc58e3a9fd798e0d806820383d873cf9cd1fd1",
+    "revision": "9216db5781bf21249d130ec9da846c4624c16137"
+  },
+  "name": "am1-memory-credit-v1",
+  "randomness_contract": "assignment-seed-matrix",
+  "run_root": "/home/kevin/cotcodec-runs/stage0/am1-memory-credit-v1/runs/main",
+  "runtime": "docker-single-node-discovery-v1",
+  "schema_version": 1,
+  "seed_binding": {
+    "flag": "--seeds"
+  },
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "source_sha256": "a46be5ed22ff177c4e789e0dde7197673cbc62ee1e894ed3dbb8e7c7e8de6077",
+  "study_artifact": {
+    "container_path": "/inputs/study-artifact.json",
+    "host_path": "/home/kevin/cotcodec-runs/stage0/am1-memory-credit-v1/study-artifact.json",
+    "license": "MIT",
+    "revision": "9ad36b10dcbd324647e4a98c3a150f954f7123f6",
+    "sha256": "f23bca047dc7246c5a8db12f67a76a2ea36304d8669dc5c62ae6c42821f73eb7",
+    "size_bytes": 12669196,
+    "source_id": "am1-memory-credit-v1-heldout-pools"
+  }
+}

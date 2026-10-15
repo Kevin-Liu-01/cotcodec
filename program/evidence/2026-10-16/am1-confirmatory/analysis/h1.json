@@ -1,0 +1,139 @@
+{
+  "both": {
+    "by_structure": {
+      "and": 0.37082066869300906,
+      "monotone-mixed": 0.27856978615951755,
+      "non-monotone": 0.5177571813047481,
+      "or": 0.3333333333333333,
+      "single": 0.0
+    },
+    "excess_over_gold_count_baseline": {
+      "ci": [
+        0.09179615727426796,
+        0.15450266495497988
+      ],
+      "clusters": 303,
+      "mean": 0.12243157512635365,
+      "units": 534
+    },
+    "excess_over_relevant_count_baseline": {
+      "ci": [
+        -0.3194169104537494,
+        -0.261973799165069
+      ],
+      "clusters": 304,
+      "mean": -0.29099962723286843,
+      "units": 539
+    },
+    "share_above_gold_count_baseline": {
+      "ci": [
+        0.47924528301886793,
+        0.5779816513761468
+      ],
+      "clusters": 303,
+      "mean": 0.5280898876404494,
+      "units": 534
+    },
+    "share_order_2_plus": {
+      "ci": [
+        0.33771744292466527,
+        0.4030509435876093
+      ],
+      "clusters": 304,
+      "mean": 0.3699383161238184,
+      "units": 539
+    },
+    "tables": 539
+  },
+  "gold": {
+    "by_structure": {
+      "and": 0.3768707482993197,
+      "monotone-mixed": 0.26666666666666666,
+      "non-monotone": 0.5190671242105913,
+      "single": 0.0
+    },
+    "excess_over_gold_count_baseline": {
+      "ci": [
+        0.05841645473890727,
+        0.12925328057564534
+      ],
+      "clusters": 288,
+      "mean": 0.09397039877587691,
+      "units": 288
+    },
+    "excess_over_relevant_count_baseline": {
+      "ci": [
+        -0.3092410459990187,
+        -0.2386553523942086
+      ],
+      "clusters": 288,
+      "mean": -0.273568939582445,
+      "units": 288
+    },
+    "share_above_gold_count_baseline": {
+      "ci": [
+        0.4270833333333333,
+        0.5416666666666666
+      ],
+      "clusters": 288,
+      "mean": 0.4861111111111111,
+      "units": 288
+    },
+    "share_order_2_plus": {
+      "ci": [
+        0.3270910376449938,
+        0.3980736843407293
+      ],
+      "clusters": 288,
+      "mean": 0.36213156109026506,
+      "units": 288
+    },
+    "tables": 288
+  },
+  "retrieved": {
+    "by_structure": {
+      "and": 0.3531746031746032,
+      "monotone-mixed": 0.28027023180135335,
+      "non-monotone": 0.5163844866429363,
+      "or": 0.3333333333333333,
+      "single": 0.0
+    },
+    "excess_over_gold_count_baseline": {
+      "ci": [
+        0.11870221126124565,
+        0.19395754715400346
+      ],
+      "clusters": 246,
+      "mean": 0.15575197670739954,
+      "units": 246
+    },
+    "excess_over_relevant_count_baseline": {
+      "ci": [
+        -0.3480195371102289,
+        -0.27546488342705466
+      ],
+      "clusters": 251,
+      "mean": -0.3109997787998882,
+      "units": 251
+    },
+    "share_above_gold_count_baseline": {
+      "ci": [
+        0.516260162601626,
+        0.6382113821138211
+      ],
+      "clusters": 246,
+      "mean": 0.5772357723577236,
+      "units": 246
+    },
+    "share_order_2_plus": {
+      "ci": [
+        0.34236300131206043,
+        0.4162355453494547
+      ],
+      "clusters": 251,
+      "mean": 0.3788958677161026,
+      "units": 251
+    },
+    "tables": 251
+  }
+}

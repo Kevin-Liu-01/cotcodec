@@ -5876,3 +5876,63 @@ they say so.)
 - Problems: a quadratic pass read idled both GPUs for about 15 of job 1411's 26.75 minutes (fixed
   in `9c3d0db8`); G2c GPU jobs started beside job 1411; a transposition in the hand labels was
   corrected against the agent's item notes (both files kept).
+
+## 2026-10-15 — `am1-memory-credit-v1` (CONFIRMATORY, frozen, ledger row 23): artifact, image, selftest and the registered GPU job ran; hand-check sample drawn, unlabelled (branch `ops/am1`, not merged)
+
+- Operator (did not draft the registration), from the freeze commit `9ad36b10` only: a clean
+  clone on the host from a git bundle (`git archive` of `9ad36b10` byte-identical on the Mac and
+  the host, `8806cd7b...`), section 17's 19 pins re-hashed and matching; the source capsule
+  `a46be5ed...` (12,492 files, carries the ledger row); 80 tests pass on the host clone.
+- Held-out artifact by the registered `memcredit_study_prepare.py artifact --split heldout`
+  command: 347 questions (the confirmatory set), `f23bca04...`, 12,669,196 bytes, rebuilt
+  byte-identically; host only.
+- Image: overlay build 1454 (1 H100, 00:01:02) from the capsule, `sha256:abcd2b56...`; the
+  post-build CPU selftest 1455 with the held-out artifact mounted passes (190,156 reader prompts
+  fit, 694 of 694 pools' memory spans, judge prompts fit, attention code ok).
+- The registered GPU job 1458 (2 H100, limit 90 minutes; GPUs 2-3, D110's jobs on 0-1
+  untouched), submitted once with no other GPU job of this program queued or running:
+  COMPLETED 0:0 in 00:45:49. Every phase and worker complete; both reader passes 190,156 of
+  190,156 (1,281 s canonical, 2,297 s shuffled, neither stopped by the 3,600 s budget, so the
+  reader-cap contingency does not arise); 10,230 judge items finished by both Qwen3-32B passes
+  and the Qwen3-8B judge; attention 694 of 694 pools. Nothing rerun.
+- Hand-check sample by the registered `hand-sample` command: 120 items, SHA-256 `cebfe191...`,
+  no label field; on the host, not labelled. No analysis ran (`analyze`, `aa`), no outcome was
+  read; G2 is PENDING. Next: blind labels (an agent unless Kevin labels, D9/D111), their
+  SHA-256 committed, then `analyze` and `aa` as registered.
+- GPU-h: 1.5444 physical (build 0.0172, job 1.5272) of the 3.1 cap; program total 27.1294.
+  D111's disclosure stands: no gauntlet score; blind discrimination and the two
+  provider-distinct reviews did not run.
+- Evidence: `program/evidence/2026-10-16/am1-confirmatory/README.md` (ops scripts, logs,
+  manifests, build and selftest records, lane and worker records, text-free judge items).
+
+## 2026-10-15 — `am1-memory-credit-v1` (CONFIRMATORY, frozen, ledger row 23): hand labels receipted, registered analysis run; every gate passes; leave-one-out and the other four primary rules MISSPECIFIED (branch `ops/am1`, not merged)
+
+- Blind G2 labels by an isolated agent (Kevin did not label; D9/D111): 120 rows, SHA-256
+  `70a5f2ec...`, kept on the host (the rows carry free-text notes). The digest was committed
+  before the join (`9e641945`, 04:22:22Z).
+- The registered `analyze` (with `--hand-labels-sha256` and `--expected-evidence-sha256`) and
+  `aa` ran once (04:24:06-04:24:39Z, host CPU) from a fresh `git archive` export of `9ad36b10`
+  (`8806cd7b...`, 19 pins checked). Both exited 0.
+- Gates: void no (0 incomplete tables); G1 PASS (190,156 of 190,156 reader requests and 10,230
+  of 10,230 judge items identical in tokens and log-prob bits); K2 no (12.4%); K3 no; K4 251
+  tables; G2 PASS (322/322, 347/347, hand-check kappa 0.867 [0.767, 0.950] on exactly the
+  seeded sample). H2 read; program decision follows.
+- H2, retrieved, B = 4, 99%: leave-one-out 0.277 [0.223, 0.333], permutation Shapley-16 0.138
+  [0.096, 0.187], SNIPW-64 0.094 [0.058, 0.133], retrieval rank 0.343 [0.271, 0.418], raw
+  attention 0.311 [0.235, 0.382]: all MISSPECIFIED. Leave-one-out minus exact Shapley +0.233
+  [0.194, 0.273] (LOO_LOSES_MORE_THAN_EXACT_SHAPLEY); exact Shapley 0.044 (95% [0.020, 0.072]; 99% [0.012, 0.080]).
+  Program reading: per-memory deletion credit is misspecified for keep/evict decisions on this
+  benchmark (this reader, this judge, BM25 user-turn pools, 4 of 8). The second judge gives the
+  same five verdicts.
+- Secondary: E1 +0.156 [0.119, 0.194] retrieved, +0.094 [0.058, 0.129] gold; AM2 non-gold ABOVE
+  THE SWAP FLOOR (+0.0099 [0.0026, 0.0170], driven by the gold arm; not evidence of content
+  effects); AM6 cross-fitted heads 0.890 vs best cheap baseline 0.830 (neither AM6 reading
+  holds); reorders change 17.1% of answers.
+- Disclosures: no gauntlet score (D111); agent hand labels (7 of 8 disagreements on preference
+  items); no GPU used by the analysis (GPU-h unchanged, 1.5444 of the 3.1 cap).
+- Verified afterwards by a fresh verifier: a new export's `analyze` gave 11 of 11 outputs
+  byte-identical, and its own implementation reproduced every H2 verdict, AM2 and the hand-check
+  join. Its three low-severity wording corrections are applied in RESULTS.md: claim 2 no longer
+  treats E3 paired differences as licensed; no claim about exact Shapley's adequacy; item 8942
+  was not among the flagged items, so 6 of 8 disagreements were.
+- Evidence: `program/evidence/2026-10-16/am1-confirmatory/RESULTS.md` and `analysis/`.

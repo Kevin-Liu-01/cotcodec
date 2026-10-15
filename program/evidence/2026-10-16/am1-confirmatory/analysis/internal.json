@@ -1,0 +1,386 @@
+{
+  "attention_meta": {
+    "attn_implementation": "eager",
+    "dtype": "bfloat16",
+    "gpu": {
+      "CUDA_VISIBLE_DEVICES": "1",
+      "name": "NVIDIA H100 80GB HBM3",
+      "pci_bus_id": 100,
+      "uuid": "0524ae85-a4b2-36bd-5769-d31e83c463e2"
+    },
+    "model_id": "qwen3-8b",
+    "shape": [
+      694,
+      36,
+      32,
+      8
+    ],
+    "wall_s": 44.5
+  },
+  "both": {
+    "attention_raw": {
+      "necessity_auroc": {
+        "ci": [
+          0.8030190132011972,
+          0.8606026083727604
+        ],
+        "clusters": 230,
+        "units": 3064,
+        "value": 0.8320595030940455
+      },
+      "spearman_with_shapley": {
+        "ci": [
+          0.375516652591012,
+          0.4349815830795189
+        ],
+        "clusters": 304,
+        "mean": 0.40492423540529254,
+        "units": 539
+      }
+    },
+    "attention_xfit": {
+      "necessity_auroc": {
+        "ci": [
+          0.8653521325369382,
+          0.9139172185787634
+        ],
+        "clusters": 230,
+        "units": 3064,
+        "value": 0.8900795062345578
+      },
+      "spearman_with_shapley": {
+        "ci": [
+          0.45319881660925837,
+          0.5085321320621723
+        ],
+        "clusters": 304,
+        "mean": 0.4810198051875725,
+        "units": 539
+      }
+    },
+    "length": {
+      "necessity_auroc": {
+        "ci": [
+          0.663000565487842,
+          0.7157036070837305
+        ],
+        "clusters": 230,
+        "units": 3064,
+        "value": 0.6877971869982791
+      },
+      "spearman_with_shapley": {
+        "ci": [
+          0.20566421421026443,
+          0.27070560915378017
+        ],
+        "clusters": 304,
+        "mean": 0.23798285007316974,
+        "units": 539
+      }
+    },
+    "lexical_question": {
+      "necessity_auroc": {
+        "ci": [
+          0.7404282794279949,
+          0.804965861335963
+        ],
+        "clusters": 230,
+        "units": 3064,
+        "value": 0.7738289574460585
+      },
+      "spearman_with_shapley": {
+        "ci": [
+          0.47601275688620903,
+          0.5457358327404743
+        ],
+        "clusters": 295,
+        "mean": 0.5123105732744263,
+        "units": 520
+      }
+    },
+    "reply_overlap": {
+      "necessity_auroc": {
+        "ci": [
+          0.8002931509655593,
+          0.8583949770407276
+        ],
+        "clusters": 230,
+        "units": 3064,
+        "value": 0.8295964441709849
+      },
+      "spearman_with_shapley": {
+        "ci": [
+          0.4851084417719059,
+          0.5629813725530821
+        ],
+        "clusters": 300,
+        "mean": 0.5242593020170102,
+        "units": 520
+      }
+    },
+    "retrieval_rank": {
+      "necessity_auroc": {
+        "ci": [
+          0.7425035674440643,
+          0.8108174625994313
+        ],
+        "clusters": 230,
+        "units": 3064,
+        "value": 0.7773492153526187
+      },
+      "spearman_with_shapley": {
+        "ci": [
+          0.3634859516735208,
+          0.4249171673758397
+        ],
+        "clusters": 304,
+        "mean": 0.3944792976372267,
+        "units": 539
+      }
+    }
+  },
+  "gold": {
+    "attention_raw": {
+      "necessity_auroc": {
+        "ci": [
+          0.817540152802658,
+          0.8861127899534113
+        ],
+        "clusters": 201,
+        "units": 1608,
+        "value": 0.8526843911566737
+      },
+      "spearman_with_shapley": {
+        "ci": [
+          0.37908694112826563,
+          0.4560805656250321
+        ],
+        "clusters": 288,
+        "mean": 0.41786813023907804,
+        "units": 288
+      }
+    },
+    "attention_xfit": {
+      "necessity_auroc": {
+        "ci": [
+          0.8791368892758917,
+          0.9341600423953366
+        ],
+        "clusters": 201,
+        "units": 1608,
+        "value": 0.9065872671000239
+      },
+      "spearman_with_shapley": {
+        "ci": [
+          0.4480423652192223,
+          0.5117380019040711
+        ],
+        "clusters": 288,
+        "mean": 0.48043135836065,
+        "units": 288
+      }
+    },
+    "length": {
+      "necessity_auroc": {
+        "ci": [
+          0.6666713613395852,
+          0.7268991285456287
+        ],
+        "clusters": 201,
+        "units": 1608,
+        "value": 0.6961436818814682
+      },
+      "spearman_with_shapley": {
+        "ci": [
+          0.19480800903183845,
+          0.27315138485768525
+        ],
+        "clusters": 288,
+        "mean": 0.2349292003572091,
+        "units": 288
+      }
+    },
+    "lexical_question": {
+      "necessity_auroc": {
+        "ci": [
+          0.8081818598526519,
+          0.8797178489237076
+        ],
+        "clusters": 201,
+        "units": 1608,
+        "value": 0.842513723473125
+      },
+      "spearman_with_shapley": {
+        "ci": [
+          0.5618118293202303,
+          0.6398633066234255
+        ],
+        "clusters": 280,
+        "mean": 0.6008248161260111,
+        "units": 280
+      }
+    },
+    "reply_overlap": {
+      "necessity_auroc": {
+        "ci": [
+          0.836145862010268,
+          0.9040868454661558
+        ],
+        "clusters": 201,
+        "units": 1608,
+        "value": 0.8692866897829962
+      },
+      "spearman_with_shapley": {
+        "ci": [
+          0.549533096015461,
+          0.6353567218285111
+        ],
+        "clusters": 276,
+        "mean": 0.5941907207739462,
+        "units": 276
+      }
+    },
+    "retrieval_rank": {
+      "necessity_auroc": {
+        "ci": [
+          0.8046866718490513,
+          0.8868135362253009
+        ],
+        "clusters": 201,
+        "units": 1608,
+        "value": 0.8438916133838227
+      },
+      "spearman_with_shapley": {
+        "ci": [
+          0.3928540015874246,
+          0.4683812533514025
+        ],
+        "clusters": 288,
+        "mean": 0.43180365019325284,
+        "units": 288
+      }
+    }
+  },
+  "retrieved": {
+    "attention_raw": {
+      "necessity_auroc": {
+        "ci": [
+          0.7723186777338794,
+          0.8470753821478839
+        ],
+        "clusters": 182,
+        "units": 1456,
+        "value": 0.807666006946641
+      },
+      "spearman_with_shapley": {
+        "ci": [
+          0.3535759868009714,
+          0.4263560647064015
+        ],
+        "clusters": 251,
+        "mean": 0.3900722763928216,
+        "units": 251
+      }
+    },
+    "attention_xfit": {
+      "necessity_auroc": {
+        "ci": [
+          0.8336421064047066,
+          0.9048032093678846
+        ],
+        "clusters": 182,
+        "units": 1456,
+        "value": 0.8684204977120669
+      },
+      "spearman_with_shapley": {
+        "ci": [
+          0.44599865848216075,
+          0.5188044749363828
+        ],
+        "clusters": 251,
+        "mean": 0.48169499517224873,
+        "units": 251
+      }
+    },
+    "length": {
+      "necessity_auroc": {
+        "ci": [
+          0.6480017110546784,
+          0.7129612808867678
+        ],
+        "clusters": 182,
+        "units": 1456,
+        "value": 0.6813476965528875
+      },
+      "spearman_with_shapley": {
+        "ci": [
+          0.20113525198546664,
+          0.28152275088008033
+        ],
+        "clusters": 251,
+        "mean": 0.24148663938869425,
+        "units": 251
+      }
+    },
+    "lexical_question": {
+      "necessity_auroc": {
+        "ci": [
+          0.6881994463171657,
+          0.7738844700482618
+        ],
+        "clusters": 182,
+        "units": 1456,
+        "value": 0.7309426766558521
+      },
+      "spearman_with_shapley": {
+        "ci": [
+          0.3616900463190345,
+          0.4548585917180153
+        ],
+        "clusters": 240,
+        "mean": 0.4090439566142442,
+        "units": 240
+      }
+    },
+    "reply_overlap": {
+      "necessity_auroc": {
+        "ci": [
+          0.7595659926711164,
+          0.8376180774824112
+        ],
+        "clusters": 182,
+        "units": 1456,
+        "value": 0.7992583421446624
+      },
+      "spearman_with_shapley": {
+        "ci": [
+          0.3988068303827934,
+          0.4923547328118575
+        ],
+        "clusters": 244,
+        "mean": 0.44515654965260704,
+        "units": 244
+      }
+    },
+    "retrieval_rank": {
+      "necessity_auroc": {
+        "ci": [
+          0.7138256268691051,
+          0.7873284509411583
+        ],
+        "clusters": 182,
+        "units": 1456,
+        "value": 0.7491843872285433
+      },
+      "spearman_with_shapley": {
+        "ci": [
+          0.30929140924017073,
+          0.3923198684091604
+        ],
+        "clusters": 251,
+        "mean": 0.35165294888768284,
+        "units": 251
+      }
+    }
+  }
+}
