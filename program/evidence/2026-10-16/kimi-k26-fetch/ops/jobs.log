@@ -1,0 +1,2 @@
+2026-10-15T18:47:46Z Kimi-K2.6 fetch job 1528 submitted (CPU lane, no GRES, limit 12 h; source 2baacac2)
+2026-10-15T19:43:48Z Kimi-K2.6 fetch job 1528 JobState=COMPLETED ExitCode=0:0 RunTime=00:55:36 (CPU lane, 0 GPU-h)

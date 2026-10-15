@@ -1,0 +1,77 @@
+{
+ "ktransformers v0.7.2": {
+  "commit": "a02efe36b5802e7ca79a6b29146e01cf3b97d305",
+  "files": {
+   "doc/en/Kimi-K2-Thinking.md": "eafc0b0f83a6b7a5cd62c637ab8d1521bcf472619e56ca4e7b2a85768543f5c2",
+   "doc/en/Kimi-K2.5.md": "07f8d0c56ab503235c6b040da1a52a207d1cfb8104845593a3c45f7c49d18204",
+   "kt-kernel/python/cli/utils/model_registry.py": "fb4e96df63faf5cc287952af3fb680c883f5f519e2b80aa256a2f7384793af97",
+   "kt-kernel/python/sft/config.py": "1477bd9346299e22838ea7b449583c2d8c55a026b1c6b321915945db62492d14"
+  }
+ },
+ "llama.cpp b11669": {
+  "commit": "620d2225cc436ab0b001e3200e590e3b286ef9ab",
+  "files": {
+   "__init__.py": "1b45e39c7bb9cab7a7c8809d0f0b7e98f4dd1e8e1ba6755ab30f148efd4faf55",
+   "base.py": "4fee4121afc7df99a0a3309ef1d1b6592fb9f6d1aa96a2fa1da14d18fab5b814",
+   "deepseek.py": "09ba15cefd9448d13f27eb0b46462d1a845d7576a6b401f0bf81d73e0419d655",
+   "kimi_k3.py": "72c9767d0a7b9482fca9c1945a3e3d5d3bca440ed8f7e89619b2ced515f0f593",
+   "kimi_linear.py": "bc1067ab4deb2326c35a4fcb4e2e8dae7615e65cfdee390d278c5b79f5420b1c",
+   "kimivl.py": "73cb871ea06b4dd81ed1dfc62bf27c11091353085fd4f65ed8077ddb72af66c1"
+  }
+ },
+ "llama.cpp b11669 runtime (GitHub raw)": {
+  "commit": null,
+  "files": {
+   "convert_hf_to_gguf.py": "e9a1da876330bbce9687541ab31736542a01b4ac43c6686126514a50f122fb7f",
+   "gguf-py_gguf_constants.py": "b0d5ef526bf56d0b3ea94e50c7a887766f82ddc9b5592284e2fea1b27ee1ece1",
+   "src_llama-arch.cpp": "c4b9cf539f74a3564922de6edbbd6a921df586fe1d1a0e091233fdabe94c2473",
+   "tools_mtmd_clip.cpp": "ec92b77c537943b67e21620a977f681b1bbde8d5485ab9a6383d4f8cfc05873a"
+  }
+ },
+ "mlx-lm v0.32.0": {
+  "commit": "a9bd8af5c02118882af735cef60705d2efce9fd0",
+  "files": {
+   "deepseek_v3.py": "a6124188b530db449b55fd42d62b366fe4e67905b78108a9a9c8a72520965d04",
+   "kimi_k25.py": "5388e4355775549b2bacb47ac57c2e4e523673ec789fe524859e26790421d305",
+   "kimi_k3.py": "f61cbcd5dadf77a615ae9e5e6e974cc3fbc0205880e6f055e484927951f75fde"
+  }
+ },
+ "mlx-vlm v0.7.8": {
+  "commit": "9790231827a890eade1a626643a6bc94a1317c72",
+  "files": {
+   "kimi_k25/kimi_k25.py": "8df616370127e608594c5528720770bca61da07b32ba899972cd4a1def634119",
+   "kimi_k25/vision.py": "ef72891d4fc9db589f13cce56074b8528070b3c60bdf168b53533b3320b2d358",
+   "kimi_k3/kimi_k3.py": "12bc6d8b1156a7fe068e952ebae86f7d54b063ec344880168598a3a9d8eb49f3",
+   "kimi_k3/vision.py": "c1373921347584cb1e1739c61a56906d12041721f96f921fe12e1493ebe78390"
+  }
+ },
+ "sglang v0.5.21": {
+  "commit": "e00930c5489053f26d86b179cee0d087f846acbb",
+  "files": {
+   "kimi_k25.py": "08fbf17caf8e81985df387c1a81a4248ef8872013019fae09da23b0dcf20c595",
+   "kimi_k3.py": "7ba8481d52c4401bc3eaffda83791ef57ba68bbe92287702fedc75b5980e58f6",
+   "kimi_linear.py": "adc9e4f993378b3ce5efe6dbcd336c5c5b73e3cbb773c44052e6b95eb92dabcc"
+  }
+ },
+ "vllm 0.31.0+cu129 in image sha256:423783aa (vllm/vllm-openai@sha256:b18abb2d)": {
+  "commit": null,
+  "files": {
+   "_version.py": "b2ed697338f4a6ca2fed3c7904f2d5f539202a681a765a6e9f4a64a46ef40a73",
+   "model_executor/models/kimi_k25.py": "0533765ab0ef604a5bb1cbb1a4c49f04560e40e82faba0a71cc0cc2aa9db7a0c",
+   "model_executor/models/kimi_k25_vit.py": "5c274a01b13b8c63a73bbaf2e8be1efe925f5bbca8d538b09bdb68e7cf8cc9e3",
+   "model_executor/models/registry.py": "7f1d56e2f4c24ff7a949b0d4e796d6af70fa85a2b97c224652949f8d993dcc22",
+   "tokenizers/registry.py": "3d557b6c19bb7d8f2ede8b0d4f9fac942d976bc82c293a25e52f6bd73ffc6b13",
+   "top/models/kimi_k3/__init__.py": "a8ce9cbcd0d8f45f27fe58e70f7dbe080da30886a744f21e60a8ee13ea955a0b",
+   "top/models/kimi_k3/nvidia/kda.py": "54c9939f1c11128fcdfa3cf8eaabec4e66471ec3183b5642b6509e09b5b8f8d6",
+   "top/models/kimi_k3/nvidia/model.py": "2b1d9629f810926a98e9ae05582afcceda02e372bb0a4afd7aa95c60d4931c74",
+   "transformers_utils/config.py": "bfa2d8ed9fc0971694e7873351a06dc9d5948775984f120148ad8a8e38a5acbc"
+  }
+ },
+ "vllm v0.31.0 tag (GitHub raw)": {
+  "commit": null,
+  "files": {
+   "vllm-v0.31.0-registry.py": "7f1d56e2f4c24ff7a949b0d4e796d6af70fa85a2b97c224652949f8d993dcc22",
+   "vllm-v0.31.0-supported_models.md": "138b999eef0259cb479047e59b22b183f58279eec7a1abd59ac52ab8729aec6b"
+  }
+ }
+}
