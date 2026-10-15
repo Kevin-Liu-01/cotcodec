@@ -553,7 +553,7 @@ reference answer on 0 of 63; Qwen3-8B on 63 and 4. The template renders and the 
 behaves as G-J2 requires; these are answerable questions, so this is a calibration, not G-J2.
 
 **Tests.** Locally and on the host, `tests/test_memcredit_am3g.py` and `tests/test_memcredit_am3.py`
-pass (81). The whole suite on the host at `eae156cf`: 3,535 passed, 64 skipped and 2 failed in
+pass (86 at `fc9ebb4d`; the analysis rerun there gave byte-identical outputs). The whole suite on the host at `eae156cf`: 3,535 passed, 64 skipped and 2 failed in
 another experiment's tests (`test_r04_evidence.py`, `test_r04_nuisance.py`), the same two that
 `am1-keepset-search-v1`'s selftest found failing on `main`; this branch changes no existing code.
 

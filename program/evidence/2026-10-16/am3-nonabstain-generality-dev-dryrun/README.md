@@ -8,8 +8,8 @@ development outputs. No held-out or abstention question was given to any model.
 
 - **Code.** Commit `eae156cf` for the image, the GPU job, extract and the first analysis.
   `scripts/memcredit_am3g.py` is unchanged from there to the draft's head; the analysis and the
-  tests were rerun at the later commits `95c3ef5a` and `ea678a99`, and the outputs were
-  byte-identical.
+  tests were rerun at the later commits `95c3ef5a`, `ea678a99` and `fc9ebb4d`, and the outputs
+  were byte-identical each time (`logs/confirm-*.log`).
 - **Host directory.** `~/cotcodec-runs/stage0/am3g-dev-dryrun/` (new). The operator scripts
   (`ops/am3g/`) ran in their `dev` mode.
 - **Inputs.** The pilot's development artifact (`15567cf1...`), AM3's job 1466 passes (the
@@ -131,7 +131,9 @@ committed `results.json` and AM3's host-only features. The registration's sectio
 ## Tests
 
 - `tests/test_memcredit_am3g.py` and `tests/test_memcredit_am3.py`: 81 passed at `eae156cf` and
-  `95c3ef5a`, 82 at `ea678a99` (one test added), on the host (`logs/pytest-*.log`) and locally.
+  `95c3ef5a`, 82 at `ea678a99` (the pins-in-image test added), 86 at `fc9ebb4d` (tests of the
+  anchor replay checks R1 and R2 added), on the host (`logs/pytest-eae156cf.log`,
+  `logs/confirm-pytest-*.log`) and locally.
 - The whole suite on the host at `eae156cf`: 3,535 passed, 64 skipped, and 2 failed in another
   experiment's tests (`test_r04_evidence.py`, `test_r04_nuisance.py`), the two that
   `am1-keepset-search-v1`'s selftest also found failing on `main`. This branch changes no
