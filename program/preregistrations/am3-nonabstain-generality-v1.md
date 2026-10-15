@@ -382,6 +382,11 @@ traceback.
   pipeline is not the one AM1 validated: H1's readings are VOID and H2 is reported as a
   description of a void run, with the differences at the token and label levels. A replay
   failure is not an infrastructure failure, and the registration is not rerun under this id.
+  Why the anchor runs on all 347 questions: its pass costs about 0.12 GPU-h, under a quarter of
+  the held-out job, and it checks the whole pipeline (the artifact, the prompt rendering, the
+  engine, the image and the primary judge) against AM1 bit for bit before any new reader's number
+  is read, and reproduces H-C's counts (39 and 0) exactly. Without it a pipeline error would be
+  indistinguishable from a reader effect. Its counts are not part of H1's family.
 - **G-J1, the answerable judge (AM1's G2 rule).** On the held-out validation items the primary
   judge says yes to at least 95% of reference answers (single-session-preference questions left
   out) and no to at least 95% of "I don't know.". If it fails, H1's readings are JUDGE_DEPENDENT
