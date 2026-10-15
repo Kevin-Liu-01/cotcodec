@@ -39,7 +39,7 @@ def main() -> None:
     p.add_argument("--kind", choices=["run", "judge"], required=True)
     p.add_argument("--name", required=True)
     p.add_argument("--model", required=True)
-    p.add_argument("--phase", choices=["pilot", "main"], default=None)
+    p.add_argument("--phase", choices=["pilot", "main", "lme_extra"], default=None)
     p.add_argument("--arm", choices=["fp32", "fp16", "bf16"], default=None)
     p.add_argument("--minutes", type=int, required=True)
     p.add_argument("--memory-gb", type=int, default=128)

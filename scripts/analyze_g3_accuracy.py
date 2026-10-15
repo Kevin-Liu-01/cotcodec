@@ -313,7 +313,12 @@ def analyze(
         "equivalence_margin": margin,
         "cells": {},
     }
-    main = [r for r in rows if r["phase"] == "main"]
+    # The 4B's long-context arms ran as phase lme_extra (after the main run; the config).
+    main = [
+        r
+        for r in rows
+        if r["phase"] == "main" or (r["phase"] == "lme_extra" and r["task"] == "lme")
+    ]
     if judge is not None:
         for r in main:
             if r["task"] == "lme":
@@ -378,7 +383,7 @@ def analyze(
                     }
                 cell["by_arm"] = ended
             results["cells"][f"{model}/{task}"] = cell
-    results["throughput"] = [t for t in throughput if t["phase"] == "main"]
+    results["throughput"] = [t for t in throughput if t["phase"] in ("main", "lme_extra")]
     return results
 
 
@@ -542,7 +547,7 @@ def cmd_judge_input(args: argparse.Namespace) -> int:
     for p in args.workers:
         w = load_worker(Path(p))
         rec = w["records"]
-        if rec["task"] != "lme" or rec["phase"] != "main":
+        if rec["task"] != "lme" or rec["phase"] not in ("main", "lme_extra"):
             continue
         for r in rec["requests"]:
             replies.append(

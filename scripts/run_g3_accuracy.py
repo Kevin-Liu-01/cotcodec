@@ -354,7 +354,9 @@ def run_main(args: argparse.Namespace) -> int:
     plan = g3.phase_plan(config, args.phase)
     if args.arm not in plan["arms"]:
         raise g3.G3ConfigError(f"arm {args.arm} is not in phase {args.phase}")
-    tasks = list(args.tasks or g3.TASKS)
+    tasks = list(args.tasks or (g3.TASKS if plan["math_questions"] else ("lme",)))
+    if "math" in tasks and not plan["math_questions"]:
+        raise g3.G3ConfigError(f"phase {args.phase} has no math task")
     out = Path(args.output_dir)
     out.mkdir(parents=True, exist_ok=True)
     stop_at, source = g2.deadline(args.allocation_minutes)

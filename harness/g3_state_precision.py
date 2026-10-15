@@ -32,7 +32,8 @@ CONFIG_PATH = PROJECT_ROOT / "experiments" / "g3" / "g3-state-precision-accuracy
 EXPERIMENT_ID = "g3-state-precision-accuracy-v1"
 ARM_NAMES = ("fp32", "fp16", "bf16")
 ARM_DTYPES = {"fp32": "auto", "fp16": "float16", "bf16": "bfloat16"}
-PHASES = ("pilot", "main")
+#: lme_extra: the 4B's long-context arms, run after the main run (no math; see the config).
+PHASES = ("pilot", "main", "lme_extra")
 TASKS = ("math", "lme")
 MODEL_ROOT = Path("/model-cache/cotcodec-models")
 LME_CONTAINER_PATH = Path("/inputs/longmemeval_s_cleaned.json")
@@ -102,14 +103,25 @@ def phase_plan(config: dict[str, Any], phase: str) -> dict[str, Any]:
     arms = list(spec["arms"])
     if not arms or not set(arms) <= set(ARM_NAMES):
         raise G3ConfigError(f"{phase}: unknown arm")
-    math_spec, lme_spec = spec["math"], spec["lme"]
+    lme_spec = spec["lme"]
+    math_spec = spec.get("math") or {"questions": 0, "seeds": [], "gen_seconds": 0}
+    if phase != "lme_extra" and not spec.get("math"):
+        raise G3ConfigError(f"{phase}: a math section is required")
+    if phase == "lme_extra" and spec.get("math"):
+        raise G3ConfigError("lme_extra runs the long-context task only")
     count = int(config["tasks"]["math"]["prompts"]["count"])
     n_math = int(math_spec["questions"])
-    if not 0 < n_math <= count:
+    if not 0 <= n_math <= count or (phase != "lme_extra" and n_math == 0):
         raise G3ConfigError(f"{phase}: math questions out of range")
-    for key, seeds in (("math", math_spec["seeds"]), ("lme", lme_spec["seeds"])):
+    seed_lists = [("lme", lme_spec["seeds"])] + ([("math", math_spec["seeds"])] if n_math else [])
+    for key, seeds in seed_lists:
         if not seeds or len(set(seeds)) != len(seeds) or any(int(s) < 0 for s in seeds):
             raise G3ConfigError(f"{phase}.{key}: seeds must be distinct non-negative integers")
+    if phase == "lme_extra":
+        if arms != list(ARM_NAMES) or [int(s) for s in lme_spec["seeds"]] != config["seeds"][:1]:
+            raise G3ConfigError("lme_extra runs every arm with the first declared seed")
+        if int(lme_spec["questions"]) > int(config["main"]["lme"]["questions"]):
+            raise G3ConfigError("lme_extra's questions are a prefix of the main run's")
     if phase == "main":
         if arms != list(ARM_NAMES):
             raise G3ConfigError("main runs every arm")
@@ -120,7 +132,7 @@ def phase_plan(config: dict[str, Any], phase: str) -> dict[str, Any]:
     return {
         "phase": phase,
         "arms": arms,
-        "math_questions": math_subset(count, n_math),
+        "math_questions": math_subset(count, n_math) if n_math else [],
         "math_seeds": [int(s) for s in math_spec["seeds"]],
         "math_gen_seconds": float(math_spec["gen_seconds"]),
         "lme_questions": int(lme_spec["questions"]),

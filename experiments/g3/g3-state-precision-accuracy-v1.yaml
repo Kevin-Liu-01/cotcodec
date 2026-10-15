@@ -181,6 +181,20 @@ main:
     seeds: [42]
     gen_seconds: 600
 
+# Added after the main run, under the budget (program/evidence/2026-10-16/
+# g3-state-precision-accuracy/ops/jobs.log, 19:06:14Z). The main math phases took 1,400-1,640 s
+# per engine against the simulated 930-1,390 s, and with every in-job long-context phase the total
+# was projected at 3.97 of 4.0 GPU-h. So the three 4B jobs were sent the lane's USR1 when their
+# math phase had saved: their long-context workers stopped during engine start and produced no
+# reply. The 9B jobs ran the long-context phase as declared. The 4B's long-context arms run here,
+# one job per arm, on the first 50 of the main run's 100 questions (the same order and seed).
+lme_extra:
+  arms: [fp32, fp16, bf16]
+  lme:
+    questions: 50
+    seeds: [42]
+    gen_seconds: 450
+
 analysis:
   bootstrap_reps: 10000
   bootstrap_seed: 42

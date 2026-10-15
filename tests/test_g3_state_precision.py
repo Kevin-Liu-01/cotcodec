@@ -373,3 +373,15 @@ def test_score_and_analyze_end_to_end(tmp_path: Path) -> None:
     text = analysis.tables_md(results)
     assert "| qwen3.5-4b | math | correct | 4 | 100.0 | 100.0 | 75.0 |" in text
     assert len(results["throughput"]) == 6
+
+
+def test_lme_extra_phase_is_long_context_only() -> None:
+    config = g3.load_config()
+    plan = g3.phase_plan(config, "lme_extra")
+    assert plan["arms"] == list(g3.ARM_NAMES)
+    assert plan["math_questions"] == [] and plan["lme_seeds"] == [42]
+    assert plan["lme_questions"] <= g3.phase_plan(config, "main")["lme_questions"]
+    order = [f"q{i}" for i in range(100)]
+    extra = g3.lme_requests(config, plan, order)
+    main = g3.lme_requests(config, g3.phase_plan(config, "main"), order)
+    assert extra == main[: len(extra)]  # same ids, indices and request seeds
