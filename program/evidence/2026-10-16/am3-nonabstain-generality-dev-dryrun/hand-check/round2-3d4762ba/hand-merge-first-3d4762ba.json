@@ -1,0 +1,21 @@
+{
+  "chunks": 1,
+  "chunks_failing_the_transcript_audit": [],
+  "final_complete": true,
+  "final_rows": 27,
+  "final_sha256": "52ebe1437166f1cc2d5a21eedb09f3b4693e8b8d6f6a06f8046b4cdaa7cf549d",
+  "items_lacking_a_valid_row": 0,
+  "malformed_rows": 0,
+  "missing_chunk_outputs": [],
+  "raw_sha256": "52ebe1437166f1cc2d5a21eedb09f3b4693e8b8d6f6a06f8046b4cdaa7cf549d",
+  "repeated_items": 0,
+  "stage": "first",
+  "transcript_audit": {
+    "hand-labels-first-01.jsonl": {
+      "pass": true,
+      "tool_calls": 3,
+      "transcript_sha256": "3c6378fd086a684c54d10c2d6ac37b199dc22c7c164e8fc6176840430bda5158"
+    }
+  },
+  "valid_rows": 27
+}
