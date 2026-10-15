@@ -5,7 +5,7 @@
 AM6's internal signals folded in), after Step 0 (D107; `program/evidence/2026-10-15/am1-step0/`).
 It ran on the development split only: 63 of LongMemEval-S's 416 usable questions, drawn with seed
 42 and stratified by type. The other 353 are held out; the confirmatory run drafted as
-`program/preregistrations/am1-memory-credit-v1.md` (DRAFT, not frozen, not in the ledger) uses 347
+`program/preregistrations/am1-memory-credit-v1.md` (DRAFT, not frozen, not in the ledger, when this README was written; frozen later as ledger row 23, D111-D112) uses 347
 of them, leaving out the six that Step 0 had already run as demo questions before the split was
 drawn (the registration's section 4). No
 decision rule applies to anything below; every number describes these 63 questions, this reader

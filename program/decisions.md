@@ -2867,3 +2867,42 @@ write-up of the memory line.**
     need new questions (another dataset or LongMemEval-M).
   - An internal write-up of the memory line in `paper/`. Publication is an
     outward action and stays Kevin's call (D101).
+
+**D120. Erratum to D117-D119 (found by the memory note's claims check), and
+next: AM5, the rule's cost when the evidence is absent.**
+- Erratum:
+  - **H-A wording.** D117 and D119 say "search beats sampled credit at equal
+    calls (6 of 7)". The accurate statement: of the six SEARCH_BETTER
+    comparisons, three are at equal calls (A1, A2, A4) and three give search
+    fewer calls (A3, A5, A6). The seventh, A7, compares search with greedy
+    backward elimination, which is itself a search rule, and is not
+    separated. H-A's verdict is INCONCLUSIVE.
+  - **H2 cost range.** The 3-27% in the `am3-nonabstain-generality-v1`
+    RESULTS is the judge's count. The hand count is 0-27%. D119 gives both
+    counts.
+  - **Reused study names.** In the D104 sweep dossier, "AM3" and "AM4" name
+    other candidates (placebo memory in memory-augmented RL; single-write
+    interventions). From D117 on, AM3 is the reader replication and
+    generality line and AM4 the read-cap study.
+  - **SNIPW-64.** AM1's MISSPECIFIED verdict rests on 3 seeds (regret 0.094,
+    99% lower bound 0.058). Over 200 seeds `am1-keepset-search-v1` gives
+    0.085 but computed no 99% interval, so whether SNIPW-64 is MISSPECIFIED
+    at 200 seeds is open.
+  - **Smaller corrections.** D112's 1.53 GPU-h is job 1458 alone; the
+    registration total is 1.5444. D119's "9-11 points" is +0.089 to +0.112.
+    The pilot README's stale "DRAFT" note now says the registration was
+    frozen later.
+- AM5, exploratory, development split first. The weakest part of the memory
+  line is the rule's cost on unanswerable questions: 30 edited questions,
+  scored by a judge that failed its check.
+  - The construction: take each answerable question, remove its evidence
+    sessions from the haystack (LongMemEval marks them), and build the BM25
+    top-8 pool from what remains. "I don't know" is then the correct reply
+    by construction.
+  - The measurement: how often the rule switches to a non-abstaining keep set
+    within K reads (K = 8 and 70). It is read from abstention flags, with no
+    judge. A judge or hand check is needed only to confirm that a switched
+    answer is not correct by chance from other memories.
+  - Cost and data: MIT data, about 0.3 GPU-h on the 63 development questions.
+  - Next step: a held-out registration on the 347 questions follows only if
+    the development run is clean.
