@@ -1,0 +1,197 @@
+# am5-ablated-cost-v1 (D121; CONFIRMATORY once frozen in the ledger): is the non-abstention keep
+# rule's cost on questions whose evidence is absent below its gain on the same questions with their
+# evidence? Registration: program/preregistrations/am5-ablated-cost-v1.md. Script:
+# scripts/memcredit_am5r.py.
+#
+# The rule (AM1d's nonabstain@70 with AM4's read cap K): read a pool's 4-subsets in BM25 order and
+# keep the first whose reply does not abstain (AM1d's four patterns, digest 031bee27...) within K
+# reads; otherwise keep BM25 top 4. Primary K = 8, secondary K = 70.
+#
+# Two populations, each one GPU job (memcredit_am5r.py run --population P) on one H100 in the
+# cotcodec-vllm cu129 overlay built from the commit's source capsule:
+# - heldout: AM1's 347 held-out answerable questions, each with its evidence sessions
+#   (answer_session_ids) removed and the BM25 top-8 user-turn pool built from the rest with AM1's
+#   retrieved-arm functions (prepare-heldout, host CPU, before the freeze); AM5's 63 development
+#   ablated pools follow in the same artifact and job as the replay control (V3);
+# - development: the pre-freeze dry run on AM5's 63 development ablated pools (exploratory).
+# Per pool every reader answers the 70 4-subsets and the full pool (71 requests) with AM1's
+# prompt, greedy, 64 tokens; then the Qwen3-32B judge scores every distinct (question, reply) with
+# LongMemEval's non-abstention answer-check prompt against the reference answer.
+schema_version: 1
+experiment_id: am5-ablated-cost-v1
+claim_level: confirmatory
+# 42: every engine seed and the bootstrap seed. 44: the blind hand check's draws. 43 is unused; the
+# lane's seed-matrix contract binds three seeds to --seeds.
+seeds: [42, 43, 44]
+
+# The readers (revisions, engines, chat templates), the model pins, the pilot's prompt, pools,
+# retriever and judges, and the steps come unchanged from the frozen am3g config, which
+# memcredit_am3g.load_config validates first.
+base:
+  config: experiments/am3/am3-nonabstain-generality-v1.yaml
+  config_sha256: "96fcd2186c43d6bdad7b1eb90e843aed39f0d56bad349799f8f1db6efb67d60e"
+
+# am3g's steps by id, unchanged: the three readers (OLMo-2's default-mode fallback only if its
+# batch-invariant step does not complete) and the primary judge. The second judge is not run.
+steps: [rd-qwen3-8b, rd-olmo2, rd-olmo2-default, rd-qwen35-9b-default, judge32]
+
+populations:
+  development:
+    claim_level: exploratory
+    # AM5's artifact, unchanged: the pilot's 63 development questions with their evidence
+    # sessions removed (memcredit_am5.py prepare at 658d2c6e).
+    split: dev-ablated
+    artifact_sha256: "f6d27d4cf2f3cf62789466cdfe80bab2cdc007c449411e1ad9b53aab76558b23"
+    # AM5's text-free prepare summary (the leakage facts), committed with AM5's evidence.
+    summary_sha256: "c9df7dbdafe94f9b54d3c1782e965f9a1492081ad6e063701643848450e8de9e"
+    questions: 63
+    question_ids_sha256: "183ee4d3406786be721c4c846fa9f72f0fc2ae8c905dcb198eaaff17d78846fc"
+    arms: [retrieved]
+    # The replay reference: AM5's job 1487 (the same 4,473 requests per reader).
+    reference:
+      name: "job 1487 (AM5): rd-qwen3-8b, rd-olmo2, rd-qwen35-9b-default; judge32"
+      readers:
+        qwen3-8b: rd-qwen3-8b
+        olmo-2-1124-7b-instruct: rd-olmo2
+        qwen3.5-9b: rd-qwen35-9b-default
+      sha256:
+        sessions/rd-qwen3-8b/all.json: "b7d000af47c894d12548c033f4ebc4aaf6b25c738374bb031ab8f06877b2e3c3"
+        sessions/rd-qwen3-8b/all.npz: "4e5dab115ee96bf1133cd4dc44182986ff810684f3ee8a48a73137dbaad81bf1"
+        sessions/rd-qwen3-8b/all.texts.jsonl.gz: "eae016a8229eef668913d30e3ccba03ae68b854a3b07676b55b064f819b09300"
+        sessions/rd-olmo2/all.json: "738c43bbf7edd1ece9367decd761a53a8b5a197063c5c274027a6326a0b39790"
+        sessions/rd-olmo2/all.npz: "02cd025e128b1665c9bb75ea7d4a3e2466c30e3307d833ce36502e4bd5b014a3"
+        sessions/rd-olmo2/all.texts.jsonl.gz: "51cd722a5ccd3add5153792c39905572537c5a594fc71193652a7760878aa7d6"
+        sessions/rd-qwen35-9b-default/all.json: "9c9fd63cd50ada6623bcca5e5530b0d496c655fe6af148ac1a4189902f2b9dd1"
+        sessions/rd-qwen35-9b-default/all.npz: "e6ae1525e11c121bcb6df603ce54ebda06ec99f54ed5fcc703659c09b1fb44bf"
+        sessions/rd-qwen35-9b-default/all.texts.jsonl.gz: "27a8b16c8597baacc5caacf1b8927d81f9ce5334ee563fcf451969555ccac430"
+        sessions/judge32/all.json: "2b9b7861aff80d845ed5500169daed5f9feac2701562d15eef23943ddd6c93d4"
+        sessions/judge32/all.npz: "50c8ed52f100d3491d43bad2c5184902776c4fff83dda556e10599c9a77d8973"
+        sessions/judge32/all.texts.jsonl.gz: "ddeeddb55081535e4fc2440f0545d4987e679754e34d57e415113c66780a71f8"
+        judge-items.json: "4bbb7f5c6d333f1e5f1b5c2108078276a8d200a04f9543458161458d45d77c7a"
+    # The dry run's gain side: AM3's committed development per-pool records (job 1466), the same
+    # 63 questions' original retrieved pools; gains at K = 8 and 70 as AM5 reported them.
+    gain:
+      path: program/evidence/2026-10-16/am3-reader-replication/per-table.json.gz
+      sha256: "0fc5635bad037588e521980536e4548eb51a6a3d9573e703b0f92010be72701e"
+      expected:
+        "8": {qwen3-8b: 1, olmo-2-1124-7b-instruct: 4, qwen3.5-9b: 3}
+        "70": {qwen3-8b: 1, olmo-2-1124-7b-instruct: 4, qwen3.5-9b: 3}
+    # AM5's outputs the dry run must reproduce: its committed results and per-pool table, its
+    # host-only features (extracted at 6f681226) and its receipted hand labels and plan.
+    am5:
+      results_sha256: "a0d5f35812c9165d81134b3cbf68299cdcbb4cb2d068c677987f6a8af2096bdb"
+      per_table_sha256: "58bec8389e37e9a9b92c6c1038fbced721731b496fee0512108d197763e11f9c"
+      features_sha256: "16bbd3855a67cd789b77acae855c9962225bdb1326cef12fd5340a6d72eb0889"
+      hand_labels_sha256: "9da82b416383fb01fcd5b4f9c97f383f13625748e6dd299020fbd0fd96e5658c"
+      hand_plan_sha256: "171707ec40cb99d772d3f55ac3af1923dffc30fd5cd36ca43e582e50024d4dc0"
+  heldout:
+    claim_level: confirmatory
+    split: heldout-ablated
+    # Built once before the freeze on the host CPU (memcredit_am5r.py prepare-heldout); host only.
+    artifact_sha256: PENDING
+    summary_sha256: PENDING
+    # AM1's confirmatory set, in AM1's held-out artifact's order (which prepare-heldout reads,
+    # with its retrieved pools for the builder check).
+    questions: 347
+    question_ids_sha256: "d4f024fbcda5394984a46c421cd938f2b6db6067fef0f21a5c6e72359b27e50a"
+    source_artifact_sha256: "f23bca047dc7246c5a8db12f67a76a2ea36304d8669dc5c62ae6c42821f73eb7"
+    arms: [retrieved]
+    # The replay control: AM5's 63 development ablated pools, appended to the artifact unchanged.
+    control:
+      artifact_sha256: "f6d27d4cf2f3cf62789466cdfe80bab2cdc007c449411e1ad9b53aab76558b23"
+      question_ids_sha256: "183ee4d3406786be721c4c846fa9f72f0fc2ae8c905dcb198eaaff17d78846fc"
+      questions: 63
+    reference:
+      name: "job 1487 (AM5): rd-qwen3-8b, rd-olmo2, rd-qwen35-9b-default; judge32"
+      readers:
+        qwen3-8b: rd-qwen3-8b
+        olmo-2-1124-7b-instruct: rd-olmo2
+        qwen3.5-9b: rd-qwen35-9b-default
+      sha256:
+        sessions/rd-qwen3-8b/all.json: "b7d000af47c894d12548c033f4ebc4aaf6b25c738374bb031ab8f06877b2e3c3"
+        sessions/rd-qwen3-8b/all.npz: "4e5dab115ee96bf1133cd4dc44182986ff810684f3ee8a48a73137dbaad81bf1"
+        sessions/rd-qwen3-8b/all.texts.jsonl.gz: "eae016a8229eef668913d30e3ccba03ae68b854a3b07676b55b064f819b09300"
+        sessions/rd-olmo2/all.json: "738c43bbf7edd1ece9367decd761a53a8b5a197063c5c274027a6326a0b39790"
+        sessions/rd-olmo2/all.npz: "02cd025e128b1665c9bb75ea7d4a3e2466c30e3307d833ce36502e4bd5b014a3"
+        sessions/rd-olmo2/all.texts.jsonl.gz: "51cd722a5ccd3add5153792c39905572537c5a594fc71193652a7760878aa7d6"
+        sessions/rd-qwen35-9b-default/all.json: "9c9fd63cd50ada6623bcca5e5530b0d496c655fe6af148ac1a4189902f2b9dd1"
+        sessions/rd-qwen35-9b-default/all.npz: "e6ae1525e11c121bcb6df603ce54ebda06ec99f54ed5fcc703659c09b1fb44bf"
+        sessions/rd-qwen35-9b-default/all.texts.jsonl.gz: "27a8b16c8597baacc5caacf1b8927d81f9ce5334ee563fcf451969555ccac430"
+        sessions/judge32/all.json: "2b9b7861aff80d845ed5500169daed5f9feac2701562d15eef23943ddd6c93d4"
+        sessions/judge32/all.npz: "50c8ed52f100d3491d43bad2c5184902776c4fff83dda556e10599c9a77d8973"
+        sessions/judge32/all.texts.jsonl.gz: "ddeeddb55081535e4fc2440f0545d4987e679754e34d57e415113c66780a71f8"
+        judge-items.json: "4bbb7f5c6d333f1e5f1b5c2108078276a8d200a04f9543458161458d45d77c7a"
+    # The gain side, known before this registration: am3g's registered held-out per-pool records
+    # (jobs 1480, retrieved arm, Qwen3-32B), read at K as AM4 read them (post hoc). The counts are
+    # AM4's committed figures (results.json 56fe0d99...): no loss at either cap.
+    gain:
+      path: program/evidence/2026-10-15/am3-nonabstain-generality-v1/per-table.json.gz
+      sha256: "921c0ea00342d20b9c014ecfdc4940b9a56bbdaf3dc5f987a4c3930ff3bf6eb7"
+      population_field: heldout
+      am4_results:
+        path: program/evidence/2026-10-16/am4-read-caps/results.json
+        sha256: "56fe0d99a5e1d2d3f01694be84c393469816b1f34de67829937273bfcba97721"
+      expected:
+        "8": {qwen3-8b: 31, olmo-2-1124-7b-instruct: 27, qwen3.5-9b: 26}
+        "70": {qwen3-8b: 39, olmo-2-1124-7b-instruct: 35, qwen3.5-9b: 31}
+
+# Per job: the Slurm limit and, per step, [min_start_s, max_s]: a step starts only with min_start_s
+# left before the deadline (the limit minus the lane's 210 s), and its passes stop at max_s. The
+# held-out job's budgets are sized with budget.overhead_model (registration section 11; a test
+# simulates the normal, fallback and residual paths). The development job is AM5's job 1487
+# repeated (6:41 of a 20-minute limit there); its limit is 13 minutes so that the dry run stays
+# within 0.3 GPU-h at the limits (with the 5-minute build), and its budgets fit job 1487's
+# measured timeline, not the worst case.
+jobs:
+  development:
+    gpus: 1
+    minutes: 13
+    step_budgets:
+      rd-qwen3-8b: [150, 90]
+      rd-olmo2: [150, 90]
+      rd-olmo2-default: [150, 90]
+      rd-qwen35-9b-default: [200, 120]
+      judge32: [100, 45]
+  heldout:
+    gpus: 1
+    minutes: 70
+    step_budgets:
+      rd-qwen3-8b: [750, 600]
+      rd-olmo2: [750, 600]
+      rd-olmo2-default: [750, 600]
+      rd-qwen35-9b-default: [1150, 1000]
+      judge32: [480, 300]
+
+# Physical GPU-hours: the image build (5 min on 1 H100) and the held-out job (70 min), 1.25 GPU-h
+# at the limits; with the one rebuild and the one rerun section 8 allows, 2.50. The development dry
+# run: a 5-minute build and a 13-minute job, 0.30 at the limits.
+budget:
+  build_minutes: 5
+  # Seconds outside a step's max_s (am3g's held-out overhead model, measured in its job 1471 and
+  # confirmed by job 1480 at 49,274 requests per reader; this job has 29,110): job: the lane's
+  # prolog and the driver's model verification; per step: the prompt rendering, the engine start,
+  # the smoke pass and the hand-off; failed_engine_step: a batch-invariant engine that refuses to
+  # start, before the fallback runs.
+  overhead_model:
+    source: "am3g's held-out overhead model (job 1471; job 1480's held-out run fitted inside it)"
+    heldout: {job: 100, reader: 135, failed_engine_step: 125, judge32: 155}
+  registered_cap_gpu_hours: 1.25
+  registered_cap_with_reruns_gpu_hours: 2.5
+  dry_run_cap_gpu_hours: 0.3
+
+analysis:
+  caps: [8, 70]
+  primary_cap: 8
+  alpha: 0.05
+  bootstrap: {resamples: 10000, seed: 42}
+
+# The blind hand check (registration section 8): am3g's protocol (labeller model, pinned launch
+# prompt, chunks of 60, CLI first then the recorded subagent fallback, transcript audit, one repair
+# stage, receipts before the join) with this registration's plan and instructions.
+hand_check:
+  seed: 44
+  chunk: 60
+  labeller_model: claude-opus-5-5
+  # The share of the switched replies the judge calls wrong beyond K = 8 (positions 9-70) that is
+  # sampled; every one within K = 8 is labelled.
+  secondary_fraction: 0.5
