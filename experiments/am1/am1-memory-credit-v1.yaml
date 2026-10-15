@@ -164,37 +164,34 @@ analysis:
   bootstrap: {resamples: 4000, seed: 42}
   power: {simulations: 2000, seed: 43}
 
-# The confirmatory job (2 H100). The pilot found that batch-invariant replay is exact only for
-# the same compiled kernels: inductor's timing-based autotune chose a different reduction block
-# for one of four fresh compiles, which changed 3.1% of replies (program/evidence/2026-10-15/
-# am1-dev-pilot/README.md). So one warm-up compiles the reader once, and both reader passes run
-# from copies of that compile cache: GPU 0 canonical (the tables), GPU 1 shuffled (the A/A
-# replicate, gate G1). The judge's A/A replicate on GPU 1 runs from a copy of GPU 0's judge cache.
+# The confirmatory job (2 H100). The pilot found that compiled batch-invariant replay is exact
+# only for the same compiled kernels (inductor's timing-based autotune chose a different reduction
+# block in one of five fresh compiles and changed 3.1% of replies, 0.25% of judged cells), while
+# enforce_eager replay was bit-exact across GPUs, processes, jobs, orders and an in-engine
+# replicate, for the reader and the Qwen3-32B judge, at 1.06x the compiled reader pass's wall time
+# (program/evidence/2026-10-15/am1-dev-pilot/README.md, jobs 1435 and 1441). So every vLLM worker
+# runs eager: GPU 0 canonical (the tables), GPU 1 shuffled (the A/A replicate, gate G1).
 job:
   gpus: 2
-  minutes: 75
+  minutes: 60
   phases:
-    - id: warm
-      min_start_s: 3900
-      workers:
-        - {id: reader-warm, kind: reader, gpu: 0, order: canonical, passes: [smoke], max_s: 300}
     - id: reader
-      min_start_s: 3300
+      min_start_s: 2700
       workers:
-        - {id: reader-gpu0, kind: reader, gpu: 0, order: canonical, cache_from: reader-warm, max_s: 2700}
-        - {id: reader-gpu1, kind: reader, gpu: 1, order: shuffled, cache_from: reader-warm, max_s: 2700}
+        - {id: reader-gpu0, kind: reader, gpu: 0, order: canonical, enforce_eager: true, max_s: 2400}
+        - {id: reader-gpu1, kind: reader, gpu: 1, order: shuffled, enforce_eager: true, max_s: 2400}
     - id: judge
-      min_start_s: 600
+      min_start_s: 540
       workers:
-        - {id: judge32-gpu0, kind: judge, judge: primary, gpu: 0, order: canonical, max_s: 600}
-        - {id: attention-gpu1, kind: attention, gpu: 1, max_s: 600}
+        - {id: judge32-gpu0, kind: judge, judge: primary, gpu: 0, order: canonical, enforce_eager: true, max_s: 600}
+        - {id: judge32-gpu1, kind: judge, judge: primary, gpu: 1, order: shuffled, enforce_eager: true, max_s: 600}
     - id: extra
-      min_start_s: 420
+      min_start_s: 360
       workers:
-        - {id: judge32-gpu1, kind: judge, judge: primary, gpu: 1, order: shuffled, cache_from: judge32-gpu0, max_s: 600}
-        - {id: judge8-gpu0, kind: judge, judge: secondary, gpu: 0, order: canonical, max_s: 420}
+        - {id: judge8-gpu0, kind: judge, judge: secondary, gpu: 0, order: canonical, enforce_eager: true, max_s: 420}
+        - {id: attention-gpu1, kind: attention, gpu: 1, max_s: 600}
   shuffle_seed: 43
   replicate_seed: 44
 
 budget:
-  total_physical_gpu_hours: 2.6
+  total_physical_gpu_hours: 2.1

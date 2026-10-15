@@ -564,9 +564,10 @@ def test_registration_config_and_judge_prompt_pin() -> None:
     for key in ("source", "usable", "split", "retriever", "pools", "placebo", "prompt", "reader",
                 "judge", "internal", "analysis", "seeds"):  # fmt: skip
         assert reg[key] == main[key], key
-    warm = driver.worker_spec(reg, "reader-warm")
-    assert warm["passes"] == ["smoke"]
-    assert driver.worker_spec(reg, "reader-gpu1")["cache_from"] == "reader-warm"
+    vllm_workers = [w for p in reg["job"]["phases"] for w in p["workers"]
+                    if w["kind"] in ("reader", "judge")]  # fmt: skip
+    assert vllm_workers and all(w.get("enforce_eager") is True for w in vllm_workers)
+    assert driver.worker_spec(reg, "reader-gpu1")["order"] == "shuffled"
     blob = json.dumps(ms.JUDGE_TEMPLATES, sort_keys=True, ensure_ascii=False).encode()
     assert hashlib.sha256(blob).hexdigest() == (
         "2e27234d4c7d50a1fd99da3e8d3c97704a1f10cc9d52185924b6d8ece3ef71d4"
@@ -574,7 +575,8 @@ def test_registration_config_and_judge_prompt_pin() -> None:
 
 
 def test_passes_option_is_checked(tmp_path: Path) -> None:
-    text = ms.REGISTRATION_CONFIG_PATH.read_text().replace("passes: [smoke]", "passes: [all]")
+    text = ms.EAGER_CONFIG_PATH.read_text().replace("passes: [smoke, all, replicate]",
+                                                    "passes: [smoke, replicate]")  # fmt: skip
     bad = tmp_path / "r.yaml"
     bad.write_text(text)
     with pytest.raises(ms.StudyError):
