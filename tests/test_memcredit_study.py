@@ -442,8 +442,9 @@ def test_analysis_on_a_synthetic_run(tmp_path: Path, artifact: dict, config: dic
     for worker in (analysis.JUDGE, analysis.JUDGE_AA, analysis.JUDGE2):
         _save(tmp_path, worker, verdicts)
     out = tmp_path / "analysis"
-    config = dict(config, analysis=dict(config["analysis"], bootstrap={"resamples": 200,
-                                                                       "seed": 42}))
+    config = dict(
+        config, analysis=dict(config["analysis"], bootstrap={"resamples": 200, "seed": 42})
+    )
     result = analysis.analyze(tmp_path, config, artifact, out, None, tmp_path / "private")
     tables = json.loads((out / "tables.json").read_text())
     assert all(t["complete"] for t in tables)
@@ -477,6 +478,74 @@ def test_analysis_on_a_synthetic_run(tmp_path: Path, artifact: dict, config: dic
     assert len(sample) == len({(i["question_index"], i["response"]) for i in items
                                if i["source"] == "reader"})  # fmt: skip
     assert all("label" not in s for s in sample)
-    pw = analysis.power(out, dict(config, analysis=dict(config["analysis"],
-                                                       power={"simulations": 20, "seed": 43})), 50)
+    pw = analysis.power(
+        out,
+        dict(config, analysis=dict(config["analysis"], power={"simulations": 20, "seed": 43})),
+        50,
+    )
     assert pw["heldout_questions"] == 50 and pw["statistics"]
+
+
+# --------------------------------------------------------------------------- A/A diagnostic config
+
+
+def test_aa_config_and_phase_readers() -> None:
+    aa = ms.load_config(ms.AA_CONFIG_PATH)
+    assert aa["experiment_id"] == "memcredit-study-v1-aa"
+    phases = {p["id"]: p for p in aa["job"]["phases"]}
+    assert driver.phase_readers(phases["fresh"]) == []
+    assert len(driver.phase_readers(phases["judge"])) == 6
+    main = ms.load_config()
+    main_phases = {p["id"]: p for p in main["job"]["phases"]}
+    assert driver.phase_readers(main_phases["judge"]) == ["reader-gpu0"]
+    assert driver.phase_readers(main_phases["extra"]) == ["reader-gpu0"]
+    worker = driver.worker_spec(aa, "rd-eager-gpu1")
+    assert driver.engine_kwargs(aa["reader"], 42, worker["enforce_eager"])["enforce_eager"]
+    assert "enforce_eager" not in driver.engine_kwargs(aa["reader"], 42)
+
+
+def test_aa_config_refuses_bad_cache_source(tmp_path: Path) -> None:
+    text = ms.AA_CONFIG_PATH.read_text().replace("cache_from: rd-fresh-gpu0",
+                                                 "cache_from: rd-later")  # fmt: skip
+    bad = tmp_path / "aa.yaml"
+    bad.write_text(text)
+    with pytest.raises(ms.StudyError):
+        ms.load_config(bad)
+
+
+def test_copy_cache_and_union_judge_items(tmp_path: Path, artifact: dict, config: dict) -> None:
+    (tmp_path / "cache" / "a" / "triton").mkdir(parents=True)
+    (tmp_path / "cache" / "a" / "triton" / "k.bin").write_bytes(b"x" * 10)
+    (tmp_path / "cache" / "a" / "rpc").mkdir()
+    (tmp_path / "cache" / "a" / "rpc" / "sock").write_bytes(b"s")
+    info = driver.copy_cache(tmp_path, "a", "b")
+    assert info["files"] == 1 and (tmp_path / "cache" / "b" / "triton" / "k.bin").is_file()
+    assert not (tmp_path / "cache" / "b" / "rpc").exists()
+    with pytest.raises(ms.StudyError):
+        driver.copy_cache(tmp_path, "a", "b")
+    requests = ms.request_table(artifact, config["pools"]["arms"])
+    _save(tmp_path, "r1", ["blue." if r["index"] % 3 else "no idea" for r in requests])
+    _save(tmp_path, "r2", ["blue." if r["index"] % 3 else "other" for r in requests])
+    items = driver.write_judge_items(config, artifact, tmp_path, ["r1", "r2"])
+    reader = {(i["question_index"], i["response"]) for i in items if i["source"] == "reader"}
+    n = len(artifact["questions"])
+    assert len(reader) == 3 * n
+    assert json.loads((tmp_path / "judge-items.json").read_text()) == items
+
+
+def test_aa_report_counts_utility_flips(tmp_path: Path, artifact: dict, config: dict) -> None:
+    requests = ms.request_table(artifact, config["pools"]["arms"])
+    a = ["blue." if r["index"] % 2 else "I don't know." for r in requests]
+    b = list(a)
+    b[1] = "I don't know."  # one reply differs and flips its utility
+    b[3] = "blue!!"  # one differs without a utility flip
+    run = tmp_path / "run"
+    _save(run, "ra", a)
+    _save(run, "rb", b)
+    items = driver.write_judge_items(config, artifact, run, ["ra", "rb"])
+    _save(run, analysis.JUDGE, ["yes" if "blue" in i["response"] else "no" for i in items])
+    report = analysis.aa_report({"x": run}, [("x:ra", "x:rb")], config, artifact)
+    pair = report["pairs"][0]
+    assert pair["n_common"] == len(requests) and pair["differing_total"] == 2
+    assert pair["utility_flips"] == 1 and pair["utility_covered"] == len(requests)
+    assert pair["pools_with_a_utility_flip"] == 1

@@ -28,6 +28,7 @@ import contextlib
 import gzip
 import json
 import os
+import shutil
 import signal
 import subprocess
 import sys
@@ -84,10 +85,11 @@ def model_spec(config: dict[str, Any], worker: dict[str, Any]) -> dict[str, Any]
     raise ms.StudyError(f"{worker['id']} has no vLLM model")
 
 
-def engine_kwargs(spec: dict[str, Any], seed: int) -> dict[str, Any]:
+def engine_kwargs(spec: dict[str, Any], seed: int, enforce_eager: bool = False) -> dict[str, Any]:
     model_dir = MODEL_ROOT / spec["model_id"]
     engine = spec["engine"]
-    return {
+    extra = {"enforce_eager": True} if enforce_eager else {}
+    return extra | {
         "model": str(model_dir),
         "tokenizer": str(model_dir),
         "trust_remote_code": False,
@@ -155,14 +157,32 @@ def completed_replies(passed: dict[str, Any]) -> dict[int, str]:
 
 
 def write_judge_items(
-    config: dict[str, Any], artifact: dict[str, Any], out: Path
+    config: dict[str, Any], artifact: dict[str, Any], out: Path, readers: list[str]
 ) -> list[dict[str, Any]]:
-    reader = load_pass(out / "sessions" / "reader-gpu0", "all")
+    """Every distinct (question, reply) of the listed readers' passes, then the validation."""
+
     requests = ms.request_table(artifact, config["pools"]["arms"])
+    n = len(requests)
+    replies: dict[int, str] = {}
+    extended: list[dict[str, Any]] = []
+    for k, reader in enumerate(readers):
+        passed = load_pass(out / "sessions" / reader, "all")
+        for index, text in completed_replies(passed).items():
+            replies[k * n + index] = text
+        extended += [dict(r, index=k * n + r["index"]) for r in requests]
     validation = ms.validation_items(artifact, config["judge"]["validation"])
-    items = ms.judge_item_table(artifact, completed_replies(reader), requests, validation)
+    items = ms.judge_item_table(artifact, replies, extended, validation)
     lane.write_json(out / "judge-items.json", items)
     return items
+
+
+def phase_readers(phase: dict[str, Any]) -> list[str]:
+    """The reader passes a phase needs: its judge items' sources, or the GPU-0 reader."""
+
+    kinds = {w["kind"] for w in phase["workers"]}
+    if kinds == {"reader"}:
+        return []
+    return list(phase.get("judge_items_from", ["reader-gpu0"]))
 
 
 # --------------------------------------------------------------------------- vLLM workers
@@ -187,7 +207,7 @@ def vllm_worker(args: argparse.Namespace, worker: dict[str, Any]) -> int:
     from vllm import LLM, SamplingParams
     from vllm.inputs import TokensPrompt
 
-    config = ms.load_config()
+    config = ms.load_config(Path(args.config))
     artifact = load_artifact(Path(args.evidence), args.expected_evidence_sha256)
     out = Path(args.output_dir) / "sessions" / worker["id"]
     out.mkdir(parents=True, exist_ok=True)
@@ -217,7 +237,7 @@ def vllm_worker(args: argparse.Namespace, worker: dict[str, Any]) -> int:
     prompt_ids = [s0.render_prompt_ids(tokenizer, m, thinking) for m in messages]
     prompt_lens = [len(p) for p in prompt_ids]
     end_of_turn = tokenizer.convert_tokens_to_ids(s0.END_OF_TURN)
-    kwargs = engine_kwargs(spec, int(config["seeds"][0]))
+    kwargs = engine_kwargs(spec, int(config["seeds"][0]), bool(worker.get("enforce_eager")))
     log("engine-start", engine_kwargs=kwargs, gpu=gpu_identity(),
         env_batch_invariant=os.environ.get("VLLM_BATCH_INVARIANT"),
         vllm_envs_batch_invariant=bool(vllm_envs.VLLM_BATCH_INVARIANT),
@@ -237,6 +257,10 @@ def vllm_worker(args: argparse.Namespace, worker: dict[str, Any]) -> int:
     base = sampling_kwargs(sampling)
     order = order_indices(len(prompt_ids), worker.get("order", "canonical"),
                           int(config["job"]["shuffle_seed"]))  # fmt: skip
+    if worker["kind"] == "reader" and worker.get("questions") is not None:
+        keep = {r["index"] for r in ms.request_table(artifact, config["pools"]["arms"])
+                if r["question_index"] < int(worker["questions"])}  # fmt: skip
+        order = [i for i in order if i in keep]
     plan = [("smoke", order[:SMOKE_REQUESTS], True), ("all", order, False)]
     passes: list[dict[str, Any]] = []
     code = 0
@@ -402,7 +426,7 @@ def load_hf_model(model_id: str, dtype_name: str, device: str, model_root: Path 
 def attention_worker(args: argparse.Namespace, worker: dict[str, Any]) -> int:
     import numpy as np
 
-    config = ms.load_config()
+    config = ms.load_config(Path(args.config))
     artifact = load_artifact(Path(args.evidence), args.expected_evidence_sha256)
     out = Path(args.output_dir) / "sessions" / worker["id"]
     out.mkdir(parents=True, exist_ok=True)
@@ -471,7 +495,7 @@ def attention_worker(args: argparse.Namespace, worker: dict[str, Any]) -> int:
 
 
 def worker_main(args: argparse.Namespace) -> int:
-    config = ms.load_config()
+    config = ms.load_config(Path(args.config))
     worker = worker_spec(config, args.worker)
     if worker["kind"] == "attention":
         return attention_worker(args, worker)
@@ -479,6 +503,19 @@ def worker_main(args: argparse.Namespace) -> int:
 
 
 # --------------------------------------------------------------------------- driver
+
+
+def copy_cache(out: Path, source: str, target: str) -> dict[str, Any]:
+    """Copy one worker's compile caches (vLLM, inductor, Triton, CUDA, FlashInfer) to another
+    worker's cache root before it starts, so both run the same compiled kernels."""
+
+    src = out / "cache" / source
+    dst = out / "cache" / target
+    if dst.exists():
+        raise ms.StudyError(f"{target}: cache directory exists already")
+    shutil.copytree(src, dst, ignore=shutil.ignore_patterns("rpc", "tmp"), symlinks=True)
+    files = [p for p in dst.rglob("*") if p.is_file()]
+    return {"from": source, "files": len(files), "bytes": sum(p.stat().st_size for p in files)}
 
 
 def worker_env(base: dict[str, str], out: Path, worker: dict[str, Any]) -> dict[str, str]:
@@ -520,9 +557,12 @@ def run_phase(
     handles = []
     for worker in phase["workers"]:
         argv = [sys.executable, str(Path(__file__).resolve()), "worker", "--worker",
-                worker["id"], "--output-dir", str(out), "--deadline", f"{stop_at:.3f}",
-                "--evidence", args.evidence, "--expected-evidence-sha256",
+                worker["id"], "--config", args.config, "--output-dir", str(out), "--deadline",
+                f"{stop_at:.3f}", "--evidence", args.evidence, "--expected-evidence-sha256",
                 args.expected_evidence_sha256]  # fmt: skip
+        copied = None
+        if worker.get("cache_from"):
+            copied = copy_cache(out, worker["cache_from"], worker["id"])
         env = worker_env(dict(os.environ), out, worker)
         handle = (out / f"worker-{worker['id']}.log").open("w", encoding="utf-8")
         handles.append(handle)
@@ -530,7 +570,7 @@ def run_phase(
             argv, env=env, stdout=handle, stderr=subprocess.STDOUT, start_new_session=True
         )
         records[worker["id"]] = {"argv": argv, "gpu": worker["gpu"], "started_at": lane.utc_now(),
-                                 "t0": time.time()}  # fmt: skip
+                                 "t0": time.time(), "cache_copied": copied}  # fmt: skip
     state["children"] = list(children.values())
     done_seen: dict[str, float] = {}
     while any(c.poll() is None for c in children.values()):
@@ -586,7 +626,7 @@ def identity_summary(out: Path, a: str, b: str) -> dict[str, Any]:
 
 
 def run_main(args: argparse.Namespace) -> int:
-    config = ms.load_config()
+    config = ms.load_config(Path(args.config))
     if list(args.seeds) != config["seeds"]:
         raise ms.StudyError("--seeds must equal the config's declared seeds")
     artifact = load_artifact(Path(args.evidence), args.expected_evidence_sha256)
@@ -641,24 +681,22 @@ def run_main(args: argparse.Namespace) -> int:
         remaining = stop_at - time.time()
         record: dict[str, Any] = {}
         summary["phases"][phase["id"]] = record
-        reader_ok = (
-            summary["phases"]
-            .get("reader", {})
-            .get("workers", {})
-            .get("reader-gpu0", {})
-            .get("status")
-            == "complete"
-        )
+        done = {
+            wid: w.get("status")
+            for p in summary["phases"].values()
+            for wid, w in p.get("workers", {}).items()
+        }
+        needed = phase_readers(phase)
         if state["signal"] or remaining < float(phase["min_start_s"]):
             record["status"] = "skipped"
             record["reason"] = state["signal"] or f"remaining {remaining:.0f} s"
             continue
-        if phase["id"] != "reader" and not reader_ok:
+        if any(done.get(r) != "complete" for r in needed):
             record["status"] = "skipped"
-            record["reason"] = "the GPU-0 reader pass is not complete"
+            record["reason"] = f"a reader pass it needs is not complete: {needed}"
             continue
-        if phase["id"] == "judge":
-            items = write_judge_items(config, artifact, out)
+        if any(w["kind"] == "judge" for w in phase["workers"]):
+            items = write_judge_items(config, artifact, out, needed)
             summary["judge_items"] = {
                 "total": len(items),
                 "reader": sum(1 for i in items if i["source"] == "reader"),
@@ -675,10 +713,15 @@ def run_main(args: argparse.Namespace) -> int:
     if sampler is not None:
         with contextlib.suppress(ProcessLookupError):
             os.killpg(sampler.pid, signal.SIGTERM)
-    summary["identity"] = {
-        "reader_cross_gpu": identity_summary(out, "reader-gpu0", "reader-gpu1"),
-        "judge_cross_gpu": identity_summary(out, "judge32-gpu0", "judge32-gpu1"),
-    }
+    summary["identity"] = {}
+    for kind in ("reader", "judge"):
+        ids = [w["id"] for p in config["job"]["phases"] for w in p["workers"] if w["kind"] == kind]
+        for i, a in enumerate(ids):
+            for b in ids[i + 1 :]:
+                if kind == "judge" and model_spec(config, worker_spec(config, a)) is not \
+                        model_spec(config, worker_spec(config, b)):  # fmt: skip
+                    continue
+                summary["identity"][f"{a}|{b}"] = identity_summary(out, a, b)
     summary["finished_at"] = lane.utc_now()
     summary["signal"] = state["signal"]
     lane.write_json(out / "summary.json", summary)
@@ -717,7 +760,7 @@ def build_plan(config: dict[str, Any], artifact: dict[str, Any]) -> dict[str, An
 def selftest_main(args: argparse.Namespace) -> int:
     from transformers import AutoTokenizer
 
-    config = ms.load_config()
+    config = ms.load_config(Path(args.config))
     artifact = load_artifact(Path(args.evidence), args.expected_evidence_sha256)
     root = Path(args.model_root)
     report: dict[str, Any] = {"plan": build_plan(config, artifact)}
@@ -818,9 +861,11 @@ def main() -> int:
     worker.add_argument("--deadline", type=float, required=True)
     worker.add_argument("--evidence", required=True)
     worker.add_argument("--expected-evidence-sha256", required=True)
+    for sp in sub.choices.values():
+        sp.add_argument("--config", default=str(ms.CONFIG_PATH))
     args = parser.parse_args()
     if args.command == "plan":
-        config = ms.load_config()
+        config = ms.load_config(Path(args.config))
         print(json.dumps(build_plan(config, load_artifact(Path(args.evidence), None)), indent=2))
         return 0
     if args.command == "selftest":

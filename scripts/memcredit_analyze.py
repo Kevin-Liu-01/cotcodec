@@ -1145,6 +1145,95 @@ def power(analysis_dir: Path, config: dict[str, Any], heldout: int) -> dict[str,
     return result
 
 
+# --------------------------------------------------------------------------- A/A diagnostic
+
+
+def judged_labels(runs: dict[str, Path]) -> dict[tuple[int, str], set[int]]:
+    """(question index, stripped reply) -> the primary judge's labels over every run's items."""
+
+    labels: dict[tuple[int, str], set[int]] = defaultdict(set)
+    for run_dir in runs.values():
+        path = run_dir / "judge-items.json"
+        if not path.is_file():
+            continue
+        items = json.loads(path.read_text(encoding="utf-8"))
+        primary = labels_from_pass(load_pass(run_dir, JUDGE))
+        for item in items:
+            if item["source"] == "reader" and item["index"] in primary:
+                labels[(item["question_index"], item["response"])].add(
+                    primary[item["index"]]["label"]
+                )
+    return labels
+
+
+def aa_pair(
+    runs: dict[str, Path],
+    a: str,
+    b: str,
+    labels: dict[tuple[int, str], set[int]],
+    requests: list[dict[str, Any]],
+) -> dict[str, Any]:
+    import memcredit_step0 as s0
+
+    (run_a, worker_a), (run_b, worker_b) = a.split(":", 1), b.split(":", 1)
+    pa, pb = load_pass(runs[run_a], worker_a), load_pass(runs[run_b], worker_b)
+    if pa is None or pb is None:
+        return {"a": a, "b": b, "missing": True}
+    common = sorted(set(pa["rows"]) & set(pb["rows"]))
+    sub_a = {"rows": {i: pa["rows"][i] for i in common}}
+    sub_b = {"rows": {i: pb["rows"][i] for i in common}}
+    result = s0.compare(sub_a, sub_b, {})
+    result.pop("clusters", None)
+    result.pop("clusters_all_identical", None)
+    result.pop("differing_examples", None)
+    covered = flips = 0
+    pools_flipped: set[tuple[int, str]] = set()
+    pools_seen: set[tuple[int, str]] = set()
+    for i in common:
+        ta, tb = pa["rows"][i]["text"], pb["rows"][i]["text"]
+        if ta is None or tb is None:
+            continue
+        q = requests[i]["question_index"]
+        pools_seen.add((q, requests[i]["arm"]))
+        la, lb = labels.get((q, ta.strip())), labels.get((q, tb.strip()))
+        if not la or not lb or len(la) != 1 or len(lb) != 1:
+            continue
+        covered += 1
+        if la != lb:
+            flips += 1
+            pools_flipped.add((q, requests[i]["arm"]))
+    return {
+        "a": a,
+        "b": b,
+        "gpu_a": gpu_of(runs[run_a], worker_a),
+        "gpu_b": gpu_of(runs[run_b], worker_b),
+        **result,
+        "utility_covered": covered,
+        "utility_flips": flips,
+        "utility_flip_rate": flips / covered if covered else None,
+        "utility_flip_ci95": list(mc.clopper_pearson(flips, covered)) if covered else None,
+        "pools": len(pools_seen),
+        "pools_with_a_utility_flip": len(pools_flipped),
+    }
+
+
+def aa_report(
+    runs: dict[str, Path],
+    pairs: list[tuple[str, str]],
+    config: dict[str, Any],
+    artifact: dict[str, Any],
+) -> dict[str, Any]:
+    requests = ms.request_table(artifact, config["pools"]["arms"])
+    labels = judged_labels(runs)
+    conflicting = sum(1 for v in labels.values() if len(v) > 1)
+    return {
+        "runs": {k: str(v) for k, v in runs.items()},
+        "judged_replies": len(labels),
+        "judged_replies_with_conflicting_labels": conflicting,
+        "pairs": [aa_pair(runs, a, b, labels, requests) for a, b in pairs],
+    }
+
+
 # --------------------------------------------------------------------------- main
 
 
@@ -1161,6 +1250,11 @@ def main() -> int:
     sample_p.add_argument("--run-dir", required=True)
     sample_p.add_argument("--evidence", required=True)
     sample_p.add_argument("--output", required=True)
+    aa_p = sub.add_parser("aa", allow_abbrev=False)
+    aa_p.add_argument("--run", action="append", required=True, help="name=run_dir")
+    aa_p.add_argument("--pair", action="append", required=True, help="run:worker,run:worker")
+    aa_p.add_argument("--evidence", required=True)
+    aa_p.add_argument("--output", required=True)
     power_p = sub.add_parser("power", allow_abbrev=False)
     power_p.add_argument("--analysis-dir", required=True)
     power_p.add_argument("--output", required=True)
@@ -1194,6 +1288,30 @@ def main() -> int:
             raise ms.StudyError(f"refusing to overwrite {out}")
         out.write_text("".join(json.dumps(s, ensure_ascii=False) + "\n" for s in sample))
         print(json.dumps({"items": len(sample)}))
+        return 0
+    if args.command == "aa":
+        artifact = load_artifact(Path(args.evidence))
+        runs = dict(item.split("=", 1) for item in args.run)
+        pairs = [tuple(p.split(",", 1)) for p in args.pair]
+        report = aa_report({k: Path(v) for k, v in runs.items()}, pairs, config, artifact)
+        Path(args.output).write_bytes(mc.canonical_json(report))
+        for row in report["pairs"]:
+            print(
+                json.dumps(
+                    {
+                        k: row.get(k)
+                        for k in (
+                            "a",
+                            "b",
+                            "n_common",
+                            "identical_tokens",
+                            "identical_tokens_and_logprob_bits",
+                            "utility_covered",
+                            "utility_flips",
+                        )
+                    }
+                )
+            )
         return 0
     split = json.loads((PROJECT_ROOT / config["split"]["path"]).read_text(encoding="utf-8"))
     heldout = args.heldout or int(split["counts"]["heldout"])

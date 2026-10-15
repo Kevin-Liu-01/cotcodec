@@ -34,6 +34,9 @@ from harness import memcredit as mc
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 CONFIG_PATH = PROJECT_ROOT / "experiments" / "am1" / "memcredit-study-v1.yaml"
 EXPERIMENT_ID = "memcredit-study-v1"
+#: Configs that share this module: the development pilot and its cross-GPU A/A diagnostic.
+CONFIG_IDS = (EXPERIMENT_ID, "memcredit-study-v1-aa")
+AA_CONFIG_PATH = PROJECT_ROOT / "experiments" / "am1" / "memcredit-study-v1-aa.yaml"
 REGISTRATION_ID = "am1-memory-credit-v1"
 SPLITS = ("development", "heldout")
 REQUEST_KINDS = ("table", "swap", "reorder")
@@ -48,8 +51,8 @@ class StudyError(ValueError):
 
 def load_config(path: Path = CONFIG_PATH) -> dict[str, Any]:
     config = yaml.safe_load(path.read_text(encoding="utf-8"))
-    if not isinstance(config, dict) or config.get("experiment_id") != EXPERIMENT_ID:
-        raise StudyError(f"not the {EXPERIMENT_ID} config")
+    if not isinstance(config, dict) or config.get("experiment_id") not in CONFIG_IDS:
+        raise StudyError(f"not a {EXPERIMENT_ID} config")
     if config.get("claim_level") != "exploratory":
         raise StudyError("the development pilot is exploratory only")
     seeds = config.get("seeds")
@@ -92,7 +95,16 @@ def load_config(path: Path = CONFIG_PATH) -> dict[str, Any]:
         gpus = [w["gpu"] for w in phase["workers"]]
         if len(set(gpus)) != len(gpus):
             raise StudyError(f"phase {phase['id']}: two workers on one GPU")
+        for source in phase.get("judge_items_from", []):
+            if source not in worker_ids:
+                raise StudyError(f"phase {phase['id']}: judge items from an unknown reader")
         for worker in phase["workers"]:
+            if worker.get("cache_from") is not None and worker["cache_from"] not in worker_ids:
+                raise StudyError(f"{worker['id']}: cache_from names no earlier worker")
+            if worker.get("questions") is not None and int(worker["questions"]) < 1:
+                raise StudyError(f"{worker['id']}: questions must be positive")
+            if not isinstance(worker.get("enforce_eager", False), bool):
+                raise StudyError(f"{worker['id']}: enforce_eager must be a boolean")
             worker_ids.append(worker["id"])
             if worker["kind"] not in ("reader", "judge", "attention"):
                 raise StudyError(f"{worker['id']}: unknown worker kind")
