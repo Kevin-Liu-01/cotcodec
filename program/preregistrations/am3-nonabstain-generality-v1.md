@@ -1,9 +1,9 @@
 # am3-nonabstain-generality-v1: does the non-abstention keep rule hold for other readers on held-out questions, and what does it cost on questions that have no answer? (LongMemEval-S, GPU)
 
-**Status: DRAFT, not frozen.** Drafted on branch `stage0/am3-nonabstain-generality` from `main`
-at `957a3c0a`, as decision D118 specifies (`program/decisions.md`). The orchestrator freezes it
-with `scripts/preregister.py` after two independent pre-freeze checks (D118) and the checklist of
-section 17. A material change after the freeze is a new experiment id.
+**Status: frozen in `program/preregistrations/ledger.jsonl`; see the ledger row for the freeze time and `git_head_at_freeze`.** Drafted on branch `stage0/am3-nonabstain-generality` from `main`
+at `957a3c0a`, as decision D118 specifies (`program/decisions.md`). The orchestrator froze it
+with `scripts/preregister.py` after three independent pre-freeze checks (D118) and the checklist
+of section 17. A material change after the freeze is a new experiment id.
 
 This registration runs two GPU jobs and one image build, about 0.7 physical GPU-h, capped at 2.08
 (section 11). It tests one rule, already confirmed for one reader and one judge, on two new
