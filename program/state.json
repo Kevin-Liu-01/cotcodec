@@ -468,7 +468,7 @@
     "Gauntleted packages that ended at honest exits and can advance only by your ruling (D24, D70, D76). S2 v3 (65) continues as S2 v4 under your delegation (D80 (iv)); its images are built and its registration is in a repair round before the freeze (D84). C5 Phase 1 (70-97 GPU-h) stays yours; its identification defect stands",
     "Shelved by Kevin (D101), not to be raised unless he asks: the outward items (disclosures, licence requests, host-admin request, publication, the GitHub Support request), key rotation and account items. Drafts are in the private archive."
   ],
-  "gpu_hours_spent_this_program": 28.3228,
+  "gpu_hours_spent_this_program": 32.1615,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -1540,6 +1540,62 @@
       ],
       "outcome": "every step complete (OLMo-2's fallback not needed); no has_answer turn left in the ablated haystacks or pools; switch rate at K = 8 / 70: Qwen3-8B 1 / 2, OLMo-2 6 / 10, Qwen3.5-9B 3 / 3 of 63; switched or answering-top-4 replies correct by chance: 3 of 18 (judge and blind hand labels agree on 18 of 18) (program/evidence/2026-10-16/am5-evidence-ablated/README.md)",
       "basis": "physical (scontrol RunTime 00:06:41 on 1 H100); Slurm limit 20 min (0.34 GPU-h cap); AM5 total 0.1297 of the 0.5 cap; submitted with no other GPU job of this program queued or running and 6 of 8 H100 free (D110's jobs on GPUs 0-1)"
+    },
+    {
+      "experiment": "G3 image builds (EXPLORATORY; g3-state-precision-accuracy-v1): cotcodec-vllm cu129 overlays from the source capsules of c1bd94ef, 4bbf141c (math max_model_len fix), fd4b909b (main phase declared) and 274a2a99 (lme_extra phase)",
+      "gpu_hours": 0.0792,
+      "jobs": [
+        "1489 vLLM overlay build c1bd94ef (1 H100; COMPLETED 0:0, 00:01:06)",
+        "1493 vLLM overlay build 4bbf141c (1 H100; COMPLETED 0:0, 00:01:06)",
+        "1508 vLLM overlay build fd4b909b (1 H100; COMPLETED 0:0, 00:01:05)",
+        "1529 vLLM overlay build 274a2a99 (1 H100; COMPLETED 0:0, 00:01:28)"
+      ],
+      "outcome": "images a00d30fb, 05a6446d, 13cdd466, 03b8bf02, provenance PASS; CPU selftests (no GRES): 1490 failed its fit check on a00d30fb (the longest of the 134 math prompts is 857 tokens, 857 + 32,768 > 33,536), fixed in 4bbf141c; 1494, 1509 and 1531 pass; CPU LongMemEval-S length probe 1488 (G2c image) (program/evidence/2026-10-16/g3-state-precision-accuracy/README.md)",
+      "basis": "physical (scontrol RunTime on 1 H100 each); at submission D110's job held GPU 0, and another registration's job (1507) one more GPU during build 1508"
+    },
+    {
+      "experiment": "G3 sizing pilot (EXPLORATORY; g3-state-precision-accuracy-v1, phase pilot, fp32 state only, not in the analysis): Qwen3.5-4B and 9B, 48 MATH-500 level-5 questions x seeds 42, 43 at 32,768 tokens (thinking), then 12 LongMemEval-S full-haystack questions",
+      "gpu_hours": 0.3506,
+      "jobs": [
+        "1498 4B (1 H100; COMPLETED 0:0, 00:09:48)",
+        "1500 9B (1 H100; COMPLETED 0:0, 00:11:14)"
+      ],
+      "outcome": "math accuracy 0.90 and 0.93, mean per-question p(1-p) 0.042 and 0.031, mean length 13.7K and 12.5K tokens, 7-8% at the cap; long-context prefill 37.9K and 27.7K prompt tok/s; CPU scoring 1501; sized the main run to k = 3 seeds on 134 questions and 100 long-context questions (program/evidence/2026-10-16/g3-state-precision-accuracy/README.md)",
+      "basis": "physical (scontrol RunTime on 1 H100 each); both jobs side by side, GPUs 1-7 otherwise idle"
+    },
+    {
+      "experiment": "G3 main run (EXPLORATORY; g3-state-precision-accuracy-v1, phase main): Qwen3.5-4B and 9B x GDN state fp32 (auto), fp16, bf16, one H100 each, side by side: 134 MATH-500 level-5 questions x seeds 42-44 at 32,768 tokens (thinking, recommended sampling), then 100 LongMemEval-S full-haystack questions (non-thinking) on the 9B",
+      "gpu_hours": 3.12,
+      "jobs": [
+        "1517 9B fp32 (COMPLETED 0:0, 00:33:43)",
+        "1519 9B fp16 (COMPLETED 0:0, 00:34:10)",
+        "1521 9B bf16 (COMPLETED 0:0, 00:37:36)",
+        "1523 4B fp32 (FAILED 3:0 by design after the budget USR1, 00:26:32)",
+        "1525 4B fp16 (FAILED 3:0 by design after the budget USR1, 00:26:32)",
+        "1527 4B bf16 (USR1 after math; lane interval 00:28:37, Slurm record expired, counted as 00:28:39)"
+      ],
+      "outcome": "every math phase complete (402 of 402 per engine, no time cut); math accuracy fp32 / fp16 / bf16: 4B 86.1 / 82.1 / 75.1, 9B 89.6 / 87.6 / 80.3 (paired fp16 - fp32 -4.0 [-7.5, -1.0] and -2.0 [-5.2, +1.2]; bf16 -10.9 and -9.2); the 16-bit states lengthen the reasoning (+930 and +2,900 tokens) and the loss is truncation at 32K; 9B long-context replies 94 (fp16) and 88 (bf16) of 100 token-identical to fp32. The 4B jobs were sent the lane's USR1 after their math phase (projected total 3.97 of 4.0 GPU-h), so their long-context phase ran as lme_extra (program/evidence/2026-10-16/g3-state-precision-accuracy/README.md)",
+      "basis": "physical (scontrol RunTime on 1 H100 each; 1527 from the lane interval); six jobs side by side on GPUs 1-6, D110's job on GPU 0"
+    },
+    {
+      "experiment": "G3 lme_extra (EXPLORATORY; g3-state-precision-accuracy-v1, phase lme_extra): the 4B's long-context arms (fp32, fp16, bf16) on the first 50 of the main run's 100 LongMemEval-S questions, one H100 each",
+      "gpu_hours": 0.2417,
+      "jobs": [
+        "1536 4B fp32 (COMPLETED 0:0, 00:04:51)",
+        "1538 4B fp16 (COMPLETED 0:0, 00:04:51)",
+        "1540 4B bf16 (COMPLETED 0:0, 00:04:48)"
+      ],
+      "outcome": "50 of 50 per arm; replies 47 (fp16) and 48 (bf16) of 50 token-identical to fp32; containment 40 / 40 / 40 (program/evidence/2026-10-16/g3-state-precision-accuracy/README.md)",
+      "basis": "physical (scontrol RunTime on 1 H100 each); three jobs side by side"
+    },
+    {
+      "experiment": "G3 judge (EXPLORATORY; g3-state-precision-accuracy-v1): AM1's primary judge (Qwen3-32B, LongMemEval answer-check prompt, greedy, thinking off) on the 158 distinct long-context replies and 200 validation items",
+      "gpu_hours": 0.0472,
+      "jobs": [
+        "1546 judge (1 H100; COMPLETED 0:0, 00:02:50)"
+      ],
+      "outcome": "358 of 358 labelled, 0 malformed; validation 194 of 200 (reference answers 94 of 100 yes, \"I don't know.\" 100 of 100 no); judge accuracy fp32 / fp16 / bf16: 9B 60 / 61 / 61, 4B 52 / 52 / 54; G3 total 3.8387 of the 4.0 cap; CPU analysis 1547 (program/evidence/2026-10-16/g3-state-precision-accuracy/README.md)",
+      "basis": "physical (scontrol RunTime 00:02:50 on 1 H100)"
     }
   ],
   "results": [

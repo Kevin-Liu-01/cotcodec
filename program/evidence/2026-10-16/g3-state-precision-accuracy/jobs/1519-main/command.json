@@ -1,0 +1,21 @@
+[
+  "python",
+  "scripts/run_g3_accuracy.py",
+  "run",
+  "--phase",
+  "main",
+  "--model",
+  "qwen3.5-9b",
+  "--arm",
+  "fp16",
+  "--seeds",
+  "42",
+  "43",
+  "44",
+  "--output-dir",
+  "/outputs/g3",
+  "--allocation-minutes",
+  "55",
+  "--longmemeval-path",
+  "/inputs/longmemeval_s_cleaned.json"
+]

@@ -1,0 +1,63 @@
+{
+  "batch_script_sha256": "2a10c9c72c22ab6dd5135061ff1b9b50977a468687180353d8cd7273acbaf1ec",
+  "command": [
+    "python",
+    "scripts/run_g3_accuracy.py",
+    "run",
+    "--phase",
+    "main",
+    "--model",
+    "qwen3.5-9b",
+    "--arm",
+    "fp32",
+    "--seeds",
+    "42",
+    "43",
+    "44",
+    "--output-dir",
+    "/outputs/g3",
+    "--allocation-minutes",
+    "55",
+    "--longmemeval-path",
+    "/inputs/longmemeval_s_cleaned.json"
+  ],
+  "container_profile": "vllm",
+  "cpus": 16,
+  "git_sha": "fd4b909b313fe4d1ae7525ecc181c4c6d12e1299",
+  "gpu_type": "h100",
+  "gpus": 1,
+  "image_id": "sha256:13cdd4664e5015fdfd74de5fb37cdf41556f9eb254b0d73afc114301b7534cf7",
+  "max_gpu_hours": 0.9167,
+  "memory_gb": 128,
+  "minutes": 55,
+  "model": {
+    "artifact_root_sha256": "9845026dbe255e24b105224eebbb5436d315713b9a5c53c434137896b160c5b1",
+    "cache_host_path": "/home/kevin/cotcodec-runs/hf-cache",
+    "model_id": "qwen3.5-9b",
+    "receipt_sha256": "0a9e052d561b017c505adf5a1c6fcdc048522660a0db134486b84edbf3de5cb3",
+    "revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a"
+  },
+  "name": "g3-main-q35-9b-fp32",
+  "public_benchmark": {
+    "container_path": "/inputs/longmemeval_s_cleaned.json",
+    "host_path": "/home/kevin/cotcodec-runs/inputs/longmemeval/98d7416c24c778c2fee6e6f3006e7a073259d48f/longmemeval_s_cleaned.json",
+    "license": "MIT",
+    "revision": "98d7416c24c778c2fee6e6f3006e7a073259d48f",
+    "sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+    "size_bytes": 277383467,
+    "source_id": "longmemeval-s-cleaned"
+  },
+  "randomness_contract": "assignment-seed-matrix",
+  "run_root": "/home/kevin/cotcodec-runs/stage0/g3-state-precision-accuracy/runs/main",
+  "runtime": "docker-single-node-discovery-v1",
+  "schema_version": 1,
+  "seed_binding": {
+    "flag": "--seeds"
+  },
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "source_sha256": "0d680d18afe8ff7e1091b58411678f9c7140d2e8b7fcd11bb050a15c1d09ceb3"
+}

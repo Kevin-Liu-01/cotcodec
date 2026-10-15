@@ -1,0 +1,160 @@
+{
+  "models": {
+    "qwen3.5-4b": {
+      "lme": {
+        "cap_hit": 0.0,
+        "contains_answer": 0.4166666666666667,
+        "len_mean": 19.583333333333332,
+        "prompt_len_mean": 109189.25,
+        "requests": 12,
+        "says_idk": 0.3333333333333333
+      },
+      "math": {
+        "accuracy": 0.8958333333333334,
+        "accuracy_g2b": 0.7916666666666666,
+        "cap_hit": 0.08333333333333333,
+        "half_width_134": {
+          "2": 0.03456193517707132,
+          "3": 0.02821970190232443,
+          "4": 0.024438978734637004,
+          "5": 0.021858887100528055,
+          "6": 0.01995434257819652,
+          "8": 0.01728096758853566
+        },
+        "len_mean": 13680.21875,
+        "len_median": 12005.5,
+        "len_p90": 29194.0,
+        "rollouts": 96,
+        "time_cut": 0.0,
+        "tokens": 1313301,
+        "variance": {
+          "mean_p_one_minus_p": 0.041666666666666664,
+          "questions": 48
+        }
+      }
+    },
+    "qwen3.5-9b": {
+      "lme": {
+        "cap_hit": 0.0,
+        "contains_answer": 0.3333333333333333,
+        "len_mean": 18.166666666666668,
+        "prompt_len_mean": 109189.25,
+        "requests": 12,
+        "says_idk": 0.08333333333333333
+      },
+      "math": {
+        "accuracy": 0.9270833333333334,
+        "accuracy_g2b": 0.8333333333333334,
+        "cap_hit": 0.07291666666666667,
+        "half_width_134": {
+          "2": 0.029931513867294778,
+          "3": 0.024438978734637004,
+          "4": 0.021164776426743324,
+          "5": 0.018930351527513267,
+          "6": 0.01728096758853566,
+          "8": 0.014965756933647389
+        },
+        "len_mean": 12542.3125,
+        "len_median": 10900.5,
+        "len_p90": 24623.5,
+        "rollouts": 96,
+        "time_cut": 0.0,
+        "tokens": 1204062,
+        "variance": {
+          "mean_p_one_minus_p": 0.03125,
+          "questions": 48
+        }
+      }
+    }
+  },
+  "throughput": [
+    {
+      "aborted": 0,
+      "arm": "fp32",
+      "block_size": 528,
+      "finished": 12,
+      "init_s": 56.8,
+      "mamba_ssm_cache_dtype": "float32",
+      "mean_running": 2.185185185185185,
+      "model": "qwen3.5-4b",
+      "num_gpu_blocks": 3733,
+      "output_tok_per_s": 6.7903374942209895,
+      "output_tokens": 235,
+      "peak_kv_usage": 0.22829581993569137,
+      "peak_running": 5.0,
+      "phase": "pilot",
+      "preemptions": 0.0,
+      "prompt_tok_per_s": 37860.35020804439,
+      "prompt_tokens": 1310271,
+      "requests": 12,
+      "task": "lme",
+      "wall_s": 34.608
+    },
+    {
+      "aborted": 0,
+      "arm": "fp32",
+      "block_size": 528,
+      "finished": 96,
+      "init_s": 74.4,
+      "mamba_ssm_cache_dtype": "float32",
+      "mean_running": 42.33706293706294,
+      "model": "qwen3.5-4b",
+      "num_gpu_blocks": 3733,
+      "output_tok_per_s": 3442.7643806672663,
+      "output_tokens": 1313301,
+      "peak_kv_usage": 0.3478027867095391,
+      "peak_running": 96.0,
+      "phase": "pilot",
+      "preemptions": 0.0,
+      "prompt_tok_per_s": 30.06288879509892,
+      "prompt_tokens": 11468,
+      "requests": 96,
+      "task": "math",
+      "wall_s": 381.467
+    },
+    {
+      "aborted": 0,
+      "arm": "fp32",
+      "block_size": 528,
+      "finished": 12,
+      "init_s": 60.0,
+      "mamba_ssm_cache_dtype": "float32",
+      "mean_running": 2.1216216216216215,
+      "model": "qwen3.5-9b",
+      "num_gpu_blocks": 3137,
+      "output_tok_per_s": 4.611414308076321,
+      "output_tokens": 218,
+      "peak_kv_usage": 0.19260204081632648,
+      "peak_running": 3.0,
+      "phase": "pilot",
+      "preemptions": 0.0,
+      "prompt_tok_per_s": 27716.52493971316,
+      "prompt_tokens": 1310271,
+      "requests": 12,
+      "task": "lme",
+      "wall_s": 47.274
+    },
+    {
+      "aborted": 0,
+      "arm": "fp32",
+      "block_size": 528,
+      "finished": 96,
+      "init_s": 77.2,
+      "mamba_ssm_cache_dtype": "float32",
+      "mean_running": 39.480722891566266,
+      "model": "qwen3.5-9b",
+      "num_gpu_blocks": 3137,
+      "output_tok_per_s": 2733.1440206473403,
+      "output_tokens": 1204062,
+      "peak_kv_usage": 0.389030612244898,
+      "peak_running": 96.0,
+      "phase": "pilot",
+      "preemptions": 0.0,
+      "prompt_tok_per_s": 26.031629292165768,
+      "prompt_tokens": 11468,
+      "requests": 96,
+      "task": "math",
+      "wall_s": 440.541
+    }
+  ]
+}

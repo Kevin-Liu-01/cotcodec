@@ -1,0 +1,13 @@
+[
+  "python",
+  "scripts/run_g3_accuracy.py",
+  "judge",
+  "--evidence",
+  "/inputs/study-artifact.json",
+  "--expected-evidence-sha256",
+  "0ba91de75ccb10bf7127fa97e2984f4823e2653119aef8088ed779a53e39a63c",
+  "--output-dir",
+  "/outputs/g3judge",
+  "--allocation-minutes",
+  "15"
+]

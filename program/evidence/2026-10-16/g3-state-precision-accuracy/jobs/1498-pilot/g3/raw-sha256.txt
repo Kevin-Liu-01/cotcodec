@@ -1,0 +1,4 @@
+64691e476baaca825b362660d9471e517c6ca5f7a3fd0ca531f6db3f7d891663  ./qwen3.5-4b-fp32-lme/texts.jsonl.gz
+d104048a78c040fb7b5e6ba8518385ca20331b414a43ac7b51e980ce221f89c2  ./qwen3.5-4b-fp32-lme/tokens.npz
+54ae753b8d0a869575df6e08290dbf4988a60936641ecc59a425e3cf7082c99e  ./qwen3.5-4b-fp32-math/texts.jsonl.gz
+f8b160f729fc500a9b759c269ea9d6db12fd314b46263cfb3d2390b57fa117cc  ./qwen3.5-4b-fp32-math/tokens.npz
