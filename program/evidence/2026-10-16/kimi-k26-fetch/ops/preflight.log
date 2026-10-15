@@ -1,0 +1,16 @@
+== fetch 2baacac2 at 2026-10-15T18:47:46Z
+-- squeue
+1451 transcreate-lama PENDING 0:00 gres:gpu:h100:1
+1450 transcreate-lama RUNNING 16:43:00 gres:gpu:h100:1
+1517 g3-main-q35-9b-fp32 RUNNING 7:23 gres:gpu:h100:1
+1519 g3-main-q35-9b-fp16 RUNNING 7:23 gres:gpu:h100:1
+1521 g3-main-q35-9b-bf16 RUNNING 7:20 gres:gpu:h100:1
+1523 g3-main-q35-4b-fp32 RUNNING 7:20 gres:gpu:h100:1
+1525 g3-main-q35-4b-fp16 RUNNING 7:20 gres:gpu:h100:1
+1527 g3-main-q35-4b-bf16 RUNNING 7:20 gres:gpu:h100:1
+-- slurm gres
+   Gres=gpu:h100:8
+   GresUsed=gpu:h100:7(IDX:0-6)
+-- disk (model cache)
+21050762981376 23443440275456
+no Hugging Face token in the environment or the known token files; 21050 GB free

@@ -1014,3 +1014,141 @@ models:
       vLLM 0.31.0 through the Transformers modeling backend (vllm/model_executor/models/
       registry.py at v0.31.0, _TRANSFORMERS_SUPPORTED_MODELS); no remote code. Context
       4,096 tokens.
+  kimi-k2.6:
+    backend: huggingface
+    repo_id: moonshotai/Kimi-K2.6
+    revision: 7eb5002f6aadc958aed6a9177b7ed26bb94011bb
+    runtime: vllm-sglang-remote-code
+    architecture_family: deepseek-v3-mla-moe-int4-vlm
+    license: other
+    license_note: >-
+      LICENSE is a Modified MIT License (Moonshot AI, 2026): the MIT grant plus one clause that a
+      commercial product or service above 100 million monthly active users or 20 million US dollars
+      in monthly revenue must prominently display "Kimi K2.6" in its user interface.
+      THIRD_PARTY_NOTICES.md says configuration_deepseek.py and modeling_deepseek.py are copied from
+      DeepSeek-V3 under MIT. The Hub API reports gated false and licence tag other (modified-mit);
+      no acceptance or credential was required to access it.
+    access: public
+    trust_remote_code: true
+    publication_eligible: false
+    roles:
+    - large-moe-compression-reference
+    metadata_files:
+    - LICENSE
+    - README.md
+    - THIRD_PARTY_NOTICES.md
+    - chat_template.jinja
+    - config.json
+    - configuration_deepseek.py
+    - configuration_kimi_k25.py
+    - docs/deploy_guidance.md
+    - generation_config.json
+    - kimi_k25_processor.py
+    - kimi_k25_vision_processing.py
+    - media_utils.py
+    - modeling_deepseek.py
+    - modeling_kimi_k25.py
+    - preprocessor_config.json
+    - tokenization_kimi.py
+    - tokenizer_config.json
+    - tool_declaration_ts.py
+    required_files:
+    - LICENSE
+    - THIRD_PARTY_NOTICES.md
+    - chat_template.jinja
+    - config.json
+    - configuration_deepseek.py
+    - configuration_kimi_k25.py
+    - generation_config.json
+    - kimi_k25_processor.py
+    - kimi_k25_vision_processing.py
+    - media_utils.py
+    - modeling_deepseek.py
+    - modeling_kimi_k25.py
+    - preprocessor_config.json
+    - tiktoken.model
+    - tokenization_kimi.py
+    - tokenizer_config.json
+    - tool_declaration_ts.py
+    - model.safetensors.index.json
+    - model-00001-of-000064.safetensors
+    - model-00002-of-000064.safetensors
+    - model-00003-of-000064.safetensors
+    - model-00004-of-000064.safetensors
+    - model-00005-of-000064.safetensors
+    - model-00006-of-000064.safetensors
+    - model-00007-of-000064.safetensors
+    - model-00008-of-000064.safetensors
+    - model-00009-of-000064.safetensors
+    - model-00010-of-000064.safetensors
+    - model-00011-of-000064.safetensors
+    - model-00012-of-000064.safetensors
+    - model-00013-of-000064.safetensors
+    - model-00014-of-000064.safetensors
+    - model-00015-of-000064.safetensors
+    - model-00016-of-000064.safetensors
+    - model-00017-of-000064.safetensors
+    - model-00018-of-000064.safetensors
+    - model-00019-of-000064.safetensors
+    - model-00020-of-000064.safetensors
+    - model-00021-of-000064.safetensors
+    - model-00022-of-000064.safetensors
+    - model-00023-of-000064.safetensors
+    - model-00024-of-000064.safetensors
+    - model-00025-of-000064.safetensors
+    - model-00026-of-000064.safetensors
+    - model-00027-of-000064.safetensors
+    - model-00028-of-000064.safetensors
+    - model-00029-of-000064.safetensors
+    - model-00030-of-000064.safetensors
+    - model-00031-of-000064.safetensors
+    - model-00032-of-000064.safetensors
+    - model-00033-of-000064.safetensors
+    - model-00034-of-000064.safetensors
+    - model-00035-of-000064.safetensors
+    - model-00036-of-000064.safetensors
+    - model-00037-of-000064.safetensors
+    - model-00038-of-000064.safetensors
+    - model-00039-of-000064.safetensors
+    - model-00040-of-000064.safetensors
+    - model-00041-of-000064.safetensors
+    - model-00042-of-000064.safetensors
+    - model-00043-of-000064.safetensors
+    - model-00044-of-000064.safetensors
+    - model-00045-of-000064.safetensors
+    - model-00046-of-000064.safetensors
+    - model-00047-of-000064.safetensors
+    - model-00048-of-000064.safetensors
+    - model-00049-of-000064.safetensors
+    - model-00050-of-000064.safetensors
+    - model-00051-of-000064.safetensors
+    - model-00052-of-000064.safetensors
+    - model-00053-of-000064.safetensors
+    - model-00054-of-000064.safetensors
+    - model-00055-of-000064.safetensors
+    - model-00056-of-000064.safetensors
+    - model-00057-of-000064.safetensors
+    - model-00058-of-000064.safetensors
+    - model-00059-of-000064.safetensors
+    - model-00060-of-000064.safetensors
+    - model-00061-of-000064.safetensors
+    - model-00062-of-000064.safetensors
+    - model-00063-of-000064.safetensors
+    - model-00064-of-000064.safetensors
+    source_url: https://huggingface.co/moonshotai/Kimi-K2.6
+    registered_at: '2026-10-15'
+    registered_for: >-
+      Reference checkpoint for the 1T-on-a-normal-computer line (can a ~1T open model be
+      compressed or restructured to run usefully on a 128 GB machine?). Kimi-K2.6 is a
+      DeepSeek-V3-style MLA MoE text model (61 layers, 384 routed experts, 8 active, 1 shared;
+      README: 1T total, 32B activated) with a 400M MoonViT vision encoder. Routed-expert weights
+      are native INT4 (compressed-tensors pack-quantized, symmetric, group size 32); attention,
+      shared experts, dense MLP, lm_head and vision stay BF16. 595,204,999,341 bytes in 96 files
+      at this revision (64 safetensors shards). Fetched under D1 by the GPU-less fetch lane;
+      the receipt is in program/evidence/2026-10-16/kimi-k26-fetch/models/.
+    blocker: >-
+      Remote code (configuration_*, modeling_*, kimi_k25_processor, kimi_k25_vision_processing,
+      media_utils, tokenization_kimi, tool_declaration_ts) is third-party code: read and hash it
+      before any execution, and run it only in a container with no network. Its 595 GB of
+      weights exceed seven H100s (560 GB), so a GPU-resident load needs all eight, and GPU 0 is
+      held by another project until 2026-10-21; any GPU run needs its own approval.

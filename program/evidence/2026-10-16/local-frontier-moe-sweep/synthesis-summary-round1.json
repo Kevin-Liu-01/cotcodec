@@ -1,0 +1,84 @@
+{
+ "dossier_path": "/Users/kevinliu/repos/cotcodec-wt-localmoe/program/evidence/2026-10-16/local-frontier-moe-sweep/DOSSIER.md",
+ "short_answer": "No, not with usable quality and speed today. Kimi already ships at native INT4, so its full model is 594-595 GB. The smallest published Kimi K2 file is 247-249 GB at 1.8 bits, about twice the Mac's 128 GB, and at that size perplexity rises 35-43% (ubergarm, the quant maker).\n\nFitting 1T parameters into about 100 GB needs 0.78 bits per parameter. Only heavy expert pruning could reach that, and nobody has shown a general-purpose Kimi surviving it. The best measured combination is REAP 50% plus INT4 at 288 GB, which keeps 98% of a knowledge average but only 88% on GPQA-Diamond.\n\nStreaming the missing experts from the SSD is the only way to run Kimi on this Mac:\n- My estimate for the 2-bit file with a good streamer is about 2-7 tok/s decode.\n- Unsloth expects under 1 tok/s with stock llama.cpp mmap.\n- One community report gives about 1.7 tok/s on a 128 GB M4 Max.\n- The native INT4 file does not fit on the about 358 GB of free disk.\n\nWhat works today:\n- **DeepSeek V4 Flash** (284B/13B, MIT) at about 2 bits (80.8 GiB) on ds4. Measured on an M5 Max 128 GB: 39.4 tok/s decode and 790 tok/s prefill at 2K context; 27.6 and 398.5 at 64K. At full precision it scores above Kimi K2.6 on the Artificial Analysis index (34 vs 27). Its 2-bit task cost is unmeasured; fidelity is +34% perplexity and 78% top-1 agreement.\n- **gpt-oss-120b** (63 GB): about 105 tok/s, but weaker (index 12).\n- **Qwen3-235B** at 3 bits (89-104 GB): estimated 22-34 tok/s, tight on memory.\n\nInteractive full-quality Kimi needs about 600 GB of fast memory. Two 512 GB M3 Ultras ran it at 15 tok/s.",
+ "feasibility_rows": [
+  "K1 Kimi K2.x native INT4 | 594-595 GB | No (4.6x RAM; exceeds free disk) | estimate 1.0-2.7 tok/s if streamed | measured 15 tok/s on 2x M3 Ultra 512 GB (Hannun); 0.89-1.03 tok/s streamed on RTX 5090 + 32 GB (SSD-LLaMA) | reference; no INT4-vs-BF16 comparison published",
+  "K2 Kimi K2.x about 2.65-2.9 bits (Unsloth UD-Q2_K_XL 340.5 GB; ubergarm IQ2_KL 375 GB) | No in RAM; 340.5 GB fits disk only after Trash | estimate 2.1-7.1 tok/s streamed; prefill about 26 (512-token batches) to 128 tok/s (4,096) | community report about 1.7 tok/s K2.5 on 128 GB M4 Max | +31% PPL (K2.6, Unsloth) vs +7.8% PPL (K2 at 2.92 bits, ubergarm); no task benchmarks",
+  "K3 Kimi K2 about 1.8-2.0 bits (UD-TQ1_0 246.8-248.6 GB; IQ1_KT 251 GB) | No (about 2x RAM) | estimate 4.0-12.2 tok/s ceiling streamed | Unsloth expects under 1 tok/s via mmap | +34.7% to +43.0% PPL (ubergarm)",
+  "K4 Kimi K2.5 REAP 50% + INT4 (kwanhee, 288.4 GB, needs vLLM fork) | No | estimate 1.5-4.5 tok/s if a Mac streamer existed | none on Mac | OpenLLM v1 97.99%, GPQA-D 88.0%, AIME25 95.1% (MoESQ, independent); REAP K2 50%: MC 0.780 to 0.643, BFCL multi-turn 0.355 to 0.164",
+  "K5 Kimi K2.6 JANGTQ about 2-bit experts (peak 167.5-185.6 GB, non-stock runtime) | No | not estimated | community report 19.4 decode / 90.2 prefill at 1K on M3 Ultra 512 GB | not evaluated",
+  "K6 hypothetical Kimi at 100 GB or less (75% pruned + 2.7-bit experts = 92.2 GB; 50% pruned + 1.4-bit = 95.3 GB) | Tight | estimate 16-29 tok/s resident | none | unknown; research gap G1",
+  "K7 Kimi K3 2.8T (smallest 466.4 GB) | No (RAM and disk) | not estimated | measured 0.465 tok/s streamed (SSD-LLaMA) | 1-bit 78.9% top-1, PPL +77% (Unsloth)",
+  "D1 DeepSeek V3.x/R1 FP8 689 GB / Q4 377-409 GB | No | not estimated | community report R1 Q4_K_M tg128 20.21, pp512 168.9 on 512 GB M3 Ultra | Q4_K_M -0.68% (China Unicom); INT4 99.82% (Red Hat)",
+  "D2 DeepSeek dynamic 2-3 bit (212-300 GB) | No in RAM | estimate 2.4-7.4 tok/s streamed | community report 1.29 tok/s decode, 2-3 prompt via mmap on 96 GB RAM + 24 GB GPU | R1 UD-Q2_K_XL -0.94%; V3.1 Q2_K_XL Aider 65.8 vs 71.6; uniform Q2_K_L -8.9 to -14.7%",
+  "D3 DeepSeek 1-1.6 bit (131-206 GB) | No | estimate 6-16 tok/s mostly cached | none on Mac | Aider 50.7-55.7 vs 71.6; uniform IQ1_S non-functional",
+  "D4 DeepSeek V3-0324 pruned + mixed precision 103 GB (2509.25689) | Tight | estimate 24-43 tok/s resident | measured >5 tok/s on 128 GB Strix Halo laptop (paper) | 130 GB variant matches uniform 2-bit (230 GB) on 5 benchmarks; no coding eval",
+  "F1 DeepSeek V4 Flash ds4 Q2 80.8 GiB | Yes (81.6 GiB at 32K, 97.2 GiB at 1M) | estimate 54-71 tok/s (measured implies e 0.25-0.36) | measured on M5 Max 128 GB: 39.35 decode/790 prefill at 2K, 27.64/398.5 at 64K (antirez) | +34% PPL, KLD 0.41, 78% top-1; task cost unpublished",
+  "F2 DeepSeek V4 Flash UD-IQ3_XXS 103 GB | Tight (about 110 GB RAM per Unsloth) | estimate 46-60 tok/s | none | no metrics published",
+  "Q5 Qwen3.5-397B 4-bit streamed (209 GB) | No in RAM | estimate 4.6-12.7 tok/s at top-10 | community report 4.36 tok/s on 48 GB M3 Max with top-4 only (flash-moe) | 2-bit breaks JSON",
+  "Q1 Qwen3-235B-2507 UD-Q2_K_XL 88.8 GB | Yes | estimate 26-34 tok/s | none | unmeasured for this model",
+  "Q2 Qwen3-235B-2507 UD-Q3_K_XL 104.2 GB / MLX 3-bit DWQ 102.9 GB | Tight | estimate 22-29 tok/s | community report about 30 tok/s 3-bit MLX on 128 GB M4 Max (aggregator) | unmeasured; MLX DWQ cards publish no metrics",
+  "Q3 Qwen3-235B 4-bit 124.5-134.3 GB | No | not estimated | community report 24 (MLX) / 16 (GGUF) tok/s on M3 Ultra | 4-bit usually within 1%",
+  "G1 GLM-4.6 (about 358B) 1-2 bit, sizes from GLM-4.7: TQ1_0 84.5 GB Yes, IQ1_S 97.2 Tight, IQ1_M 107.7+ No | estimate 23-60 tok/s at TQ1_0 for an unverified 20-40B active bracket | none | unmeasured; 1-bit costs 16-21 Aider points on V3.1",
+  "G2 GLM-4.6 REAP-218B at 3.5 bits about 95 GB (arithmetic; no such file found) | Tight | not computed | none | coding-only retention reported; general knowledge lost out of domain",
+  "G3 GLM-4.6 BF16 717 GB / 4-bit about 201 GB | No",
+  "O1 gpt-oss-120b native MXFP4 61-65 GB | Yes (64.0-68.5 GB to 131K) | estimate 61-79 tok/s | community report 105 decode / 1,833 prefill (llama.cpp, M5 Max); 79.7 tok/s at 1K, 14.0 at 128K (oMLX) | no quantization cost; capability index 12 vs 34 (V4 Flash), 27 (K2.6)"
+ ],
+ "research_gaps": [
+  {
+   "question": "G1: Does any combination of expert pruning (REAP or HOPE, 50-75%) and 1.4-2.7-bit expert quantization of Kimi K2.6 at 100 GB or less keep at least 90% of the INT4 reference on a fixed held-out suite, reported separately for knowledge, coding and tool use?",
+   "why_open": "The best measured point is 288 GB (REAP 50% + INT4: 97.99% OpenLLM v1, 88% GPQA-D; arXiv 2610.02241). No Kimi results exist beyond 50% pruning or for 50% pruning with 2 bits or fewer. 100 GB needs 0.78 bits per original parameter. Pruning of 70-90% works only for single-task specialists (2605.28042), and 1-bit plus pruning broke down in MoE-XBench (2608.21693).",
+   "measure": "Per configuration: bytes and peak memory; KLD and top-1 agreement against INT4; suite accuracy with paired bootstrap CIs by domain; reasoning tokens per solved item; tool-call schema accuracy with a fixed template; repetition and non-termination rate; Mac decode and prefill speed for the best configuration.",
+   "gpu_hours": "About 90-240 GPU-h. Calibration: 49M tokens = 11-55. KLD screen of 12 configurations = 14-19. Task evaluation of 4 finalists x 9.6M tokens = 53-142. INT4 reference = 9-21. Stage 1 (calibration + screen) is 25-75 GPU-h, with a stop rule: stop if no configuration under 100 GB reaches 80% top-1 agreement.",
+   "risk": "The likely result is negative: a 100 GB Kimi worse than DeepSeek V4 Flash Q2. INT4 Kimi leaves only about 45 GB of the 640 GB HBM free (about 5.6 GB per GPU), so calibration needs a layer-wise observer. Requantizing weights trained for INT4 may compound error. A pruned Kimi GGUF may not load in stock llama.cpp or MLX on the Mac."
+  },
+  {
+   "question": "G2: On real decode traces of Kimi K2.6 (chat, coding, agentic tool use, long-document QA), does an LRU cache holding 26% of the 2.65-bit expert pool (88 GB) reach a hit rate of 0.70 or more on every workload? Does the bandwidth model, fed with measured hit rates and SSD bandwidth, predict the Mac's replayed I/O time within 20%?",
+   "why_open": "No published routing trace exists for K2's 384-expert, top-8 routing. Hit rates are interpolated from DeepSeek-V3 and Kimi K3 (2608.12103). Sources disagree at similar cache sizes (80.1% in SSD-LLaMA vs 46-54% in LMSYS). Hot experts do not transfer across domains (Jaccard 0.03-0.19). Kevin's 2 TB SSD is unmeasured; reviewer figures (12.6-13.6 GB/s) come from 4 TB units.",
+   "measure": "Per-layer expert IDs per token, from teacher-forced prefill of the model's own transcripts, with the decode-routing flip rate checked on a small sample. Reuse after 1 and after 64 tokens; Zipf slope; LRU, LFU and Belady hit-rate curves at 5-50% of the pool; cross-domain overlap; top-8 routing agreement between INT4 and the 2-bit GGUF. On the Mac: pread bandwidth for 9-25 MB blocks at queue depth 1-64; trace-replay I/O time; prefill speed at micro-batch sizes 32-4,096.",
+   "gpu_hours": "About 10-30 GPU-h. Transcript generation 1.6M tokens = 1.5-3.6. Trace prefill 4M tokens = 0.9-4.4. 2-bit GGUF trace = 1-3. Decode check = 2-4. Setup = 5-15. The Mac work uses no GPU-hours.",
+   "risk": "A full-size replay file (241-336 GB) fits only after the Trash is emptied, and the 2.65-bit pool leaves about 17 GB free; a scaled replay adds modelling error. Memory pressure from other sessions on the Mac may dominate measured speed (MawForge cliff). Router hooks need Python changes in a pinned image; no GPU kernels are needed."
+  },
+  {
+   "question": "G3: At 105 GB or less on this Mac, does the best compressed Kimi K2.x from G1 score at least 2 points higher (95% paired bootstrap CI excluding 0) than each of DeepSeek V4 Flash ds4 Q2 (80.8 GiB), V4 Flash UD-IQ3_XXS (103 GB), Qwen3-235B-2507 UD-Q3_K_XL (104 GB) and gpt-oss-120b (63 GB)?",
+   "why_open": "The only memory-matched task comparison is R1 at 210 GB vs Qwen3-235B 8-bit at 233 GB: 3 benchmarks, no variance (2509.25689). Existing evidence leans towards no: V4 Flash scores 34 vs K2.6 27 at full precision (Artificial Analysis), and V3.1 at 1 bit (55.7 Aider) scored below unquantized Qwen3-235B (59.6).",
+   "measure": "Suite accuracy with paired CIs; tokens per solved item; tool-call schema accuracy; Mac decode and prefill speed and peak memory; agreement between CUDA and Metal scores on a 100-item subset per model.",
+   "gpu_hours": "About 60-150 GPU-h, not counting the G1 Kimi run. 4 GGUF configurations x 9.6M tokens at 0.27-0.72M tokens per GPU-h = 53-142. gpt-oss-120b on vLLM = 3-10. The V4 Flash runs are shared with G4.",
+   "risk": "A confirmatory negative is most likely. The same GGUF may score slightly differently on CUDA and Metal kernels. Chat templates and tool parsers confound comparisons across model families (K2 vendor verifier: 83-100% schema accuracy across providers)."
+  },
+  {
+   "question": "G4: Does DeepSeek V4 Flash at ds4 Q2 (80.8 GiB) lose at most 3 points (absolute, suite average) against its official FP4/FP8 weights, with at most 10% more reasoning tokens per solved item? Does UD-IQ3_XXS (103 GB) lose at most 1 point?",
+   "why_open": "Only fidelity metrics exist: +34% PPL, KLD 0.41, 78% top-1 (Unsloth page). Unsloth's recommended IQ3_XXS has no metrics. ds4's EVAL_DATA.md was not read. The Artificial Analysis score is for full precision. This is the model that actually fits the Mac, so the result has the most direct use.",
+   "measure": "Suite accuracy by domain with paired CIs; reasoning tokens per solved item; tool-call schema accuracy; KLD; Mac speed for each quant.",
+   "gpu_hours": "About 20-60 GPU-h. Five settings (Q8_K_XL reference, IQ3_XXS, ds4 Q2, UD-Q2_K_XL, UD-IQ1_S) x 9.6M tokens at 1-3M tokens per GPU-h = 16-48, plus 5-10 for setup.",
+   "risk": "The sweeps do not confirm llama.cpp CUDA support for V4 Flash, though GGUFs exist and ds4 has DGX Spark numbers. The recommended temperature of 1.0 raises variance and may need more seeds."
+  },
+  {
+   "question": "G5: If Kimi K2.6 INT4 routes each token to 6 experts instead of 8 (gate weights renormalized), does it lose at most 1 point on the suite? Does top-4 lose at most 3 points? (Estimated streamed decode gain at a fixed hit rate: +30% for top-6, +86% for top-4.)",
+   "why_open": "flash-moe cut Qwen3.5-397B from 10 to 4 experts without evaluation. KTransformers reported speeds with 6 experts but no quality numbers. ssd-moe says TOPK=5 has a 'mild quality cost'. MoBE's top-6 variant lost 0.3 points, but only on top of MoBE compression.",
+   "measure": "Suite accuracy; KLD against top-8; routed bytes per token; change in hit rate on the G2 traces; predicted Mac decode speed.",
+   "gpu_hours": "About 30-70 GPU-h. 3 settings x 9.6M tokens on vLLM TP8 at 0.45-1.1M tokens per GPU-h = 26-64, plus 2-3 for KLD.",
+   "risk": "vLLM may need a config override or a Python patch to change top-k for K2. Results may not transfer to the low-bit files used on the Mac. The reference run's small KV headroom limits concurrency."
+  }
+ ],
+ "key_numbers": [
+  "Kimi K2.x native INT4 checkpoint: 594-595 GB (about 4.6 bits/weight); K2-Instruct FP8: 1,029 GB",
+  "Smallest Kimi K2 GGUF: 246.8-248.6 GB (Unsloth UD-TQ1_0, 1.8-bit); smallest Kimi K3: 466.4 GB",
+  "Kimi K2 perplexity cost (ubergarm): +0.26% at 4.64 bits, +2.4% at 3.60, +7.8% at 2.92, +24.8% at 2.43, +34.7% at 1.96, +43.0% at 1.84; K2.6 UD-Q2_K_XL 340.5 GB: +31% (Unsloth)",
+  "100 GB for 1T params = 0.78 bits per parameter (100 x 8 / 1,026.4)",
+  "Best measured pruned Kimi: REAP 50% + INT4, 288.4 GB; 97.99% OpenLLM v1, 88.0% GPQA-Diamond, 95.1% AIME25",
+  "Kimi K2 per-token reads: 21.14B routed + 10.55B always-read params; 7.0 GB routed at 2.65 bits, 11.9 GB at 4.5 bits",
+  "Measured default Metal GPU ceiling on Kevin's Mac: 107.52 GiB (115.4 GB); iogpu.wired_limit_mb = 0",
+  "M5 Max: 614 GB/s memory (Apple); SSD 12.6-13.6 GB/s on 4 TB reviewer units, Kevin's 2 TB unmeasured; decode efficiency observed 0.25-0.61",
+  "DeepSeek V4 Flash ds4 Q2 (80.8 GiB) on M5 Max 128 GB: 39.35 tok/s decode / 790 prefill at 2K; 27.64 / 398.5 at 64K (maintainer)",
+  "gpt-oss-120b on M5 Max: 105 tok/s decode, 1,833 prefill (llama.cpp, tensor API on); 877 prefill with LM Studio's runtime",
+  "Artificial Analysis index (full precision): DeepSeek V4 Flash 34, Kimi K2.6 27, gpt-oss-120b 12",
+  "Kimi K2 streamed estimates on this Mac: 2-7 tok/s at 2.65 bits, 4-12 tok/s ceiling at 1.9 bits, 1-2.7 tok/s at 4.5 bits; community report about 1.7 tok/s on a 128 GB M4 Max",
+  "Streaming prefill estimate at 2.65 bits: about 26 tok/s with 512-token micro-batches, about 128 with 4,096 (a 30k-token prompt takes 19 vs 4 minutes); measured SSD-bound prefill 0.25-4.1 tok/s",
+  "Full-quality Kimi on Macs: 15 tok/s on 2x M3 Ultra 512 GB (native INT4); 20.8-22 tok/s at about 3.5 bits on one 512 GB M3 Ultra",
+  "DeepSeek V3.1 Aider (non-thinking): full 71.6, 4-bit 69.7, 3-bit 68.4, 2-bit 65.8, 1-bit 50.7-55.7; R1 dynamic 2.7-bit -0.94% vs uniform Q2_K_L -8.9 to -14.7%",
+  "Mac disk: about 120 GB free now, about 358 GB after the Trash; the Kimi 2-bit file leaves about 17 GB free; host program downloads about 2.3 TB of 20 TB",
+  "H100 host: Kimi K2.6 INT4 595 GB in 640 GB HBM leaves about 45 GB (about 5.6 GB per GPU); MLA KV about 8.1 GiB per 64K-token sequence",
+  "Research program estimate: G2 10-30, G4 20-60, G5 30-70, G1 90-240, G3 60-150 GPU-hours"
+ ]
+}

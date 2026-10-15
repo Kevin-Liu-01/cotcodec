@@ -1,0 +1,28 @@
+JobId=1528 JobName=cotcodec-fetch-cpu
+   UserId=kevin(1004) GroupId=kevin(1004) MCS_label=N/A
+   Priority=4294900232 Nice=0 Account=(null) QOS=(null)
+   JobState=COMPLETED Reason=None Dependency=(null)
+   Requeue=1 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=00:55:36 TimeLimit=12:00:00 TimeMin=N/A
+   SubmitTime=2026-10-15T18:47:46 EligibleTime=2026-10-15T18:47:46
+   AccrueTime=2026-10-15T18:47:46
+   StartTime=2026-10-15T18:47:46 EndTime=2026-10-15T19:43:22 Deadline=N/A
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2026-10-15T18:47:46 Scheduler=Main
+   Partition=research AllocNode:Sid=fal-h100-01:2138174
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=fal-h100-01
+   BatchHost=fal-h100-01
+   NumNodes=1 NumCPUs=8 NumTasks=1 CPUs/Task=8 ReqB:S:C:T=0:0:*:*
+   TRES=cpu=8,mem=16G,node=1,billing=8
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   MinCPUsNode=8 MinMemoryNode=16G MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+   Command=~/cotcodec-runs/stage0/kimi-k26-fetch/src/2baacac2/infra/slurm/host-single-node/fetch-model-cpu.sbatch
+   WorkDir=~
+   StdErr=~/cotcodec-runs/model-fetch/slurm-cotcodec-fetch-cpu-1528.out
+   StdIn=/dev/null
+   StdOut=~/cotcodec-runs/model-fetch/slurm-cotcodec-fetch-cpu-1528.out
+   Power=
+   
+

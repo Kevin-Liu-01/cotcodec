@@ -1,0 +1,13 @@
+{
+ "artifact_root_receipt": "68f8581365f4531c422bf0640c2215d6d85367d24b012a7b574468eeecde3316",
+ "artifact_root_recomputed": "68f8581365f4531c422bf0640c2215d6d85367d24b012a7b574468eeecde3316",
+ "bytes_hub": 595204999341,
+ "bytes_receipt": 595204999341,
+ "files_hub": 96,
+ "files_receipt": 96,
+ "lfs_files_checked": 67,
+ "mismatches": [],
+ "non_lfs_files_checked": 29,
+ "pass": true,
+ "receipt_revision": "7eb5002f6aadc958aed6a9177b7ed26bb94011bb"
+}
