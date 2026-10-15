@@ -2906,3 +2906,36 @@ next: AM5, the rule's cost when the evidence is absent.**
   - Cost and data: MIT data, about 0.3 GPU-h on the 63 development questions.
   - Next step: a held-out registration on the 347 questions follows only if
     the development run is clean.
+
+**D121. AM5 (exploratory, development split): with the evidence removed, the
+rule rarely abandons a correct abstention for the Qwen readers, and more often
+for OLMo-2. Next: one held-out registration, `am5-ablated-cost-v1`.**
+- AM5. 0.13 GPU-h (jobs 1483, 1487). A fresh checker reproduced every count
+  (`program/evidence/2026-10-16/am5-evidence-ablated/README.md`).
+- Construction. For each of the 63 development questions, the evidence
+  sessions were removed and a BM25 top-8 pool was built from the rest. None of
+  LongMemEval's 126 `has_answer` turns survives.
+- Switches, of 63, at K = 8 / K = 70: Qwen3-8B 1 / 2, OLMo-2 6 / 10,
+  Qwen3.5-9B 3 / 3.
+- Costs (switched replies that are not correct), with hand labels equal to the
+  judge's in every cell:
+  - at K = 8: 0, 5 and 3;
+  - at K = 70: 1, 9 and 3;
+  - without preference questions (58): K = 8 gives 0, 4 and 2, and K = 70
+    gives 1, 7 and 2.
+- The development gains on the same questions are far below the held-out ones,
+  so these questions cannot give a deployable cost-benefit picture.
+- `am5-ablated-cost-v1` on the GPU, about 0.5 GPU-h, under 8, continuing a
+  confirmed line (as D111/D115/D118). There is no gauntlet wave, and two
+  independent pre-freeze checks.
+  - Population: the 347 held-out questions with their evidence removed,
+    retrieved arm, the same three readers and AM1's prompt.
+  - Primary: per reader, the cost rate at K = 8 with an exact interval.
+    Secondary: K = 70.
+  - The decision rule compares the cost with the K = 8 gain on the original
+    pools of the same 347 questions. That gain is already known from AM4 (post
+    hoc), and this is disclosed.
+  - The sensitivity analysis leaves out single-session-preference questions.
+  - A blind hand check covers every switched reply the judge calls correct,
+    and a seeded sample of the rest.
+  - These ablated held-out pools have never been given to a model.
