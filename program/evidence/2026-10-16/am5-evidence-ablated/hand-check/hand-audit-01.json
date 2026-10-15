@@ -1,0 +1,36 @@
+{
+  "agent_id": "a1ba4a9423e076215",
+  "audit": {
+    "agent_ids": [
+      "a1ba4a9423e076215"
+    ],
+    "assistant_lines": 6,
+    "first_prompt_sha256": "b19356de8c0555548896d5a4a0424accaa9b4cafdbc12d2af6193d2a2a50e066",
+    "first_timestamp": "2026-10-15T16:45:21.258000Z",
+    "instruction_files": [
+      [
+        "User",
+        "CLAUDE.md"
+      ],
+      [
+        "Project",
+        "CLAUDE.md"
+      ],
+      [
+        "AutoMem",
+        "MEMORY.md"
+      ]
+    ],
+    "last_timestamp": "2026-10-15T16:45:34.597000Z",
+    "models": [
+      "claude-opus-5-5"
+    ],
+    "pass": true,
+    "session_ids": [],
+    "tool_calls": 3,
+    "transcript_sha256": "6d98a4af78c094325dde85a4ad36eedf0128018f7e0710cde900f7e739a916f8"
+  },
+  "chunk": "hand-first-chunk-01.jsonl",
+  "launch": "subagent",
+  "not_before_epoch": 1792082714.0
+}
