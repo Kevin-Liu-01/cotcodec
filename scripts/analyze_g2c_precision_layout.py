@@ -14,8 +14,11 @@ CPU only. Subcommands:
 * ``rollouts --rollout-jobs DIR... --output F``: per arm, the engine record (block size, block
   pool, GDN page padding), log facts, phase summaries, the prefill engines, the smoke probe and
   per-rollout records (length, how it ended, boxed answer, tail compressibility).
+* ``pairs --specs model:G2B_FP32_WORKER:G2B_BF16_WORKER:G2C_JOB ... --output F``: for every
+  arm pair on the same (prompt, seed), how long the rollouts stay token-identical and the decode
+  log-probs on the identical prefix (G2b's token arrays stay on the host).
 * ``analyze --per-token F... --g2b-per-token F... --rollouts F --g2b-throughput F
-  --output-dir D``: tables (JSON, Markdown) and the figure. G2b's arms come from G2b's
+  [--pairs F] --output-dir D``: tables (JSON, Markdown) and the figure. G2b's arms come from G2b's
   committed per-token files (checked against the SHA-256 in the config) and throughput.json;
   their numbers are recomputed with the same code and checked against G2b's analysis.json.
 
@@ -478,6 +481,85 @@ def rollouts_main(args: argparse.Namespace) -> int:
     return 0
 
 
+#: Arm pairs compared on identical (prompt, seed): the same sampler seed in both arms, so the
+#: rollouts share tokens until the first sampled token that differs.
+PAIRS = [
+    ("bf16_b528", "bf16"),
+    ("fp16", "fp32"),
+    ("fp16", "bf16"),
+    ("bf16", "fp32"),
+    ("bf16_b528", "fp32"),
+]
+
+
+def load_rollout_tokens(worker: Path) -> dict[tuple[int, int], tuple[np.ndarray, np.ndarray]]:
+    """(prompt, seed) -> (completion token ids, decode log-probs) of one arm's phase R."""
+
+    tokens = np.load(worker / "tokens.npz")
+    meta = json.loads((worker / "sequences.json").read_text(encoding="utf-8"))
+    out = {}
+    for i, seq_id in enumerate(meta["sequence_order"]):
+        parts = gb.parse_sequence_id(seq_id)
+        lo, hi = int(tokens["offsets"][i]), int(tokens["offsets"][i + 1])
+        out[(parts["prompt_index"], parts["seed"])] = (
+            tokens["token_ids"][lo:hi],
+            tokens["logp_decode"][lo:hi],
+        )
+    return out
+
+
+def compare_arms(
+    a: dict[tuple[int, int], tuple[np.ndarray, np.ndarray]],
+    b: dict[tuple[int, int], tuple[np.ndarray, np.ndarray]],
+) -> dict[str, Any]:
+    """Two arms' rollouts of each shared (prompt, seed): how long they stay token-identical, and
+    the decode log-probs on the identical prefix (same tokens, same context)."""
+
+    prefixes, diffs = [], []
+    identical = same_to_shorter = 0
+    for key in sorted(set(a) & set(b)):
+        (x, lx), (y, ly) = a[key], b[key]
+        n = min(len(x), len(y))
+        differ = np.nonzero(x[:n] != y[:n])[0]
+        c = int(differ[0]) if len(differ) else n
+        prefixes.append(c)
+        identical += int(c == len(x) == len(y))
+        same_to_shorter += int(c == n)
+        if c:
+            diffs.append(np.abs(lx[:c].astype(np.float64) - ly[:c].astype(np.float64)))
+    d = np.concatenate(diffs) if diffs else np.zeros(0)
+    pre = np.asarray(prefixes)
+    return {
+        "pairs": len(prefixes),
+        "identical_to_the_end": identical,
+        "identical_up_to_the_shorter": same_to_shorter,
+        "prefix_median": float(np.median(pre)) if len(pre) else None,
+        "prefix_quartiles": [float(np.percentile(pre, q)) for q in (25, 75)] if len(pre) else None,
+        "prefix_max": int(pre.max()) if len(pre) else None,
+        "prefix_tokens": int(d.size),
+        "prefix_mean_abs_dlogp": float(d.mean()) if d.size else None,
+        "prefix_share_bit_equal_logp": float((d == 0).mean()) if d.size else None,
+    }
+
+
+def pairs_main(args: argparse.Namespace) -> int:
+    """Each spec is model:G2b_fp32_worker:G2b_bf16_worker:G2c_rollout_job_dir."""
+
+    out: dict[str, Any] = {"experiment_id": gc.EXPERIMENT_ID, "models": {}}
+    for spec in args.specs:
+        model_id, fp32_dir, bf16_dir, job = spec.split(":")
+        arms = {
+            "fp32": load_rollout_tokens(Path(fp32_dir)),
+            "bf16": load_rollout_tokens(Path(bf16_dir)),
+        }
+        for arm in NEW_ARMS:
+            arms[arm] = load_rollout_tokens(Path(job) / f"{model_id}-{arm}")
+        out["models"][model_id] = {f"{a}_vs_{b}": compare_arms(arms[a], arms[b]) for a, b in PAIRS}
+    g2.write_json(Path(args.output), out)
+    print(json.dumps({m: list(v) for m, v in out["models"].items()}))
+    return 0
+
+
 def termination(records: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
     """Per arm: how phase R ended; per arm against fp32 and bf16: paired over (prompt, seed),
     which arm's rollout ended (EOS) first. A rollout without EOS (cap or time budget) counts as
@@ -756,6 +838,25 @@ def markdown(result: dict[str, Any]) -> str:
                     f" {ms.get('32768')} | {fmt(w.get('output_tok_per_s'), 0)} | "
                     f"{fmt(w.get('mean_running'), 0)} | {fmt(w.get('preemptions_delta'), 0)} | "
                     f"{kv_text}% |"
+                )
+        lines.append("")
+    pairs = result.get("pairs", {})
+    if pairs:
+        lines += ["## Same prompt and seed across arms (phase R tokens)", ""]
+        lines += [
+            "| Model | Pair | Pairs | Identical to the end | Identical up to the shorter |"
+            " Shared prefix median [IQR] | Max | Decode mean abs on the prefix | Bit-equal |",
+            "|---|---|---:|---:|---:|---|---:|---:|---:|",
+        ]
+        for model_id, model in pairs.items():
+            for name, p in model.items():
+                q = p["prefix_quartiles"] or [None, None]
+                lines.append(
+                    f"| {model_id} | {name} | {p['pairs']} | {p['identical_to_the_end']} | "
+                    f"{p['identical_up_to_the_shorter']} | {fmt(p['prefix_median'], 0)} "
+                    f"[{fmt(q[0], 0)}, {fmt(q[1], 0)}] | {p['prefix_max']} | "
+                    f"{fmt(p['prefix_mean_abs_dlogp'], 6)} | "
+                    f"{fmt(100 * (p['prefix_share_bit_equal_logp'] or 0), 2)}% |"
                 )
         lines.append("")
     check = result.get("g2b_reproduction")
@@ -1094,6 +1195,8 @@ def analyze_main(args: argparse.Namespace) -> int:
     result["termination"] = {m: termination(r) for m, r in records.items()}
     result["block_pool"] = block_pool(g2c_jobs, g2b_jobs, config)
     result["probe"] = [j for j in g2c_jobs if j["arm"] == "probe_fp32_b272"]
+    if args.pairs:
+        result["pairs"] = json.loads(Path(args.pairs).read_text(encoding="utf-8"))["models"]
     if args.g2b_analysis:
         committed = json.loads(Path(args.g2b_analysis).read_text(encoding="utf-8"))
         result["g2b_reproduction"] = reproduction_check(result, committed)
@@ -1114,6 +1217,9 @@ def main() -> int:
     pack.add_argument("--rollouts", required=True)
     pack.add_argument("--teacher-force", required=True)
     pack.add_argument("--output", required=True)
+    prs = sub.add_parser("pairs", allow_abbrev=False)
+    prs.add_argument("--specs", nargs="+", required=True)
+    prs.add_argument("--output", required=True)
     roll = sub.add_parser("rollouts", allow_abbrev=False)
     roll.add_argument("--rollout-jobs", nargs="+", required=True)
     roll.add_argument("--output", required=True)
@@ -1124,11 +1230,15 @@ def main() -> int:
     an.add_argument("--rollouts", default=None)
     an.add_argument("--g2b-throughput", default=None)
     an.add_argument("--g2b-analysis", default=None)
+    an.add_argument("--pairs", default=None)
     an.add_argument("--output-dir", required=True)
     args = parser.parse_args()
-    return {"pack": pack_main, "rollouts": rollouts_main, "analyze": analyze_main}[args.command](
-        args
-    )
+    return {
+        "pack": pack_main,
+        "rollouts": rollouts_main,
+        "pairs": pairs_main,
+        "analyze": analyze_main,
+    }[args.command](args)
 
 
 if __name__ == "__main__":

@@ -421,3 +421,38 @@ def test_report_survives_arms_without_shared_prompts(tmp_path: Path) -> None:
     assert "arms" not in result["contrasts"]["dec_vs_r1"]
     assert "fp16 state" in analysis.markdown({"mismatch": {MODEL: result}})
     analysis.plot({"mismatch": {MODEL: result}}, tmp_path / "f.png")
+
+
+def _token_worker(path: Path, arm: str, rows: dict[tuple[int, int], tuple[list, list]]) -> Path:
+    path.mkdir(parents=True)
+    keys = sorted(rows)
+    order = [gb.sequence_id(MODEL, arm, p, s) for p, s in keys]
+    offsets = np.concatenate([[0], np.cumsum([len(rows[k][0]) for k in keys])])
+    np.savez(
+        path / "tokens.npz",
+        offsets=offsets,
+        token_ids=np.concatenate([rows[k][0] for k in keys]).astype(np.int32),
+        logp_decode=np.concatenate([rows[k][1] for k in keys]).astype(np.float32),
+    )
+    (path / "sequences.json").write_text(json.dumps({"sequence_order": order}))
+    return path
+
+
+def test_compare_arms_counts_identical_and_diverging_rollouts(tmp_path: Path) -> None:
+    base = {(0, 42): ([1, 2, 3, 4], [-0.1, -0.2, -0.3, -0.4]), (1, 42): ([5, 6, 7], [-1, -1, -1])}
+    other = {
+        (0, 42): ([1, 2, 3, 4], [-0.1, -0.2, -0.3, -0.5]),  # identical tokens, one log-prob moved
+        (1, 42): ([5, 6], [-1.0, -1.0]),  # cut earlier: identical up to the shorter
+        (2, 42): ([9], [-1.0]),  # no partner
+    }
+    a = analysis.load_rollout_tokens(_token_worker(tmp_path / "a", "bf16", base))
+    b = analysis.load_rollout_tokens(_token_worker(tmp_path / "b", "bf16_b528", other))
+    r = analysis.compare_arms(b, a)
+    assert r["pairs"] == 2 and r["identical_to_the_end"] == 1
+    assert r["identical_up_to_the_shorter"] == 2 and r["prefix_max"] == 4
+    assert r["prefix_tokens"] == 6
+    assert r["prefix_share_bit_equal_logp"] == pytest.approx(5 / 6)
+    diverge = {(0, 42): ([1, 9, 3, 4], [-0.1, -0.2, -0.3, -0.4])}
+    c = analysis.load_rollout_tokens(_token_worker(tmp_path / "c", "fp16", diverge))
+    r = analysis.compare_arms(c, a)
+    assert r["identical_up_to_the_shorter"] == 0 and r["prefix_median"] == 1

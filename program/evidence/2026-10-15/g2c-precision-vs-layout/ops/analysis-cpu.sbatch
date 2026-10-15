@@ -8,9 +8,10 @@
 #SBATCH --time=00:30:00
 #SBATCH --no-requeue
 # CPU-only (no GRES) analysis of g2c-precision-layout-v1 from a clean checkout (G2C_CHECKOUT):
-# pack (join and token checks) per model, the rollout records, then the four-arm tables and the
-# figure. G2b's arms come from G2b's full per-token files on the host (SHA-256 checked against
-# the config) and G2b's committed throughput.json and analysis.json.
+# pack (join and token checks) per model, the rollout records, the same-seed token comparison
+# against G2b's rollouts, then the four-arm tables and the figure. G2b's arms come from G2b's
+# full per-token files and rollout token arrays on the host (the per-token files' SHA-256 checked
+# against the config) and G2b's committed throughput.json and analysis.json.
 # G2C_JOBS: "model:rollout_job:tf_job ..."; G2C_SMOKE_JOB: the smoke rollout job (probe record).
 set -Eeuo pipefail
 : "${G2C_CHECKOUT:?}"; : "${G2C_ANALYSIS:?}"; : "${G2C_JOBS:?}"
@@ -22,9 +23,14 @@ mkdir -p "$G2C_ANALYSIS"
 cd "$G2C_CHECKOUT"
 [[ -z "$(git status --porcelain)" ]] || { echo dirty; exit 2; }
 git rev-parse HEAD > "$G2C_ANALYSIS/analysis-git-sha.txt"
-per_token=(); g2b=(); rs=()
+# G2b's phase-R rollout jobs, by model (fp32 job, bf16 job), for the same-seed token comparison.
+declare -A G2B_RS=([qwen3.5-4b]="1368 1370" [qwen3.5-9b]="1372 1374")
+GR=/home/kevin/cotcodec-runs/stage0/g2b-state-dtype/runs/rs
+per_token=(); g2b=(); rs=(); pair_specs=()
 for spec in $G2C_JOBS; do
   IFS=: read -r model rsj tfj <<< "$spec"
+  read -r f32 b16 <<< "${G2B_RS[$model]}"
+  pair_specs+=("$model:$GR/$f32/g2b/$model-fp32:$GR/$b16/g2b/$model-bf16:$R/rs/$rsj/g2c")
   out="$G2C_ANALYSIS/per-token-$model.npz"
   uv run --locked python scripts/analyze_g2c_precision_layout.py pack --model "$model" \
     --rollouts "$R/rs/$rsj/g2c" --teacher-force "$R/tf/$tfj/g2ctf" --output "$out"
@@ -33,8 +39,11 @@ done
 [[ -n "${G2C_SMOKE_JOB:-}" ]] && rs+=("$R/smoke-rs/$G2C_SMOKE_JOB/g2c")
 uv run --locked python scripts/analyze_g2c_precision_layout.py rollouts --rollout-jobs "${rs[@]}" \
   --output "$G2C_ANALYSIS/rollouts.json"
+uv run --locked python scripts/analyze_g2c_precision_layout.py pairs --specs "${pair_specs[@]}" \
+  --output "$G2C_ANALYSIS/pairs.json"
 uv run --locked python scripts/analyze_g2c_precision_layout.py analyze --per-token "${per_token[@]}" \
   --g2b-per-token "${g2b[@]}" --check-g2b-sha256 --rollouts "$G2C_ANALYSIS/rollouts.json" \
+  --pairs "$G2C_ANALYSIS/pairs.json" \
   --g2b-throughput "$E/throughput.json" --g2b-analysis "$E/analysis.json" --output-dir "$G2C_ANALYSIS"
 sha256sum "$G2C_ANALYSIS"/* > "$G2C_ANALYSIS/SHA256SUMS.txt" 2>/dev/null || true
 echo done
