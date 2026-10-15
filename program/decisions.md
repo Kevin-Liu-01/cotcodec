@@ -2537,3 +2537,20 @@ fp16 state keeps the throughput lever with much less drift.**
 - Next. An RL training comparison, with fp32, fp16 and bf16 state for
   rollouts, would show whether the gap changes learning. It exceeds 8 GPU-h,
   so it goes through the gauntlet first.
+
+**D110. The node is shared with another of Kevin's projects for inference
+through 2026-10-20.** At Kevin's request, relayed by another of his Claude
+sessions, the node hosts inference only, on 1-2 GPUs, through 2026-10-20.
+- What runs. Open models (Apache-2.0 image inpainting and video text removal,
+  and SAM 3.1 once Kevin arranges its gated access) as long Slurm jobs. Each
+  serves HTTP on the host's localhost only, in a digest-pinned image.
+- Conditions:
+  - Code runs on GPUs only after review and SHA-256 pinning (the unpatched
+    R570 driver; D7).
+  - No code or data of that project enters this public repository. It lives
+    under a separate host directory, and the data is deleted after the
+    release.
+  - Containers run unprivileged, with a read-only root.
+  - No credentials are created or entered by agents, and no licences are
+    accepted on Kevin's behalf.
+- This program's GPU jobs keep the remaining GPUs, and Slurm allocates them.
