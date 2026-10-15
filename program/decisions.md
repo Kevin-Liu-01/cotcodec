@@ -2795,3 +2795,41 @@ Next memory step: test whether H-C holds across readers and judges.**
   - Budget: 2 GPU-h or less.
   - A held-out registration follows only if the development result
     replicates.
+
+**D118. AM3 (exploratory, development split): the non-abstention rule never
+loses under the primary judge for three readers, but the split is too small
+to separate it. Next: one registration, `am3-nonabstain-generality-v1`, that
+tests other readers on held-out questions and measures the rule's cost on
+unanswerable questions.**
+- AM3. 0.20 GPU-h (jobs 1462, 1466), on the 63 development questions. A fresh
+  checker reproduced every cell
+  (`program/evidence/2026-10-16/am3-reader-replication/README.md`). Readers:
+  - Qwen3-8B, the anchor: 2,272 of 2,272 replies are bit-identical to the
+    pilot's eager pass;
+  - OLMo-2-1124-7B-Instruct, Apache-2.0, ungated and fetched anonymously;
+  - Qwen3.5-9B, in default mode, because vLLM refuses batch-invariant mode
+    for GDN.
+- Primary judge (Qwen3-32B): the rule gains in every cell and loses none.
+  Without the anchor that is 17 gained and 0 lost. On the retrieved arm nothing
+  separates (OLMo-2 4 against 0, Qwen3.5-9B 3 against 0). The anchor itself
+  shows only 1 against 0 here, against 39 against 0 on held-out data.
+- Second judge (Qwen3-8B): 6 losses on 3 questions. These are non-abstention
+  questions, and 4 of the 6 are a bare "I don't know" judged correct, which
+  is a judge error by the pilot's validation standard.
+- The open cost. H-C's c ≈ 0 holds because every question in AM1's set has an
+  answer. In deployment some questions cannot be answered, and on those the
+  rule would search for a subset that answers, trading a correct abstention
+  for an answer that is likely wrong. That cost has not been measured.
+- `am3-nonabstain-generality-v1`. On the GPU, about 1-2 GPU-h, under 8. As in
+  D111 and D115 it continues a confirmed line, so no gauntlet wave runs, and
+  it gets two independent pre-freeze checks.
+  - H1: nonabstain-BM25 against BM25 top 4 on the 347 held-out answerable
+    questions, retrieved arm, primary judge, for OLMo-2 and Qwen3.5-9B. Exact
+    McNemar, with Holm across the two readers.
+  - H2: on LongMemEval-S's abstention questions (BM25 pools built as AM1's
+    retrieved arm, judged with LongMemEval's abstention prompt), how often the
+    rule turns a correct abstention by BM25 top 4 into a wrong answer, for
+    all three readers. These questions were never used by AM1, AM1b, AM1d or
+    AM3.
+  - Descriptive: the net effect at LongMemEval-S's own mix of answerable and
+    unanswerable questions; the gold arm; the second judge.
