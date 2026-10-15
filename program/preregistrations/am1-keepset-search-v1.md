@@ -1,7 +1,7 @@
 # am1-keepset-search-v1: at equal reader calls, does search over keep sets beat sampled memory credit, and does a label-free non-abstention search beat BM25 top 4? (AM1's held-out LongMemEval-S tables, CPU only)
 
-**Status: DRAFT, not frozen.** Drafted on branch `stage0/am1-keepset-search` from `main` at
-`ea9d57dc`, as decision D115 specifies (`program/decisions.md`). Freezing is the orchestrator's,
+**Status: frozen in `program/preregistrations/ledger.jsonl`; see the ledger row for the freeze time and `git_head_at_freeze`.** Drafted on branch `stage0/am1-keepset-search` from `main` at
+`ea9d57dc`, as decision D115 specifies (`program/decisions.md`). It was frozen by the orchestrator
 with `scripts/preregister.py`, after two independent pre-freeze checks (D115) and the checklist of
 section 17. A material change after the freeze is a new experiment id.
 
