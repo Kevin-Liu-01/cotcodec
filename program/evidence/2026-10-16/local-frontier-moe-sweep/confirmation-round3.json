@@ -1,0 +1,129 @@
+{
+ "per_finding": [
+  {
+   "finding": "R2-CL-01 (major): K3 pruning summary wrong for the 80% build; rests on single prompts",
+   "status": "fixed",
+   "note": "Re-read the pipenetwork REAP80, mlx-community reap160, mgoin and Nota cards. REAP80 answers 'The capital of France is' with 'Paris.' and then drifts into a list; its Chinese prompt loops. It runs at 5.54 tok/s on a 512 GiB M3 Ultra, and the calibration mix is 40/30/15/15. reap160 (82% pruned, 2-bit) loops on the France prompt, reports perplexity and benchmarks as 'not done', has 51.7% router demand at 160 experts against 77.5% at 376, and top-k 16 to 6 did not help. Section 1, K6, K7, 3c and G1 all match these cards, and 'keep their coding ability' is gone. Nit: the K3 50% REAP row comes from Nota's card (Nota evaluated a REAP baseline), so 'the makers' evaluations' is loose for REAP."
+  },
+  {
+   "finding": "R2-CL-02 (major): 5.85-10.6 GB/s stated as fact; 2.82x/1.93x called speedups",
+   "status": "fixed",
+   "note": "SSD-LLaMA section 5.2 confirmed. 2.82x and 1.93x are read-bandwidth ratios; decode is 1.35-3.44x over llama.cpp and 1.57-15.61x over KTransformers. The flash-moe CLAUDE.md gives 2.41 ms for K=4 experts and about a 71% hit rate, which implies about 3.4 GB/s. Recomputed K2 at B=3.4: 1.51-2.24 tok/s with other work stopped and 0.85-1.05 today, so the dossier's 1.5-2.2 and 0.9-1.0 hold. A5, section 1, K2 and G2 label the range an assumption. Residual: section 1 line 91 calls the range 'SSD-LLaMA's 43-78% of peak', but 43.2% is the paper's best baseline, not SSD-LLaMA (A5 states this correctly)."
+  },
+  {
+   "finding": "R2-CL-03 (major): GSQ called CUDA-only; GGUF K-quant route and full-node need omitted",
+   "status": "fixed",
+   "note": "Paper section 4.4, Appendix E and Tables 4, 13 and 14, plus the GSQ README, confirm the claims. The GGUF route starts from Unsloth K-quants and keeps the format. It 'runs unchanged on llama.cpp / Ollama' and is tested only on Qwen3-8B (Table 4) and Qwen3-4B (Table 13: Q2_K 35.01 to 48.34). The README lists Kimi-K2 at 8x H100/H200 (full node) minimum, and K2.5 at a full node, typically 1-2 nodes. Section 1, K2b, 3a, 3c, section 4 and G1 route (c) are correct. Table 14 names UD-IQ1_M at 2.4 bits against GSQ at 2.37 bits. Side effect not handled: Table 14 is task data for a Kimi GGUF, which contradicts section 1's 'GGUF files have only fidelity data' (see section 1 problems)."
+  },
+  {
+   "finding": "R2-CL-04 (minor): mgoin base scores omitted; 'no benchmarks' contradicted other rows",
+   "status": "fixed",
+   "note": "mgoin card: 34.4200 / 68.2335 / 95.5269, 5-shot, 256-token limit, same harness and seed, ranked by router weight with no calibration. The card says pruned75's kept set is an exact prefix of pruned50's ranking, so calling both 'without calibration' is supported. prometheusAIR: needle test 15/15 through 64K, 0.48 tok/s warm on an RTX PRO 6000 PC. The Limits line is reworded."
+  },
+  {
+   "finding": "R2-CL-05 (minor): event-atomic replay figure inverted",
+   "status": "fixed",
+   "note": "2608.07911 Table 2: LRU 24.59% under sequential replay against 19.30% event-atomic, +27.4%, at rho=40% and B=8. G2 and A7 now give the correct direction. Info: section 2.2 of the paper says the artifact arises when an event's expert set exceeds the per-layer quota. At S82's single-stream bracket points (B=32 slots with k=8 or 16) the bias is probably small, so 'lean pessimistic' should not imply 27%."
+  },
+  {
+   "finding": "R2-CL-06 (minor): documented MLX pread streamer ran Kimi-K2 on a 128 GB Mac",
+   "status": "fixed",
+   "note": "rita-aga README (created 2026-03-26): Kimi-K2, 578 GB, M3 Max 128 GB, 7.1 GB RAM, 0.5 tok/s, parallel pread, usage path Kimi-K2-Instruct-4bit. S51 re-read: Daniel Isaac's 1.7 tok/s on a 128 GB M4 Max names no engine or quant. Wording is now 'no maintained or supported'. Nit: S51 also reports a K2.5 run in 96 GB on an M2 Max (no speed), so 'Two community reports exist' in section 1 slightly undercounts."
+  },
+  {
+   "finding": "R2-CL-07 (minor): 'being downloaded' stale",
+   "status": "fixed",
+   "note": "Main-repo commit 90c337f5 README: job 1528, 96 files, 595,204,999,341 bytes, all 67 LFS SHA-256 match. Sections 4 and 5 and the disk and host lists cite S140. No stale 'downloading' text remains outside the log."
+  },
+  {
+   "finding": "R2-CL-08 (minor): F1 mixed April/Vision-Exp runs; 284B/13B cited to 0731 card; recipe unnamed",
+   "status": "fixed",
+   "note": "The April README says 284B / 13B activated. The 0731 README has no count, and its config has 43 layers plus 1 MTP layer. The Weschera README confirms a Mac Studio M4 Max 128 GB running the Vision-Exp IQ2XXS file (86,720,111,776 B) at 81.62 / 97.15 GiB and about 103 GB wired at 1M. download_model.sh confirms ds4f-vision-mxfp4 and ds4f-mxfp4 (about 156 GB). Residuals: the section 5 disk table still says 'DeepSeek Flash MXFP4 (streamed, measured)' without naming Vision-Exp. antirez also publishes a Vision-Exp q2-q4 mix of the same 97.59 GB, so S131's file could be from any of three checkpoints, not just 'April or 0731'."
+  },
+  {
+   "finding": "R2-CL-09 (minor): ds4 whole-prompt batching undocumented for measured files",
+   "status": "fixed",
+   "note": "PERFORMANCE.md: 'ordinary DeepSeek uses 4096-token chunks'; GLM chooses its own chunks. In MODELS.md the 'wide batches' and Metal-overlap sentences sit only in the V4.1 Flash section. The whole-prompt case is now a bound; section 1 gives about 6-12.5 min (table 6.1-12.5); conflict 10 is scoped. Trivial residual: 3b line 527 cites 'short appends keep using the expert cache [S110]' from the same V4.1-only paragraph; S109 supports it for GLM 5.3."
+  },
+  {
+   "finding": "R2-CL-10 (minor): AtomicChat, S119, S120 misstated",
+   "status": "fixed",
+   "note": "AtomicChat: 50 JSONL rows = 1 BF16 reference + 1 imatrix + 48 quant rows (45 with KLD values), so 'about 48' is right. 8x RTX 5090; rival files 'split by the machine that produced them'; ds4 Q2 is in RIVALS-B3; 4.5381 against 4.3406 is the reference model (4.5%). S119: twelve checkpoints in nine families up to 295B (Hy3), and 98.8% averaged over nine models. The partial rejection on S120 is justified: the discussion reads 'k2=k1, every implementation's default, is the worst choice in that grid'."
+  },
+  {
+   "finding": "R2-CL-11 (minor): S137 GGUF is a 2-layer truncation",
+   "status": "fixed",
+   "note": "The ubicloud BF16-Pruned-20B card says 'first 2 layer(s) of the original 61'. mradermacher's GGUF is 'static quants of' BF16-Pruned-20B. Pruned-340B keeps 20 layers, and an HF search finds no GGUF of it. Section 3c and S137 are correct."
+  },
+  {
+   "finding": "R2-CL-12 (minor): A2 21.7 tok/s uncited and treated as GGUF",
+   "status": "fixed",
+   "note": "oMLX runs qsgif005 (21.7), 8y9ori5i (22.0 at 1K), 93kgjkbc (20.8) and ez6mnyny (20.3): Kimi-K2.6DQ3_K_M-q8, label '4bit', M3 Ultra 512 GB, 439.6 GB peak. Recomputed: 11.2 GB spine plus (439.6-11.2) x 8/384 = 20.1 GB per token, so e = 0.50-0.54. The dossier's 0.49 is a rounding nit. The inferred layout is labelled as inferred."
+  },
+  {
+   "finding": "R2-CL-13 (minor): S131 numbers unverifiable; summaries disagree",
+   "status": "fixed",
+   "note": "The card and API still return HTTP 401 (checked 2026-10-15). The benchmark count and MMLU pair are dropped, the file is identified as a q2-q4 mix (90.9 GiB = 97.6 GB), and G4 treats it as a weak prior. A fresh search summary supports 'thinking disabled' and says the 78.09 reference is the full-precision model run on MLX, an engine confound worth noting. Same residual as CL-08: the checkpoint could also be Vision-Exp."
+  },
+  {
+   "finding": "R2-CL-14 (minor): small citation errors (ds4 CONTRIBUTING, reviewer SSD figures, Cerebras Kimi, FP8)",
+   "status": "partly",
+   "note": "Fixed: ds4 CONTRIBUTING.md has the macOS kernel-bug warning; Computerworld gives 12,587.3 MBps on a 128 GB / 4 TB unit; the HF author=cerebras listing has Kimi-Linear-REAP-35B-A3B-Instruct and GLM-4.6/4.7 REAP FP8; row G2 says BF16 and FP8. Not fixed: A5 still cites PetaPixel's 12.7 GB/s 'via S4', but MacDailyNews (S4) quotes only The Verge (13.6 GB/s, 4 TB). PetaPixel's 12,695 MB/s (4 TB, Blackmagic) appears only in the PetaPixel review (S127, search summary only)."
+  },
+  {
+   "finding": "R2-AR-01 (minor): antirez V4 Flash rows dropped trunk layer 42",
+   "status": "fixed",
+   "note": "Config: 43 hidden layers plus 1 nextn layer. antirez lists a separate MTP file of 3,807,602,400 B. A3 restored: 9.57 / 11.19 GB, 284.3B / 13.27B. Recomputed e = 0.613 / 0.572 / 0.551 / 0.456; F1 30.2-39.4; S2 cache 92.56/147.17 = 62.9%; ds4 check 13.9-25.2 s and 5.15-9.34 s. Conflict 12 and the AR-01 log are updated."
+  },
+  {
+   "finding": "R2-AR-02 (major): G1 build range broke its own 100 GB bound",
+   "status": "fixed",
+   "note": "Recomputed with size = 1014.7B x (1-p) x b/8 + 9.34. 75% pruned at 1.6-2.7 bits gives 60.1-95.0 GB; 62.5% at 1.6 bits gives 85.4 and at 2.0 bits 104.5; the maximum is 1.906 bits at 62.5%. Section 1's 64-74% at 2-2.7 bits equals 64.3-73.5%. Four of 12 grid configurations are at or under 100 GB. G1 text and the screen-grid row match."
+  },
+  {
+   "finding": "R2-AR-03 (minor): top-k gains mixed old and new parameters",
+   "status": "fixed",
+   "note": "Recomputed t8/tk at h=0.75 over B 5.85-10.6 and e x 614 = 288-377: top-6 is 1.275-1.304 and top-4 is 1.759-1.874. '+28-30%' and '+76-87%' appear in 3e, G5 and the AR-14 note."
+  },
+  {
+   "finding": "R2-AR-04 (minor): ds4 'both fit' false; whole-prompt row ignored overlap; fractional passes",
+   "status": "fixed",
+   "note": "Recomputed every 3b row. Whole-prompt bound: 84.1-185 tok/s (2.7-5.9 min). 4,096-token chunks over 8 passes with no hits: 39.9-72.8 (6.9-12.5 min); with a managed 72 GB cache: 45.0-82.3 (6.1-11.1 min). 512-token chunks over 59 passes: 8.2-15.0 (33-61 min), or 10.3-18.6 with a managed cache. mmap: 18.5-20.2. The ds4 check is rewritten: the GLM Flash 2K prompt needs compute under 0.75 s, and the V4 4K append (15.6 s) beats the 19.1 s no-hit minimum. The adjusted 45-82 (72 GB cache rather than 78.7) is justified."
+  },
+  {
+   "finding": "R2-AR-05 (minor): stopped-case cache omitted KV and buffers",
+   "status": "fixed",
+   "note": "One A7 rule. Recomputed: K2 75.2 GB (22.7%), 71.1-73.1 at 32K (21.5-22.1%); K3 76.8 (32.1%); D2 73.6 (34.1%); D3 73.4 (56.8%); Q5 79.2 (36.4%); K1 61.1 (10.7%). Tokens/s are unchanged at 3.9-9.8, 2.9-7.1, 6.5-13, 4.6-11.6 and 0.8-1.7. The 88 GB budget is explained and labelled as a choice. Keeping the h brackets is justified: on S82's K3 curve (+0.175 per e-fold) the shifts are 0.03 or less."
+  },
+  {
+   "finding": "R2-AR-06 (minor): Headroom 'GB' are GiB",
+   "status": "fixed",
+   "note": "Confirmed live: headroom reports totalGB 128 against hw.memsize 137,438,953,472, and freeGB 61.44 equals 48%. Labels are converted (57.6 GiB = 61.8 GB). Today's cache recomputes to 44.9-47.0 GB (13.6-14.2%). Readings are marked as snapshots; mine (61.4 GiB) sits within the stated 46.1-70.4 GiB range. Keeping 1.4-3.0 tok/s at h 0.45-0.55 is defensible."
+  },
+  {
+   "finding": "R2-AR-07 (info): G3 has 3 new configurations",
+   "status": "fixed",
+   "note": "3 x 6.4/3 = 6.4 and 3 x 11.2/0.27 = 124.4; plus gpt-oss (2-11) and the kernel-path check (2-4) gives 10.4-139.4. G3 names the three configurations."
+  },
+  {
+   "finding": "R2-AR-08 (info): flash-moe back-test hid where the error is",
+   "status": "fixed",
+   "note": "1/4.36 = 229.4 ms, minus 144.9 ms of SSD time, leaves 84.5 ms against a memory term of 29.5-38.3 ms, which is 2.21-2.86x. A6 states this and gives the K2 downside as 2.0-4.5 tok/s (0.220-0.509 s). Section 1 does not mention the downside; that is acceptable."
+  },
+  {
+   "finding": "R2-AR-09 (info): K1 bytes/token, DP-attention comparison, F3 label",
+   "status": "fixed",
+   "note": "K1: 11.89 + 21.1 = 33.0 GB per token, range still 0.8-1.7. DP attention: 12.34 - 1.54 = 10.8 GB against about 11 GB free. F3: 89.88 + 0.43 + 0.13 + 3 = 93.4 GiB, which is Yes to about 150K tokens (1.97 GiB / 14,080 B); ds4's 'modest initial context' caution is kept and confirmed in METAL.md."
+  }
+ ],
+ "section1_problems": [
+  "Line 34, 'A 700B-class model already runs on this Mac by streaming': not supported for Kevin's Mac. The GLM 5.3 numbers come from the ds4 maintainer's 128 GB M5 Max, whose SSD size is unknown. Section 5's disk table marks the 211.1 GB file 'no' for today's 203 GB free (153 GB usable), and section 1 itself says no 2 TB M5 Max has been tested. Write 'on a 128 GB M5 Max like this one' and add the disk condition.",
+  "Lines 97-98, 'The GGUF files have only fidelity data' and 'The only task results are for GSQ at 2.13 bits (294 GB)': row K2b contradicts this. It reports AgentBench scores for Unsloth's Kimi K2.5 UD-IQ1_M GGUF at 2.4 bits (40/61/39/41/47, GSQ paper Table 14) and for GSQ at 2.37 bits, not 2.13. K4 and 3c also give task numbers for REAP50+INT4 (about 2.25 bits per original expert weight). Section 3a Limits (line 437, 'None exist for the GGUF or MLX files a Mac would run') has the same error. The GSQ authors also note that GGUF evaluation was hampered by templating failures, which bears on the 'lower bound' reading.",
+  "Line 122, 'Stock mmap reaches about 2 GB/s, about 500 ms per GB': stated as fact, but the body (A5) only says 'I use about 2 GB/s', with no source. The only Mac evidence, flash-moe's '5x slower than pread' against a pread rate of about 3.4 GB/s, points lower, so the mmap estimate on line 90 (0.5-1.4 tok/s) may be optimistic. Label it an assumption, as was done for 5.85-10.6.",
+  "Line 91, 'SSD-LLaMA's 43-78% of peak': 43.2% is the best baseline in the SSD-LLaMA paper, not SSD-LLaMA itself. A5 (lines 195-196) states this correctly; section 1 should say '43% (best baseline) to 78% (SSD-LLaMA)'.",
+  "Line 34, 'Two community reports exist': S51 also reports Kimi K2.5 running in 96 GB of RAM on an M2 Max, with no speed given. Minor; the scoped wording on line 94 ('on a 128 GB Mac') is accurate.",
+  "Line 107, '(REAP or Nota; the makers' evaluations)': both 50% rows come from Nota's card, so the REAP 50% figures are Nota's evaluation of a REAP baseline, not the REAP build maker's. The 3c table has the same label. Minor.",
+  "Line 65, the quotation 'workload references, not a speed guarantee': accurate to ds4 SSD_STREAMING.md (S109), but the body never states it; section 3b lists other S109 guidance only. Info only."
+ ],
+ "verdict": "The revision holds up. I re-opened the sources for all 23 round-2 findings: ds4 docs, GSQ paper and README, the K3, mgoin and ubicloud cards, AtomicChat JSONL, the oMLX runs, SSD-LLaMA, 2608.07911, 2609.04575, 2609.25809, Weschera, rita-aga, S51, Computerworld, MacDailyNews, the HF API and the main repo's S140. I also recomputed every changed number. 22 findings are fixed correctly. R2-CL-14 is only partly fixed: A5 still cites PetaPixel's 12.7 GB/s 'via S4', but MacDailyNews quotes only The Verge. The rejections and adjustments are all justified: the exact S120 'worst choice in that grid' quote, the 45-82 tok/s managed-cache prefill, and the kept h brackets and 1.4-3.0 tok/s today case. The headline is unchanged: Kimi on this Mac means slow streaming, and V4 Flash 0731 or GLM-5.3-Flash is the practical choice. Section 1 needs three corrections before it goes out. (1) 'Already runs on this Mac' overstates: the GLM 5.3 streaming result is the maintainer's M5 Max, and the 211 GB file does not fit Kevin's free disk today. (2) 'GGUF files have only fidelity data' and 'the only task results are GSQ 2.13-bit' are contradicted by the dossier's own K2b row (Unsloth K2.5 UD-IQ1_M AgentBench, GSQ Table 14); 3a Limits repeats the error. (3) The 2 GB/s mmap rate is stated as fact but is an unsourced assumption. Smaller residuals: section 1 calls 43-78% 'SSD-LLaMA's'; the section 5 disk table leaves the 156 GB MXFP4 file unnamed; S131's file could also be the Vision-Exp q2-q4 mix; the event-atomic inflation applies mainly when an event's expert set exceeds the per-layer quota, so its effect on S82's single-stream brackets is probably small."
+}
