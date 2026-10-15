@@ -5876,3 +5876,45 @@ they say so.)
 - Problems: a quadratic pass read idled both GPUs for about 15 of job 1411's 26.75 minutes (fixed
   in `9c3d0db8`); G2c GPU jobs started beside job 1411; a transposition in the hand labels was
   corrected against the agent's item notes (both files kept).
+
+## 2026-10-15 — G2-RL gauntlet wave 1: score 63 (one review), honest exit on the query budget with the triad stop (branch `gauntlet/g2rl-state-precision`, not merged)
+
+- Candidate: does the GDN recurrent-state precision of RL rollouts (fp32, fp16, bf16) change
+  GRPO training of Qwen3.5-4B, and does token-level truncated importance sampling recover it?
+  Proposal `program/proposals/2026-10-15-g2rl-state-precision-rl.md` (`10beca2a...`) and DRAFT
+  registration `g2rl-state-precision-rl-v1` (`f9a7c9b1...`, not frozen, no ledger row) at
+  `6483df8a`: a pilot at learning rate 0 (7.92 cap-GPU-h) that reads the policy-gradient bias of
+  bf16-state rollouts against an fp32 A/A floor and the share token-TIS removes, gating a staged
+  training comparison of about 640 GPU-h (null path) to 1,150 GPU-h (central estimates).
+- Run: workflow `wf_f7b403ad-d82`, budgets queries 150 (30 reserved for the triad),
+  wall_minutes 720, tokens 10,000,000, dollars 150, waves 3, gpu_hours 0.5. The orchestrating
+  session paused it at 02:06 UTC to free a slot for D110 hosting and resumed it at 02:34 UTC; the
+  frontier cell re-ran its retrieval from scratch.
+- Review: reviewer 1 (claude-opus-5-5) scored 63; its ten scores sum to 63 and no cap binds
+  (74, 79, 89 applied). Reviewer 2 (open-weight) never ran: the host rule allows its lane job only
+  on an empty queue, and the D110 hosting jobs (1450-1453) hold the queue until about
+  2026-10-17. The score is 63 as an upper bound on the lower of two totals; best 63.
+- Blind discrimination: PASS against Ring-linear (2510.19338); the critic judged the proposal
+  stronger. KV4-RL (2610.14448), whose Sec. 3 states the proposal's TIS-prefix split, was not in
+  the packet.
+- Triad: all three refuted. Novelty: a recombination (Ring-linear's lever, KV4-RL's split and
+  design template, the FP16 paper's dose-and-length profile), not OCCUPIED. Identification: PR5
+  cannot attribute a low TIS recovery to state visitation (continuation advantages, truncation
+  scored 0, token-mean normalization and fixed prompts predict the same). Feasibility: the pilot
+  decides runnability only, and is over 8 GPU-h under D22 with its own conditional repeats.
+- Largest defect: no pilot readout can stop or re-size the full study (G4 cannot fail; kappa and
+  r are never gates), the pilot never measures the seed-to-seed SD that decides whether Stage 1
+  reads more than INCONCLUSIVE (0.62 under the null at an SD of 2), PR5 cannot attribute what it
+  finds, and both P3 jobs exceed their limits at the registration's own high step estimate.
+- Doctor at record time: FAIL (Compute and Novelty FAIL), byte-identical to the bundle copy.
+- Budgets, recounted from the transcripts: queries 298 of 150 under the program convention
+  (orx discover plus GitHub searches, the paused attempt included; 191 without it; 123 counting
+  only orx discover and web searches). The bundle under-records the GitHub searches (80, not
+  about 51) and omits the asset cell's and the paused attempt's. Tokens 4,249,241 of 10M; $93.75
+  of $150 (list-price equivalent); 234.3 of 720 minutes; 0 GPU-h (ledger row added, NOT RUN).
+- Exit: the declared query budget under the program convention, with the triad stop (3/3
+  refuted). Under the narrowest reading no exit would apply, but a repair wave would take dollars
+  to about $155. A fresh repair run needs a decision; admission of the full study is Kevin's
+  (D24, D92) whatever any wave scores.
+- Audit row 1 of `program/gauntlet/2026-10-15-g2rl-state-precision-rl.jsonl`, row hash
+  `dc36ee2497e3023f104d6d3ac8d936456cae444274a50f1d40a4297dcb25dcc9`.
