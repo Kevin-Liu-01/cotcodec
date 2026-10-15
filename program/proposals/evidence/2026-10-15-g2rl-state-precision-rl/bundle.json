@@ -1,0 +1,756 @@
+{
+ "schema_version": 1,
+ "proposal": "program/proposals/2026-10-15-g2rl-state-precision-rl.md",
+ "proposal_sha256": "10beca2ab6867bf6eea9f3f006a91cc111714022a389db7eac24afcc3c37483e",
+ "draft_registration": {
+  "path": "program/preregistrations/g2rl-state-precision-rl-v1.md",
+  "sha256": "f9a7c9b1e9af22d8ce10d535623beaa1cdfdc3f8108b56599413a363db004b79",
+  "status": "DRAFT"
+ },
+ "source_snapshots": [
+  {
+   "url": "https://arxiv.org/abs/1507.02646",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:24:54Z",
+   "raw_sha256": "96bc44ee8d159088b3c3f558feca7b7b6bab92ca70b52ba190328d2b28e7aea8",
+   "raw_bytes": 42483,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_1507.02646.json",
+   "sha256": "0e86df6ba7ed4eb90f2dd6323d46388f46761a4bc09c7f723a2761e111c84653"
+  },
+  {
+   "url": "https://arxiv.org/abs/1511.01437",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:24:54Z",
+   "raw_sha256": "7ae373a8ffa354b157dbb1b45263b3b79b4a9012f76bfa985799263fa10d447a",
+   "raw_bytes": 41928,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_1511.01437.json",
+   "sha256": "441f6488c7bd0d336b77aff5728b91498c0d2c9ee2631c7156b64e1c514045c0"
+  },
+  {
+   "url": "https://arxiv.org/abs/1709.06560",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:24:54Z",
+   "raw_sha256": "ef73c9eecd478e493903ccad282f4dd3ad5e3d19cddb76cb72deaf2147627a6c",
+   "raw_bytes": 44068,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_1709.06560.json",
+   "sha256": "0aa53b664498c7a9fdafa025c101dc60c0705e44d627bebeb9bfdc265cb6561c"
+  },
+  {
+   "url": "https://arxiv.org/abs/1802.01561",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:24:54Z",
+   "raw_sha256": "63e501e8bf91f3a41ea7e61ac0bede77ebea3c3d07ad5dd6cddeb9cc1bc69999",
+   "raw_bytes": 44942,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_1802.01561.json",
+   "sha256": "507c1bf792f610c0454ea275df1adbb68c2f241db9a8c2367cd6950f65f22c59"
+  },
+  {
+   "url": "https://arxiv.org/abs/1806.08295",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:24:55Z",
+   "raw_sha256": "1249a3c96b1d3ec477aac26939560b88a07785abe3d016ca17211a39cbbaed5b",
+   "raw_bytes": 42182,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_1806.08295.json",
+   "sha256": "4d561b5f85c5da642df61f57e892da8429546c86396f7eff9e6b302af3b774ec"
+  },
+  {
+   "url": "https://arxiv.org/abs/1810.12429",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:24:55Z",
+   "raw_sha256": "9c961b750460f7bad8a414617aed295c7195e888f8f4c176613f6d9d3a9a7ec5",
+   "raw_bytes": 43103,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_1810.12429.json",
+   "sha256": "05a65fefe0cb1bf1a0063be32e23b5fc80e8b20293a63c80d2115feb12b19459"
+  },
+  {
+   "url": "https://arxiv.org/abs/1811.02553",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:24:55Z",
+   "raw_sha256": "a12b988359d907e71da6797c4ad85aec92bb64db717f6977e9c34f512f478d97",
+   "raw_bytes": 43223,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_1811.02553.json",
+   "sha256": "ebfbfdbc01aa232cebf23987a7e30f22c3e43cf036f53f232579c952b3adaf4e"
+  },
+  {
+   "url": "https://arxiv.org/abs/2103.04514",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:24:55Z",
+   "raw_sha256": "d44db908d004455994721ce28f7e67c307d61966a067a593d52073e44a005b60",
+   "raw_bytes": 41871,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2103.04514.json",
+   "sha256": "b811f5eac8f1ed2be6acbfa1cb1c896da56df67c1b8792b26c4dc6b237bf1718"
+  },
+  {
+   "url": "https://arxiv.org/abs/2104.15076",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:24:55Z",
+   "raw_sha256": "7fc06993c6fb9804444dcf1ca5091040a1cda334c108f1822aff47f5f48ed2f3",
+   "raw_bytes": 44676,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2104.15076.json",
+   "sha256": "fa8bffdbf3f7d120c4e6647e262958c97226fa334525a0fcf22ad62516525e35"
+  },
+  {
+   "url": "https://arxiv.org/abs/2108.13264",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:24:55Z",
+   "raw_sha256": "c8adf85a4b91519556353ed8174a1f2304c842598e1bf2a05a47c03b1b20ef75",
+   "raw_bytes": 46956,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2108.13264.json",
+   "sha256": "dcd8a3cc3b6266d407d0ed5ff5cc4bbc809072fcd9aefdb8e52f3fe7a03b0085"
+  },
+  {
+   "url": "https://arxiv.org/abs/2110.00641",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:24:55Z",
+   "raw_sha256": "2f977f90902f50526511a9119011bad12609f2a7a32487667bbf86b76f99d253",
+   "raw_bytes": 41537,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2110.00641.json",
+   "sha256": "6576a71456cacaf31b3769aa3ef3b48db71d2ab1187224297e3eb6013e6d9c83"
+  },
+  {
+   "url": "https://arxiv.org/abs/2506.13585",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:24:55Z",
+   "raw_sha256": "d4a867b78d7be6f3471235b4086367ba12198020d20bd5aec39394ef0de7a3b7",
+   "raw_bytes": 64410,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2506.13585.json",
+   "sha256": "a66f3a11e710d24cd5610e90aac88c61cdddf13cd230cdf3a71af7429f7644e2"
+  },
+  {
+   "url": "https://arxiv.org/abs/2510.18855",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:24:55Z",
+   "raw_sha256": "6995c64fb7d3c8fbcec3b80742754d76f0a8f8f924729c6471a208d5c165cfeb",
+   "raw_bytes": 59821,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2510.18855.json",
+   "sha256": "57c5880bb125c4c085b5c9221fce132ed4ffa21f64fde74606c68d2f7a467cd8"
+  },
+  {
+   "url": "https://arxiv.org/abs/2510.19338",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:24:56Z",
+   "raw_sha256": "e58196b53883219127fe8f1d84960be829639b009649f2d431e2851b1fa9572b",
+   "raw_bytes": 46648,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2510.19338.json",
+   "sha256": "97d22eb0a22b0e792e9dc9a319ce44b81bf5fd542d4b3d321f8d49d9dd2addce"
+  },
+  {
+   "url": "https://arxiv.org/abs/2510.26692",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:24:56Z",
+   "raw_sha256": "d91b905343b5f9a73f27a72b988592e4c4ea707b918724836bcd3992737a0461",
+   "raw_bytes": 51487,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2510.26692.json",
+   "sha256": "71425fdc471ba2b68aaaa12b1a42edb3dde1685590566c9c3975e545717f775f"
+  },
+  {
+   "url": "https://arxiv.org/abs/2510.26788",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:24:56Z",
+   "raw_sha256": "7b6d046d0182628231339218a4b8b252f22e6721115bb951f493ddd2c5a9a01e",
+   "raw_bytes": 41947,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2510.26788.json",
+   "sha256": "ebe1852bccaf92b4fb5979495d0d37c2a10aa87d37d979d7a1e659e84f4a6b44"
+  },
+  {
+   "url": "https://arxiv.org/abs/2512.23075",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:24:56Z",
+   "raw_sha256": "787819b1b5b72d77ddaf8164c8705e4fa84f96c0f809e3d5809cd32bd0e2491a",
+   "raw_bytes": 44357,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2512.23075.json",
+   "sha256": "dc2ec1fa0506b323f613fb7f707dc3bb50c1effa95dd9ee19b84a00b65ab3f4d"
+  },
+  {
+   "url": "https://arxiv.org/abs/2602.01826",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:24:56Z",
+   "raw_sha256": "9a847b7e2ea25b0efedd0f254c8f207e3594eb5bf315a8dcc7c2e62e47d19843",
+   "raw_bytes": 42910,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2602.01826.json",
+   "sha256": "e9ce052e2c527ce7a9a64faa25813eb0f3a575f38d862e36c189409ffe4b7a31"
+  },
+  {
+   "url": "https://arxiv.org/abs/2604.03444",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:24:56Z",
+   "raw_sha256": "f9e43ed4e7f98cace25902fdcfb130f2688aaf66237941e21e5e28c6e8ea1f3e",
+   "raw_bytes": 47658,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2604.03444.json",
+   "sha256": "ba467768146eb5923227081cc239bd23096bec01dd21a45928aa30331b6b1cf6"
+  },
+  {
+   "url": "https://arxiv.org/abs/2604.11554",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:24:56Z",
+   "raw_sha256": "1a017898bb8dd461fc2c866f4edc5649481e175ca84bf31804cc12edb270fbaf",
+   "raw_bytes": 44673,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2604.11554.json",
+   "sha256": "083d1f6dca546ef7d328924c5541d3e31a453ce7fc16ad1a666df7bd962cd7de"
+  },
+  {
+   "url": "https://arxiv.org/abs/2604.12374",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:24:56Z",
+   "raw_sha256": "e54a5848a1e2d8697129416b9756c1360f0239cb2b771b1d5a34f939ee920310",
+   "raw_bytes": 133929,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2604.12374.json",
+   "sha256": "db794b08f1a2cf2dee7537264b48c8c899e34c3e63b6f88326ed3e0cf215227d"
+  },
+  {
+   "url": "https://arxiv.org/abs/2605.14220",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:24:56Z",
+   "raw_sha256": "5c82712d23ea69afbf19d7a56fc21940255fc41cc4e07d9aad658e6769e2c5b0",
+   "raw_bytes": 42343,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2605.14220.json",
+   "sha256": "146ac94965c16ff5d9461a323d5f18e232150b37bb62897aeefb8e51fb1a9ea6"
+  },
+  {
+   "url": "https://arxiv.org/abs/2606.15007",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:24:57Z",
+   "raw_sha256": "fa0773b8a29248a13a96ba119f313c41522a6a5a46b6beb095afba5c04fbb1a8",
+   "raw_bytes": 137522,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2606.15007.json",
+   "sha256": "09162f686f74884ec5522a10ed311a68bb129beee45db24597f8d7909bb3eda7"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.27513",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:24:57Z",
+   "raw_sha256": "d1bfb609d236cd02804450c8f48d5907e1b2c55dc1e159139856498525da6e41",
+   "raw_bytes": 44400,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2608.27513.json",
+   "sha256": "017ad9a855996893cf858b3cb319d841a8227244295c0405e37a93e85e1f2b0f"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.20807",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:24:57Z",
+   "raw_sha256": "477ebbb0c3c946610289064cb0b1590bd9dd8b81a93d9e65c003eb36eec842ad",
+   "raw_bytes": 40826,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2609.20807.json",
+   "sha256": "50fae3579b0ce8feb93080dc1218e4c9f6681f438e2a3ce7f20ce823d05ef2aa"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.39185",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:24:57Z",
+   "raw_sha256": "39b491ef862d89245f36a419208f02f341918308f909613988545b73e01f7ff2",
+   "raw_bytes": 40562,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2609.39185.json",
+   "sha256": "6e7f03f1b82db7e4ec43b8535934da1947f416deb7dd58d30df2e71f55579d9e"
+  },
+  {
+   "url": "https://arxiv.org/abs/2610.14448",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:24:57Z",
+   "raw_sha256": "5a6043f97aff62fb6a876dab1eaf4e0686d1603dc68293209efbf0e23aae4301",
+   "raw_bytes": 42869,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2610.14448.json",
+   "sha256": "66b26e1ccf6df87cdc9ec3b654951121d9ad3e3db012de116593a1121413e67d"
+  },
+  {
+   "url": "https://arxiv.org/abs/2610.15709",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:24:57Z",
+   "raw_sha256": "357072e758facd49f03f858558bd36d50e288e4be6804d2708e7f989effb924f",
+   "raw_bytes": 43138,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2610.15709.json",
+   "sha256": "4243f94daac31518d9c25d2cb551c8b23d21c47bc076b8457e5faddb4ae1dd4d"
+  },
+  {
+   "url": "https://docs.vllm.ai/en/stable/api/vllm/config/mamba/",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:24:58Z",
+   "raw_sha256": "29b3df37d3666922dffb6b977cdafa515dbda8ae5c923cfe73ef446a4295c0c6",
+   "raw_bytes": 692566,
+   "primary": false,
+   "artifact": "snapshots/docs.vllm.ai_en_stable_api_vllm_config_mamba.json",
+   "sha256": "28dadd5735449f282c42aafc0c0d0cb99da5113c55b4aec2f34d9c3e40fba9ec"
+  },
+  {
+   "url": "https://github.com/NVIDIA-NeMo/RL/blob/main/examples/nemo_gym/grpo_nanov3.yaml",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:24:58Z",
+   "raw_sha256": "845459364a7aab34c70a22680078347d944f58bd615737ef0eb41f5a128f2004",
+   "raw_bytes": 415616,
+   "primary": true,
+   "artifact": "snapshots/github.com_NVIDIA-NeMo_RL_blob_main_examples_nemo_gym_grpo_nanov3.yaml.json",
+   "sha256": "c78b4f31111b34ba420567a9fd73c76688890da40e75c2f22d7401e11b6d4cac"
+  },
+  {
+   "url": "https://github.com/NVIDIA-NeMo/RL/issues/4243",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:24:59Z",
+   "raw_sha256": "e5d64d3180a90e0c25c2c620c5f6b3b9a167178de37f7a8bb14c751f73646e73",
+   "raw_bytes": 324679,
+   "primary": true,
+   "artifact": "snapshots/github.com_NVIDIA-NeMo_RL_issues_4243.json",
+   "sha256": "f717cd9dee7008f1fc1f276057392f0eb92474bb930891dfd82e7edd663b9b64"
+  },
+  {
+   "url": "https://github.com/pytorch/torchtitan/blob/main/torchtitan/rl/generator/vllm/gdn.py",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:25:00Z",
+   "raw_sha256": "c94608eef7625e566bf9bbc27bebaec9cfe0e2ddad770c16ec379524f644bde9",
+   "raw_bytes": 495211,
+   "primary": true,
+   "artifact": "snapshots/github.com_pytorch_torchtitan_blob_main_torchtitan_rl_generator_vllm_gdn.py.json",
+   "sha256": "77dce1b7fcfdaddbcadd828b8e650f62cbcac501d72e9a760a6f69694d05472e"
+  },
+  {
+   "url": "https://github.com/radixark/miles/blob/main/docs/models/qwen/qwen3-8.md",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:25:00Z",
+   "raw_sha256": "6e139da0297f9db8d3f7d7d682bec8ff430ca53c035906d4964f29d8399aa3dd",
+   "raw_bytes": 333233,
+   "primary": true,
+   "artifact": "snapshots/github.com_radixark_miles_blob_main_docs_models_qwen_qwen3-8.md.json",
+   "sha256": "eed2001c323a2f25d9488cc2ee15275cb21b21c99a438b98eafc263abcd29f60"
+  },
+  {
+   "url": "https://github.com/sgl-project/sglang/pull/26929",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:25:02Z",
+   "raw_sha256": "c47e7106f68922bf61b4dce77ca99c4a2e9d2ce542e4e28fe149aa90183c3483",
+   "raw_bytes": 472831,
+   "primary": true,
+   "artifact": "snapshots/github.com_sgl-project_sglang_pull_26929.json",
+   "sha256": "6209203afb9b87169624af4ddc3fda1c8381f25d5c78bb89d63da891e818f1bf"
+  },
+  {
+   "url": "https://github.com/verl-project/verl/blob/main/docs/algo/rollout_corr.md",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:25:03Z",
+   "raw_sha256": "a1af1874825feae029b19839ada47517e17e5bb3a57060a08a50870a676cc674",
+   "raw_bytes": 814879,
+   "primary": true,
+   "artifact": "snapshots/github.com_verl-project_verl_blob_main_docs_algo_rollout_corr.md.json",
+   "sha256": "bb6c640c31f51785735d7946e9b418de2d53c79bd8b91724a63e79487e46843c"
+  },
+  {
+   "url": "https://github.com/verl-project/verl/blob/main/verl/models/transformers/qwen3_5.py",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:25:04Z",
+   "raw_sha256": "10cf7f6db5e9a48ba3e8886003d46b27f1e19bb6b7801d4ebfd428a3c5a9c3ee",
+   "raw_bytes": 644141,
+   "primary": true,
+   "artifact": "snapshots/github.com_verl-project_verl_blob_main_verl_models_transformers_qwen3_5.py.json",
+   "sha256": "3053ac9592658f581ccf11c3f552ff9c4d0ade733611c4adb52947ab79c21d07"
+  },
+  {
+   "url": "https://github.com/verl-project/verl/issues/6829",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:25:05Z",
+   "raw_sha256": "0193bac55fb27adf7d512bafaf50346aac741b8f196039bcbc0716a35917f122",
+   "raw_bytes": 303245,
+   "primary": true,
+   "artifact": "snapshots/github.com_verl-project_verl_issues_6829.json",
+   "sha256": "eac0260a9616ffdac996b3494f9545aa696e3d02f8f97230dfc22c1c1775868e"
+  },
+  {
+   "url": "https://github.com/verl-project/verl/issues/7438",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:25:06Z",
+   "raw_sha256": "88ef470767f96d35ac6a744d0c179fed0aedce957a992fada0655ce97076b5de",
+   "raw_bytes": 317984,
+   "primary": true,
+   "artifact": "snapshots/github.com_verl-project_verl_issues_7438.json",
+   "sha256": "0378ea48de1e6c7cb607c314629b2291db275b5572a05394eec2b30d9abbfa68"
+  },
+  {
+   "url": "https://github.com/verl-project/verl/issues/8154",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:25:07Z",
+   "raw_sha256": "f0cce47896dba88e820bc93c996592f50aa1a49aabb70120ff930dee28fa6ce3",
+   "raw_bytes": 358005,
+   "primary": true,
+   "artifact": "snapshots/github.com_verl-project_verl_issues_8154.json",
+   "sha256": "80551a189ef8ea29add051535a4e28937c1f63f54002a78ca4e79d77534647c8"
+  },
+  {
+   "url": "https://github.com/verl-project/verl/releases/tag/v0.9.1",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:25:08Z",
+   "raw_sha256": "13eb1cf3b484db3911a6b73666837e2eed936fd457f80db97586350b9f18c741",
+   "raw_bytes": 399835,
+   "primary": true,
+   "artifact": "snapshots/github.com_verl-project_verl_releases_tag_v0.9.1.json",
+   "sha256": "e3573621de901974e3944674abd9a755701e8b338a32c07f4968cc00cd7b358d"
+  },
+  {
+   "url": "https://github.com/vllm-project/vllm/blob/v0.31.0/vllm/model_executor/models/config.py",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:25:08Z",
+   "raw_sha256": "a12eaef8d6fa5983c922f0b4997ddb8e2431c75378690f6b65826804ea671ee1",
+   "raw_bytes": 913292,
+   "primary": true,
+   "artifact": "snapshots/github.com_vllm-project_vllm_blob_v0.31.0_vllm_model_executor_models_config.py.json",
+   "sha256": "bf924f2c79ff3ce8f98c4a26dd0afc3ac3c0f417d3ec2854f27f4397475cd9ec"
+  },
+  {
+   "url": "https://github.com/vllm-project/vllm/issues/59764",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:25:09Z",
+   "raw_sha256": "3442b5f0fb4c797264fa78ae3431c72e2807dc0ddf661f3e4539b8262d7b0911",
+   "raw_bytes": 400176,
+   "primary": true,
+   "artifact": "snapshots/github.com_vllm-project_vllm_issues_59764.json",
+   "sha256": "c94351c04472ac8d9061990a4ce41d1798979fba7ca6a26a8697a910a1ebf76a"
+  },
+  {
+   "url": "https://huggingface.co/Qwen/Qwen3.5-4B",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:25:10Z",
+   "raw_sha256": "0cf271cfea4f67ebadc36bf11f11b1bae8c3df56d3a382ddd99b262356848aa5",
+   "raw_bytes": 498892,
+   "primary": true,
+   "artifact": "snapshots/huggingface.co_Qwen_Qwen3.5-4B.json",
+   "sha256": "dc48e0793522f200f391130e1867c1f6acc138f6a327b42dafbb1799dc1bb4db"
+  },
+  {
+   "url": "https://huggingface.co/datasets/BytedTsinghua-SIA/DAPO-Math-17k",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:25:10Z",
+   "raw_sha256": "735668e1a26d8834fdc3593fbef72fb68d62648e3b26bb5b78f5a48b6e2bd293",
+   "raw_bytes": 804299,
+   "primary": true,
+   "artifact": "snapshots/huggingface.co_datasets_BytedTsinghua-SIA_DAPO-Math-17k.json",
+   "sha256": "49ed40711a1e8b3ce6893e0b10bdb65ea239f5a1c56b70849ea0e3e7b1af306c"
+  },
+  {
+   "url": "https://huggingface.co/datasets/HuggingFaceH4/MATH-500",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:25:10Z",
+   "raw_sha256": "9f4179c4ba2e06716caeb3efad03f19e07c4d81ba4809316f2fb3379daed077f",
+   "raw_bytes": 616366,
+   "primary": true,
+   "artifact": "snapshots/huggingface.co_datasets_HuggingFaceH4_MATH-500.json",
+   "sha256": "c0438f2c4d03ea18e8cb03328de924b70e9d0f378ef353ac384adb409dda90e9"
+  },
+  {
+   "url": "https://huggingface.co/datasets/math-ai/aime25",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:25:11Z",
+   "raw_sha256": "d5fae38cd245ba7633219c81a57ba97e976923d22a4a75067c2d09a23a6fe7f1",
+   "raw_bytes": 232221,
+   "primary": true,
+   "artifact": "snapshots/huggingface.co_datasets_math-ai_aime25.json",
+   "sha256": "35a7b21b14ea5aa8f35245aa8da8185cf9284edbfa89dbc7cb6c67a97a223321"
+  },
+  {
+   "url": "https://openreview.net/forum?id=9LUInzhKZc",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:25:11Z",
+   "raw_sha256": "bc3f99651f6ba5d4fbe225cf88a1b39f8df87464533af783edb6ab0ca08d2d2a",
+   "raw_bytes": 4787,
+   "primary": true,
+   "artifact": "snapshots/openreview.net_forum_id_9LUInzhKZc.json",
+   "sha256": "9e97c424706ca2fc62c4ff3e4d5f2afe4bf468833b34d262bf4eabf2f7bfe630",
+   "content_note": "HTTP 200 browser-challenge page; verifies nothing about content (UNVERIFIABLE_ACCESS)"
+  },
+  {
+   "url": "https://vllm.ai/blog/2026-08-21-isoexec",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:25:11Z",
+   "raw_sha256": "e4b13bafae15e8ab6d10487d4652dda13e023245584dab32225770e857c43fae",
+   "raw_bytes": 266814,
+   "primary": false,
+   "artifact": "snapshots/vllm.ai_blog_2026-08-21-isoexec.json",
+   "sha256": "cdd05c215234e6503eb891e5918c5ef1693d244494570e4bfb170aadc3c33954"
+  },
+  {
+   "url": "https://yichuan-w.github.io/blog/GDN-train-inference-mismatch-asyncRL/",
+   "http_status": 200,
+   "fetched_at": "2026-10-15T04:25:11Z",
+   "raw_sha256": "b7547b9bc5daa5200d03cde71f315476110bd06903b01ffe206bd1ea64117859",
+   "raw_bytes": 86908,
+   "primary": false,
+   "artifact": "snapshots/yichuan-w.github.io_blog_GDN-train-inference-mismatch-asyncRL.json",
+   "sha256": "b0d123af9baaf0c5b501e9bcb7ddbbcb66b2020fe4de2239154e71893fa734b3"
+  }
+ ],
+ "query_log": {
+  "artifact": "query-log.json",
+  "sha256": "b1a4fdba0783796f84318a8c98732306f9ddefe4c59fc92659440167b289fcde"
+ },
+ "reviews": [],
+ "reviews_status": "not run: the blind critic, the refute-first triad and both reviewers follow this synthesis; no trusted Ed25519 store exists (D24)",
+ "compute": {
+  "scope": "g2rl-state-precision-rl-v1 is a DRAFT pilot registration. No RL image, driver, manifest or host attestation exists; only CPU analyses of committed data and simulations were run (compute/attestations-not-run.md).",
+  "image_digest": "docker.io/vllm/vllm-openai@sha256:b18abb2df97b8f798e81862bd93f872ea18613372e2c3adc0cc2ac21e66ac12f",
+  "image_scope": "engine base image (vLLM v0.31.0, commit db9527a4); the program's cu129 overlay (G2c local image id sha256:7f6d49d75fe5d6cefd3fc348129c48e141ab607118a55b7897a47df8bf988ff3) is the parent of the RL overlay the pilot's P0 builds",
+  "real_model_loop": false,
+  "benchmark_adapter": null,
+  "manifest": null,
+  "manifest_scope": "no manifest is rendered; the RL overlay's image id does not exist",
+  "container_smoke": {
+   "label": "container_smoke",
+   "status": "NOT_RUN",
+   "return_code": null,
+   "artifact": "compute/attestations-not-run.md",
+   "sha256": "96789f528dccaf4edf091c2cdd3d19975453a49e6255bf00f44ddb8bcddf5518"
+  },
+  "slurm_test": {
+   "label": "slurm_test",
+   "status": "NOT_RUN",
+   "return_code": null,
+   "artifact": "compute/attestations-not-run.md",
+   "sha256": "96789f528dccaf4edf091c2cdd3d19975453a49e6255bf00f44ddb8bcddf5518"
+  },
+  "provenance_verification": {
+   "label": "provenance_verification",
+   "status": "NOT_RUN",
+   "return_code": null,
+   "artifact": "compute/attestations-not-run.md",
+   "sha256": "96789f528dccaf4edf091c2cdd3d19975453a49e6255bf00f44ddb8bcddf5518"
+  },
+  "executable_pilot": null,
+  "executable_pilot_scope": "none run; the gauntlet's host rule allowed only the open-weight reviewer's lane job",
+  "pilot_caps_gpu_h": {
+   "total": 7.9167,
+   "expected": 6.0,
+   "line": 8.0,
+   "jobs": [
+    {
+     "job": "P0a",
+     "cap": 0.0,
+     "arithmetic": "0 x 60 min / 60 = 0.0000"
+    },
+    {
+     "job": "P0b",
+     "cap": 0.0,
+     "arithmetic": "0 x 120 min / 60 = 0.0000"
+    },
+    {
+     "job": "P0c",
+     "cap": 0.0,
+     "arithmetic": "0 x 20 min / 60 = 0.0000"
+    },
+    {
+     "job": "P1",
+     "cap": 0.25,
+     "arithmetic": "1 x 15 min / 60 = 0.2500"
+    },
+    {
+     "job": "P2a",
+     "cap": 1.1667,
+     "arithmetic": "2 x 35 min / 60 = 1.1667"
+    },
+    {
+     "job": "P2b",
+     "cap": 0.5,
+     "arithmetic": "2 x 15 min / 60 = 0.5000"
+    },
+    {
+     "job": "P3a",
+     "cap": 2.6667,
+     "arithmetic": "4 x 40 min / 60 = 2.6667"
+    },
+    {
+     "job": "P3b",
+     "cap": 3.3333,
+     "arithmetic": "4 x 50 min / 60 = 3.3333"
+    },
+    {
+     "job": "P4",
+     "cap": 0.0,
+     "arithmetic": "0 x 60 min / 60 = 0.0000"
+    }
+   ]
+  },
+  "full_design_gpu_h": {
+   "low": {
+    "null_path": 495.5,
+    "changes_path": 890.7
+   },
+   "central": {
+    "null_path": 641.6,
+    "changes_path": 1153.1
+   },
+   "high": {
+    "null_path": 866.3,
+    "changes_path": 1557.0
+   }
+  },
+  "supplementary_cpu_evidence": [
+   {
+    "label": "committed G2b/G2c per-token data re-read under response caps (k3 ratios, TIS weight shares, sequence log ratios, calibrated sequence mask, PSIS k-hat)",
+    "script": {
+     "artifact": "compute/mismatch_by_cap.py",
+     "sha256": "3c01e449789c2e2b97b5511b0d9925af0f49577f1d2b898109d112718e1703a5"
+    },
+    "output": {
+     "artifact": "compute/mismatch-by-cap.json",
+     "sha256": "0067804ad89b2487285b6308977b3f3ac69708735e52c97a1ead69df3d0c2353"
+    },
+    "stdout": {
+     "artifact": "compute/mismatch-by-cap.stdout",
+     "sha256": "c3086f496bd966cd95b693713c2cc611a4cfc2f061f34161694e2de84912c2f8"
+    }
+   },
+   {
+    "label": "operating characteristics: MDE tables, the pilot's manipulation gate, the gradient-bias readout, the full design's rule (seeds 42-44)",
+    "script": {
+     "artifact": "compute/power_g2rl.py",
+     "sha256": "d6719c87e323b1139cd60530e135f7d5cf136e7280199b8c3efef5dad68aedf1"
+    },
+    "output": {
+     "artifact": "compute/power-g2rl.json",
+     "sha256": "38d7a1f627205627c8a2972b5bce70c991999dc12792d3c3a0a5825e8b62c292"
+    },
+    "stdout": {
+     "artifact": "compute/power-g2rl.stdout",
+     "sha256": "907a939fe4c88d8e38d411a9d5f4776bbe0015a55d2f3106064127620ddda360"
+    }
+   },
+   {
+    "label": "cap arithmetic for the pilot and the full design",
+    "script": {
+     "artifact": "compute/caps_g2rl.py",
+     "sha256": "1c6143b74d904a54bf7c0c6c204d09207e54813096012b1977157b3699cca9fe"
+    },
+    "output": {
+     "artifact": "compute/caps-g2rl.json",
+     "sha256": "e2b732f4fd6888c6cad6d923a01b3eb897c61f33aa1a3cbf9edd5bd584976301"
+    },
+    "stdout": {
+     "artifact": "compute/caps-g2rl.stdout",
+     "sha256": "0e243bacd37b40103ee77b6e0c484622d295cc207dd2aa550f5cb1ab6a770e84"
+    }
+   }
+  ]
+ },
+ "doctors": [
+  {
+   "name": "Source",
+   "status": "PASS",
+   "artifact": "doctors/source.json",
+   "sha256": "211025af4e4063a2629065a2692575f53d2c2739b8870d631e1061e1a7608654"
+  },
+  {
+   "name": "Citation",
+   "status": "PASS",
+   "artifact": "doctors/citation.json",
+   "sha256": "a94b97f7525c8660710425872e71b68b189c7dee886822f58285f11a9883a7d2"
+  },
+  {
+   "name": "Novelty",
+   "status": "FAIL",
+   "artifact": "doctors/novelty.json",
+   "sha256": "902f3688349f527feab0b9ac0622c80978db92648cc23fc398fbd875f04aa15f"
+  },
+  {
+   "name": "Design",
+   "status": "PASS",
+   "artifact": "doctors/design.json",
+   "sha256": "4b518a0a48b2910562f6d2d518f285df30b40508ab0f207b341da942a556dd90"
+  },
+  {
+   "name": "Compute",
+   "status": "FAIL",
+   "artifact": "doctors/compute.json",
+   "sha256": "ad49ae745652b91f6c7fd8452fd048adef1d93f68825ea8d29e534c816bc6b70"
+  },
+  {
+   "name": "Safety",
+   "status": "PASS",
+   "artifact": "doctors/safety.json",
+   "sha256": "53fd7b84c76e8d56548ad3d31c175d0fd6fa875753b368ef7f0ac4c9fc0457d4"
+  }
+ ],
+ "audit_log": null,
+ "audit_log_status": "no gauntlet row yet; the recorder appends program/gauntlet/2026-10-15-g2rl-state-precision-rl.jsonl after the reviewers score",
+ "blind_discrimination_packet": {
+  "paragraphs": [
+   {
+    "artifact": "blind/paragraph-c53e285c.txt",
+    "sha256": "c53e285ca48f8eee25965d38a30ccc6d30c915eda4db72112729229d71428623"
+   },
+   {
+    "artifact": "blind/paragraph-d3140801.txt",
+    "sha256": "d3140801c3db6e77762be7c9332d557da2f3417f364324f8071640382a3166e8"
+   }
+  ],
+  "roles": {
+   "artifact": "compute/blind-roles.json",
+   "sha256": "621cb51e3bd149a1abf68d5fde5a492294d70cef5add4d10e7d573f3cba3497e",
+   "note": "recorder only; never shown to the critic"
+  }
+ },
+ "budget_ledger": {
+  "declared": {
+   "queries": 150,
+   "wall_minutes": 720,
+   "tokens": 10000000,
+   "dollars": 150,
+   "waves": 3,
+   "gpu_hours": 0.5
+  },
+  "queries": {
+   "orx_discover_by_cell": {
+    "frontier": 44,
+    "kill-shot": 25,
+    "cross-domain": 29
+   },
+   "orx_discover_by_mode": {
+    "orx discover keyword": 74,
+    "orx discover embedding": 14,
+    "orx discover openalex": 10
+   },
+   "orx_discover_total": 98,
+   "web_search_total": 8,
+   "github_search_total_approximate": 51,
+   "literature_searches": 106,
+   "all_searches_reaching_a_backend_approximate": 157,
+   "declared_query_budget": 150,
+   "refuter_reserve": 30,
+   "convention_note": "Counting literature searches only, 44 queries remain (reserve intact). Counting every search that reached a backend (the D75 convention), about 157 were used and the budget is exceeded before the refuters; the orchestrator rules on the convention."
+  },
+  "gpu_hours_used_by_synthesis": 0.0,
+  "host_jobs_submitted_by_synthesis": 0,
+  "tokens_wall_dollars": "metered by the recorder over the whole wave"
+ },
+ "evidence_root_sha256": "758eb71eb17634b1555459d2fcf17bcae8ab0a1003ecabe3b8c75d159f69946b",
+ "direction_doctor_run": {
+  "command": "uv run python scripts/research_direction_doctor.py program/proposals/2026-10-15-g2rl-state-precision-rl.md",
+  "status": "FAIL",
+  "acceptedScore": 0,
+  "hardCaps": [
+   89
+  ],
+  "evidence_root_at_run": "758eb71eb17634b1555459d2fcf17bcae8ab0a1003ecabe3b8c75d159f69946b",
+  "artifact": "doctors/direction-doctor-output.json",
+  "sha256": "155d0d054417df5a0de96972f7bddfa90eab1acd02c462414819c80b2c58d771"
+ }
+}

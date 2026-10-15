@@ -1,0 +1,36 @@
+{
+ "url": "https://arxiv.org/abs/2605.14220",
+ "fetched_at": "2026-10-15T04:24:56Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42343,
+ "raw_sha256": "5c82712d23ea69afbf19d7a56fc21940255fc41cc4e07d9aad658e6769e2c5b0",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "Diagnosing Training Inference Mismatch in LLM Reinforcement Learning via a Zero-Mismatch Reference",
+  "authors": [
+   "Zhong, Tianle",
+   "Ling, Neiwen",
+   "Pi, Yifan",
+   "Wei, Zijun",
+   "Yu, Tianshu",
+   "Fox, Geoffrey",
+   "Wu, Peng",
+   "Yu, Xiao"
+  ],
+  "citation_date": "2026/05/14",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 14 May 2026 00:27:35 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Tue, 29 Sep 2026 19:15:13 UTC"
+   }
+  ],
+  "abstract": "Modern LLM RL systems separate rollout generation from policy optimization. These two stages are expected to produce token probabilities that match exactly. However, implementation differences can make them assign different values to the same sequence under the same model weights, inducing Training-Inference Mismatch (TIM). TIM is difficult to inspect because it is entangled with off-policy drift and common stabilization mechanisms. In this work, we isolate TIM in a zero-mismatch diagnostic setting (VeXact), and show that small token-level numerical disagreements can independently cause training collapse. We further show that TIM changes the effective optimization problem, and identify a set of remedies that could mitigate TIM. Our results suggest that TIM is not benign numerical noise, but a systems-level perturbation that should be treated as a first-order factor in analyzing LLM RL stability.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

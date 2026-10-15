@@ -1,0 +1,13 @@
+{
+ "url": "https://huggingface.co/datasets/math-ai/aime25",
+ "fetched_at": "2026-10-15T04:25:11Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 232221,
+ "raw_sha256": "d5fae38cd245ba7633219c81a57ba97e976923d22a4a75067c2d09a23a6fe7f1",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "html_title": "math-ai/aime25 · Datasets at Hugging Face"
+ }
+}

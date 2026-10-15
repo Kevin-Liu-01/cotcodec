@@ -1,0 +1,13 @@
+{
+ "url": "https://github.com/vllm-project/vllm/issues/59764",
+ "fetched_at": "2026-10-15T04:25:09Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 400176,
+ "raw_sha256": "3442b5f0fb4c797264fa78ae3431c72e2807dc0ddf661f3e4539b8262d7b0911",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "html_title": "[Bug]: Qwen3.6-35B-A3B (hybrid GDN + MoE): a prompt's logprobs move by up to 0.2 when another sequence shares its engine step (v0.30.0, sm_120) · Issue #59764 · vllm-project/vllm · GitHub"
+ }
+}

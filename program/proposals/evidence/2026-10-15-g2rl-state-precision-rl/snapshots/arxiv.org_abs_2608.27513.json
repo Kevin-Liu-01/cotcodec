@@ -1,0 +1,37 @@
+{
+ "url": "https://arxiv.org/abs/2608.27513",
+ "fetched_at": "2026-10-15T04:24:57Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44400,
+ "raw_sha256": "d1bfb609d236cd02804450c8f48d5907e1b2c55dc1e159139856498525da6e41",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "DAMP: Decay-Aware Mixed-Precision Recurrent-State Quantization",
+  "authors": [
+   "Zhang, Tao",
+   "Tan, Jianchao",
+   "Sun, Pingwei",
+   "Yu, Yanqi",
+   "Su, Zunhai",
+   "Jiang, Zixu",
+   "Xie, Yuchen",
+   "Cai, Xunliang",
+   "Zeng, Ziqian"
+  ],
+  "citation_date": "2026/08/27",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 27 Aug 2026 09:11:48 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Wed, 30 Sep 2026 12:35:40 UTC"
+   }
+  ],
+  "abstract": "Complex reasoning and agentic applications increasingly rely on long-context inference, where growing KV caches increase both memory usage and decoding overhead. Hybrid models reduce these costs by combining Softmax Attention with Gated DeltaNet (GDN) or Kimi Delta Attention (KDA), which maintain fixed-size recurrent states. These states are commonly stored in FP32 and consume substantial GPU memory, while their updates are limited by memory bandwidth. Quantization can reduce both storage footprint and memory traffic, but we find that uniform INT8 and FP8 degrade complex reasoning accuracy, while INT4 and NVFP4 collapse it to near zero. To our knowledge, this is the first study of post-training recurrent-state quantization for GDN and KDA. Our analysis reveals that outliers in GDN and KDA states are concentrated in particular key channels and value dimensions. Learned decay influences how much quantization error is retained. We find that largely the same GDN heads and KDA key channels exhibit slow decay across tasks. Based on these insights, we propose DAMP, which jointly considers quantization error and decay-based error retention to select high-risk key channels offline. Under a fixed storage budget, it retains these channels in FP16 and stores the remainder in INT8. We evaluate DAMP on Qwen3.6-35B, Kimi-Linear-48B and Kimi-K3 across six reasoning and code generation benchmarks. At 9.9 bits per state value, DAMP maintains average accuracy close to FP32. In SGLang, DAMP reduces recurrent-state storage by 69.1%, accelerates the recurrent-state update kernel by up to 2.59x , and lowers full-model time per output token by up to 19.0%.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

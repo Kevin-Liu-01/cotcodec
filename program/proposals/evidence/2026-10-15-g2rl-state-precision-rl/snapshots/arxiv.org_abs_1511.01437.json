@@ -1,0 +1,34 @@
+{
+ "url": "https://arxiv.org/abs/1511.01437",
+ "fetched_at": "2026-10-15T04:24:54Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41928,
+ "raw_sha256": "7ae373a8ffa354b157dbb1b45263b3b79b4a9012f76bfa985799263fa10d447a",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "The sample size required in importance sampling",
+  "authors": [
+   "Chatterjee, Sourav",
+   "Diaconis, Persi"
+  ],
+  "citation_date": "2015/11/04",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 4 Nov 2015 19:06:25 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Sun, 15 Nov 2015 04:48:41 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Wed, 21 Jun 2017 03:36:08 UTC"
+   }
+  ],
+  "abstract": "The goal of importance sampling is to estimate the expected value of a given function with respect to a probability measure $\\nu$ using a random sample of size $n$ drawn from a different probability measure $\\mu$. If the two measures $\\mu$ and $\\nu$ are nearly singular with respect to each other, which is often the case in practice, the sample size required for accurate estimation is large. In this article it is shown that in a fairly general setting, a sample of size approximately $\\exp(D(\\nu||\\mu))$ is necessary and sufficient for accurate estimation by importance sampling, where $D(\\nu||\\mu)$ is the Kullback-Leibler divergence of $\\mu$ from $\\nu$. In particular, the required sample size exhibits a kind of cut-off in the logarithmic scale. The theory is applied to obtain a general formula for the sample size required in importance sampling for one-parameter exponential families (Gibbs measures).",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

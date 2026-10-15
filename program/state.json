@@ -1450,6 +1450,13 @@
       ],
       "outcome": "ran once, complete: both reader passes 190,156 of 190,156 (1,281 s and 2,297 s, no time cap), judge items 10,230 finished by both primary-judge passes and the second judge, attention 694 of 694 pools; hand-check sample drawn (120 items, cebfe191), unlabelled; no analysis run, no outcome read (program/evidence/2026-10-16/am1-confirmatory/README.md)",
       "basis": "physical (scontrol RunTime 00:45:49 on 2 H100); Slurm limit 90 min (3.0 GPU-h cap); registration total 1.5444 of the 3.1 cap; submitted with no other GPU job of this program queued or running and 6 of 8 H100 free (D110's jobs on GPUs 0-1)"
+    },
+    {
+      "experiment": "G2-RL gauntlet wave 1 (g2rl-state-precision-rl-v1 draft: pilot of at most 8 GPU-h and the staged RL training comparison it gates) open-weight review (D24): NOT RUN",
+      "gpu_hours": 0.0,
+      "jobs": [],
+      "outcome": "review NOT RUN: the lane request (request-g2rl-w1-r2, 855231ee...) and prompt (587098e8..., about 105K tokens) were prepared but never dry-run, tested or submitted, because the host rule allows this gauntlet's lane job only on an empty queue and the D110 hosting jobs (1450 and 1452 running with 1-day limits, 1451 and 1453 pending on them) held it at every check (05:24-05:32 UTC by the operator, 05:40 UTC by the recorder); the queue cannot empty before about 2026-10-17T02:22Z, past the 720-minute wall budget. Wave score 63 (reviewer 1 only; an upper bound on the lower of two totals), best 63; honest exit on the declared query budget under the program convention (298 of 150; 191 without the paused first frontier attempt; 123 under the orx-plus-web reading) with the triad stop (3/3 refuted). Tokens 4.25M of 10M, $93.75 of $150, 234.3 of 720 minutes. Audit row 1 of program/gauntlet/2026-10-15-g2rl-state-precision-rl.jsonl (hash dc36ee24...)",
+      "basis": "physical: no GPU job ran for this gauntlet (no Slurm job submitted); recorder's read-only check at 05:40:25 UTC: 1450 and 1452 running, 1451 and 1453 pending, GPUs 2-7 at 0 MiB, no reviewer container"
     }
   ],
   "results": [

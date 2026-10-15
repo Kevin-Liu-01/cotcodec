@@ -1,0 +1,50 @@
+200 https://arxiv.org/abs/1507.02646 Pareto Smoothed Importance Sampling
+200 https://arxiv.org/abs/1511.01437 The sample size required in importance sampling
+200 https://arxiv.org/abs/1709.06560 Deep Reinforcement Learning that Matters
+200 https://arxiv.org/abs/1802.01561 IMPALA: Scalable Distributed Deep-RL with Importance Weighted Actor-Learner Arch
+200 https://arxiv.org/abs/1806.08295 How Many Random Seeds? Statistical Power Analysis in Deep Reinforcement Learning
+200 https://arxiv.org/abs/1810.12429 Breaking the Curse of Horizon: Infinite-Horizon Off-Policy Estimation
+200 https://arxiv.org/abs/1811.02553 A Closer Look at Deep Policy Gradients
+200 https://arxiv.org/abs/2103.04514 Nondeterminism and Instability in Neural Network Optimization
+200 https://arxiv.org/abs/2104.15076 Climate Modelling in Low-Precision: Effects of both Deterministic & Stochastic R
+200 https://arxiv.org/abs/2108.13264 Deep Reinforcement Learning at the Edge of the Statistical Precipice
+200 https://arxiv.org/abs/2110.00641 Batch size-invariance for policy optimization
+200 https://arxiv.org/abs/2506.13585 MiniMax-M1: Scaling Test-Time Compute Efficiently with Lightning Attention
+200 https://arxiv.org/abs/2510.18855 Every Step Evolves: Scaling Reinforcement Learning for Trillion-Scale Thinking M
+200 https://arxiv.org/abs/2510.19338 Every Attention Matters: An Efficient Hybrid Architecture for Long-Context Reaso
+200 https://arxiv.org/abs/2510.26692 Kimi Linear: An Expressive, Efficient Attention Architecture
+200 https://arxiv.org/abs/2510.26788 Defeating the Training-Inference Mismatch via FP16
+200 https://arxiv.org/abs/2512.23075 Trust Region Masking for Long-Horizon LLM Reinforcement Learning
+200 https://arxiv.org/abs/2602.01826 Beyond Precision: Training-Inference Mismatch is an Optimization Problem and Sim
+200 https://arxiv.org/abs/2604.03444 Olmo Hybrid: From Theory to Practice and Back
+200 https://arxiv.org/abs/2604.11554 Relax: An Asynchronous Reinforcement Learning Engine for Omni-Modal Post-Trainin
+200 https://arxiv.org/abs/2604.12374 Nemotron 3 Super: Open, Efficient Mixture-of-Experts Hybrid Mamba-Transformer Mo
+200 https://arxiv.org/abs/2605.14220 Diagnosing Training Inference Mismatch in LLM Reinforcement Learning via a Zero-
+200 https://arxiv.org/abs/2606.15007 Nemotron 3 Ultra: Open, Efficient Mixture-of-Experts Hybrid Mamba-Transformer Mo
+200 https://arxiv.org/abs/2608.27513 DAMP: Decay-Aware Mixed-Precision Recurrent-State Quantization
+200 https://arxiv.org/abs/2609.20807 Score Centering Stabilizes Off-policy Reinforcement Learning
+200 https://arxiv.org/abs/2609.39185 Low-Discrepancy Dither for Quantized Recurrent State Caches
+200 https://arxiv.org/abs/2610.14448 KV4-RL: Unlocking Faster Asynchronous Rollouts for RLVR with INT4 KV Cache Quant
+200 https://arxiv.org/abs/2610.15709 Preserving Updates in Low-Bit Recurrent State Quantization
+200 https://docs.vllm.ai/en/stable/api/vllm/config/mamba/ mamba - vLLM
+200 https://github.com/NVIDIA-NeMo/RL/blob/main/examples/nemo_gym/grpo_nanov3.yaml RL/examples/nemo_gym/grpo_nanov3.yaml at main · NVIDIA-NeMo/RL · GitHub
+200 https://github.com/NVIDIA-NeMo/RL/issues/4243 Nemotron-3-Nano-30B-A3B: train/generation logprob divergence persists on vLLM 0.
+200 https://github.com/pytorch/torchtitan/blob/main/torchtitan/rl/generator/vllm/gdn.py torchtitan/torchtitan/rl/generator/vllm/gdn.py at main · pytorch/torchtitan · Gi
+200 https://github.com/radixark/miles/blob/main/docs/models/qwen/qwen3-8.md miles/docs/models/qwen/qwen3-8.md at main · radixark/miles · GitHub
+200 https://github.com/sgl-project/sglang/pull/26929 Add stochastic rounding for FP16 Mamba SSM cache by danielafrimi · Pull Request 
+200 https://github.com/verl-project/verl/blob/main/docs/algo/rollout_corr.md verl/docs/algo/rollout_corr.md at main · verl-project/verl · GitHub
+200 https://github.com/verl-project/verl/blob/main/verl/models/transformers/qwen3_5.py verl/verl/models/transformers/qwen3_5.py at main · verl-project/verl · GitHub
+200 https://github.com/verl-project/verl/issues/6829 Qwen3.5-4b ppo_kl != 0 · Issue #6829 · verl-project/verl · GitHub
+200 https://github.com/verl-project/verl/issues/7438 delta_sharded + one_step_off_policy fails with Qwen3.5 due to multimodal process
+200 https://github.com/verl-project/verl/issues/8154 [Bug] FSDP BF16 model loading quantizes FP32 RoPE inv_freq and changes log proba
+200 https://github.com/verl-project/verl/releases/tag/v0.9.1 Release v0.9.1 · verl-project/verl · GitHub
+200 https://github.com/vllm-project/vllm/blob/v0.31.0/vllm/model_executor/models/config.py vllm/vllm/model_executor/models/config.py at v0.31.0 · vllm-project/vllm · GitHu
+200 https://github.com/vllm-project/vllm/issues/59764 [Bug]: Qwen3.6-35B-A3B (hybrid GDN + MoE): a prompt's logprobs move by up to 0.2
+200 https://huggingface.co/Qwen/Qwen3.5-4B Qwen/Qwen3.5-4B · Hugging Face
+200 https://huggingface.co/datasets/BytedTsinghua-SIA/DAPO-Math-17k BytedTsinghua-SIA/DAPO-Math-17k · Datasets at Hugging Face
+200 https://huggingface.co/datasets/HuggingFaceH4/MATH-500 HuggingFaceH4/MATH-500 · Datasets at Hugging Face
+200 https://huggingface.co/datasets/math-ai/aime25 math-ai/aime25 · Datasets at Hugging Face
+200 https://openreview.net/forum?id=9LUInzhKZc Verifying your browser | OpenReview
+200 https://vllm.ai/blog/2026-08-21-isoexec IsoExec: Unified Execution to Eliminate Trainer-Inference Mismatch in SkyRL | vL
+200 https://yichuan-w.github.io/blog/GDN-train-inference-mismatch-asyncRL/ Defending Against the Training–Inference Numeric Mismatch in RL (Especially Line
+exit=0

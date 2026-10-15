@@ -1,0 +1,44 @@
+{
+ "url": "https://arxiv.org/abs/1802.01561",
+ "fetched_at": "2026-10-15T04:24:54Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44942,
+ "raw_sha256": "63e501e8bf91f3a41ea7e61ac0bede77ebea3c3d07ad5dd6cddeb9cc1bc69999",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "IMPALA: Scalable Distributed Deep-RL with Importance Weighted Actor-Learner Architectures",
+  "authors": [
+   "Espeholt, Lasse",
+   "Soyer, Hubert",
+   "Munos, Remi",
+   "Simonyan, Karen",
+   "Mnih, Volodymir",
+   "Ward, Tom",
+   "Doron, Yotam",
+   "Firoiu, Vlad",
+   "Harley, Tim",
+   "Dunning, Iain",
+   "Legg, Shane",
+   "Kavukcuoglu, Koray"
+  ],
+  "citation_date": "2018/02/05",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 5 Feb 2018 18:47:30 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Fri, 9 Feb 2018 15:09:30 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Thu, 28 Jun 2018 06:54:39 UTC"
+   }
+  ],
+  "abstract": "In this work we aim to solve a large collection of tasks using a single reinforcement learning agent with a single set of parameters. A key challenge is to handle the increased amount of data and extended training time. We have developed a new distributed agent IMPALA (Importance Weighted Actor-Learner Architecture) that not only uses resources more efficiently in single-machine training but also scales to thousands of machines without sacrificing data efficiency or resource utilisation. We achieve stable learning at high throughput by combining decoupled acting and learning with a novel off-policy correction method called V-trace. We demonstrate the effectiveness of IMPALA for multi-task reinforcement learning on DMLab-30 (a set of 30 tasks from the DeepMind Lab environment (Beattie et al., 2016)) and Atari-57 (all available Atari games in Arcade Learning Environment (Bellemare et al., 2013a)). Our results show that IMPALA is able to achieve better performance than previous agents with less data, and crucially exhibits positive transfer between tasks as a result of its multi-task approach.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

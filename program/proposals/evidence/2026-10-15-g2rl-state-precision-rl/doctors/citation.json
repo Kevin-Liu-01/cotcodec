@@ -1,0 +1,509 @@
+{
+ "name": "Citation",
+ "status": "PASS",
+ "protocol": "ARS academic-pipeline claim_verification_protocol (claim registry, locators, verdicts, UNVERIFIABLE_ACCESS)",
+ "claims": [
+  {
+   "claim_id": "C01",
+   "claim": "A bf16 linear-attention state in the inference engine accumulates error through the recurrence; RL reward improves as fixes are applied cumulatively, the state fix bundled with an fp32 LM head; no seeds or numbers; no algorithmic correction needed once aligned",
+   "source": "https://arxiv.org/abs/2510.19338",
+   "date": "2025-10-22",
+   "read_level": "full text read by a discovery cell and by the synthesis owner",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C02",
+   "claim": "Qwen3.5-9B/35B-A3B-Base RL on TorchTitan + vLLM, always fp32 GDN state; bitwise parity (BI) vs default execution: abs-mean log-prob gap about 0.011 without BI and 0.009 with it (as reported), AIME2025 peaks about 0.57 and 0.53 with the no-BI arm finishing higher; no reward gain at window 4, on MoE or on Search-R1; mostly one seed; no TIS/MIS arm; BI costs 2-3x trainer throughput",
+   "source": "https://yichuan-w.github.io/blog/GDN-train-inference-mismatch-asyncRL/",
+   "date": "2026-08",
+   "read_level": "first-party page, blog or issue",
+   "verdict": "FIRST-PARTY",
+   "snapshot_http_status": 200,
+   "note": "first-party; not replicated"
+  },
+  {
+   "claim_id": "C03",
+   "claim": "IsoExec: unified execution for Qwen3.5-9B and 35B-A3B, synchronous DAPO 50 steps on 8xH100, no meaningful reward gain, step time 1,224.6 to 1,534.0 s (+25.3%); state dtype not stated",
+   "source": "https://vllm.ai/blog/2026-08-21-isoexec",
+   "date": "2026-08-21",
+   "read_level": "first-party page, blog or issue",
+   "verdict": "FIRST-PARTY",
+   "snapshot_http_status": 200,
+   "note": "first-party; not replicated"
+  },
+  {
+   "claim_id": "C04",
+   "claim": "BF16 token-TIS prolongs training but fails; sequence MIS stable but slow (95% vs 99% train accuracy; AIME24 34% vs 39%); BF16 training with FP32 vLLM inference fully stable at about 3x cost; no hybrid model",
+   "source": "https://arxiv.org/abs/2510.26788",
+   "date": "2025-10-30",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C05",
+   "claim": "INT4 KV rollouts with BF16 learner and token-TIS (C = 5) on Qwen3-4B/8B-Base at 16,384: KV4 fails to match BF16's later improvement (5.24 pp lower MATH-500 avg@8), KV8 tracks BF16; KV4 mean conditional KL 8.14e-3; 4B 600 updates in 19.80 h on 4 GPUs; rollout about 47% of iteration; hybrids a stated limitation",
+   "source": "https://arxiv.org/abs/2610.14448",
+   "date": "2026-10-10",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C06",
+   "claim": "Score centering matches or beats IS-family methods under sampler quantization, gap growing with mismatch; sequences 512-1,024 tokens; 6,180 H100-h; TIS 51% vs SC 52% (FP8 W/A + FP4 KV) but 12% vs 30% (INT8 + INT4 KV)",
+   "source": "https://arxiv.org/abs/2609.20807",
+   "date": "2026-09-17",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C07",
+   "claim": "FP16 round-to-nearest Mamba-2 SSM cache: LiveCodeBench completion tokens +36.95% (21,769 to 29,812) at pass@1 72.91 to 73.24; stochastic rounding -1.73%; FP32 default (first-party on its own model)",
+   "source": "https://arxiv.org/abs/2604.12374",
+   "date": "2026-04-14",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C08",
+   "claim": "FP16 SSM cache with stochastic rounding preserves FP32 accuracy and verbosity",
+   "source": "https://arxiv.org/abs/2606.15007",
+   "date": "2026-06-12",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C09",
+   "claim": "Post-trained GDN hybrid scores drop without enforce-eager; an fp32 GDN cache recovers them (repeated low-precision downcasting)",
+   "source": "https://arxiv.org/abs/2604.03444",
+   "date": "2026-04-03",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C10",
+   "claim": "vLLM v0.31.0: Qwen3.5 copies the checkpoint's `mamba_ssm_dtype` (float32) when auto; Qwen3-Next has no hook and resolves to the model dtype (code reading, not runtime-verified)",
+   "source": "https://github.com/vllm-project/vllm/blob/v0.31.0/vllm/model_executor/models/config.py",
+   "date": "2026-10-05",
+   "read_level": "repository, code, release or dataset record",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C11",
+   "claim": "SGLang FP16 SSM stochastic rounding (Mamba; Triton needs SM100); the GDN SR PR #27975 closed unmerged",
+   "source": "https://github.com/sgl-project/sglang/pull/26929",
+   "date": "2026-06-29",
+   "read_level": "repository, code, release or dataset record",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C12",
+   "claim": "TorchTitan RL forces a float32 GDN state in its vLLM generator",
+   "source": "https://github.com/pytorch/torchtitan/blob/main/torchtitan/rl/generator/vllm/gdn.py",
+   "date": "2026-10-14",
+   "read_level": "repository, code, release or dataset record",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C13",
+   "claim": "NeMo-RL Nemotron-3 GRPO recipe: `mamba_ssm_cache_dtype: float32`, IS correction on, `seq_logprob_error_threshold` 2",
+   "source": "https://github.com/NVIDIA-NeMo/RL/blob/main/examples/nemo_gym/grpo_nanov3.yaml",
+   "date": "2026-10-13",
+   "read_level": "repository, code, release or dataset record",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C14",
+   "claim": "Nemotron-3-Nano GRPO with fp32 state still shows a large generation-trainer divergence (median gen_kl_error 0.0166; 60-71% of eligible sequences masked)",
+   "source": "https://github.com/NVIDIA-NeMo/RL/issues/4243",
+   "date": "2026-09-22",
+   "read_level": "first-party page, blog or issue",
+   "verdict": "FIRST-PARTY",
+   "snapshot_http_status": 200,
+   "note": "first-party; not replicated"
+  },
+  {
+   "claim_id": "C15",
+   "claim": "miles guide: GDN state about 151 MB per in-flight sequence for Qwen3.8-27B; bf16 state offered as a rollout lever at a precision cost",
+   "source": "https://github.com/radixark/miles/blob/main/docs/models/qwen/qwen3-8.md",
+   "date": "2026-08-18",
+   "read_level": "first-party page, blog or issue",
+   "verdict": "FIRST-PARTY",
+   "snapshot_http_status": 200,
+   "note": "first-party; not replicated"
+  },
+  {
+   "claim_id": "C16",
+   "claim": "verl v0.9.1 (pins vLLM 0.24.0); rollout correction: token and sequence IS, rejection sampling, Geo-RS, IcePop, score-centering presets",
+   "source": "https://github.com/verl-project/verl/releases/tag/v0.9.1",
+   "date": "2026-09-20",
+   "read_level": "repository, code, release or dataset record",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C17",
+   "claim": "verl rollout-correction documentation (presets, decoupled and bypass modes, default threshold 2.0)",
+   "source": "https://github.com/verl-project/verl/blob/main/docs/algo/rollout_corr.md",
+   "date": "2026-09-23",
+   "read_level": "repository, code, release or dataset record",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C18",
+   "claim": "verl's Qwen3.5 trainer patch calls FLA `chunk_gated_delta_rule` with `cu_seqlens` (the packed path G2b found exact)",
+   "source": "https://github.com/verl-project/verl/blob/main/verl/models/transformers/qwen3_5.py",
+   "date": "2026-10-14",
+   "read_level": "repository, code, release or dataset record",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C19",
+   "claim": "verl: the FSDP bf16 cast rounds the RoPE `inv_freq` buffer and changes log-probs (verl 0.9.1, torch 2.13.0+cu129)",
+   "source": "https://github.com/verl-project/verl/issues/8154",
+   "date": "2026-10-08",
+   "read_level": "first-party page, blog or issue",
+   "verdict": "FIRST-PARTY",
+   "snapshot_http_status": 200,
+   "note": "first-party; not replicated"
+  },
+  {
+   "claim_id": "C20",
+   "claim": "verl: ppo_kl nonzero on Qwen3.5-4B unless log-prob and update micro-batch sizes match",
+   "source": "https://github.com/verl-project/verl/issues/6829",
+   "date": "2026-06-23 (open)",
+   "read_level": "first-party page, blog or issue",
+   "verdict": "FIRST-PARTY",
+   "snapshot_http_status": 200,
+   "note": "first-party; not replicated"
+  },
+  {
+   "claim_id": "C21",
+   "claim": "verl: one_step_off fails with Qwen3.5 (async modes out)",
+   "source": "https://github.com/verl-project/verl/issues/7438",
+   "date": "2026-08-16 (open)",
+   "read_level": "first-party page, blog or issue",
+   "verdict": "FIRST-PARTY",
+   "snapshot_http_status": 200,
+   "note": "first-party; not replicated"
+  },
+  {
+   "claim_id": "C22",
+   "claim": "Small token-level numerical disagreements can independently cause collapse; combinations of TIS and rejection sampling can closely match a zero-mismatch reference (dense and MoE)",
+   "source": "https://arxiv.org/abs/2605.14220",
+   "date": "2026-05-14",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C23",
+   "claim": "Dense Qwen3-4B: FP16 lowers train-rollout abs log-prob difference 0.0122 to 0.0016 with comparable final reward (first-party ablation)",
+   "source": "https://arxiv.org/abs/2604.11554",
+   "date": "2026-04-13",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C24",
+   "claim": "Trust-region error bounds grow with horizon; sequence masking by maximum token divergence",
+   "source": "https://arxiv.org/abs/2512.23075",
+   "date": "2025-12-28",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C25",
+   "claim": "Lightning-attention hybrid: probability mismatch prevented reward growth; fp32 LM head raised correlation 0.987 to 0.997",
+   "source": "https://arxiv.org/abs/2506.13585",
+   "date": "2025-06-16",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C26",
+   "claim": "KDA hybrid RL adds TIS against precision mismatch; no state-dtype analysis",
+   "source": "https://arxiv.org/abs/2510.26692",
+   "date": "2025-10-30",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C27",
+   "claim": "IcePop masks tokens with training/inference probability ratio outside [0.5, 5]",
+   "source": "https://arxiv.org/abs/2510.18855",
+   "date": "2025-10-21",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C28",
+   "claim": "Training-inference mismatch escalates with gradient noise; a learning-rate schedule controls it",
+   "source": "https://arxiv.org/abs/2602.01826",
+   "date": "2026-02-02",
+   "read_level": "abstract or report only",
+   "verdict": "VERIFIED-ABSTRACT",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C29",
+   "claim": "Qwen3.6-35B-A3B AIME 2026: FP32 state 85.46, FP16 84.58, BF16 79.71 (inference)",
+   "source": "https://arxiv.org/abs/2608.27513",
+   "date": "2026-08-27",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C30",
+   "claim": "Round-to-nearest discards updates below half a step; low-bit state error is coherent and grows with decode length (preprints)",
+   "source": "https://arxiv.org/abs/2610.15709",
+   "date": "2026-10-11",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C31",
+   "claim": "Weyl dither beats stochastic rounding in 15/15 settings for quantized recurrent caches (preprint)",
+   "source": "https://arxiv.org/abs/2609.39185",
+   "date": "2026-09-30",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C32",
+   "claim": "1-step IS about equals V-trace at negligible lag; the gap widens as data become more off-policy",
+   "source": "https://arxiv.org/abs/1802.01561",
+   "date": "2018-02-05",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C33",
+   "claim": "IS needs a sample size of about exp(KL)",
+   "source": "https://arxiv.org/abs/1511.01437",
+   "date": "2015-11-04",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C34",
+   "claim": "PSIS: k-hat above 0.7 means unreliable IS",
+   "source": "https://arxiv.org/abs/1507.02646",
+   "date": "2015-07-09",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C35",
+   "claim": "IS variance over long horizons; correct state-visitation ratios instead",
+   "source": "https://arxiv.org/abs/1810.12429",
+   "date": "2018-10-29",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C36",
+   "claim": "Decoupled proximal and behaviour policies in PPO",
+   "source": "https://arxiv.org/abs/2110.00641",
+   "date": "2021-10-01",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C37",
+   "claim": "Bootstrap tests at fewer than about 10 samples have about 10% false positives at 5%; prefer Welch; size from pilot SD",
+   "source": "https://arxiv.org/abs/1806.08295",
+   "date": "2018-07-05",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C38",
+   "claim": "With 3 runs, bootstrap CIs undercover; stratified bootstrap needs many tasks",
+   "source": "https://arxiv.org/abs/2108.13264",
+   "date": "2021-08-30",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C39",
+   "claim": "Two groups of 5 identical TRPO runs differ significantly (t = -9.09, p = 0.0016)",
+   "source": "https://arxiv.org/abs/1709.06560",
+   "date": "2017-09-19",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C40",
+   "claim": "Any nondeterminism source, even one bit, decorrelates training runs",
+   "source": "https://arxiv.org/abs/2103.04514",
+   "date": "2021-03-08",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C41",
+   "claim": "Policy-gradient estimates at standard batch sizes correlate poorly with the true gradient",
+   "source": "https://arxiv.org/abs/1811.02553",
+   "date": "2018-11-06",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C42",
+   "claim": "Lorenz in BFloat16 with round-to-nearest collapses; Float16 periodic; stochastic rounding tracks; compare to a high-precision control ensemble",
+   "source": "https://arxiv.org/abs/2104.15076",
+   "date": "2021-04-30",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C43",
+   "claim": "\"Forgetting to Forget\": bf16 round-to-nearest GDN state on Qwen3.5-0.8B; fp32 on selected heads removes 75.4% of excess NLL; inference only (dossier verifier)",
+   "source": "https://openreview.net/forum?id=9LUInzhKZc",
+   "date": "2026-09-18",
+   "read_level": "not readable from this environment",
+   "verdict": "UNVERIFIABLE_ACCESS",
+   "snapshot_http_status": 200,
+   "note": "the snapshot is an HTTP 200 browser-challenge page; content from the D104 dossier verifier only"
+  },
+  {
+   "claim_id": "C44",
+   "claim": "vLLM batch composition shifts log-probs up to 0.198 on Qwen3.6-35B-A3B",
+   "source": "https://github.com/vllm-project/vllm/issues/59764",
+   "date": "2026-10-02",
+   "read_level": "first-party page, blog or issue",
+   "verdict": "FIRST-PARTY",
+   "snapshot_http_status": 200,
+   "note": "first-party; not replicated"
+  },
+  {
+   "claim_id": "C45",
+   "claim": "Qwen3.5-4B, Apache-2.0",
+   "source": "https://huggingface.co/Qwen/Qwen3.5-4B",
+   "date": "2026",
+   "read_level": "repository, code, release or dataset record",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C46",
+   "claim": "DAPO-Math-17k, Apache-2.0, 1,791,700 rows (each prompt about 100x)",
+   "source": "https://huggingface.co/datasets/BytedTsinghua-SIA/DAPO-Math-17k",
+   "date": "2026-10-15 (read)",
+   "read_level": "repository, code, release or dataset record",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C47",
+   "claim": "MATH-500 (held-out evaluation; no HF licence tag; the program records MIT)",
+   "source": "https://huggingface.co/datasets/HuggingFaceH4/MATH-500",
+   "date": "2026-10-15 (read)",
+   "read_level": "repository, code, release or dataset record",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C48",
+   "claim": "AIME 2024 and 2025 compilations, Apache-2.0 (problems MAA copyright)",
+   "source": "https://huggingface.co/datasets/math-ai/aime25",
+   "date": "2026-10-15 (read)",
+   "read_level": "repository, code, release or dataset record",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C49",
+   "claim": "vLLM's stochastic-rounding option is documented for the Mamba SSM cache only, Triton path on SM100",
+   "source": "https://docs.vllm.ai/en/stable/api/vllm/config/mamba/",
+   "date": "2026-10-03",
+   "read_level": "repository, code, release or dataset record",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "M1",
+   "claim": "fp32 GDN state: 49.1 MiB per sequence on Qwen3.5-4B/9B; vLLM allocates the checkpoint's float32",
+   "source": "program/evidence/2026-10-14/inference-baseline/README.md",
+   "date": "2026-10-14",
+   "read_level": "this program's committed measurement (exploratory)",
+   "verdict": "COMMITTED-MEASUREMENT",
+   "snapshot_http_status": null
+  },
+  {
+   "claim_id": "M2",
+   "claim": "bf16 state: saturation throughput 1.33x (4B) and 1.38x (9B); mean abs mismatch 0.0077 to 0.0357 (4.6x) and 0.0074 to 0.0365 (4.9x); k3 18-21x; ratios outside [0.8, 1.25] 0.02-0.03% to 3.7-3.9%; within-sequence slope +1.3e-3 and +1.5e-3 per 1K; 9B cap hits at 32K 35/72 vs 7/72 (sign test p 2.0e-9); drift in vLLM decode, not prefill; packed varlen trainer exact",
+   "source": "program/evidence/2026-10-15/g2b-state-dtype/README.md",
+   "date": "2026-10-15",
+   "read_level": "this program's committed measurement (exploratory)",
+   "verdict": "COMMITTED-MEASUREMENT",
+   "snapshot_http_status": null
+  },
+  {
+   "claim_id": "M3",
+   "claim": "fp16 state at bf16's memory: mismatch 2.0x (4B) and 1.7x (9B) fp32, k3 3.3x and 2.5x, fp32-like lengths, 1.34-1.38x throughput; bf16 at fp32's block keeps bf16's drift (4B ratio 1.00 [0.99, 1.01])",
+   "source": "program/evidence/2026-10-15/g2c-precision-vs-layout/README.md",
+   "date": "2026-10-15",
+   "read_level": "this program's committed measurement (exploratory)",
+   "verdict": "COMMITTED-MEASUREMENT",
+   "snapshot_http_status": null
+  },
+  {
+   "claim_id": "M4",
+   "claim": "fp32-state mismatch flat in position at fixed entropy to 11.5K (unpacked)",
+   "source": "program/evidence/2026-10-14/g2-pilot/README.md",
+   "date": "2026-10-14",
+   "read_level": "this program's committed measurement (exploratory)",
+   "verdict": "COMMITTED-MEASUREMENT",
+   "snapshot_http_status": null
+  },
+  {
+   "claim_id": "M5",
+   "claim": "At a 16,384 cap (committed seed-42 rows): k3 ratio to fp32 bf16 8.9 [7.7, 9.9] (4B) and 11.1 [9.9, 12.0] (9B), fp16 2.0 and 1.8; at 8,192: bf16 5.4 and 5.8; at 4,096: 3.1 and 3.3; cut share at 16K 54% fp32, 58% bf16; tokens with weight above 2: 0.023% and 0.030% (bf16); median abs log trajectory ratio 2.4/30/4.8 nats (fp32/bf16/fp16, 4B); fp32-calibrated sequence mask removes 96% (4B) and 92% (9B) of bf16 sequences",
+   "source": "compute/mismatch-by-cap.json` (this bundle)",
+   "date": "2026-10-15",
+   "read_level": "this program's committed measurement (exploratory)",
+   "verdict": "COMMITTED-MEASUREMENT",
+   "snapshot_http_status": null
+  }
+ ],
+ "summary": {
+  "claims": 54,
+  "first_party": 8,
+  "unverifiable": 1,
+  "snapshots_http_200": 49
+ },
+ "remediation": "Replace first-party numbers when replicated; re-read the C02/C03 figures directly; read 9LUInzhKZc"
+}

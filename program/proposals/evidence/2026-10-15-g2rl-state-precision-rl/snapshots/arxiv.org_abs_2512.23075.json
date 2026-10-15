@@ -1,0 +1,47 @@
+{
+ "url": "https://arxiv.org/abs/2512.23075",
+ "fetched_at": "2026-10-15T04:24:56Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44357,
+ "raw_sha256": "787819b1b5b72d77ddaf8164c8705e4fa84f96c0f809e3d5809cd32bd0e2491a",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "Trust Region Masking for Long-Horizon LLM Reinforcement Learning",
+  "authors": [
+   "Li, Yingru",
+   "Liu, Jiacai",
+   "Xu, Jiawei",
+   "Tong, Yuxuan",
+   "Li, Ziniu",
+   "Liu, Qian",
+   "Wang, Baoxiang"
+  ],
+  "citation_date": "2025/12/28",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sun, 28 Dec 2025 20:41:59 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Fri, 6 Feb 2026 16:11:39 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Mon, 9 Feb 2026 02:46:55 UTC"
+   },
+   {
+    "version": "v4",
+    "date": "Fri, 27 Feb 2026 03:19:46 UTC"
+   },
+   {
+    "version": "v5",
+    "date": "Fri, 26 Jun 2026 02:45:25 UTC"
+   }
+  ],
+  "abstract": "Policy gradient methods for Large Language Models optimize a policy $\\pi_\\theta$ via a surrogate objective computed from samples of a rollout policy $\\pi_{\\text{roll}}$. However, modern LLM-RL pipelines suffer from unavoidable implementation divergences -- backend discrepancies, Mixture-of-Experts routing discontinuities, and distributed training staleness -- causing off-policy mismatch ($\\pi_{\\text{roll}} \\neq \\pi_\\theta$) and approximation errors between the surrogate and the true objective. We demonstrate that classical trust region bounds on this error scale as $O(T^2)$ with sequence length $T$, rendering them vacuous for long-horizon tasks. To address this, we derive a family of bounds -- both KL-based and TV-based -- including a Pinsker-Marginal bound ($O(T^{3/2})$), a Mixed bound ($O(T)$), and an Adaptive bound that strictly generalizes the Pinsker-Marginal bound via per-position importance-ratio decomposition. Taking the minimum over all bounds yields the tightest known guarantee across all divergence regimes. Crucially, all bounds depend on the maximum token-level divergence $D_{\\mathrm{KL}}^{\\mathrm{tok,max}}$ (or $D_{\\mathrm{TV}}^{\\mathrm{tok,max}}$), a sequence-level quantity that cannot be controlled by token-independent methods like PPO clipping. We propose Trust Region Masking (TRM), which masks entire sequences violating the trust region, enabling the first non-vacuous monotonic improvement guarantees for long-horizon LLM-RL.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

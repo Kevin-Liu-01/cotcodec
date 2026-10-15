@@ -1,0 +1,13 @@
+{
+ "url": "https://huggingface.co/datasets/BytedTsinghua-SIA/DAPO-Math-17k",
+ "fetched_at": "2026-10-15T04:25:10Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 804299,
+ "raw_sha256": "735668e1a26d8834fdc3593fbef72fb68d62648e3b26bb5b78f5a48b6e2bd293",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "html_title": "BytedTsinghua-SIA/DAPO-Math-17k · Datasets at Hugging Face"
+ }
+}

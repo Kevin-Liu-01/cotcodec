@@ -1,0 +1,43 @@
+{
+ "url": "https://arxiv.org/abs/1811.02553",
+ "fetched_at": "2026-10-15T04:24:55Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43223,
+ "raw_sha256": "a12b988359d907e71da6797c4ad85aec92bb64db717f6977e9c34f512f478d97",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "A Closer Look at Deep Policy Gradients",
+  "authors": [
+   "Ilyas, Andrew",
+   "Engstrom, Logan",
+   "Santurkar, Shibani",
+   "Tsipras, Dimitris",
+   "Janoos, Firdaus",
+   "Rudolph, Larry",
+   "Madry, Aleksander"
+  ],
+  "citation_date": "2018/11/06",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 6 Nov 2018 18:54:21 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Mon, 12 Nov 2018 18:54:30 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Sun, 2 Dec 2018 02:45:35 UTC"
+   },
+   {
+    "version": "v4",
+    "date": "Mon, 25 May 2020 16:24:26 UTC"
+   }
+  ],
+  "abstract": "We study how the behavior of deep policy gradient algorithms reflects the conceptual framework motivating their development. To this end, we propose a fine-grained analysis of state-of-the-art methods based on key elements of this framework: gradient estimation, value prediction, and optimization landscapes. Our results show that the behavior of deep policy gradient algorithms often deviates from what their motivating framework would predict: the surrogate objective does not match the true reward landscape, learned value estimators fail to fit the true value function, and gradient estimates poorly correlate with the \"true\" gradient. The mismatch between predicted and empirical behavior we uncover highlights our poor understanding of current methods, and indicates the need to move beyond current benchmark-centric evaluation methods.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

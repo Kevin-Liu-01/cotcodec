@@ -1,0 +1,58 @@
+{
+ "url": "https://arxiv.org/abs/2604.03444",
+ "fetched_at": "2026-10-15T04:24:56Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 47658,
+ "raw_sha256": "f9e43ed4e7f98cace25902fdcfb130f2688aaf66237941e21e5e28c6e8ea1f3e",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "Olmo Hybrid: From Theory to Practice and Back",
+  "authors": [
+   "Merrill, William",
+   "Li, Yanhong",
+   "Romero, Tyler",
+   "Svete, Anej",
+   "Costello, Caia",
+   "Dasigi, Pradeep",
+   "Groeneveld, Dirk",
+   "Heineman, David",
+   "Kuehl, Bailey",
+   "Lambert, Nathan",
+   "Li, Chuan",
+   "Lo, Kyle",
+   "Malik, Saumya",
+   "Matusz, DJ",
+   "Minixhofer, Benjamin",
+   "Morrison, Jacob",
+   "Soldaini, Luca",
+   "Timbers, Finbarr",
+   "Walsh, Pete",
+   "Smith, Noah A.",
+   "Hajishirzi, Hannaneh",
+   "Sabharwal, Ashish"
+  ],
+  "citation_date": "2026/04/03",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Fri, 3 Apr 2026 20:36:34 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Tue, 7 Apr 2026 06:15:48 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Thu, 16 Apr 2026 18:50:04 UTC"
+   },
+   {
+    "version": "v4",
+    "date": "Mon, 15 Jun 2026 18:55:41 UTC"
+   }
+  ],
+  "abstract": "Recent work has demonstrated the potential of non-transformer language models, especially linear recurrent neural networks (RNNs) and hybrid models that mix recurrence and attention. Yet there is no consensus on whether the potential benefits of these new architectures justify the risk and effort of scaling them up. To address this, we provide evidence for the advantages of hybrid models over pure transformers on several fronts. First, theoretically, we show that hybrid models do not merely inherit the expressivity of transformers and linear RNNs, but can express tasks beyond both, such as code execution. Putting this theory to practice, we train Olmo Hybrid, a 7B-parameter model largely comparable to Olmo 3 7B but with the sliding window layers replaced by Gated DeltaNet layers. We show that Olmo Hybrid outperforms Olmo 3 across standard pretraining and mid-training evaluations, demonstrating the benefit of hybrid models in a controlled, large-scale setting. We find that the hybrid model scales significantly more efficiently than the transformer, explaining its higher performance. However, its unclear why greater expressivity on specific formal problems should result in better scaling or superior performance on downstream tasks unrelated to those problems. To explain this apparent gap, we return to theory and argue why increased expressivity should translate to better scaling efficiency, completing the loop. Overall, our results suggest that hybrid models mixing attention and recurrent layers are a powerful extension to the language modeling paradigm: not merely to reduce memory during inference, but as a fundamental way to obtain more expressive models that scale better during pretraining.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

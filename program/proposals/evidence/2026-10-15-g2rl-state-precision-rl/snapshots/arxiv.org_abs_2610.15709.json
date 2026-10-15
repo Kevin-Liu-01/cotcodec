@@ -1,0 +1,28 @@
+{
+ "url": "https://arxiv.org/abs/2610.15709",
+ "fetched_at": "2026-10-15T04:24:57Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43138,
+ "raw_sha256": "357072e758facd49f03f858558bd36d50e288e4be6804d2708e7f989effb924f",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "Preserving Updates in Low-Bit Recurrent State Quantization",
+  "authors": [
+   "Li, Haotian",
+   "Dong, Liran",
+   "Xiao, Kaicheng",
+   "Xing, Guoliang"
+  ],
+  "citation_date": "2026/10/11",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sun, 11 Oct 2026 15:46:25 UTC"
+   }
+  ],
+  "abstract": "Linear attention and recurrent models compress past tokens into a fixed-size state that is updated at every step. However, storing these states in high precision incurs substantial memory and bandwidth costs at large batch sizes, motivating low-bit state quantization. Unlike weights and key--value caches, a recurrent state is requantized after every update, so its quantization errors accumulate across steps. Our analysis shows that these errors are highly coherent across steps, so reducing per-step errors alone is insufficient. This coherence arises mainly from small updates that are lost in rounding. To preserve these updates, we intervene both before and at rounding. Before rounding, we propose Low-Rank Bypass (LRB), which accumulates small updates in a compact low-rank buffer and periodically merges its sufficiently large elements into the state. At rounding, we observe that a state element can even move opposite to its update, and such reversals prove particularly harmful. Therefore, we propose Bounded Directional Rounding (BDR), which rounds reversed elements toward their updates without additional storage. Although BDR enlarges the rounding error, it improves the model, suggesting that the direction of an update matters more than its rounding error at a single step. Across Gated DeltaNet, GLA, Mamba2, and RetNet, our training-free method substantially outperforms INT4, while reducing state memory by up to 5.3$\\times$ and speeding up decoding by up to 1.9$\\times$ relative to FP32 states.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

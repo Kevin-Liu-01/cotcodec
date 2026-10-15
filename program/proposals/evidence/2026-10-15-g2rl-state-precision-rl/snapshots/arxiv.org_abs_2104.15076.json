@@ -1,0 +1,29 @@
+{
+ "url": "https://arxiv.org/abs/2104.15076",
+ "fetched_at": "2026-10-15T04:24:55Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44676,
+ "raw_sha256": "7fc06993c6fb9804444dcf1ca5091040a1cda334c108f1822aff47f5f48ed2f3",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "Climate Modelling in Low-Precision: Effects of both Deterministic & Stochastic Rounding",
+  "authors": [
+   "Paxton, E. Adam",
+   "Chantry, Matthew",
+   "Klöwer, Milan",
+   "Saffin, Leo",
+   "Palmer, Tim"
+  ],
+  "citation_date": "2021/04/30",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Fri, 30 Apr 2021 15:54:30 UTC"
+   }
+  ],
+  "abstract": "Motivated by recent advances in operational weather forecasting, we study the efficacy of low-precision arithmetic for climate simulations. We develop a framework to measure rounding error in a climate model which provides a stress-test for a low-precision version of the model, and we apply our method to a variety of models including the Lorenz system; a shallow water approximation for flow over a ridge; and a coarse resolution global atmospheric model with simplified parameterisations (SPEEDY). Although double precision (52 significant bits) is standard across operational climate models, in our experiments we find that single precision (23 sbits) is more than enough and that as low as half precision (10 sbits) is often sufficient. For example, SPEEDY can be run with 12 sbits across the entire code with negligible rounding error and this can be lowered to 10 sbits if very minor errors are accepted, amounting to less than 0.1 mm/6hr for the average grid-point precipitation, for example. Our test is based on the Wasserstein metric and this provides stringent non-parametric bounds on rounding error accounting for annual means as well as extreme weather events. In addition, by testing models using both round-to-nearest (RN) and stochastic rounding (SR) we find that SR can mitigate rounding error across a range of applications. Thus our results also provide evidence that SR could be relevant to next-generation climate models. While many studies have shown that low-precision arithmetic can be suitable on short-term weather forecasting timescales, our results give the first evidence that a similar low precision level can be suitable for climate.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

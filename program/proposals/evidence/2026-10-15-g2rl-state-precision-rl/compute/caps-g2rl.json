@@ -1,0 +1,167 @@
+{
+ "pilot": {
+  "jobs": [
+   {
+    "job": "P0a",
+    "what": "CPU: hash-pinned wheel and source fetch under D1 (pip download --require-hashes)",
+    "gpus": 0,
+    "limit_min": 60,
+    "cap_gpu_h": 0.0,
+    "expected_min": 20,
+    "expected_gpu_h": 0.0,
+    "arithmetic": "0 x 60 min / 60 = 0.0000"
+   },
+   {
+    "job": "P0b",
+    "what": "CPU: offline overlay build FROM the vLLM 0.31.0 overlay (verl, ray, FLA 0.5.2, Math-Verify; flash-attn from source or the torch varlen patch)",
+    "gpus": 0,
+    "limit_min": 120,
+    "cap_gpu_h": 0.0,
+    "expected_min": 60,
+    "expected_gpu_h": 0.0,
+    "arithmetic": "0 x 120 min / 60 = 0.0000"
+   },
+   {
+    "job": "P0c",
+    "what": "CPU: selftests (imports; Hydra resolves rollout.engine_kwargs.vllm.mamba_ssm_cache_dtype into the vllm serve argv; gradient-dump hook unit test)",
+    "gpus": 0,
+    "limit_min": 20,
+    "cap_gpu_h": 0.0,
+    "expected_min": 5,
+    "expected_gpu_h": 0.0,
+    "arithmetic": "0 x 20 min / 60 = 0.0000"
+   },
+   {
+    "job": "P1",
+    "what": "trainer anchor: verl FSDP2 compute_log_prob on G2b's 48 seed-42 4B rollouts (942,608 tokens) against G2b's host-kept r1/r2 and decode log-probs",
+    "gpus": 1,
+    "limit_min": 15,
+    "cap_gpu_h": 0.25,
+    "expected_min": 8,
+    "expected_gpu_h": 0.1333,
+    "arithmetic": "1 x 15 min / 60 = 0.2500"
+   },
+   {
+    "job": "P2a",
+    "what": "smoke: fp32 3 GRPO steps (checkpoint after step 2, step-3 batch saved), bf16 and fp16 2 steps each; 8 prompts x 4 at a 4,096 cap; engine-logged state dtype",
+    "gpus": 2,
+    "limit_min": 35,
+    "cap_gpu_h": 1.1667,
+    "expected_min": 20,
+    "expected_gpu_h": 0.6667,
+    "arithmetic": "2 x 35 min / 60 = 1.1667"
+   },
+   {
+    "job": "P2b",
+    "what": "resume: fresh job loads the step-2 checkpoint, replays the saved step-3 batch, compares parameters with P2a's step 3; SIGUSR1 save-on-signal test",
+    "gpus": 2,
+    "limit_min": 15,
+    "cap_gpu_h": 0.5,
+    "expected_min": 14,
+    "expected_gpu_h": 0.4667,
+    "arithmetic": "2 x 15 min / 60 = 0.5000"
+   },
+   {
+    "job": "P3a",
+    "what": "calibration fp32: lr 0, R = 4 replicate batches (32 prompts x 8, 16,384 cap, sampling seeds 42-45), per-token in-loop log-probs, full-gradient dumps",
+    "gpus": 4,
+    "limit_min": 40,
+    "cap_gpu_h": 2.6667,
+    "expected_min": 30,
+    "expected_gpu_h": 2.0,
+    "arithmetic": "4 x 40 min / 60 = 2.6667"
+   },
+   {
+    "job": "P3b",
+    "what": "calibration bf16: as P3a, plus a second backward on every batch with token-TIS weights (C = 2), both gradients dumped",
+    "gpus": 4,
+    "limit_min": 50,
+    "cap_gpu_h": 3.3333,
+    "expected_min": 41,
+    "expected_gpu_h": 2.7333,
+    "arithmetic": "4 x 50 min / 60 = 3.3333"
+   },
+   {
+    "job": "P4",
+    "what": "CPU: in-loop mismatch tables, gradient Gram matrix, readouts",
+    "gpus": 0,
+    "limit_min": 60,
+    "cap_gpu_h": 0.0,
+    "expected_min": 20,
+    "expected_gpu_h": 0.0,
+    "arithmetic": "0 x 60 min / 60 = 0.0000"
+   }
+  ],
+  "cap_gpu_h": 7.9167,
+  "expected_gpu_h": 6.0,
+  "line_8_gpu_h": 8.0,
+  "under_line": true,
+  "p3_arithmetic": {
+   "per_batch_s_fp32": "generation 175 + old-log-prob recompute 42 + backward 127 + dump 30 = 374",
+   "per_batch_s_bf16_dual": "374 + second backward 127 + dump 30 = 531",
+   "startup_s": "Ray, model load, vLLM start with CUDA graphs: about 300",
+   "P3a_expected_s": 1796,
+   "P3b_expected_s": 2424,
+   "P3a_high_s": 2468,
+   "P3b_high_s": 3348,
+   "rule": "a P3 job cut before its fourth batch reports R = 3 and its gradient readout is estimation only"
+  },
+  "gradient_dump_storage_gb": {
+   "per_dump_fp32": "about 4.3e9 language-model parameters x 4 bytes = about 17 GB",
+   "dumps": "P3a 4 + P3b 8 = 12",
+   "total_gb": 204,
+   "deleted_after": "P4 writes the Gram matrix; the dumps are deleted after the readouts are committed"
+  }
+ },
+ "full": {
+  "steps_per_run": 150,
+  "evals_per_run": 3,
+  "stage0": {
+   "what": "learnable pool: 1,536 deduplicated DAPO-Math-17k prompts x 8 at 16,384 with fp32 state (about 135M tokens) plus base-checkpoint evaluation",
+   "central": 7.3,
+   "low": 5.5,
+   "high": 10.0,
+   "arithmetic": "12,288 rollouts x about 11K tokens / (4 GPUs x about 6K tok/s) = about 6.3 GPU-h, plus 1.0 evaluation"
+  },
+  "levels": {
+   "low": {
+    "step_s": 270.0,
+    "gpu_h_per_step": 0.3,
+    "run_F": 48.6,
+    "run_B_or_BT_or_H": 49.4,
+    "stage0": 5.5,
+    "stage1_F5_B5": 490.0,
+    "stage2_BT5": 247.0,
+    "stage2_H3": 148.2,
+    "path_null_or_no_change": 495.5,
+    "path_changes": 890.7
+   },
+   "central": {
+    "step_s": 350.0,
+    "gpu_h_per_step": 0.3889,
+    "run_F": 62.9,
+    "run_B_or_BT_or_H": 63.9,
+    "stage0": 7.3,
+    "stage1_F5_B5": 634.3,
+    "stage2_BT5": 319.7,
+    "stage2_H3": 191.8,
+    "path_null_or_no_change": 641.6,
+    "path_changes": 1153.1
+   },
+   "high": {
+    "step_s": 470.0,
+    "gpu_h_per_step": 0.5222,
+    "run_F": 84.9,
+    "run_B_or_BT_or_H": 86.3,
+    "stage0": 10.0,
+    "stage1_F5_B5": 856.3,
+    "stage2_BT5": 431.7,
+    "stage2_H3": 259.0,
+    "path_null_or_no_change": 866.3,
+    "path_changes": 1557.0
+   }
+  },
+  "proposed_full_cap_gpu_h": 1600,
+  "note": "The full design is registered after the pilot, with its per-step time replaced by P3's measurement; if the measured step exceeds 1.5 x 350 s, the design is re-sized (fewer steps or an 8,192 cap) before registration. Admission is Kevin's (D24, D92)."
+ }
+}

@@ -1,0 +1,13 @@
+pilot cap 7.9167 expected 6.0
+  P0a 0 x 60 min / 60 = 0.0000 expected 0.0
+  P0b 0 x 120 min / 60 = 0.0000 expected 0.0
+  P0c 0 x 20 min / 60 = 0.0000 expected 0.0
+  P1 1 x 15 min / 60 = 0.2500 expected 0.1333
+  P2a 2 x 35 min / 60 = 1.1667 expected 0.6667
+  P2b 2 x 15 min / 60 = 0.5000 expected 0.4667
+  P3a 4 x 40 min / 60 = 2.6667 expected 2.0
+  P3b 4 x 50 min / 60 = 3.3333 expected 2.7333
+  P4 0 x 60 min / 60 = 0.0000 expected 0.0
+full low {'step_s': 270.0, 'gpu_h_per_step': 0.3, 'run_F': 48.6, 'run_B_or_BT_or_H': 49.4, 'stage0': 5.5, 'stage1_F5_B5': 490.0, 'stage2_BT5': 247.0, 'stage2_H3': 148.2, 'path_null_or_no_change': 495.5, 'path_changes': 890.7}
+full central {'step_s': 350.0, 'gpu_h_per_step': 0.3889, 'run_F': 62.9, 'run_B_or_BT_or_H': 63.9, 'stage0': 7.3, 'stage1_F5_B5': 634.3, 'stage2_BT5': 319.7, 'stage2_H3': 191.8, 'path_null_or_no_change': 641.6, 'path_changes': 1153.1}
+full high {'step_s': 470.0, 'gpu_h_per_step': 0.5222, 'run_F': 84.9, 'run_B_or_BT_or_H': 86.3, 'stage0': 10.0, 'stage1_F5_B5': 856.3, 'stage2_BT5': 431.7, 'stage2_H3': 259.0, 'path_null_or_no_change': 866.3, 'path_changes': 1557.0}
