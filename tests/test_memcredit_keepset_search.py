@@ -1,7 +1,8 @@
 """Tests for am1-keepset-search-v1 (scripts/memcredit_keepset_search.py): the exact order-statistic
 expectation of direct search and the exact McNemar test on toy tables, H-A's per-table rules,
 comparisons, bounds and verdict, H-C's stop rule, the held-out gate (refused before the freeze),
-the code pins, and the development tables. No test opens a held-out file."""
+the code pins, the size simulation, and the development tables. No test decodes the held-out
+tables; one test hashes the committed gz to check its pin (and reads AM1's SHA-256 records)."""
 
 from __future__ import annotations
 
@@ -502,7 +503,8 @@ def test_heldout_pins_are_the_committed_records():
         for line in (base / "analysis/logs/outputs.sha256").read_text().splitlines()  # fmt: skip
     )
     assert spec["tables_json_sha256"] == outputs["./tables.json"]
-    assert ks.sha256_file(ROOT / spec["tables"]) == spec["tables_sha256"]  # a digest, not a read
+    # hashes the committed gz to check its pin; nothing is decompressed or decoded
+    assert ks.sha256_file(ROOT / spec["tables"]) == spec["tables_sha256"]
     config = ms.load_config(ms.REGISTRATION_CONFIG_PATH)
     assert config["confirmatory_set"]["question_ids_sha256"] == spec["question_ids_sha256"]
 
@@ -596,6 +598,16 @@ def test_analyze_end_to_end_is_deterministic():
     assert results["h_a"]["retrieved"]["tables"] == 5
     assert set(results["verdicts"]) == {"H-A", "H-C"}
     assert results["h_c"]["status"] == "READ" and results["h_b_descriptive"]["decides"] is False
+    # the gold arm carries descriptive labels only (no decision)
+    assert results["h_c"]["retrieved"]["decides"] and not results["h_c"]["gold"]["decides"]
+    assert "reading" in results["h_c"]["retrieved"] and "reading" not in results["h_c"]["gold"]
+    assert "descriptive_label" in results["h_c"]["gold"]
+    assert "verdict" not in results["h_a"]["gold"] and results["h_a"]["gold"]["decides"] is False
+    gold_label = results["h_a"]["gold"]["descriptive_label_no_decision"]["descriptive_label"]
+    assert f"Descriptive label (no decision): **{gold_label}**" in outs[0][2]
+    assert "(descriptive label, no decision)" in outs[0][2]
+    assert set(results["verdicts"]["H-C"]) == {
+        "arm", "reading", "gold_arm_descriptive_label_no_decision"}  # fmt: skip
     assert "## H-B (descriptive, D116; no decision)" in outs[0][2]
     assert "Description (not a decision)" in outs[0][2]
     assert results["verdicts"]["H-A"]["verdict"] in ("SEARCH_DOMINATES", "RULE_BEATS_SEARCH",
@@ -665,7 +677,41 @@ def test_h_c_void_path_runs_h_a_and_h_b_from_the_tables(tmp_path):
     assert ks.main(both) == 1
 
 
-def test_unreadable_features_are_a_named_h_c_void(tmp_path, capsys):
+def test_unreadable_features_are_a_named_h_c_void(tmp_path, capsys, monkeypatch):
+    import zlib
+
+    rng = random.Random(9)
+    pools = [
+        {"u": [rng.randrange(2) for _ in range(256)],
+         "abstain": [rng.random() < 0.5 for _ in range(256)],
+         "cls": [rng.randrange(8) for _ in range(256)]}
+        for _ in range(40)
+    ]  # fmt: skip
+    blob = gzip.compress(json.dumps({"pools": pools}, separators=(",", ":")).encode(), mtime=0)
+    # 3-byte corruptions inside the deflate stream: the streaming reader raises zlib.error or a
+    # CRC error (BadGzipFile), depending on the corruption and the Python version; both must be
+    # the named V3 void
+    for case in range(40):
+        bad = bytearray(blob)
+        start = rng.randrange(len(blob) // 4, 3 * len(blob) // 4)
+        for k in range(3):
+            bad[start + k] = rng.randrange(256)
+        path = tmp_path / f"corrupt-{case}.json.gz"
+        path.write_bytes(bytes(bad))
+        with pytest.raises(ks.KeepsetError, match=r"VOID \(H-C, V3\): the features file"):
+            ks.load_features(path, "development")
+    # zlib.error itself, whatever this platform's reader raises for the cases above
+    assert zlib.error in ks.READ_ERRORS
+    good = tmp_path / "good.json.gz"
+    good.write_bytes(blob)
+
+    def raise_zlib(path):
+        raise zlib.error("Error -3 while decompressing data: invalid distance too far back")
+
+    monkeypatch.setattr(ks, "read_gz_json", raise_zlib)
+    with pytest.raises(ks.KeepsetError, match=r"VOID \(H-C, V3\).*error: Error -3"):
+        ks.load_features(good, "development")
+    monkeypatch.undo()
     whole = gzip.compress(json.dumps({"pools": [], "experiment": ks.EXPERIMENT}).encode(), mtime=0)
     cases = {
         "truncated.json.gz": whole[: len(whole) // 2],
@@ -748,3 +794,44 @@ def test_the_feature_code_is_the_whole_import_closure():
     assert sorted(ks.FEATURE_CODE) == out.stdout.split()
     pins = ks.code_pins()
     assert all(path in pins for path in ks.FEATURE_CODE)
+
+
+# --------------------------------------------------------------------------- size simulation
+
+
+def test_size_simulation_is_deterministic_and_reports_each_case():
+    """The size block of `power` (registration section 9): the rule's error rates under centred
+    differences, one null comparison among strong ones, and the skew stress case."""
+
+    import numpy as np
+
+    rng = np.random.default_rng(5)
+    d = rng.normal(-0.05, 0.1, size=(30, 7))
+    a = ks.size_simulation(d, 60, simulations=30, resamples=200, seed=1)
+    b = ks.size_simulation(d, 60, simulations=30, resamples=200, seed=1)
+    assert ks.canonical(a) == ks.canonical(b)
+    assert set(a["one_null"]) == set(a["skew_stress"]) == set(ks.COMPARISON_IDS)
+    assert sum(a["all_null"]["verdict_rate"].values()) == pytest.approx(1.0)
+    assert a["nominal_rule_beats_search"] == pytest.approx(4 * 0.05 / 7)
+    # a stress comparison has mean exactly 0
+    share = ks.STRESS_WIN_SHARE
+    assert share * 1.0 + (1 - share) * (-share / (1 - share)) == pytest.approx(0.0, abs=1e-15)
+    # strong effects everywhere: SEARCH_DOMINATES nearly always
+    strong = ks.size_simulation(d - 0.3, 60, simulations=20, resamples=200, seed=2)
+    assert strong["one_null"]["A1"].get("SEARCH_DOMINATES", 0.0) < 0.5
+    assert max(strong["summary"]["all_null_per_comparison_wrong_direction"].values()) < 0.5
+
+
+def test_decide_applies_the_verdict_rule():
+    import numpy as np
+
+    matched = np.array([c.matched for c in ks.COMPARISONS])
+    counts = np.ones((10, 4))  # every resample is the sample itself
+    sample = np.full((4, 7), -0.1)
+    assert ks._decide(sample, counts, 0, 9, matched)[2] == "SEARCH_DOMINATES"
+    sample[:, 2] = 0.1  # A3 (fewer calls) favours the rule
+    assert ks._decide(sample, counts, 0, 9, matched)[2] == "RULE_AT_MORE_CALLS_BETTER"
+    sample[:, 0] = 0.1  # A1 (matched) favours the rule
+    assert ks._decide(sample, counts, 0, 9, matched)[2] == "RULE_BEATS_SEARCH"
+    sample[:] = 0.0
+    assert ks._decide(sample, counts, 0, 9, matched)[2] == "INCONCLUSIVE"

@@ -52,6 +52,7 @@ import re
 import statistics
 import sys
 import zipfile
+import zlib
 from collections import Counter, defaultdict
 from collections.abc import Sequence
 from dataclasses import dataclass
@@ -104,6 +105,14 @@ POWER_SIMULATIONS = 1_000
 POWER_RESAMPLES = 1_000
 POWER_SEED = 43
 POWER_SCALES = (1.0, 0.5, 0.25)
+#: Size simulation (development only): H-A's rule under null and stress cases built from the
+#: development differences (registration section 9).
+SIZE_SIMULATIONS = 2_000
+SIZE_RESAMPLES = 2_000
+SIZE_SEED = 44
+#: The skew stress case: the rule wins a whole answer (D = +1) on this share of tables and loses
+#: a little on the rest, so that D's mean is exactly 0.
+STRESS_WIN_SHARE = 0.02
 
 SAMPLED_RULES = ("snipw_64", "msr_banzhaf_64", "perm_shapley_16")
 HA_RULES = ("loo", "snipw_64", "msr_banzhaf_64", "perm_shapley_16", "greedy_backward")
@@ -153,7 +162,7 @@ VOID_HC_PROVENANCE = "VOID (H-C, V5)"
 #: Errors that reading an H-C input can raise; extract and analyze map them to the H-C void.
 READ_ERRORS = (
     OSError, EOFError, ValueError, KeyError, IndexError, TypeError, zipfile.BadZipFile,
-    gzip.BadGzipFile, json.JSONDecodeError, UnicodeDecodeError,
+    gzip.BadGzipFile, zlib.error, json.JSONDecodeError, UnicodeDecodeError,
 )  # fmt: skip
 
 
@@ -890,8 +899,19 @@ def ha_aggregate(
         "comparisons": comps,
         "rules": rules,
         "direct_search": direct,
-        "verdict": ha_verdict(comps),
+        **_label_for_arm(ha_verdict(comps), arm),
     }
+
+
+def _label_for_arm(verdict: dict[str, Any], arm: str) -> dict[str, Any]:
+    """The primary arm carries H-A's verdict; any other arm the same rule's output as a
+    descriptive label that decides nothing."""
+
+    if arm == PRIMARY_ARM:
+        return {"verdict": verdict, "decides": True}
+    label = dict(verdict)
+    label["descriptive_label"] = label.pop("verdict")
+    return {"descriptive_label_no_decision": label, "decides": False}
 
 
 def classify(entry: dict[str, Any]) -> str:
@@ -1069,7 +1089,9 @@ def analyze(
             h_c[arm] = paired_reading(
                 rule, top, ("NONABSTAIN_HELPS", "NONABSTAIN_HURTS", "NO_DETECTED_DIFFERENCE"),
                 resamples, bootstrap_seed,
+                label_key="reading" if arm == PRIMARY_ARM else "descriptive_label",
             )  # fmt: skip
+            h_c[arm]["decides"] = arm == PRIMARY_ARM
             h_c[arm]["reads"] = {
                 "all_questions": reads_summary([r["hc"]["reads"] for r in rows]),
                 "nonconstant": reads_summary([r["hc"]["reads"] for r in rows if r["nonconstant"]]),
@@ -1088,7 +1110,7 @@ def analyze(
         h_c_verdict = {
             "arm": PRIMARY_ARM,
             "reading": h_c[PRIMARY_ARM]["reading"],
-            "gold_arm_descriptive": h_c["gold"]["reading"],
+            "gold_arm_descriptive_label_no_decision": h_c["gold"]["descriptive_label"],
         }
     else:
         h_c_record = h_c_verdict = None
@@ -1096,7 +1118,9 @@ def analyze(
         "H-A": {
             "arm": PRIMARY_ARM,
             **h_a[PRIMARY_ARM]["verdict"],
-            "gold_arm_same_rule_descriptive": h_a["gold"]["verdict"]["verdict"],
+            "gold_arm_descriptive_label_no_decision": h_a["gold"]["descriptive_label_no_decision"][
+                "descriptive_label"
+            ],
         },
         "H-C": h_c_verdict,
     }
@@ -1186,6 +1210,12 @@ def _ci(ci: Sequence[float | None], signed: bool = False) -> str:
     return f"[{fmt(ci[0])}, {fmt(ci[1])}]"
 
 
+def _arm_label(row: dict[str, Any], label_key: str) -> str:
+    if label_key in row:
+        return str(row[label_key])
+    return f"{row['descriptive_label']} (descriptive label, no decision)"
+
+
 def render_markdown(results: dict[str, Any]) -> str:
     cfg = results["config"]
     lines = [
@@ -1224,9 +1254,14 @@ def render_markdown(results: dict[str, Any]) -> str:
                 f"{_ci(c['ci95'], True)} | {_s(c['lower'])} | {_s(c['upper'])} | "
                 f"{c['mc_se']:.4f} | {c['classification']} |"
             )
+        if arm == PRIMARY_ARM:
+            label_line = f"Verdict: **{ha['verdict']['verdict']}**"
+        else:
+            label = ha["descriptive_label_no_decision"]["descriptive_label"]
+            label_line = f"Descriptive label (no decision): **{label}**"
         lines += [
             "",
-            f"Verdict: **{ha['verdict']['verdict']}**",
+            label_line,
             "",
             "| Rule | Calls (mean, range) | Regret | 95% CI |",
             "|---|---|---:|---|",
@@ -1244,7 +1279,8 @@ def render_markdown(results: dict[str, Any]) -> str:
     blocks = (
         ("H-B (descriptive, D116; no decision): BM25 top 4 minus all 8", "h_b_descriptive",
          "description", "Description (not a decision)"),
-        ("H-C: nonabstain-BM25 minus BM25 top 4", "h_c", "reading", "Reading"),
+        ("H-C: nonabstain-BM25 minus BM25 top 4", "h_c", "reading",
+         "Reading (retrieved); descriptive label, no decision (gold)"),
     )  # fmt: skip
     for name, key, label_key, column in blocks:
         block = results.get(key)
@@ -1267,7 +1303,7 @@ def render_markdown(results: dict[str, Any]) -> str:
                 f"{_f(r['base_accuracy'])} | {r['rule_right_base_wrong']} | "
                 f"{r['rule_wrong_base_right']} | {_s(r['difference'])} | "
                 f"{_ci(r['ci95_exact_conditional'], True)} | {_ci(r['ci95_bootstrap'], True)} | "
-                f"{r['p_exact_mcnemar']:.4g} | {r[label_key]} |"
+                f"{r['p_exact_mcnemar']:.4g} | {_arm_label(r, label_key)} |"
             )
         lines.append("")
     if (results.get("h_c") or {}).get("status") == "READ":
@@ -1887,6 +1923,132 @@ def power(
         }
     out["paired"] = paired
     out["conditional_on_am1_published_counts"] = am1_count_power()
+    out["size"] = size_simulation(d, n_tables)
+    return out
+
+
+def _decide(sample: Any, counts: Any, lo_i: int, hi_i: int, matched: Any) -> tuple[Any, Any, str]:
+    """H-A's rule (section 7.1, without the Monte Carlo margin) on one simulated set of tables:
+    bootstrap means from resample counts (resamples x tables), the one-sided bounds, the classes
+    and the verdict."""
+
+    import numpy as np
+
+    means = np.sort(counts @ sample / sample.shape[0], axis=0)
+    sb, rb = means[hi_i] < 0, means[lo_i] > 0
+    if sb.all():
+        verdict = "SEARCH_DOMINATES"
+    elif (rb & matched).any():
+        verdict = "RULE_BEATS_SEARCH"
+    elif rb.any():
+        verdict = "RULE_AT_MORE_CALLS_BETTER"
+    else:
+        verdict = "INCONCLUSIVE"
+    return sb, rb, verdict
+
+
+def size_simulation(
+    d: Any,
+    n_tables: int,
+    simulations: int = SIZE_SIMULATIONS,
+    resamples: int = SIZE_RESAMPLES,
+    seed: int = SIZE_SEED,
+) -> dict[str, Any]:
+    """The measured size of H-A's percentile-bootstrap rule (registration sections 7.1 and 9).
+    Each simulation draws ``n_tables`` rows with replacement from the development differences
+    ``d`` (tables x comparisons, the seven together), resamples them ``resamples`` times
+    (tables drawn with replacement) and applies the rule without the Monte Carlo margin. Cases:
+
+    * ``all_null``: every comparison centred (mean 0): each class in either direction, and every
+      verdict other than INCONCLUSIVE, is an error;
+    * ``one_null``: one comparison centred, the others shifted to twice their development mean
+      (search clearly better): SEARCH_DOMINATES is an error;
+    * ``skew_stress``: as ``one_null``, but the null comparison's difference is +1 (the rule wins
+      a whole answer) on a share STRESS_WIN_SHARE of tables and -share / (1 - share) on the
+      rest, mean 0: SEARCH_DOMINATES is an error, and rare large wins are what a percentile
+      bootstrap misses."""
+
+    import numpy as np
+
+    rng = np.random.default_rng(seed)
+    matched = np.array([c.matched for c in COMPARISONS])
+    alpha_one = ALPHA_A / len(COMPARISONS)
+    lo_i = int(math.floor(alpha_one * (resamples - 1)))
+    hi_i = int(math.ceil((1 - alpha_one) * (resamples - 1)))
+    mean = d.mean(axis=0)
+    centred = d - mean
+    offsets = (np.arange(resamples) * n_tables)[:, None]
+    lose = -STRESS_WIN_SHARE / (1.0 - STRESS_WIN_SHARE)
+
+    def run(make: Any) -> dict[str, Any]:
+        verdicts: Counter[str] = Counter()
+        sb_n = np.zeros(len(COMPARISON_IDS))
+        rb_n = np.zeros(len(COMPARISON_IDS))
+        for _ in range(simulations):
+            sample = make(rng.integers(0, d.shape[0], size=n_tables))
+            draws = rng.integers(0, n_tables, size=(resamples, n_tables))
+            counts = np.bincount((offsets + draws).ravel(), minlength=resamples * n_tables)
+            counts = counts.reshape(resamples, n_tables).astype(float)
+            sb, rb, verdict = _decide(sample, counts, lo_i, hi_i, matched)
+            sb_n += sb
+            rb_n += rb
+            verdicts[verdict] += 1
+        return {
+            "verdict_rate": {k: v / simulations for k, v in sorted(verdicts.items())},
+            "search_better_rate": {c: float(sb_n[j] / simulations)
+                                   for j, c in enumerate(COMPARISON_IDS)},
+            "rule_better_rate": {c: float(rb_n[j] / simulations)
+                                 for j, c in enumerate(COMPARISON_IDS)},
+        }  # fmt: skip
+
+    out: dict[str, Any] = {
+        "simulations": simulations,
+        "resamples": resamples,
+        "seed": seed,
+        "n_tables": n_tables,
+        "nominal_one_sided_per_comparison": alpha_one,
+        "nominal_rule_beats_search": 4 * alpha_one,
+        "nominal_rule_at_more_calls_better": 3 * alpha_one,
+        "stress_win_share": STRESS_WIN_SHARE,
+        "note": "percentile bootstrap, no Monte Carlo margin, resampling tables with replacement; "
+        "rates are "
+        "error rates of the rule under the stated cases (registration section 9)",
+    }
+    out["all_null"] = run(lambda idx: centred[idx])
+    one_null, stress = {}, {}
+    for j, cid in enumerate(COMPARISON_IDS):
+        shift = 2.0 * mean
+        shift[j] = 0.0
+
+        def null_j(idx: Any, shift: Any = shift) -> Any:
+            return centred[idx] + shift
+
+        def stress_j(idx: Any, shift: Any = shift, j: int = j) -> Any:
+            sample = centred[idx] + shift
+            wins = rng.random(len(idx)) < STRESS_WIN_SHARE
+            sample[:, j] = np.where(wins, 1.0, lose)
+            return sample
+
+        one_null[cid] = run(null_j)["verdict_rate"]
+        stress[cid] = run(stress_j)["verdict_rate"]
+    out["one_null"] = one_null
+    out["skew_stress"] = stress
+    out["summary"] = {
+        "all_null_per_comparison_wrong_direction": {
+            "search_better_max": max(out["all_null"]["search_better_rate"].values()),
+            "rule_better_max": max(out["all_null"]["rule_better_rate"].values()),
+        },
+        "all_null_false_rule_beats_search": out["all_null"]["verdict_rate"].get(
+            "RULE_BEATS_SEARCH", 0.0),
+        "all_null_false_rule_at_more_calls_better": out["all_null"]["verdict_rate"].get(
+            "RULE_AT_MORE_CALLS_BETTER", 0.0),
+        "all_null_false_search_dominates": out["all_null"]["verdict_rate"].get(
+            "SEARCH_DOMINATES", 0.0),
+        "one_null_false_search_dominates_max": max(
+            v.get("SEARCH_DOMINATES", 0.0) for v in one_null.values()),
+        "skew_stress_false_search_dominates_max": max(
+            v.get("SEARCH_DOMINATES", 0.0) for v in stress.values()),
+    }  # fmt: skip
     return out
 
 

@@ -49,10 +49,14 @@ about them. They were read, as text, before this file was drafted.
   wrong on 347 of 347 held-out questions (validation items, not reader replies). The reader's
   abstentions are almost all of that form (2,386 of the 2,405 flagged development 4-subset replies
   matched the `i_dont_know` pattern), so an abstaining reply is almost never judged correct and H-C
-  is in effect one-directional (section 1.2).
+  is in effect one-directional (section 1.2). That rests on the primary judge: the second judge
+  (Qwen3-8B) called "I don't know." correct on 49 of 347 held-out validation items (298 of 347
+  judged no; RESULTS.md, judge table). H-C's scope therefore names this judge (section 7.3).
 - **Held-out replies already read.** AM1's G2 hand check read 120 held-out reader replies (agent
   labels). Their reply SHA-256s, the hand labels and both judges' labels are public in
-  `analysis/hand-check-joined-text-free.jsonl`. This registration does not use them.
+  `analysis/hand-check-joined-text-free.jsonl`. This registration does not use them. That file
+  publishes the SHA-256 of 120 held-out replies with the primary judge's labels, so hashing
+  candidate abstention strings could reveal which of those replies abstain; nobody has done this.
 - **What AM1 did not report, and nobody has computed:** direct search at any number of calls,
   MSR-Banzhaf, greedy selection, SNIPW-64 or permutation Shapley-16 beyond seeds 42-44, u(BM25 top
   4) as an accuracy, any statistic of the held-out replies' abstention, and any label-free rule.
@@ -102,7 +106,10 @@ rounded RESULTS.md values (`power.json`, `conditional_on_am1_published_counts`).
   These are exact bounds under the constraints (`direct_search_bounds`; they equal check 1's).
   The 57-call bound nearly excludes RULE_BETTER on A2 before the run: SNIPW-64 would have to lose
   less than direct search at its own calls, which needs direct search's regret near the top of
-  its range. No other comparison's direction is fixed.
+  its range. For A4, exact Banzhaf's published regret, 0.025 [0.009, 0.043], is MSR-Banzhaf's
+  many-sample limit; with direct search at 64 calls bounded by [0, 0.044], A4's sign is open.
+  Nothing published bounds greedy backward elimination, so A7 is open too. No other comparison's
+  direction is fixed.
 
 ### 1.3 Development work that shaped the hypotheses
 
@@ -311,7 +318,9 @@ comparison would nearly restate its regret.
 A1, A2, A4 and A7 are the **matched** comparisons (equal calls). A3, A5 and A6 are the
 **fewer-calls** comparisons: direct search reads 26 subsets against the rule's 57-83.
 
-The estimand of comparison j is the mean of D_j over the 251 non-constant retrieved tables.
+The estimand of comparison j is the expected D_j over questions drawn as AM1's confirmatory set
+was (held-out questions whose retrieved table is non-constant), estimated by the mean of D_j over
+the 251 such tables; the bootstrap resamples questions.
 
 ### 6.4 H-B (descriptive, D116)
 
@@ -352,7 +361,10 @@ Per arm, and per question type within each arm:
   abstains, the number where every 4-subset abstains, and abstaining replies judged correct;
 - H-A's comparisons, rule regrets and decision bounds on the gold arm, under the same rule as
   section 7.1 but without a decision;
-- H-C's test on the gold arm, without a decision;
+- H-C's test on the gold arm, without a decision: its label is a descriptive label
+  (`h_c.gold.descriptive_label`; "descriptive label, no decision" in `tables.md`), as is H-A's
+  gold-arm label (`h_a.gold.descriptive_label_no_decision`; "Descriptive label (no decision)" in
+  `tables.md`);
 - H-B on both arms, which is descriptive everywhere (D116; section 7.2);
 - nonabstain-BM25 against all 8 on both arms, also descriptive.
 
@@ -371,10 +383,11 @@ bounds are the one-sided ends of section 7.1.
 **Family**: the seven comparisons A1-A7 of section 6.3, retrieved arm, B = 4, 251 non-constant
 tables.
 
-**Bounds.** For each comparison, U_j and L_j are the one-sided upper and lower bootstrap bounds
-of the mean of D_j at level 1 - 0.05/7 (one-sided 99.29%): the
-ceil((1 - 0.05/7)(R - 1))-th and floor((0.05/7)(R - 1))-th order statistics of the R = 10,000
-resampled means (the ends of `cluster_bootstrap`'s two-sided interval at alpha 2 x 0.05/7).
+**Bounds.** For each comparison, U_j and L_j are the one-sided upper and lower percentile
+bootstrap bounds of the mean of D_j at nominal level 1 - 0.05/7 (one-sided 99.29%): with the
+R = 10,000 resampled means sorted, the 0-based indices ceil((1 - 0.05/7)(R - 1)) = 9,928 and
+floor((0.05/7)(R - 1)) = 71, that is the 72nd largest and the 72nd smallest (the ends of
+`cluster_bootstrap`'s two-sided interval at alpha 2 x 0.05/7).
 
 **Monte Carlo margin.** A bound clears 0 only if it clears it by more than 3 Monte Carlo standard
 errors of that comparison's mean (section 7.4), and by any margin for A1 and A7, whose rules are
@@ -390,7 +403,9 @@ RULE_BETTER if L_j is above 0 by more than the margin, and NOT_SEPARATED otherwi
   A5 or A6) is. There the rule read about 57-83 subsets against direct search's 26, so this label
   says only that the rule, reading two to three times as many subsets, lost less. It blocks
   SEARCH_DOMINATES and licenses nothing at equal calls; the report names the comparisons;
-- **INCONCLUSIVE** otherwise; the report names the comparisons not separated.
+- **INCONCLUSIVE** otherwise; the report names the comparisons not separated. Under
+  INCONCLUSIVE the other comparisons' classifications still hold together at 0.05 (nominal) per
+  direction.
 
 The four are exclusive: a comparison cannot be both SEARCH_BETTER and RULE_BETTER, SEARCH_DOMINATES
 leaves none RULE_BETTER, and RULE_BEATS_SEARCH takes precedence over RULE_AT_MORE_CALLS_BETTER
@@ -402,17 +417,22 @@ leaves none RULE_BETTER, and RULE_BEATS_SEARCH takes precedence over RULE_AT_MOR
   (permutation Shapley-16 and SNIPW-64), the cheapest exact rule (leave-one-out), the best sampled
   Banzhaf rule per call in AM1b (MSR-Banzhaf-64), and the only search rule AM1b tried (greedy
   backward with BM25 ties; forward selection with BM25 ties lost more on development, 0.105).
-- Alpha: each verdict's probability of being wrong is at most 0.05. AM1's H2 used 99% two-sided
-  intervals with Bonferroni over five rules, which is 2.5% per direction; this design spends 5% in
-  each direction, because each direction carries its own verdict. The bounds are one-sided
-  because the hypothesis has a direction (search loses less), and the opposite direction is its
-  falsifier, tested by its own one-sided bound at the same level.
+- Alpha: each verdict's nominal probability of being wrong is at most 0.05. AM1's H2 used 99%
+  two-sided intervals with Bonferroni over five rules, which is 2.5% per direction; this design
+  spends 5% in each direction, because each direction carries its own verdict. The bounds are
+  one-sided because the hypothesis has a direction (search loses less), and the opposite
+  direction is its falsifier, tested by its own one-sided bound at the same level.
 - Bonferroni rather than Holm, because it gives bounds, the dual of the tests, that the report can
-  print and a reader can check. SEARCH_DOMINATES is an intersection-union claim: it is wrong only if
-  some D_j is at least 0, and then it fires with probability at most 0.05/7, so Bonferroni is
-  conservative for it. RULE_BEATS_SEARCH is a union over the four matched comparisons, wrong with
-  probability at most 4 x 0.05/7; RULE_AT_MORE_CALLS_BETTER a union over the three others, at most
-  3 x 0.05/7. Both are at most 0.05.
+  print and a reader can check. Nominally, SEARCH_DOMINATES is an intersection-union claim: it is
+  wrong only if some D_j is at least 0, and then it fires with probability at most 0.05/7, so
+  Bonferroni is conservative for it. RULE_BEATS_SEARCH is a union over the four matched
+  comparisons, wrong with probability at most 4 x 0.05/7; RULE_AT_MORE_CALLS_BETTER a union over
+  the three others, at most 3 x 0.05/7.
+- **These rates are nominal.** The percentile bootstrap does not hold them under the skewed
+  differences of these tables: in the size simulation of section 9, built from the development
+  differences, the measured rates exceed the nominal ones in one direction (section 9 gives
+  them). The method is kept, as registered, and the measured size is reported with it; a verdict
+  is read with that size, not the nominal one.
 - A2 and A4 are nearly implied by A3 and A5: direct search's expected regret does not increase
   with calls, so whenever a SNIPW-64 draw reads at least 26 subsets (every development draw read
   47 or more) D_A2 is at most D_A3 table by table, and with shared resamples U_A2 is at most U_A3
@@ -428,12 +448,13 @@ leaves none RULE_BETTER, and RULE_BEATS_SEARCH takes precedence over RULE_AT_MOR
 utility, direct search over random 4-subsets loses less keep-set regret than leave-one-out and
 greedy backward elimination at the same calls, and than SNIPW-64, MSR-Banzhaf-64 and permutation
 Shapley-16 at 26 calls, fewer than they read; in expectation over the search's and the rules'
-random draws, averaged over the 251 non-constant tables" (this reader, this judge, LongMemEval-S
-held-out questions, BM25 user-turn pools, 4 of 8). RULE_BEATS_SEARCH names the rules that beat
+random draws and over questions drawn as AM1's confirmatory set was (held-out questions with a
+non-constant retrieved table), as estimated by the 251-table mean with questions resampled" (this
+reader, this judge, LongMemEval-S held-out questions, BM25 user-turn pools, 4 of 8). RULE_BEATS_SEARCH names the rules that beat
 direct search at equal calls. RULE_AT_MORE_CALLS_BETTER names the rules that lost less while
 reading more calls, and licenses nothing at equal calls. INCONCLUSIVE names the comparisons not
-separated, and the others' classifications stand as reported. The gold arm's verdict under the
-same rule is descriptive.
+separated, and the others' classifications stand as reported. On the gold arm the same rule
+gives a descriptive label, not a verdict.
 
 ### 7.2 H-B (descriptive, D116): BM25 top 4 against all 8
 
@@ -475,8 +496,9 @@ rule (no label is read) whose cost is the stop rule's reads (section 6.6). NONAB
 license the reverse in the same scope. Because an abstaining reply is almost never judged correct
 (section 1.1), c is expected near 0 and the test is in effect one-directional: with c = 0 it
 rejects when b is 6 or more, with c = 1 when b is 8 or more, with c = 2 when b is 10 or more.
-If the inputs of section 8's V3 or V5 fail, H-C is VOID with the named error, and nothing about
-it is read.
+NONABSTAIN_HELPS does not say the rule beats keeping all 8; that comparison is reported as a
+description (section 1.2 shows all 8 at least 17 questions ahead of BM25 top 4). If the inputs of
+section 8's V3 or V5 fail, H-C is VOID with the named error, and nothing about it is read.
 
 ### 7.4 Monte Carlo error of the sampled rules
 
@@ -504,8 +526,9 @@ V5)`); none surfaces as a traceback.
   input unless the ledger holds a row for `am1-keepset-search-v1` whose SHA-256 equals this file's,
   and every code pin of section 16 matches the working tree (parsed from this file). The gate runs
   before any held-out file is opened. The tests check the refusal and the opening against a
-  scratch ledger and a scratch copy of this file; no test reads the real ledger's row or the
-  held-out tables, so the tests pass before and after the freeze.
+  scratch ledger and a scratch copy of this file, never the real ledger's row, so the tests pass
+  before and after the freeze. No test decodes the held-out tables; one test hashes the committed
+  gz to check its pin (and reads AM1's SHA-256 record files).
 - **VOID, nothing read (V1): a digest differs.** The tables' gz file or the uncompressed tables
   (section 4), any code pin, or the abstention list's digest. An input is fixed, never the code; a
   code change is a new registration id.
@@ -601,7 +624,8 @@ top-4 replies were judged correct (0.64, 0.36), and is unlikely to detect 1 in 2
 ## 10. Seeds
 
 200 seeds for the sampled rules, 42 to 241 (section 6.2; AM1's 42-44 and AM1b's 42-61 among
-them). Bootstrap: numpy `default_rng(42)`. Power simulation: numpy `default_rng(43)`. Direct
+them). Bootstrap: numpy `default_rng(42)`. Power simulation: numpy `default_rng(43)`. Size
+simulation: numpy `default_rng(44)`. Direct
 search, H-B and H-C involve no random draw. No unseeded randomness.
 
 ## 11. Compute plan
@@ -677,8 +701,8 @@ mode the script parses this table and refuses to run unless every file matches.
 
 | File | Role | SHA-256 |
 |---|---|---|
-| `scripts/memcredit_keepset_search.py` | this registration's analysis: gate, extract, analyze, development selftest and power | `a367036085a4cb199d3a5ba46f48931a19fee306d2c22432fd9e590328bdb33d` |
-| `tests/test_memcredit_keepset_search.py` | its tests: exact order-statistic expectation, exact McNemar test and its interval, H-A per table and verdict, H-C's stop rule, the gate and the pins | `c2a9571d4eda4e4ffadf70ddd78351848a4ccc5ec6e851a8b860d84e384bd672` |
+| `scripts/memcredit_keepset_search.py` | this registration's analysis: gate, extract, analyze, development selftest and power | `3fbb804328bd310a6c8626f408d0d1b44a4624f06829a0762e3afc6134add584` |
+| `tests/test_memcredit_keepset_search.py` | its tests: exact order-statistic expectation, exact McNemar test and its interval, H-A per table and verdict, H-C's stop rule, the gate and the pins | `6ab16170cfef0c7c0b891fa45f4867a17e3ff2a69231dc5b8504cb2abc343e83` |
 | `scripts/memcredit_cost_curve.py` | AM1b's decoding, memoized calls, rules, greedy search and exact direct-search curve | `431f4cb21ccd398e1433e29a5b40c1a697d48b9aecc5fc728956f819e28c9bab` |
 | `scripts/memcredit_label_free.py` | AM1d's abstention list, join, features, BM25 order and stop rule | `721015de434021a72ab3bbbab5e91d0de39a2fc359df7283068f83026dcb9d8f` |
 | `scripts/memcredit_analyze.py` | AM1's join (`join_rows`, `pool_views`) and artifact loader | `5444104d3c760b17f311656f4e0dbd50b2b154c89d806f1e4aa2ab6791fb0f34` |
@@ -703,42 +727,58 @@ and `harness/memcredit_study.py`.
 
 Commands of the registered run, on the host, in the `uv` environment of a `git archive` export of
 the freeze commit (AM1d's usage), run from inside EXPORT_DIR. The names in capitals are host
-paths, all new directories under `~/cotcodec-runs/stage0/am1-keepset-search-v1/`:
+paths, all new sibling directories under `~/cotcodec-runs/stage0/am1-keepset-search-v1/`:
 - EXPORT_DIR is `.../export-FREEZE`, FREEZE being the freeze commit's short hash;
 - PRIVATE_DIR is `.../private`, host only;
 - OUTPUT_DIR is `.../out`;
+- LOG_DIR is `.../logs`;
 - HELDOUT_RUN is `~/cotcodec-runs/stage0/am1-memory-credit-v1/runs/main/1458/am1`;
 - HELDOUT_ARTIFACT is `~/cotcodec-runs/stage0/am1-memory-credit-v1/study-artifact.json`.
 
 `extract` refuses a PRIVATE_DIR inside the repository it runs from, so EXPORT_DIR is a sibling of
-PRIVATE_DIR and OUTPUT_DIR, never their parent.
+PRIVATE_DIR, OUTPUT_DIR and LOG_DIR, never their parent.
+
+**Platform of record.** The host (x86_64 Linux), uv's CPython 3.14.6 (`--python 3.14.6` on every
+command), and numpy 2.5.2 as the freeze commit's `uv.lock` pins it for Python 3.12 and later. The
+registered outputs and the verifier's rerun are made there. A run on a Mac may differ in the last
+digit of the exact conditional intervals (`harness.memcredit.clopper_pearson` sums binomial terms
+with the platform's `lgamma`) and in the `environment` field of `results.json`; no reading depends
+on either.
+
+Each command writes its standard output and error to a log in LOG_DIR and appends its exit code:
 
 ```bash
 cd EXPORT_DIR
-uv run --offline python scripts/memcredit_keepset_search.py extract --split heldout \
-  --run-dir HELDOUT_RUN --evidence HELDOUT_ARTIFACT --private-dir PRIVATE_DIR
-uv run --offline python scripts/memcredit_keepset_search.py analyze --split heldout \
-  --features PRIVATE_DIR/features-heldout-1458.json.gz --output-dir OUTPUT_DIR
-uv run --offline --extra dev pytest -q tests/test_memcredit_keepset_search.py
+uv run --offline --python 3.14.6 python scripts/memcredit_keepset_search.py extract \
+  --split heldout --run-dir HELDOUT_RUN --evidence HELDOUT_ARTIFACT --private-dir PRIVATE_DIR \
+  > LOG_DIR/extract.log 2>&1; echo "exit $?" >> LOG_DIR/extract.log
+uv run --offline --python 3.14.6 python scripts/memcredit_keepset_search.py analyze \
+  --split heldout --features PRIVATE_DIR/features-heldout-1458.json.gz --output-dir OUTPUT_DIR \
+  > LOG_DIR/analyze.log 2>&1; echo "exit $?" >> LOG_DIR/analyze.log
+uv run --offline --python 3.14.6 --extra dev pytest -q tests/test_memcredit_keepset_search.py \
+  > LOG_DIR/pytest.log 2>&1; echo "exit $?" >> LOG_DIR/pytest.log
 ```
 
 If `extract` or `analyze` stops with a `VOID (H-C, V3)` or `VOID (H-C, V5)` error (section 8), the
-registered H-C void path replaces the second command, with REASON the error's text:
+registered H-C void path replaces the second command:
 
 ```bash
-uv run --offline python scripts/memcredit_keepset_search.py analyze --split heldout \
-  --h-c-void "REASON" --output-dir OUTPUT_DIR
+uv run --offline --python 3.14.6 python scripts/memcredit_keepset_search.py analyze \
+  --split heldout --h-c-void 'REASON' --output-dir OUTPUT_DIR \
+  > LOG_DIR/analyze.log 2>&1; echo "exit $?" >> LOG_DIR/analyze.log
 ```
+
+REASON is the failing command's error line in its log, the line that begins `error: `, without
+that prefix and with the home directory written as `~`. It is passed in single quotes, each single
+quote inside it written as `'\''`, so that the shell passes the text unchanged. The verifier passes
+the same string.
 
 The committed logs shorten the home directory to `~`: `extract` prints the features' absolute
 path.
 
 The defaults are the registered settings: 200 seeds from 42, 10,000 bootstrap resamples with seed
-42. `analyze` runs once; a fresh verifier reruns it on the host from a new export, and the outputs
-must be byte-identical. Byte identity holds on one platform: the exact conditional interval of
-section 7.2 comes from `harness.memcredit.clopper_pearson`, whose last bit follows the platform's
-`lgamma` (the development dry run differed in one such bit between the host and a Mac). No
-reading depends on it; the readings use the exact rational p-value.
+42. `analyze` runs once; a fresh verifier reruns it on the platform of record from a new export,
+and the outputs must be byte-identical.
 
 ## 17. Freeze checklist
 
@@ -753,7 +793,12 @@ Before the freeze, by the orchestrator:
 4. Re-pin section 16 in a fill commit; run the tests locally and on the host.
 5. Confirm that `git diff ea9d57dc -- program/evidence/2026-10-16/am1-confirmatory` is empty at
    the fill commit, and on the host that the files of section 4 still have their digests.
-6. The ledger row, by `uv run python scripts/preregister.py freeze am1-keepset-search-v1
+6. The fill commit also rewrites the status line (line 3) to the frozen wording that
+   `am1-memory-credit-v1` uses: "**Status: frozen in `program/preregistrations/ledger.jsonl`; see
+   the ledger row for the freeze time and `git_head_at_freeze`.**". The file must then contain no
+   to-be-decided marker and no placeholder in angle brackets, which the freeze command rejects.
+   The orchestrator makes this edit, not the drafter.
+7. The ledger row, by `uv run python scripts/preregister.py freeze am1-keepset-search-v1
    program/preregistrations/am1-keepset-search-v1.md`, in a commit that adds only that row. A test
    freezes this file into a scratch ledger, so the command's text checks pass.
 
