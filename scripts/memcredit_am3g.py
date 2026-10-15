@@ -55,6 +55,7 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import datetime
 import gzip
 import hashlib
 import json
@@ -2657,16 +2658,69 @@ def _valid_rows(raw_lines: Sequence[str], allowed: set[str]) -> tuple[dict[str, 
     return valid, {"malformed_rows": malformed, "repeated_items": len(repeated)}
 
 
-def audit_transcript(path: Path, allowed_reads: set[str], output: str) -> dict[str, Any]:
-    """The labeller's tool calls in one chunk's transcript: JSON lines (the CLI's stream-json, or
-    a Claude Code subagent's transcript) whose assistant messages hold ``tool_use`` blocks. It
-    passes only if every line parses, every call is a Read of one of the chunk's two input files
-    or a Write of its output file (matched by file name), and the output was written. Text-free:
-    it reports tool names and file names only."""
+def _iso_seconds(value: Any) -> float | None:
+    try:
+        return datetime.datetime.fromisoformat(str(value).replace("Z", "+00:00")).timestamp()
+    except ValueError:
+        return None
+
+
+def _message_text(content: Any) -> str | None:
+    """A user message's own text (a prompt), or None for tool results and other blocks."""
+
+    if isinstance(content, str):
+        return content
+    if (
+        isinstance(content, list)
+        and content
+        and all(isinstance(b, dict) and b.get("type") == "text" for b in content)
+    ):
+        return "".join(str(b.get("text", "")) for b in content)
+    return None
+
+
+def audit_transcript(
+    path: Path,
+    chunk: dict[str, Any],
+    launch: str = "cli",
+    chunk_dir: str | None = None,
+    agent_id: str | None = None,
+    not_before: float | None = None,
+) -> dict[str, Any]:
+    """Audit one chunk's labeller transcript: JSON lines (the CLI's stream-json, or a Claude Code
+    subagent's transcript, ``subagents/agent-<id>.jsonl``, copied unmodified). It passes only if:
+    every line parses; every assistant line names the model ``HAND_LABELLER_MODEL``; every
+    tool-call block is a ``tool_use`` Read of the chunk's two input files or Write of its output
+    file, by path inside the chunk's own directory (absolute paths there, or bare names for the
+    CLI), with no other block type that calls a tool (``server_tool_use`` included); the output
+    was written; the first user message, when the transcript holds one (a subagent's always
+    does), is the chunk's pinned prompt (``hand_labeller_prompt``, with bare names or with the
+    chunk directory's absolute paths; SHA-256 of the stripped text); and, for a subagent, every
+    line carries the launch record's agent id and a timestamp after the CLI's recorded failure.
+    Text-free: it reports tool names, file names, digests, ids, times and the context's
+    instruction-file types and names."""
 
     if not path.is_file():
         return {"pass": False, "why": "no transcript", "tool_calls": 0}
-    calls, bad, unreadable, wrote = 0, [], 0, False
+    names = ("hand-check-instructions.txt", chunk["chunk"], chunk["output"])
+    paths: dict[str, set[str]] = {}
+    for nm in names:
+        paths[nm] = ({nm} if launch == "cli" else set()) | (
+            {f"{chunk_dir}/{nm}"} if chunk_dir else set())  # fmt: skip
+    prompts = {sha256_text(hand_labeller_prompt(chunk["chunk"], chunk["output"]).strip())}
+    if chunk_dir:
+        prompts.add(sha256_text(hand_labeller_prompt(
+            f"{chunk_dir}/{chunk['chunk']}", f"{chunk_dir}/{chunk['output']}",
+            f"{chunk_dir}/hand-check-instructions.txt").strip()))  # fmt: skip
+    calls, bad, unreadable, wrote, failures = 0, [], 0, False, []
+    models: set[str] = set()
+    agents: set[str] = set()
+    sessions: set[str] = set()
+    assistant_lines = 0
+    first_prompt: str | None = None
+    stamps: list[float] = []
+    missing_stamps = 0
+    instruction_files: list[list[str]] = []
     for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
         if not line.strip():
             continue
@@ -2675,25 +2729,90 @@ def audit_transcript(path: Path, allowed_reads: set[str], output: str) -> dict[s
         except ValueError:
             unreadable += 1
             continue
-        message = entry.get("message") if isinstance(entry, dict) else None
+        if not isinstance(entry, dict):
+            unreadable += 1
+            continue
+        kind = entry.get("type")
+        if entry.get("agentId") is not None:
+            agents.add(str(entry["agentId"]))
+        if entry.get("session_id") is not None:
+            sessions.add(str(entry["session_id"]))
+        if kind in ("user", "assistant", "attachment"):
+            stamp = _iso_seconds(entry.get("timestamp")) if entry.get("timestamp") else None
+            if stamp is None:
+                missing_stamps += 1
+            else:
+                stamps.append(stamp)
+        attachment = entry.get("attachment")
+        if isinstance(attachment, dict) and attachment.get("type") == "instructions":
+            for f in attachment.get("files") or []:
+                if isinstance(f, dict):
+                    instruction_files.append([str(f.get("type")), Path(str(f.get("path"))).name])
+        message = entry.get("message")
         content = message.get("content") if isinstance(message, dict) else None
+        if kind == "assistant":
+            assistant_lines += 1
+            models.add(str(message.get("model")) if isinstance(message, dict) else "None")
+        if kind == "user" and first_prompt is None:
+            text = _message_text(content)
+            if text is not None:
+                first_prompt = sha256_text(text.strip())
         if not isinstance(content, list):
             continue
         for block in content:
-            if not isinstance(block, dict) or block.get("type") != "tool_use":
+            btype = str(block.get("type")) if isinstance(block, dict) else ""
+            if "tool_use" not in btype:
                 continue
             calls += 1
             name = str(block.get("name"))
             tool_input = block.get("input") if isinstance(block.get("input"), dict) else {}
-            target = Path(str(tool_input.get("file_path", ""))).name
-            if name == "Read" and target in allowed_reads:
+            target = str(tool_input.get("file_path", ""))
+            base = Path(target).name
+            if (
+                btype == "tool_use"
+                and name == "Read"
+                and base in names[:2]
+                and target in paths[base]
+            ):
                 continue
-            if name == "Write" and target == output:
+            if (
+                btype == "tool_use"
+                and name == "Write"
+                and base == names[2]
+                and target in paths[base]
+            ):
                 wrote = True
                 continue
-            bad.append(f"{name} {target}".strip())
-    out: dict[str, Any] = {"pass": not bad and not unreadable and wrote, "tool_calls": calls,
-                           "transcript_sha256": sha256_file(path)}  # fmt: skip
+            where = " (outside the chunk)" if base in paths and target not in paths[base] else ""
+            bad.append(f"{name if btype == 'tool_use' else btype} {base}".strip() + where)
+    if bad:
+        failures.append("other tool calls")
+    if unreadable:
+        failures.append("unreadable lines")
+    if not wrote:
+        failures.append("the output was not written")
+    if not assistant_lines or models != {HAND_LABELLER_MODEL}:
+        failures.append("an assistant line of another model")
+    if first_prompt is None and launch == "subagent":
+        failures.append("no first prompt")
+    if first_prompt is not None and first_prompt not in prompts:
+        failures.append("the first prompt is not the chunk's pinned prompt")
+    if launch == "subagent":
+        if agent_id is None or agents != {agent_id}:
+            failures.append("agent id differs from the launch record")
+        if not_before is None or missing_stamps or not stamps or min(stamps) <= not_before:
+            failures.append("a line without a timestamp after the CLI's failure")
+    out: dict[str, Any] = {
+        "pass": not failures, "tool_calls": calls, "transcript_sha256": sha256_file(path),
+        "models": sorted(models), "assistant_lines": assistant_lines,
+        "first_prompt_sha256": first_prompt, "agent_ids": sorted(agents),
+        "session_ids": sorted(sessions),
+        "first_timestamp": _utc_text(min(stamps)) if stamps else None,
+        "last_timestamp": _utc_text(max(stamps)) if stamps else None,
+        "instruction_files": instruction_files,
+    }  # fmt: skip
+    if failures:
+        out["failures"] = failures
     if bad:
         out["other_calls"] = bad
     if unreadable:
@@ -2703,16 +2822,24 @@ def audit_transcript(path: Path, allowed_reads: set[str], output: str) -> dict[s
     return out
 
 
+def _utc_text(seconds: float) -> str:
+    return datetime.datetime.fromtimestamp(seconds, datetime.UTC).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+
+
 def cmd_hand_merge(args: argparse.Namespace) -> dict[str, Any]:
     """Merge one labelling stage's chunk outputs, whatever they hold (registration section 8).
     first: concatenate the chunk outputs in order (``hand-labels-first-raw.jsonl``), keep the
     rows that are valid, and, if items lack a valid row, write the repair sample and its chunks
     (``hand-repair-*``); otherwise write the final labels. repair: add the repair stage's valid
     rows for exactly those items and write the final labels (``hand-labels.jsonl``, sample order),
-    complete or not: there is no third stage. Each chunk's transcript
-    (``transcripts/{stage}-NN.jsonl``) is audited first (``audit_transcript``): the rows of a
-    chunk whose transcript is missing or fails the audit are not used, so its items go to the
-    repair stage (or stay unlabelled after it)."""
+    complete or not: there is no third stage. The stage's launch record
+    (``labeller-{stage}.json``, written by ``am3g-hand-label-mac.sh``: the launch, each chunk's
+    directory, the CLI's failure time, and per chunk the labelling attempts found) is required.
+    Each chunk's transcript (``transcripts/{stage}-NN.jsonl``) is audited first
+    (``audit_transcript``): the rows of a chunk whose transcript is missing or fails the audit
+    are not used, so its items go to the repair stage (or stay unlabelled after it). A chunk with
+    more than one labelling attempt voids the hand check: the final labels are written empty, so
+    the join is "incomplete" and a directional reading is JUDGE_DEPENDENT (section 7.1)."""
 
     hand_dir = Path(args.hand_dir)
     manifest = json.loads((hand_dir / "hand-manifest.json").read_text(encoding="utf-8"))
@@ -2722,13 +2849,26 @@ def cmd_hand_merge(args: argparse.Namespace) -> dict[str, Any]:
     stage = args.stage
     if stage not in ("first", "repair") or stage not in manifest:
         raise Am3gError(f"no {stage} stage in the hand manifest")
+    try:
+        launch = json.loads((hand_dir / f"labeller-{stage}.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        raise Am3gError(f"no readable launch record labeller-{stage}.json: {exc}") from exc
+    kind = launch.get("launch") if isinstance(launch, dict) else None
+    if kind not in ("cli", "subagent"):
+        raise Am3gError(f"the launch record names no launch (cli or subagent): {kind!r}")
+    if kind == "subagent" and not launch.get("cli_failed_at"):
+        raise Am3gError("a subagent launch without the CLI's recorded failure")
+    attempts = {str(k): int(v) for k, v in (launch.get("attempts") or {}).items()}
+    not_before = _iso_seconds(launch.get("cli_failed_at")) if kind == "subagent" else None
     raw_lines: list[str] = []
     audited_lines: list[str] = []
     missing_chunks, failing, audits = [], [], {}
     for n, chunk in enumerate(manifest[stage], start=1):
-        audit = audit_transcript(hand_dir / "transcripts" / f"{stage}-{n:02d}.jsonl",
-                                 {"hand-check-instructions.txt", chunk["chunk"]},
-                                 chunk["output"])  # fmt: skip
+        nn = f"{n:02d}"
+        audit = audit_transcript(hand_dir / "transcripts" / f"{stage}-{nn}.jsonl", chunk, kind,
+                                 (launch.get("chunk_dirs") or {}).get(nn),
+                                 (launch.get("agents") or {}).get(nn), not_before)  # fmt: skip
+        audit["attempts"] = attempts.get(nn, 0)
         audits[chunk["output"]] = audit
         if not audit["pass"]:
             failing.append(chunk["output"])
@@ -2746,11 +2886,19 @@ def cmd_hand_merge(args: argparse.Namespace) -> dict[str, Any]:
     raw.write_text("\n".join(raw_lines) + ("\n" if raw_lines else ""), encoding="utf-8")
     allowed = {i for c in manifest[stage] for i in c["items"]}
     valid, problems = _valid_rows(audited_lines, allowed)
-    out: dict[str, Any] = {"stage": stage, "raw_sha256": sha256_file(raw),
+    out: dict[str, Any] = {"stage": stage, "raw_sha256": sha256_file(raw), "launch": kind,
                            "chunks": len(manifest[stage]), "missing_chunk_outputs": missing_chunks,
                            "chunks_failing_the_transcript_audit": failing,
                            "transcript_audit": audits,
+                           "labelling_attempts": sum(attempts.values()),
                            "valid_rows": len(valid), **problems}  # fmt: skip
+    extra = sorted(nn for nn, k in attempts.items() if k > 1)
+    if extra:
+        final.write_text("", encoding="utf-8")
+        out.update(void=f"more than one labelling attempt for chunk(s) {', '.join(extra)}: the "
+                   "hand check is void and its final labels are empty",
+                   final_rows=0, final_complete=False, final_sha256=sha256_file(final))  # fmt: skip
+        return out
     if stage == "first":
         lacking = [i for i in manifest["items"] if i not in valid]
         (hand_dir / "hand-valid-first.json").write_text(json.dumps(valid, sort_keys=True))
@@ -3568,6 +3716,8 @@ def cmd_rerun_decision(args: argparse.Namespace) -> dict[str, Any]:
             summary = json.loads(summary_path.read_text(encoding="utf-8"))
         except ValueError:
             summary = None
+        if summary is not None and not isinstance(summary, dict):
+            raise Am3gError(f"{VOID_INCOMPLETE}: the driver's summary.json is not a JSON object")
     decision = rerun_decision(summary, read_env_file(job_dir / "termination.env"), args.is_rerun)
     return {"population": args.population, "job_dir": job_dir.name} | decision
 

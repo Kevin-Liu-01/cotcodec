@@ -11,9 +11,14 @@ set -Eeuo pipefail
 source "$(dirname "$0")/am3g-env.sh" "${1:?mode}"
 SHORT="${2:?commit short id}"; STAGE="${3:?first or repair}"
 check_checkout "$SHORT"
+OUT="$R/hand-merge-${STAGE}-${SHORT}.json"
+[[ ! -e "$OUT" ]] || { echo "stage $STAGE was merged already ($OUT)" >&2; exit 2; }
 chmod u+w "$R/hand/hand-manifest.json"
+rm -f "$OUT.tmp"
 uv run --locked --offline python scripts/memcredit_am3g.py hand-merge --hand-dir "$R/hand" \
-  --stage "$STAGE" > "$R/hand-merge-${STAGE}-${SHORT}.json"
-chmod a-w "$R"/hand/*.jsonl "$R"/hand/*.json "$R"/hand/*.txt "$R"/hand/transcripts/* 2>/dev/null || true
-cat "$R/hand-merge-${STAGE}-${SHORT}.json"
-log_job "hand labels merged, stage ${STAGE}: $(python3 -c "import json,sys;d=json.load(open(sys.argv[1]));print({k:d[k] for k in ('valid_rows','malformed_rows','repeated_items') if k in d}, 'chunks failing the transcript audit', len(d['chunks_failing_the_transcript_audit']), d.get('items_lacking_a_valid_row', d.get('final_rows')))" "$R/hand-merge-${STAGE}-${SHORT}.json")"
+  --stage "$STAGE" > "$OUT.tmp"
+mv "$OUT.tmp" "$OUT"
+chmod a-w "$R"/hand/*.jsonl "$R"/hand/*.json "$R"/hand/*.txt "$R"/hand/*.sha256 \
+  "$R"/hand/transcripts/* 2>/dev/null || true
+cat "$OUT"
+log_job "hand labels merged, stage ${STAGE}: $(python3 -c "import json,sys;d=json.load(open(sys.argv[1]));print({k:d[k] for k in ('launch','labelling_attempts','valid_rows','malformed_rows','repeated_items') if k in d}, 'chunks failing the transcript audit', len(d['chunks_failing_the_transcript_audit']), d.get('items_lacking_a_valid_row', d.get('final_rows')), d.get('void', ''))" "$OUT")"

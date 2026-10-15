@@ -21,10 +21,13 @@ if [[ -n "$JOB_A" ]]; then
   ABS=(--abstention-run-dir "$R/runs/abstention/${JOB_A}/am3g" --abstention-evidence "$ABS_ART"
        --abstention-features "$R/private/features-abstention.json.gz")
 fi
+OUT="$R/hand-sample-${SHORT}.json"
+[[ ! -e "$OUT" ]] || { echo "the sample was drawn already ($OUT)" >&2; exit 2; }
+rm -f "$OUT.tmp"
 uv run --locked --offline python scripts/memcredit_am3g.py hand-sample --population "$POP" \
   --run-dir "$R/runs/${POP}/${JOB}/am3g" --evidence "$(artifact_for "$POP")" \
-  --features "$R/private/features-${POP}.json.gz" "${ABS[@]}" --hand-dir "$R/hand" \
-  > "$R/hand-sample-${SHORT}.json"
+  --features "$R/private/features-${POP}.json.gz" "${ABS[@]}" --hand-dir "$R/hand" > "$OUT.tmp"
+mv "$OUT.tmp" "$OUT"
 chmod a-w "$R"/hand/*
-cat "$R/hand-sample-${SHORT}.json"
-log_job "hand-check sample at ${SHORT}: $(python3 -c "import json,sys;d=json.load(open(sys.argv[1]));print(d['items'],'items in',d['chunks'],'chunks, sample',d['sample_sha256'][:16],'plan',d['plan_sha256'][:16])" "$R/hand-sample-${SHORT}.json")"
+cat "$OUT"
+log_job "hand-check sample at ${SHORT}: $(python3 -c "import json,sys;d=json.load(open(sys.argv[1]));print(d['items'],'items in',d['chunks'],'chunks, sample',d['sample_sha256'][:16],'plan',d['plan_sha256'][:16])" "$OUT")"

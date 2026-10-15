@@ -945,8 +945,8 @@ parses this table and refuses to run unless every file matches.
 
 | File | Role | SHA-256 |
 |---|---|---|
-| `scripts/memcredit_am3g.py` | this registration: gate and config binding, abstention pools, driver and workers, extract, analyze, the rerun rule, the blind hand check (plan, sample, chunks, transcript audit, merge, join), dry-run comparison, power | `3c3b48d3ea27bf69f74d51af4991be026e1c12013e02e442544dcd7b758ccd7e` |
-| `tests/test_memcredit_am3g.py` | its tests: config and pins, the gate and the config binding, the pins inside the image, the abstention template against the archived port, pools, requests, judge items, the anchor replay checks R1 and R2, Holm and H1's readings, H2's estimand and strata, the natural mix, the hand check (blindness, plan, merge, repair, transcript audit, join), the rerun rule's order, the combined power, end to end on toy runs | `5e487262e7128669b7b6779bdb8cafb6a7b7a79af93d5403ca9e9f448f20a76e` |
+| `scripts/memcredit_am3g.py` | this registration: gate and config binding, abstention pools, driver and workers, extract, analyze, the rerun rule, the blind hand check (plan, sample, chunks, transcript audit, merge, join), dry-run comparison, power | `4bb0d42c09f9fca6e728a2487966bc13c08715672dce33316db195f6e7573e26` |
+| `tests/test_memcredit_am3g.py` | its tests: config and pins, the gate and the config binding, the pins inside the image, the abstention template against the archived port, pools, requests, judge items, the anchor replay checks R1 and R2, Holm and H1's readings, H2's estimand and strata, the natural mix, the hand check (blindness, plan, merge, repair, transcript audit, join), the rerun rule's order, the combined power, end to end on toy runs | `e4f5f152e5dc6e89bdaa0eed94dfbb21f02dde36001b32813d2fd638e928032e` |
 | `experiments/am3/am3-nonabstain-generality-v1.yaml` | this registration's config | `96fcd2186c43d6bdad7b1eb90e843aed39f0d56bad349799f8f1db6efb67d60e` |
 | `scripts/memcredit_am3.py` | AM3's engine helpers, rule, per-pool record and cell summary (imported) | `25f634edd29a23f2fdee12b0825013d624aa5305d49cf512f74fdf1827ea130f` |
 | `tests/test_memcredit_am3.py` | AM3's tests (also supply a pass writer to these tests) | `1ab5196ca553f8cc92deda0a728ec98987853ec81d3f75041561661659d848b3` |
@@ -972,26 +972,26 @@ parses this table and refuses to run unless every file matches.
 | `scripts/create_source_archive.py` | the source capsule | `672670ca29d3254e9af90b810eef591e15dae6934612c5184a72e5d0c7e9948c` |
 | `scripts/extract_discovery_source_archive.py` | the capsule extractor | `9b4d21a83beac8913dc06a946cf43ea31d77326e65d04957fad66d7b97d8c3cb` |
 | `scripts/preregister.py` | the ledger | `21fc3ef0ed0958b1600ce742c3b4f8d557d0a298635acb20342710eb814b2c0d` |
-| `ops/am3g/am3g-env.sh` | operator: shared host paths | `6729aac083872f2256b009fae0d0bc18fff8709a9d10a86f8c374cf672c338d8` |
+| `ops/am3g/am3g-env.sh` | operator: shared host paths | `021996f3e681b35cfb00fc21a121b8c4e9d441abe80ef586f483879b02e29ea3` |
 | `ops/am3g/am3g-checkout.sh` | operator: clean clone from a bundle | `fef6cba73c929da5f4af7147ff7edc1fb27c2f5afc4cbf6731b5da24a0df27dd` |
 | `ops/am3g/am3g-prepare-abstention.sh` | operator: the abstention artifact (before the freeze) | `bc93c751efcec2f25a35bc046beea3f212757c09ed8dc5c17a849a483d895425` |
 | `ops/am3g/am3g-capsule.sh` | operator: source capsule | `73b19889a335c204e754f3565c30ca51c239297b63c4ef9d3cf282a1f5caa579` |
 | `ops/am3g/am3g-preflight.sh` | operator: queue and GPU check (reports on stderr) | `6c1ac55cccca8d8e8478ec8403bd3123f61c397e3b04e5ba488e63e3faa35035` |
-| `ops/am3g/am3g-build.sh` | operator: image build, and the one rebuild | `df2c3ec803fd0dc8bb5c6a82b222d7b05df5bfc170e3c657aa98c5bf3f599ada` |
+| `ops/am3g/am3g-build.sh` | operator: image build, and the one rebuild | `82ce5dc7dfe9be584d43172520056c62eac7dec0690b151767fa1674431df86c` |
 | `ops/am3g/am3g-selftest-cpu.sbatch` | operator: CPU selftest in the image | `7fbbe82d36e6c86efb3c4cba19ef799783fa3033fa0f97f803e6b40edd2e7919` |
 | `ops/am3g/am3g-selftest.sh` | operator: submits the CPU selftest | `5b7eae57d1d031850760ee2dee31c5bbadb91e34064c0afc0458c2d905f77309` |
 | `ops/am3g/am3g-submit.sh` | operator: lane manifest, dry run, test-only check, submit, the rerun the rule allows | `269a739644b986d8e2c3776a537d22751cf5b5e2b0c91ac81bfda089733de04e` |
 | `ops/am3g/am3g-extract.sh` | operator: extract | `ef96744ab8f7b254bdbb95dc18d5b1ee776ff111dc23c8de73f60afcd5fe05ea` |
 | `ops/am3g/am3g-analyze.sh` | operator: analyze twice, tests | `9602b90ae1675f6f71473c77bd32b6a3b0d8447a1dddb10ebdd3c62e790aa2ad` |
-| `ops/am3g/am3g-stage-evidence.sh` | operator: text-free staging and the text search | `3723226151092c32f3b1ea05e77fc4cb4b9e4324b94a4ec7bbb4ff8aedee3004` |
+| `ops/am3g/am3g-stage-evidence.sh` | operator: text-free staging and the text search | `fcc8a46f64fb83d03fe2f33d94fe8877c969fa2741121d16ec2f7cef46bd6164` |
 | `ops/am3g/am3g-mac-bundle.sh` | operator, on the Mac: the bundle and the bootstrap copies | `15524e2fc8f467328505314e0a4d8e3c5edf4c09d481d72d2cbfc52b99199721` |
-| `ops/am3g/am3g-job-state.sh` | operator: a job's state, and its scontrol record when it ends | `fe0a039e7e24c73f66a1ab7c62975c07130096790ce4b5ec66298945b534418b` |
-| `ops/am3g/am3g-image.sh` | operator: the built image id, after its provenance and receipt checks | `eece44202eee8172dac412ccdc8e3c5f8adf377d070914692bddae1872bfa65d` |
-| `ops/am3g/am3g-rerun-decision.sh` | operator: the mechanical rerun rule | `9f7aaa98d44f291e81aa612e1e9612bf6b8c2c6872df82bdde5ddda0a07224c1` |
-| `ops/am3g/am3g-hand-sample.sh` | operator: the blind hand-check sample (H1, with H2 mixed in), its chunks and prompts | `82e5a34db467e9fc6660c33f1794eb2fb6c1863303ededa4e62ca3491fdbee78` |
-| `ops/am3g/am3g-hand-receipt.sh` | operator: one stage's text-free receipt, committed before the join | `7d3650859d66a4f26f3baa98b757b95349b811414004e6294fa3890f2b4276c7` |
-| `ops/am3g/am3g-hand-label-mac.sh` | operator, on the Mac: the registered labelling of one stage, chunk by chunk (prepare, the CLI launch, the recorded subagent fallback, push) | `e69204042142679b9384075e762cbcf650ab39da59f8bbd30791cf1a2f24f3dc` |
-| `ops/am3g/am3g-hand-merge.sh` | operator: audits the transcripts and merges a labelling stage; writes the one repair stage | `1282e19908c6cb35485a31595fa79ae32c80c26b6ae0983fe67cd42cbb7bd04e` |
+| `ops/am3g/am3g-job-state.sh` | operator: a job's state, and its scontrol record when it ends | `f48456a6f628ad98af0a57b8817903130bc78eb473a6afe5da92f158826b4505` |
+| `ops/am3g/am3g-image.sh` | operator: the built image id, after its provenance and receipt checks | `5ee1ef539e6fbcff9d9f3a5fee29d103f299fbc50ba3fce1e5eb36526953c1ef` |
+| `ops/am3g/am3g-rerun-decision.sh` | operator: the mechanical rerun rule | `8bcc8460b328871ab6ee31d0b27cf1665c541b671e3a6b8a18c5faed9989d7df` |
+| `ops/am3g/am3g-hand-sample.sh` | operator: the blind hand-check sample (H1, with H2 mixed in), its chunks and prompts | `7cf1f9a8348cd469dc5eb3a463001a12e0050951c1dafd3488c8827fe57b38b6` |
+| `ops/am3g/am3g-hand-receipt.sh` | operator: one stage's text-free receipt, committed before the join | `5014b7101b8b70d999788cac7d075817a21c618fc7ee34f192e73d46617432d1` |
+| `ops/am3g/am3g-hand-label-mac.sh` | operator, on the Mac: the registered labelling of one stage, chunk by chunk (prepare, the CLI launch, the recorded subagent fallback, push) | `86b2e32bb1d7d70dbb074dfdb7561b4473da38aaf4f5c4db72346da586c782c9` |
+| `ops/am3g/am3g-hand-merge.sh` | operator: audits the transcripts and merges a labelling stage; writes the one repair stage | `890632c9d409c486e3e76dd0f08a588563d471ad7644162d2c122b255968c30a` |
 | `scripts/verify_compute_provenance.py` | the lane, inside the container: image provenance | `ca62d62ae5c0e820a08574d5c5b1227c4495a24f3abcf342a1ae3ff1958d54ba` |
 | `scripts/check_compute_env.sh` | the lane, inside the container: environment doctor | `76fc5d64f7e84fd1e93340688b6be845d97f01c4791981c31ac8e70d66ff08ff` |
 | `scripts/exec_research_workload.py` | the lane, inside the container: runs the workload | `bb3abd1dd11e8ec9336fc181ac1999b1deea00e08e05d0fff3227111eaa6e4c1` |

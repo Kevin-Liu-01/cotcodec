@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # am3-nonabstain-generality-v1: after the image build job has ended (am3g-job-state.sh), print the
 # image id it built, and nothing else on stdout (one line, sha256:<64 hex>), after checking the
-# latest attempt's record (the rebuild's, overlay-build-vllm-<short>-r2, when there is one)
+# latest submitted attempt's record (the rebuild's, overlay-build-vllm-<short>-r2, once submitted)
 # against the pins: provenance PASS for this commit and capsule; a receipt that names the image,
 # the commit, the capsule, vLLM 0.31.0 at commit db9527a4 and the pinned base image. A failed
 # build is rebuilt once from the same capsule (am3g-build.sh ... rebuild; registration section 8);

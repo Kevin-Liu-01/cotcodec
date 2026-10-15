@@ -63,8 +63,14 @@ check_image() {
   [[ "${1:-}" =~ ^sha256:[0-9a-f]{64}$ ]] || { echo "not an image id: '${1:-}'" >&2; exit 2; }
 }
 
-# The build root of an attempt: the first, or the one allowed rebuild (-r2).
+# The submitted build attempts of a commit (am3g-build.sh records each job id).
+build_attempts() {
+  if [[ -f "$R/ops/build-attempts-$1.txt" ]]; then grep -c . "$R/ops/build-attempts-$1.txt" || true
+  else echo 0; fi
+}
+
+# The build root of the latest submitted attempt: the first, or the one allowed rebuild (-r2).
 build_root() {
-  if [[ -d "$R/overlay-build-vllm-$1-r2" ]]; then echo "$R/overlay-build-vllm-$1-r2"
+  if [[ "$(build_attempts "$1")" -ge 2 ]]; then echo "$R/overlay-build-vllm-$1-r2"
   else echo "$R/overlay-build-vllm-$1"; fi
 }

@@ -1210,33 +1210,67 @@ def test_hand_sample_is_blind_and_matches_the_plan(tmp_path, monkeypatch):
     _hand_sample_fixture(tmp_path, monkeypatch)
 
 
-def _write_transcript(hand_dir, stage, n, chunk, extra=(), wrote=True):
-    """A labeller transcript in the CLI's stream-json form: Read the two inputs, any ``extra``
-    calls, then Write the output."""
+CHUNK_DIR = "/mac/work/first/first-01"
+
+
+def _write_transcript(hand_dir, stage, n, chunk, extra=(), wrote=True, launch="cli",
+                      model="claude-opus-5-5", prompt=True, agent="a1",
+                      start="2026-10-15T10:00:01Z", block="tool_use"):  # fmt: skip
+    """A labeller transcript: in the CLI's stream-json form (bare file names, no prompt line), or
+    in a subagent's form (the absolute-path prompt first, absolute paths, the agent id and a
+    timestamp on every line). Read the two inputs, any ``extra`` calls, then Write the output."""
 
     tdir = hand_dir / "transcripts"
     tdir.mkdir(exist_ok=True)
+    d = f"/mac/work/{stage}/{stage}-{n:02d}"
+    where = (lambda nm: nm) if launch == "cli" else (lambda nm: f"{d}/{nm}")
     calls = [("Read", "hand-check-instructions.txt"), ("Read", chunk["chunk"]), *extra]
     if wrote:
         calls.append(("Write", chunk["output"]))
-    lines = [json.dumps({"type": "system", "subtype": "init", "tools": ["Read", "Write"]})]
+    common = {"agentId": agent, "timestamp": start} if launch == "subagent" else {}
+    lines = []
+    if launch == "subagent" and prompt:
+        text = g.hand_labeller_prompt(f"{d}/{chunk['chunk']}", f"{d}/{chunk['output']}",
+                                      f"{d}/hand-check-instructions.txt")  # fmt: skip
+        lines.append(json.dumps({"type": "user", "message": {"role": "user", "content": text},
+                                 **common}))  # fmt: skip
+        files = [{"path": "/home/x/CLAUDE.md", "type": "User"}]
+        attachment = {"type": "instructions", "files": files}
+        lines.append(json.dumps({"type": "attachment", **common, "attachment": attachment}))
+    else:
+        lines.append(json.dumps({"type": "system", "subtype": "init", "session_id": "s1"}))
     for k, (name, target) in enumerate(calls):
-        tool_input = {"file_path": f"/w/{stage}-{n:02d}/{target}"} if target else {"command": "ls"}
-        block = {"type": "tool_use", "id": f"t{k}", "name": name, "input": tool_input}
-        message = {"role": "assistant", "content": [block]}
-        lines.append(json.dumps({"type": "assistant", "message": message}))
-        lines.append(json.dumps({"type": "user", "message": {"role": "user", "content": [
-            {"type": "tool_result", "tool_use_id": f"t{k}", "content": "ok"}]}}))  # fmt: skip
+        tool_input = {"file_path": where(target)} if target else {"command": "ls"}
+        if target and target.startswith("/"):
+            tool_input = {"file_path": target}
+        payload = {"type": block if name != "Bash" else "tool_use", "id": f"t{k}", "name": name,
+                   "input": tool_input}  # fmt: skip
+        message = {"role": "assistant", "model": model, "content": [payload]}
+        lines.append(json.dumps({"type": "assistant", "message": message, **common}))
+        result = {"type": "tool_result", "tool_use_id": f"t{k}", "content": "ok"}
+        reply = {"role": "user", "content": [result]}
+        lines.append(json.dumps({"type": "user", "message": reply, **common}))
     (tdir / f"{stage}-{n:02d}.jsonl").write_text("\n".join(lines) + "\n")
+
+
+def _write_launch(hand_dir, stage, manifest, launch="cli", attempts=None):
+    """The launch record that ``am3g-hand-label-mac.sh`` pushes."""
+
+    chunks = manifest[stage]
+    nns = [f"{n:02d}" for n in range(1, len(chunks) + 1)]
+    record = {"launch": launch, "chunk_dirs": {nn: f"/mac/work/{stage}/{stage}-{nn}" for nn in nns},
+              "attempts": attempts or {nn: 1 for nn in nns}}  # fmt: skip
+    if launch == "subagent":
+        record.update(cli_failed_at="2026-10-15T10:00:00Z", agents={nn: "a1" for nn in nns})
+    (hand_dir / f"labeller-{stage}.json").write_text(json.dumps(record))
 
 
 def test_audit_transcript_admits_only_the_two_reads_and_the_write(tmp_path):
     chunk = {"chunk": "hand-first-chunk-01.jsonl", "output": "hand-labels-first-01.jsonl"}
-    allowed = {"hand-check-instructions.txt", chunk["chunk"]}
 
-    def audit():
-        return g.audit_transcript(tmp_path / "transcripts" / "first-01.jsonl", allowed,
-                                  chunk["output"])  # fmt: skip
+    def audit(launch="cli", agent=None, not_before=None):
+        return g.audit_transcript(tmp_path / "transcripts" / "first-01.jsonl", chunk, launch,
+                                  CHUNK_DIR, agent, not_before)  # fmt: skip
 
     assert audit() == {"pass": False, "why": "no transcript", "tool_calls": 0}
     _write_transcript(tmp_path, "first", 1, chunk)
@@ -1253,11 +1287,50 @@ def test_audit_transcript_admits_only_the_two_reads_and_the_write(tmp_path):
     _write_transcript(tmp_path, "first", 1, chunk)
     path.write_text(path.read_text() + "{truncated\n")
     assert not audit()["pass"] and audit()["unreadable_lines"] == 1
+    # Check 3: the model, the paths, the tool-call block types.
+    _write_transcript(tmp_path, "first", 1, chunk, model="claude-sonnet-x")
+    assert "an assistant line of another model" in audit()["failures"]
+    _write_transcript(tmp_path, "first", 1, chunk,
+                      extra=[("Read", "/elsewhere/hand-first-chunk-01.jsonl")])  # fmt: skip
+    assert audit()["other_calls"] == ["Read hand-first-chunk-01.jsonl (outside the chunk)"]
+    _write_transcript(tmp_path, "first", 1, chunk, block="server_tool_use")
+    assert not audit()["pass"] and "server_tool_use hand-check-instructions.txt" in \
+        audit()["other_calls"]  # fmt: skip
+
+
+def test_audit_transcript_checks_a_subagent_against_its_launch_record(tmp_path):
+    chunk = {"chunk": "hand-first-chunk-01.jsonl", "output": "hand-labels-first-01.jsonl"}
+    failed = g._iso_seconds("2026-10-15T10:00:00Z")
+
+    def audit(agent="a1", not_before=failed):
+        return g.audit_transcript(tmp_path / "transcripts" / "first-01.jsonl", chunk,
+                                  "subagent", CHUNK_DIR, agent, not_before)  # fmt: skip
+
+    _write_transcript(tmp_path, "first", 1, chunk, launch="subagent")
+    out = audit()
+    assert out["pass"], out
+    assert out["agent_ids"] == ["a1"] and out["instruction_files"] == [["User", "CLAUDE.md"]]
+    assert out["first_prompt_sha256"] == g.sha256_text(g.hand_labeller_prompt(
+        f"{CHUNK_DIR}/{chunk['chunk']}", f"{CHUNK_DIR}/{chunk['output']}",
+        f"{CHUNK_DIR}/hand-check-instructions.txt").strip())  # fmt: skip
+    assert "agent id differs from the launch record" in audit(agent="a2")["failures"]
+    _write_transcript(tmp_path, "first", 1, chunk, launch="subagent", start="2026-10-15T09:59:00Z")
+    assert "a line without a timestamp after the CLI's failure" in audit()["failures"]
+    _write_transcript(tmp_path, "first", 1, chunk, launch="subagent", prompt=False)
+    assert "no first prompt" in audit()["failures"]
+    # Bare names are the CLI's; a subagent must use the chunk directory's absolute paths.
+    _write_transcript(tmp_path, "first", 1, chunk, launch="subagent",
+                      extra=[("Read", "hand-check-instructions.txt")])  # fmt: skip
+    t = tmp_path / "transcripts" / "first-01.jsonl"
+    t.write_text(t.read_text().replace(f"{CHUNK_DIR}/hand-check-instructions.txt",
+                                       "hand-check-instructions.txt", 1))  # fmt: skip
+    assert not audit()["pass"]
 
 
 def test_hand_merge_drops_a_chunk_whose_transcript_fails_the_audit(tmp_path, monkeypatch):
     hand_dir, rows = _hand_sample_fixture(tmp_path, monkeypatch)
     manifest = json.loads((hand_dir / "hand-manifest.json").read_text())
+    _write_launch(hand_dir, "first", manifest)
     for n, chunk in enumerate(manifest["first"], start=1):
         lines = [json.dumps({"item_id": i, "label": 1, "note": ""}) for i in chunk["items"]]
         (hand_dir / chunk["output"]).write_text("\n".join(lines) + "\n")
@@ -1270,6 +1343,30 @@ def test_hand_merge_drops_a_chunk_whose_transcript_fails_the_audit(tmp_path, mon
     # The raw file keeps whatever every chunk held, the failing chunk's rows included.
     raw = (hand_dir / "hand-labels-first-raw.jsonl").read_text().splitlines()
     assert len(raw) == len(rows)
+
+
+def test_hand_merge_needs_the_launch_record_and_voids_an_extra_attempt(tmp_path, monkeypatch):
+    hand_dir, rows = _hand_sample_fixture(tmp_path, monkeypatch)
+    manifest = json.loads((hand_dir / "hand-manifest.json").read_text())
+    for n, chunk in enumerate(manifest["first"], start=1):
+        lines = [json.dumps({"item_id": i, "label": 1, "note": ""}) for i in chunk["items"]]
+        (hand_dir / chunk["output"]).write_text("\n".join(lines) + "\n")
+        _write_transcript(hand_dir, "first", n, chunk, launch="subagent")
+    args = g.argparse.Namespace(hand_dir=str(hand_dir), stage="first")
+    with pytest.raises(g.Am3gError, match="launch record"):
+        g.cmd_hand_merge(args)
+    (hand_dir / "labeller-first.json").write_text(json.dumps({"launch": "subagent"}))
+    with pytest.raises(g.Am3gError, match="CLI's recorded failure"):
+        g.cmd_hand_merge(args)
+    _write_launch(hand_dir, "first", manifest, "subagent", attempts={"01": 2})
+    out = g.cmd_hand_merge(args)
+    assert out["void"].startswith("more than one labelling attempt for chunk(s) 01")
+    assert (hand_dir / "hand-labels.jsonl").read_text() == ""
+    assert out["labelling_attempts"] == 2 and "repair" not in json.loads(
+        (hand_dir / "hand-manifest.json").read_text())  # fmt: skip
+    # The void labels (none) join as "incomplete", so a directional reading is JUDGE_DEPENDENT.
+    assert g.read_hand_labels(hand_dir / "hand-labels.jsonl", out["final_sha256"])[0] == []
+    assert g.confirm_reading("NONABSTAIN_HELPS", {"status": "incomplete"}, "x") == "JUDGE_DEPENDENT"
 
 
 def test_hand_merge_runs_one_stage_and_one_repair(tmp_path, monkeypatch):
@@ -1287,6 +1384,7 @@ def test_hand_merge_runs_one_stage_and_one_repair(tmp_path, monkeypatch):
             lines.append(lines[1])
         (hand_dir / chunk["output"]).write_text("\n".join(lines) + "\n")
         _write_transcript(hand_dir, "first", n + 1, chunk)
+    _write_launch(hand_dir, "first", manifest)
     first = g.cmd_hand_merge(g.argparse.Namespace(hand_dir=str(hand_dir), stage="first"))
     lacking = first["items_lacking_a_valid_row"]
     assert first["malformed_rows"] == 1 and first["repeated_items"] == 1
@@ -1295,6 +1393,7 @@ def test_hand_merge_runs_one_stage_and_one_repair(tmp_path, monkeypatch):
     manifest = json.loads((hand_dir / "hand-manifest.json").read_text())
     repair_ids = [i for c in manifest["repair"] for i in c["items"]]
     assert len(repair_ids) == lacking
+    _write_launch(hand_dir, "repair", manifest)
     for n, chunk in enumerate(manifest["repair"], start=1):
         (hand_dir / chunk["output"]).write_text("".join(
             json.dumps({"item_id": i, "label": 0}) + "\n" for i in chunk["items"]))  # fmt: skip
@@ -1453,6 +1552,10 @@ def test_rerun_decision_reads_a_job_directory(tmp_path):
     out = g.cmd_rerun_decision(g.argparse.Namespace(population="heldout", job_dir=str(job),
                                                     is_rerun=False))  # fmt: skip
     assert out["decision"] == "complete" and out["job_dir"] == "1500"
+    (job / "am3g" / "summary.json").write_text("[1, 2]")
+    with pytest.raises(g.Am3gError, match="V2.*not a JSON object"):
+        g.cmd_rerun_decision(g.argparse.Namespace(population="heldout", job_dir=str(job),
+                                                  is_rerun=False))  # fmt: skip
 
 
 def test_check_2_cases_of_the_rerun_rule():
