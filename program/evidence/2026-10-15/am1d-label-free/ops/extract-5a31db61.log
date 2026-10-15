@@ -1,0 +1,34 @@
+Using CPython 3.14.6
+Creating virtual environment at: .venv
+Installed 50 packages in 46ms
+{
+ "eager": {
+  "comparison": {
+   "identical_replies": 7932,
+   "pools": 32,
+   "table_cells": 8192,
+   "table_cells_same_u": 8177,
+   "tables_with_any_difference": 8
+  },
+  "pools": 32
+ },
+ "main": {
+  "pools": 126,
+  "validation": {
+   "distinct_replies_reproduced": 126,
+   "failures": [],
+   "joins_agree_requests": 34524,
+   "judge_items": 1738,
+   "passed": true,
+   "reader_finish": {
+    "length": 18,
+    "stop": 32238
+   },
+   "requests": 34524,
+   "table_requests": 32256,
+   "table_requests_labelled": 32256,
+   "tables": 126,
+   "values_hex_reproduced": 126
+  }
+ }
+}
