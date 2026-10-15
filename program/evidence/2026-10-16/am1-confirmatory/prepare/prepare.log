@@ -1,0 +1,10 @@
+/home/kevin/cotcodec-runs/inputs/longmemeval/98d7416c24c778c2fee6e6f3006e7a073259d48f/longmemeval_s_cleaned.json: OK
+2026-10-15T03:18:47Z artifact at 9ad36b10dcbd324647e4a98c3a150f954f7123f6 (registered command)
+2026-10-15T03:18:52Z artifact exit 0
+f23bca047dc7246c5a8db12f67a76a2ea36304d8669dc5c62ae6c42821f73eb7  study-artifact.json
+7e2a73cf2d06b763b3c1721480de96248e64079d6617f83441e3d900c510ed7c  pools-summary.json
+12669196 study-artifact.json
+2026-10-15T03:18:52Z rebuild check (same command, scratch path)
+f23bca047dc7246c5a8db12f67a76a2ea36304d8669dc5c62ae6c42821f73eb7  prepare/rebuild-check/study-artifact.json
+7e2a73cf2d06b763b3c1721480de96248e64079d6617f83441e3d900c510ed7c  prepare/rebuild-check/pools-summary.json
+rebuild identical; scratch copy removed

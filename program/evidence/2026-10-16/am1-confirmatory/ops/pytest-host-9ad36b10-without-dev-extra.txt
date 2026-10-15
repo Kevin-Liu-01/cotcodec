@@ -1,0 +1,2 @@
+/home/kevin/cotcodec-runs/stage0/am1-memory-credit-v1/checkout/.venv/bin/python3: No module named pytest
+pytest exit 1

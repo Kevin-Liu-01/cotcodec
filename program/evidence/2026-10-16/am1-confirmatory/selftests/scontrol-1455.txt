@@ -1,0 +1,28 @@
+JobId=1455 JobName=am1c-selftest-cpu
+   UserId=kevin(1004) GroupId=kevin(1004) MCS_label=N/A
+   Priority=4294900305 Nice=0 Account=(null) QOS=(null)
+   JobState=COMPLETED Reason=None Dependency=(null)
+   Requeue=0 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=00:02:20 TimeLimit=00:20:00 TimeMin=N/A
+   SubmitTime=2026-10-15T03:20:19 EligibleTime=2026-10-15T03:20:19
+   AccrueTime=2026-10-15T03:20:19
+   StartTime=2026-10-15T03:20:20 EndTime=2026-10-15T03:22:40 Deadline=N/A
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2026-10-15T03:20:20 Scheduler=Main
+   Partition=research AllocNode:Sid=fal-h100-01:1173791
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=fal-h100-01
+   BatchHost=fal-h100-01
+   NumNodes=1 NumCPUs=16 NumTasks=1 CPUs/Task=16 ReqB:S:C:T=0:0:*:*
+   TRES=cpu=16,mem=48G,node=1,billing=16
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   MinCPUsNode=16 MinMemoryNode=48G MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+   Command=/home/kevin/cotcodec-runs/stage0/am1-memory-credit-v1/ops/am1c-selftest-cpu.sbatch
+   WorkDir=/home/kevin
+   StdErr=/home/kevin/cotcodec-runs/stage0/am1-memory-credit-v1/ops/slurm-selftest-1455.out
+   StdIn=/dev/null
+   StdOut=/home/kevin/cotcodec-runs/stage0/am1-memory-credit-v1/ops/slurm-selftest-1455.out
+   Power=
+   
+

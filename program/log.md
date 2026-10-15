@@ -5876,3 +5876,31 @@ they say so.)
 - Problems: a quadratic pass read idled both GPUs for about 15 of job 1411's 26.75 minutes (fixed
   in `9c3d0db8`); G2c GPU jobs started beside job 1411; a transposition in the hand labels was
   corrected against the agent's item notes (both files kept).
+
+## 2026-10-15 — `am1-memory-credit-v1` (CONFIRMATORY, frozen, ledger row 23): artifact, image, selftest and the registered GPU job ran; hand-check sample drawn, unlabelled (branch `ops/am1`, not merged)
+
+- Operator (did not draft the registration), from the freeze commit `9ad36b10` only: a clean
+  clone on the host from a git bundle (`git archive` of `9ad36b10` byte-identical on the Mac and
+  the host, `8806cd7b...`), section 17's 19 pins re-hashed and matching; the source capsule
+  `a46be5ed...` (12,492 files, carries the ledger row); 80 tests pass on the host clone.
+- Held-out artifact by the registered `memcredit_study_prepare.py artifact --split heldout`
+  command: 347 questions (the confirmatory set), `f23bca04...`, 12,669,196 bytes, rebuilt
+  byte-identically; host only.
+- Image: overlay build 1454 (1 H100, 00:01:02) from the capsule, `sha256:abcd2b56...`; the
+  post-build CPU selftest 1455 with the held-out artifact mounted passes (190,156 reader prompts
+  fit, 694 of 694 pools' memory spans, judge prompts fit, attention code ok).
+- The registered GPU job 1458 (2 H100, limit 90 minutes; GPUs 2-3, D110's jobs on 0-1
+  untouched), submitted once with no other GPU job of this program queued or running:
+  COMPLETED 0:0 in 00:45:49. Every phase and worker complete; both reader passes 190,156 of
+  190,156 (1,281 s canonical, 2,297 s shuffled, neither stopped by the 3,600 s budget, so the
+  reader-cap contingency does not arise); 10,230 judge items finished by both Qwen3-32B passes
+  and the Qwen3-8B judge; attention 694 of 694 pools. Nothing rerun.
+- Hand-check sample by the registered `hand-sample` command: 120 items, SHA-256 `cebfe191...`,
+  no label field; on the host, not labelled. No analysis ran (`analyze`, `aa`), no outcome was
+  read; G2 is PENDING. Next: blind labels (an agent unless Kevin labels, D9/D111), their
+  SHA-256 committed, then `analyze` and `aa` as registered.
+- GPU-h: 1.5444 physical (build 0.0172, job 1.5272) of the 3.1 cap; program total 27.1294.
+  D111's disclosure stands: no gauntlet score; blind discrimination and the two
+  provider-distinct reviews did not run.
+- Evidence: `program/evidence/2026-10-16/am1-confirmatory/README.md` (ops scripts, logs,
+  manifests, build and selftest records, lane and worker records, text-free judge items).

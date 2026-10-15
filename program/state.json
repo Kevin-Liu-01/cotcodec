@@ -468,7 +468,7 @@
     "Gauntleted packages that ended at honest exits and can advance only by your ruling (D24, D70, D76). S2 v3 (65) continues as S2 v4 under your delegation (D80 (iv)); its images are built and its registration is in a repair round before the freeze (D84). C5 Phase 1 (70-97 GPU-h) stays yours; its identification defect stands",
     "Shelved by Kevin (D101), not to be raised unless he asks: the outward items (disclosures, licence requests, host-admin request, publication, the GitHub Support request), key rotation and account items. Drafts are in the private archive."
   ],
-  "gpu_hours_spent_this_program": 25.585,
+  "gpu_hours_spent_this_program": 27.1294,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -1431,6 +1431,24 @@
       ],
       "outcome": "eager replay bit-exact across GPUs, processes, orders, an in-engine replicate and jobs 1435/1441 (8,768 of 8,768 each); judge 573 of 573; judge labels identical across compiled and eager mode on 573 shared items; eager pass 1.06x the compiled pass's wall time (exploratory; program/evidence/2026-10-15/am1-dev-pilot/README.md)",
       "basis": "physical (scontrol RunTime 00:05:07 on 2 H100); Slurm limit 14 min (0.47 GPU-h cap); pilot total 1.4862 of the 2.0 cap"
+    },
+    {
+      "experiment": "am1-memory-credit-v1 image build (CONFIRMATORY, frozen, ledger row 23): cotcodec-vllm cu129 overlay from the source capsule of the freeze commit 9ad36b10",
+      "gpu_hours": 0.0172,
+      "jobs": [
+        "1454 vLLM overlay build 9ad36b10 (1 H100; COMPLETED 0:0, 00:01:02)"
+      ],
+      "outcome": "image sha256:abcd2b56 from capsule a46be5ed (git archive of 9ad36b10, carries ledger row 23); post-build CPU selftest 1455 with the held-out artifact f23bca04 (347 questions) mounted passes; 80 tests pass on the host clone (program/evidence/2026-10-16/am1-confirmatory/README.md)",
+      "basis": "physical (scontrol RunTime 00:01:02 on 1 H100); submitted with no other GPU job of this program queued or running"
+    },
+    {
+      "experiment": "am1-memory-credit-v1 registered GPU job (CONFIRMATORY, frozen, ledger row 23): Qwen3-8B reader eager batch-invariant on 347 held-out questions x 2 pool arms x 274 requests (GPU 0 canonical, GPU 1 shuffled), Qwen3-32B judge on both GPUs, Qwen3-8B second judge, HF eager-attention signals",
+      "gpu_hours": 1.5272,
+      "jobs": [
+        "1458 phases reader, judge, extra (2 H100; COMPLETED 0:0, 00:45:49)"
+      ],
+      "outcome": "ran once, complete: both reader passes 190,156 of 190,156 (1,281 s and 2,297 s, no time cap), judge items 10,230 finished by both primary-judge passes and the second judge, attention 694 of 694 pools; hand-check sample drawn (120 items, cebfe191), unlabelled; no analysis run, no outcome read (program/evidence/2026-10-16/am1-confirmatory/README.md)",
+      "basis": "physical (scontrol RunTime 00:45:49 on 2 H100); Slurm limit 90 min (3.0 GPU-h cap); registration total 1.5444 of the 3.1 cap; submitted with no other GPU job of this program queued or running and 6 of 8 H100 free (D110's jobs on GPUs 0-1)"
     }
   ],
   "results": [

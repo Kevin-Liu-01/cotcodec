@@ -1,0 +1,36 @@
+{
+  "experiment_id": "am1-memory-credit-v1",
+  "split": "heldout",
+  "questions": 347,
+  "pools": 694,
+  "reader_requests": 190156,
+  "by_kind": {
+    "table": 177664,
+    "swap": 11104,
+    "reorder": 1388
+  },
+  "validation_items": 1040,
+  "phases": [
+    {
+      "id": "reader",
+      "workers": [
+        "reader-gpu0",
+        "reader-gpu1"
+      ]
+    },
+    {
+      "id": "judge",
+      "workers": [
+        "judge32-gpu0",
+        "judge32-gpu1"
+      ]
+    },
+    {
+      "id": "extra",
+      "workers": [
+        "judge8-gpu0",
+        "attention-gpu1"
+      ]
+    }
+  ]
+}

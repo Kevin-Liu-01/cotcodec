@@ -1,0 +1,286 @@
+{
+  "allocation_minutes": 90.0,
+  "claim_level": "confirmatory",
+  "deadline_source": "job.env started_at",
+  "deadline_utc": "2026-10-15T04:50:10Z",
+  "evidence_sha256": "f23bca047dc7246c5a8db12f67a76a2ea36304d8669dc5c62ae6c42821f73eb7",
+  "experiment_id": "am1-memory-credit-v1",
+  "finished_at": "2026-10-15T04:09:27Z",
+  "gpus": "0, GPU-a485003c-eb56-c00a-5efc-ba2fb61d12d5, 00000000:63:00.0, NVIDIA H100 80GB HBM3\n1, GPU-0524ae85-a4b2-36bd-5769-d31e83c463e2, 00000000:64:00.0, NVIDIA H100 80GB HBM3\n",
+  "identity": {
+    "judge32-gpu0|judge32-gpu1": {
+      "ci95_bits": [
+        0.9996394707292631,
+        1.0
+      ],
+      "ci95_tokens": [
+        0.9996394707292631,
+        1.0
+      ],
+      "differing_examples": [],
+      "differing_total": 0,
+      "identical_tokens": 10230,
+      "identical_tokens_and_logprob_bits": 10230,
+      "n_common": 10230,
+      "other": "judge32-gpu1:all",
+      "rate_bits": 1.0,
+      "rate_tokens": 1.0,
+      "ref": "judge32-gpu0:all",
+      "text_differs_total": 0
+    },
+    "reader-gpu0|reader-gpu1": {
+      "ci95_bits": [
+        0.9999806009609287,
+        1.0
+      ],
+      "ci95_tokens": [
+        0.9999806009609287,
+        1.0
+      ],
+      "differing_examples": [],
+      "differing_total": 0,
+      "identical_tokens": 190156,
+      "identical_tokens_and_logprob_bits": 190156,
+      "n_common": 190156,
+      "other": "reader-gpu1:all",
+      "rate_bits": 1.0,
+      "rate_tokens": 1.0,
+      "ref": "reader-gpu0:all",
+      "text_differs_total": 0
+    }
+  },
+  "judge_items": {
+    "reader": 9190,
+    "total": 10230,
+    "validation": 1040
+  },
+  "model_verification": {
+    "qwen3-32b": {
+      "artifact_root_sha256": "8fcd9106bfb1854a5b160c64a0ff3d3463208ab69854ae8c1cc26ba19dbf5714",
+      "mode": "full",
+      "model_id": "qwen3-32b",
+      "receipt": "/model-cache/cotcodec-receipts/qwen3-32b.json",
+      "receipt_sha256": "06e4a7e981eee4f6c079fd6b02dc58e3a9fd798e0d806820383d873cf9cd1fd1",
+      "repo_id": "Qwen/Qwen3-32B",
+      "revision": "9216db5781bf21249d130ec9da846c4624c16137",
+      "total_bytes": 65540298478,
+      "verified_by": "lane (model-verification.txt)",
+      "wall_s": 0.0
+    },
+    "qwen3-8b": {
+      "artifact_root_sha256": "325ab760530dfa4eb0529cc56f17b5042326d1bcc8fddf902b10fde325ff6281",
+      "mode": "full",
+      "model_id": "qwen3-8b",
+      "receipt": "/model-cache/cotcodec-receipts-cpu-lane/qwen3-8b.json",
+      "receipt_sha256": "b9e3a74d42882abe218e77d6023010543dd98278dedcc9180dd7089d336287fa",
+      "repo_id": "Qwen/Qwen3-8B",
+      "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+      "total_bytes": 16397461266,
+      "verified_by": "scripts/fetch_open_model.py verify",
+      "verify_exit": 0,
+      "verify_s": 12.0,
+      "verify_stderr": "",
+      "verify_stdout": "{\n  \"artifact_root_sha256\": \"325ab760530dfa4eb0529cc56f17b5042326d1bcc8fddf902b10fde325ff6281\",\n  \"backend\": \"huggingface\",\n  \"mode\": \"full\",\n  \"model_id\": \"qwen3-8b\",\n  \"publication_eligible\": true,\n  \"revision\": \"b968826d9c46dd6066d109eabc6255188de91218\",\n  \"total_bytes\": 16397461266\n}\n",
+      "wall_s": 12.0
+    }
+  },
+  "phases": {
+    "extra": {
+      "started_at": "2026-10-15T04:08:26Z",
+      "status": "complete",
+      "workers": {
+        "attention-gpu1": {
+          "argv": [
+            "/usr/local/bin/python",
+            "/workspace/cotcodec/scripts/memcredit_study.py",
+            "worker",
+            "--worker",
+            "attention-gpu1",
+            "--config",
+            "experiments/am1/am1-memory-credit-v1.yaml",
+            "--output-dir",
+            "/outputs/am1",
+            "--deadline",
+            "1792039810.000",
+            "--evidence",
+            "/inputs/study-artifact.json",
+            "--expected-evidence-sha256",
+            "f23bca047dc7246c5a8db12f67a76a2ea36304d8669dc5c62ae6c42821f73eb7"
+          ],
+          "cache_copied": null,
+          "exit": 0,
+          "gpu": 1,
+          "started_at": "2026-10-15T04:08:26Z",
+          "status": "complete",
+          "wall_s": 58.0,
+          "worker_done": {
+            "exit": 0,
+            "utc": "2026-10-15T04:09:12Z"
+          }
+        },
+        "judge8-gpu0": {
+          "argv": [
+            "/usr/local/bin/python",
+            "/workspace/cotcodec/scripts/memcredit_study.py",
+            "worker",
+            "--worker",
+            "judge8-gpu0",
+            "--config",
+            "experiments/am1/am1-memory-credit-v1.yaml",
+            "--output-dir",
+            "/outputs/am1",
+            "--deadline",
+            "1792039810.000",
+            "--evidence",
+            "/inputs/study-artifact.json",
+            "--expected-evidence-sha256",
+            "f23bca047dc7246c5a8db12f67a76a2ea36304d8669dc5c62ae6c42821f73eb7"
+          ],
+          "cache_copied": null,
+          "exit": 0,
+          "gpu": 0,
+          "started_at": "2026-10-15T04:08:26Z",
+          "status": "complete",
+          "wall_s": 58.0,
+          "worker_done": {
+            "exit": 0,
+            "utc": "2026-10-15T04:09:22Z"
+          }
+        }
+      }
+    },
+    "judge": {
+      "started_at": "2026-10-15T04:06:10Z",
+      "status": "complete",
+      "workers": {
+        "judge32-gpu0": {
+          "argv": [
+            "/usr/local/bin/python",
+            "/workspace/cotcodec/scripts/memcredit_study.py",
+            "worker",
+            "--worker",
+            "judge32-gpu0",
+            "--config",
+            "experiments/am1/am1-memory-credit-v1.yaml",
+            "--output-dir",
+            "/outputs/am1",
+            "--deadline",
+            "1792039810.000",
+            "--evidence",
+            "/inputs/study-artifact.json",
+            "--expected-evidence-sha256",
+            "f23bca047dc7246c5a8db12f67a76a2ea36304d8669dc5c62ae6c42821f73eb7"
+          ],
+          "cache_copied": null,
+          "exit": 0,
+          "gpu": 0,
+          "started_at": "2026-10-15T04:06:10Z",
+          "status": "complete",
+          "wall_s": 135.0,
+          "worker_done": {
+            "exit": 0,
+            "utc": "2026-10-15T04:08:11Z"
+          }
+        },
+        "judge32-gpu1": {
+          "argv": [
+            "/usr/local/bin/python",
+            "/workspace/cotcodec/scripts/memcredit_study.py",
+            "worker",
+            "--worker",
+            "judge32-gpu1",
+            "--config",
+            "experiments/am1/am1-memory-credit-v1.yaml",
+            "--output-dir",
+            "/outputs/am1",
+            "--deadline",
+            "1792039810.000",
+            "--evidence",
+            "/inputs/study-artifact.json",
+            "--expected-evidence-sha256",
+            "f23bca047dc7246c5a8db12f67a76a2ea36304d8669dc5c62ae6c42821f73eb7"
+          ],
+          "cache_copied": null,
+          "exit": 0,
+          "gpu": 1,
+          "started_at": "2026-10-15T04:06:10Z",
+          "status": "complete",
+          "wall_s": 135.0,
+          "worker_done": {
+            "exit": 0,
+            "utc": "2026-10-15T04:08:22Z"
+          }
+        }
+      }
+    },
+    "reader": {
+      "started_at": "2026-10-15T03:24:41Z",
+      "status": "complete",
+      "workers": {
+        "reader-gpu0": {
+          "argv": [
+            "/usr/local/bin/python",
+            "/workspace/cotcodec/scripts/memcredit_study.py",
+            "worker",
+            "--worker",
+            "reader-gpu0",
+            "--config",
+            "experiments/am1/am1-memory-credit-v1.yaml",
+            "--output-dir",
+            "/outputs/am1",
+            "--deadline",
+            "1792039810.000",
+            "--evidence",
+            "/inputs/study-artifact.json",
+            "--expected-evidence-sha256",
+            "f23bca047dc7246c5a8db12f67a76a2ea36304d8669dc5c62ae6c42821f73eb7"
+          ],
+          "cache_copied": null,
+          "exit": 0,
+          "gpu": 0,
+          "started_at": "2026-10-15T03:24:41Z",
+          "status": "complete",
+          "wall_s": 2487.5,
+          "worker_done": {
+            "exit": 0,
+            "utc": "2026-10-15T03:49:09Z"
+          }
+        },
+        "reader-gpu1": {
+          "argv": [
+            "/usr/local/bin/python",
+            "/workspace/cotcodec/scripts/memcredit_study.py",
+            "worker",
+            "--worker",
+            "reader-gpu1",
+            "--config",
+            "experiments/am1/am1-memory-credit-v1.yaml",
+            "--output-dir",
+            "/outputs/am1",
+            "--deadline",
+            "1792039810.000",
+            "--evidence",
+            "/inputs/study-artifact.json",
+            "--expected-evidence-sha256",
+            "f23bca047dc7246c5a8db12f67a76a2ea36304d8669dc5c62ae6c42821f73eb7"
+          ],
+          "cache_copied": null,
+          "exit": 0,
+          "gpu": 1,
+          "started_at": "2026-10-15T03:24:41Z",
+          "status": "complete",
+          "wall_s": 2487.5,
+          "worker_done": {
+            "exit": 0,
+            "utc": "2026-10-15T04:06:06Z"
+          }
+        }
+      }
+    }
+  },
+  "questions": 347,
+  "reader_requests": 190156,
+  "signal": null,
+  "split": "heldout",
+  "started_at": "2026-10-15T03:24:26Z"
+}
