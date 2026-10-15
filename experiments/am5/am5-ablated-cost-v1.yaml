@@ -87,9 +87,11 @@ populations:
   heldout:
     claim_level: confirmatory
     split: heldout-ablated
-    # Built once before the freeze on the host CPU (memcredit_am5r.py prepare-heldout); host only.
-    artifact_sha256: PENDING
-    summary_sha256: PENDING
+    # Built once before the freeze on the host CPU (memcredit_am5r.py prepare-heldout at
+    # ca661cd9; 2,493,448 bytes; host only, read-only); its text-free summary is in the dry-run
+    # evidence.
+    artifact_sha256: "68a75dcf1bc37ebe54fde61ec288d9c393adc1d0197b88168d7c153be34c1ce6"
+    summary_sha256: "c68b1da9e0e456c8bf7e06741df298cfbd622b6e3fd44602a812c137069a8355"
     # AM1's confirmatory set, in AM1's held-out artifact's order (which prepare-heldout reads,
     # with its retrieved pools for the builder check).
     questions: 347

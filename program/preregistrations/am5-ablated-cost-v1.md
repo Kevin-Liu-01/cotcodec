@@ -156,7 +156,7 @@ It does not decide:
 | Data | LongMemEval-S cleaned, `xiaowu0162/longmemeval-cleaned` @ `98d7416c24c778c2fee6e6f3006e7a073259d48f`, `longmemeval_s_cleaned.json`, 277,383,467 bytes, SHA-256 `d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442`, MIT; host only |
 | Split | `experiments/am1/memcredit-split-v1.json`, SHA-256 `4fa1b774d4131080855d668ac8f00f5cb07d49cf741f2051d5f8d96577edb3e3` |
 | Held-out questions | AM1's confirmatory set: 347 ids, SHA-256 of the newline-joined ids `d4f024fbcda5394984a46c421cd938f2b6db6067fef0f21a5c6e72359b27e50a`, in the order of AM1's held-out study artifact (host `~/cotcodec-runs/stage0/am1-memory-credit-v1/study-artifact.json`, SHA-256 `f23bca047dc7246c5a8db12f67a76a2ea36304d8669dc5c62ae6c42821f73eb7`), which `prepare-heldout` reads for the order and the builder check only |
-| Held-out ablated artifact | host `~/cotcodec-runs/stage0/am5-ablated-cost-v1/inputs/heldout-ablated-artifact.json`, read-only: the 347 ablated pools, then the 63 control pools; SHA-256 in the config (`populations.heldout.artifact_sha256`), filled once `prepare-heldout` has run (section 15); text-free summary `heldout-ablated-summary.json`, SHA-256 in the config (`summary_sha256`) |
+| Held-out ablated artifact | host `~/cotcodec-runs/stage0/am5-ablated-cost-v1/inputs/heldout-ablated-artifact.json`, read-only: the 347 ablated pools, then the 63 control pools; 2,493,448 bytes, SHA-256 `68a75dcf1bc37ebe54fde61ec288d9c393adc1d0197b88168d7c153be34c1ce6`, built by `prepare-heldout` at `ca661cd9` (section 15); text-free summary `heldout-ablated-summary.json`, SHA-256 `c68b1da9e0e456c8bf7e06741df298cfbd622b6e3fd44602a812c137069a8355` (in the dry-run evidence, `prepare/`) |
 | Replay control and development population | AM5's ablated development artifact, unchanged: 63 ids, SHA-256 of the ids `183ee4d3406786be721c4c846fa9f72f0fc2ae8c905dcb198eaaff17d78846fc`, artifact `f6d27d4cf2f3cf62789466cdfe80bab2cdc007c449411e1ad9b53aab76558b23`, summary `c9df7dbdafe94f9b54d3c1782e965f9a1492081ad6e063701643848450e8de9e` |
 | Replay reference (V3) | AM5's job 1487: `sessions/{rd-qwen3-8b, rd-olmo2, rd-qwen35-9b-default, judge32}/all.{json, npz, texts.jsonl.gz}` and `judge-items.json`, the thirteen digests in the config (`populations.*.reference`; the npz, texts and judge-items digests equal AM5's committed `raw-sha256.txt` and `judge-items.sha256.txt`, a test checks) |
 | Gain side | am3g's committed held-out per-pool records `program/evidence/2026-10-15/am3-nonabstain-generality-v1/per-table.json.gz`, SHA-256 `921c0ea00342d20b9c014ecfdc4940b9a56bbdaf3dc5f987a4c3930ff3bf6eb7`; expected gains 31, 27, 26 (K = 8) and 39, 35, 31 (K = 70), no loss, equal to AM4's committed `results.json` (`56fe0d99a5e1d2d3f01694be84c393469816b1f34de67829937273bfcba97721`; a test checks) |
@@ -499,8 +499,7 @@ job's driver and workers record their own failures in `summary.json`).
       and the plan records the shortfall.
     Every item is a reply that does not abstain by the four patterns, so targets and distractors
     look alike. Items are deduplicated by (question, SHA-256 of the normalized reply), keep every
-    use, and are put in one seeded order (`random.Random("44:am5r:hand:order")`). On development
-    data (the dry run) this draws every switched reply AM5's hand check read.
+    use, and are put in one seeded order (`random.Random("44:am5r:hand:order")`).
   - *The labels' meaning.* The instructions (`HAND_INSTRUCTIONS`) give the check
     "answer-or-decline": 1 if the reply gives the reference answer (LongMemEval's answer-check
     criteria per question type, as am3g's check "answer"), or declines to answer and gives no
@@ -766,7 +765,7 @@ parses this table and refuses to run unless every file matches.
 |---|---|---|
 | `scripts/memcredit_am5r.py` | this registration: gate and config binding, the held-out artifact, driver and workers, extract and the replay control, the cost and gain indicators, the paired test with Holm, the break-even share, the hand check's plan, sample and join, the confirmation rule, analyze, the dry-run comparison, power | `b24766ddb8f90b268fa7660d5c09dec98009827b5a799a87767c92bb039e2006` |
 | `tests/test_memcredit_am5r.py` | its tests | `8727795313c4c8767298b4f1d49564ebcb097a0b924082abda7e076dc274b2ef` |
-| `experiments/am5/am5-ablated-cost-v1.yaml` | this registration's config | `c0f45eaaf4ac21d178f004e6655a656357c33a05e5339150e65c9564a1fc1419` |
+| `experiments/am5/am5-ablated-cost-v1.yaml` | this registration's config | `f18eeb7317c9fd4f2673934e3c435295605e6d3d89af6f973d86a7bcb2a0f863` |
 | `scripts/memcredit_am5.py` | AM5's ablation, capped rule, per-pool records and blocks (imported) | `225e42e7d4f2e9a1ccfce1c4a826a04bcdb57511fea248f8009bf97467b6fa0b` |
 | `experiments/am5/am5-evidence-ablated-dev.yaml` | AM5's config (the dry run's comparison) | `0c49e157755a3a67e83eed9c07e1c37ba912e93aaf29416d9ac7fbc643ea88a9` |
 | `scripts/memcredit_am3g.py` | am3g's readers, steps, pools, judge items, rerun rule, hand-check protocol (imported) | `4bb0d42c09f9fca6e728a2487966bc13c08715672dce33316db195f6e7573e26` |
