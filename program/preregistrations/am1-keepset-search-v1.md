@@ -430,8 +430,8 @@ when b is 8 or more.
 
 For each comparison and rule with seeds, the Monte Carlo standard error is the standard deviation
 over the 200 seeds of the seed's mean over tables, divided by the square root of 200 (AM1b's
-`seed_mc_se`). On the 38 development tables it was 0.0013-0.0020 (section 9); on 251 tables it is
-expected near 0.0005-0.0008. It enters H-A through the margin of section 7.1 and is reported for
+`seed_mc_se`). On the development tables (38 retrieved, 51 gold) it was 0.0013-0.0020 (the dry
+run of section 15); on 251 tables it is expected near 0.0005-0.0008. It enters H-A through the margin of section 7.1 and is reported for
 every comparison, with the list of comparisons whose bounds lie within it
 (`bounds_within_mc_margin`).
 
@@ -448,8 +448,8 @@ result when one fails.
 
 - **Freeze gate.** With `--split heldout`, `extract` and `analyze` refuse to open any held-out
   input unless the ledger holds a row for `am1-keepset-search-v1` whose SHA-256 equals this file's,
-  and every code pin of section 16 matches the working tree (parsed from this file). A test checks
-  that the refusal fires before any read.
+  and every code pin of section 16 matches the working tree (parsed from this file). The gate runs
+  before any held-out file is opened, and a test checks the refusal.
 - **VOID, nothing read (V1): a digest differs.** The tables' gz file or the uncompressed tables
   (section 4), any code pin, or the abstention list's digest. For H-C also the study artifact, any
   pass file of section 4 or the features' recorded provenance (V5). An input is fixed, never the
@@ -498,8 +498,8 @@ thinning: each drawn table keeps its seven differences with probability 1/2 or 1
 Readings: if the held-out differences resemble development's, the design calls SEARCH_DOMINATES
 with probability near 1, and with probability about 0.9 at half the effect. Greedy backward (A7)
 is the weak link: on development it lost 0.055 more than direct search at 26 calls, 95% [-0.003,
-+0.130] in AM1b's sign, on a few tables. These figures rest on 38 development tables, and
-development and held-out differ (section 1.4).
++0.130] (AM1b, rule minus direct). These figures rest on 38 development tables, and development
+and held-out differ (section 1.4).
 
 **H-B.** The exact power of the exact test over 347 questions, at a discordance rate r (the share
 of questions where BM25 top 4 and all 8 disagree) and a share s of discordant pairs favouring BM25
@@ -565,19 +565,20 @@ completes is byte-identical.
 
 ## 15. What development fixed in this design: the development selftest
 
-Before the freeze, the code ran on development data only
-(`program/evidence/2026-10-16/am1-keepset-search-dev-selftest/README.md`). It reproduced AM1b's
-and AM1d's committed numbers wherever this code overlaps them, and ran the full analysis on the
-development tables and replies as a dry run. The record lists every check; in short:
+Before the freeze, the code ran on development data only, at commit `f41b59cd`, in a new host
+directory (`program/evidence/2026-10-16/am1-keepset-search-dev-selftest/README.md`). It reproduced
+AM1b's and AM1d's committed numbers wherever this code overlaps them, by exact equality: 19 of 19
+checks pass (`selftest.json`). It also ran the full analysis on the development tables and
+replies as a dry run; two runs were byte-identical, and 106 tests passed on the host. In short:
 
-- AM1b, per table and in aggregate, at B = 4 on both arms: direct search's exact curve,
-  leave-one-out, greedy backward, the random set, retrieval rank, and SNIPW-64, MSR-Banzhaf-64 and
-  permutation Shapley-16 at AM1b's 20 seeds (per seed), with AM1b's means, 95% and 99% intervals
-  and rule-minus-direct differences;
-- AM1d: `extract` on job 1411 reproduces AM1d's feature file pool for pool, and the analysis
-  reproduces AM1d's per-table choices, accuracies with intervals, abstention counts, stop-rule
-  positions and the exact sign tests its README quotes (4 vs 0, p = 0.125; 5 vs 0, p = 0.0625;
-  1 vs 0).
+- AM1b, per table and in aggregate, at B = 4 on both arms (89 tables): direct search's exact
+  curve, leave-one-out, greedy backward, the random set and retrieval rank, and SNIPW-64,
+  MSR-Banzhaf-64 and permutation Shapley-16 seed by seed at AM1b's 20 seeds, with AM1b's means,
+  95% and 99% intervals and rule-minus-direct differences (24 of 24 aggregate rows);
+- AM1d: `extract` on job 1411 reproduces AM1d's feature file pool for pool (126 of 126; AM1d's
+  file pinned at `cb678e3b...`) and its validation record; the analysis reproduces AM1d's
+  per-table choices (126 of 126), accuracies with intervals (36 of 36), abstention counts, stop-rule
+  reads and the exact sign tests its README quotes (4 vs 0, p = 0.125; 5 vs 0, p = 0.0625; 1 vs 0).
 
 Development also set: the 200 seeds (AM1's 3-seed SNIPW-64 was off by 0.020 from AM1b's 20-seed
 mean); the Monte Carlo margin; the 26-call point (greedy selection's cost, where direct search's
@@ -622,8 +623,11 @@ uv run --offline --extra dev pytest -q tests/test_memcredit_keepset_search.py
 ```
 
 The defaults are the registered settings: 200 seeds from 42, 10,000 bootstrap resamples with seed
-42. `analyze` runs once; a fresh verifier reruns it from a new export, and the outputs must be
-byte-identical.
+42. `analyze` runs once; a fresh verifier reruns it on the host from a new export, and the outputs
+must be byte-identical. Byte identity holds on one platform: the exact conditional interval of
+section 7.2 comes from `harness.memcredit.clopper_pearson`, whose last bit follows the platform's
+`lgamma` (the development dry run differed in one such bit between the host and a Mac). No
+reading depends on it; the readings use the exact rational p-value.
 
 ## 17. Freeze checklist
 
@@ -648,14 +652,16 @@ export.
 
 ## 18. Priors (for the record; not tested)
 
-- **H-A:** SEARCH_DOMINATES. Development differences are all negative, and on held-out every rule
-  AM1 scored lost more than on development (section 1.4). The weak links are greedy backward (A7)
-  and MSR-Banzhaf-64 against 26 calls (A5).
+- **H-A:** SEARCH_DOMINATES. Development differences are all negative. On held-out,
+  leave-one-out, SNIPW-64 and permutation Shapley-16 (seeds 42-44) lost more than on development,
+  while exact Shapley and exact Banzhaf lost less (section 1.4); the random keep set lost more
+  (0.625 against 0.576), so direct search's held-out curve may sit higher too. The weak links are
+  greedy backward (A7) and MSR-Banzhaf-64 against 26 calls (A5).
 - **H-B:** PRUNING_HURTS, from section 1.2: AM1's figures put BM25 top 4 at least 17 questions
   behind all 8.
 - **H-C:** uncertain. On development, nonabstain-BM25 converted 1 of the 5 tables BM25 top 4 got
-  wrong; at that rate over the 86 held-out tables the test rejects with probability near 1, at a
-  quarter of it rarely. The reads: on development, 1.21 on average over non-constant retrieved
+  wrong; at that rate over the 86 held-out tables the test rejects with probability near 1, and
+  at a quarter of it (q = 0.05) about one time in four. The reads: on development, 1.21 on average over non-constant retrieved
   tables and 12.87 over all 63 questions (most of them pools where no 4-subset answers).
 - **Descriptive:** abstention around half of the 4-subset replies (development: 54.5% retrieved,
   58.9% gold); oracle ceiling well above all 8 (development: 0.587 against 0.444 over every
