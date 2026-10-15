@@ -49,6 +49,7 @@ import json
 import math
 import random
 import re
+import statistics
 import sys
 from collections import Counter, defaultdict
 from collections.abc import Callable, Sequence
@@ -439,8 +440,25 @@ def reply_stats(features: Sequence[dict[str, Any]]) -> dict[str, Any]:
                 p["u"][FULL] for p in pools if p["abstain"][FULL]
             ),
             "agree_with_full": sum(p["cls"][m] == p["cls"][FULL] for p in pools for m in sets4),
+            # added after the first results (post hoc): where the confidence sits
+            "median_mean_lp_abstain": _median([p["mean_lp"][m] for p, m in flagged]),
+            "median_mean_lp_nonabstain_correct": _median(
+                [p["mean_lp"][m] for p in pools for m in sets4 if not p["abstain"][m] and p["u"][m]]
+            ),
+            "median_mean_lp_nonabstain_wrong": _median(
+                [
+                    p["mean_lp"][m]
+                    for p in pools
+                    for m in sets4
+                    if not p["abstain"][m] and not p["u"][m]
+                ]
+            ),
         }
     return out
+
+
+def _median(values: Sequence[float]) -> float | None:
+    return statistics.median(values) if values else None
 
 
 # --------------------------------------------------------------------------- search
@@ -655,6 +673,116 @@ def within_table_auroc(pool: dict[str, Any]) -> dict[str, float] | None:
         value = ms.auroc([score(m) for m in FOUR_SETS], labels)
         if value is not None:
             out[utility.name] = value
+    return out
+
+
+# --------------------------------------------------------------------------- post hoc
+
+#: Diagnostics added after the first AM1d results were seen. They are not declared utilities,
+#: and ``answers`` does not consider them.
+POSTHOC_NOTE = (
+    "added after the first AM1d results were seen; not a declared utility; not used to pick the "
+    "best label-free rule"
+)
+POSTHOC_AUROC = ("conf_mean", "conf_sum", "agree_full", "vote")
+
+
+def auroc_among_nonabstaining(pool: dict[str, Any]) -> dict[str, float] | None:
+    """AUROC for u of the confidence, agreement and vote scores (all 70 4-subsets read) among
+    the 4-subsets whose reply does not abstain; None without both labels among them."""
+
+    sets = [m for m in FOUR_SETS if not pool["abstain"][m]]
+    labels = [pool["u"][m] for m in sets]
+    if len(set(labels)) < 2:
+        return None
+    by_name = {u.name: u for u in UTILITIES}
+    out = {}
+    for name in POSTHOC_AUROC:
+        score = by_name[name].make(pool, FOUR_SETS)
+        value = ms.auroc([score(m) for m in sets], labels)
+        if value is not None:
+            out[name] = value
+    return out
+
+
+def bm25_ordered_nonabstain(pool: dict[str, Any], values: Sequence[float]) -> dict[str, Any]:
+    """Read 4-subsets in BM25 order (``rank_key``, best first) and keep the first whose reply
+    does not abstain; with a cap of m reads, keep BM25 top 4 when none of the first m answers.
+    Without a cap the choice is exactly ``nonabstain@70``'s, at fewer reads."""
+
+    ranks = pool["bm25_rank"]
+    order = sorted(FOUR_SETS, key=lambda m: rank_key(m, ranks), reverse=True)
+    position = next((i + 1 for i, m in enumerate(order) if not pool["abstain"][m]), None)
+    uncapped = order[position - 1] if position else order[0]
+    nonabstain = next(u for u in UTILITIES if u.name == "nonabstain")
+    if uncapped != select(pool, FOUR_SETS, nonabstain) or order[0] != bm25_top_mask(ranks):
+        raise LabelFreeError("the BM25-ordered rule differs from nonabstain@70")
+    rows = {}
+    for m in SEARCH_CALLS:
+        chosen = uncapped if position and position <= m else order[0]
+        rows[f"bm25_ordered_nonabstain@{m}"] = {
+            "u": float(values[chosen]),
+            "calls": min(position, m) if position else m,
+        }
+    return {"first_answer_position": position, "rows": rows}
+
+
+def posthoc_summary(
+    per_table: Sequence[dict[str, Any]],
+    pools: Sequence[dict[str, Any]],
+    resamples: int,
+    seed: int,
+) -> dict[str, Any]:
+    out: dict[str, Any] = {"note": POSTHOC_NOTE}
+    auroc: dict[str, Any] = {}
+    for arm in ARMS:
+        per = [auroc_among_nonabstaining(p) for p in pools if p["arm"] == arm]
+        per = [x for x in per if x is not None]
+        auroc[arm] = {
+            "tables_with_both_labels_among_nonabstaining_4_subsets": len(per),
+            "mean_auroc": {
+                n: sum(x[n] for x in per if n in x) / max(1, sum(n in x for x in per))
+                for n in POSTHOC_AUROC
+            },
+        }
+    out["auroc_among_nonabstaining_4_subsets"] = auroc
+    ordered: dict[str, Any] = {}
+    names = [f"bm25_ordered_nonabstain@{m}" for m in SEARCH_CALLS]
+    for arm in ARMS:
+        ordered[arm] = {}
+        for subset in ("nonconstant", "all"):
+            rows = [
+                p for p in per_table if p["arm"] == arm and (subset == "all" or p["nonconstant"])
+            ]
+            positions = [p["posthoc"]["first_answer_position"] for p in rows]
+            answered = sorted(x for x in positions if x is not None)
+            bm25 = {p["question_id"]: p["rows"]["bm25_top4"]["u"] for p in rows}
+            full = {p["question_id"]: p["rows"]["all_8"]["u"] for p in rows}
+            cells: dict[str, Any] = {
+                "tables": len(rows),
+                "first_answer_position": {
+                    "at_1": sum(x == 1 for x in answered),
+                    "none_of_70": len(positions) - len(answered),
+                    "mean_when_found": sum(answered) / len(answered) if answered else None,
+                    "max_when_found": max(answered) if answered else None,
+                },
+            }
+            for name in names:
+                u = {p["question_id"]: [p["posthoc"]["rows"][name]["u"]] for p in rows}
+                calls = [p["posthoc"]["rows"][name]["calls"] for p in rows]
+                d_b = {q: [v[0] - bm25[q]] for q, v in u.items()}
+                d_f = {q: [v[0] - full[q]] for q, v in u.items()}
+                cells[name] = {
+                    "calls_mean": sum(calls) / len(calls),
+                    "calls_max": max(calls),
+                    "accuracy": _boot(u, resamples, seed),
+                    "minus_bm25_top4": _boot(d_b, resamples, seed),
+                    "minus_all_8": _boot(d_f, resamples, seed),
+                    "tables_better_than_bm25_top4": sum(d[0] > 0 for d in d_b.values()),
+                    "tables_worse_than_bm25_top4": sum(d[0] < 0 for d in d_b.values()),
+                }
+            ordered[arm][subset] = cells
+    out["bm25_ordered_nonabstain"] = ordered
     return out
 
 
@@ -877,8 +1005,10 @@ def analyze(
         result = table_results(pool, values, seed_list)
         if result["nonconstant"] != (not t["summary"]["constant"]):
             raise LabelFreeError("the non-constant set differs from AM1's summary")
+        result["posthoc"] = bm25_ordered_nonabstain(pool, values)
         per_table.append(result)
     agg = aggregate(per_table, resamples, bootstrap_seed, n_seeds)
+    posthoc = posthoc_summary(per_table, features["pools"], resamples, bootstrap_seed)
     crossfit = {}
     for arm in ARMS:
         crossfit[arm] = {
@@ -983,6 +1113,7 @@ def analyze(
         "aggregate": agg,
         "answers": answers(agg, crossfit[HEADLINE_ARM]),
         "crossfit": crossfit,
+        "posthoc": posthoc,
         "eager_sensitivity": eager_out,
     }
     return results, per_table
@@ -1003,6 +1134,67 @@ def _ci(ci: Sequence[float | None], signed: bool = False) -> str:
     if signed:
         return f"[{_d(ci[0])}, {_d(ci[1])}]"  # type: ignore[arg-type]
     return f"[{_f(ci[0])}, {_f(ci[1])}]"
+
+
+def _render_posthoc(posthoc: dict[str, Any]) -> list[str]:
+    lines = [
+        "",
+        "## Post hoc diagnostics",
+        "",
+        f"These were {posthoc['note']}.",
+        "",
+        "AUROC for u among the 4-subsets whose reply does not abstain (all 70 read):",
+        "",
+        "| Arm | Tables | " + " | ".join(POSTHOC_AUROC) + " |",
+        "|---|---:|" + "---:|" * len(POSTHOC_AUROC),
+    ]
+    for arm in ARMS:
+        a = posthoc["auroc_among_nonabstaining_4_subsets"][arm]
+        lines.append(
+            f"| {arm} | {a['tables_with_both_labels_among_nonabstaining_4_subsets']} | "
+            + " | ".join(f"{a['mean_auroc'][n]:.3f}" for n in POSTHOC_AUROC)
+            + " |"
+        )
+    lines += [
+        "",
+        "BM25-ordered stop rule: read 4-subsets in BM25 rank-sum order and keep the first whose "
+        "reply does not abstain; with a cap of m reads, keep BM25 top 4 when none of the first m "
+        "answers. Uncapped, its choice is `nonabstain@70`'s.",
+        "",
+        "| Arm | Tables | Rule | Calls, mean (max) | Accuracy [95% CI] | minus BM25 top 4 "
+        "[95% CI] | Tables better / worse than BM25 | minus all 8 [95% CI] |",
+        "|---|---|---|---|---|---|---|---|",
+    ]
+    for arm in ARMS:
+        for subset in ("nonconstant", "all"):
+            cells = posthoc["bm25_ordered_nonabstain"][arm][subset]
+            label = f"{cells['tables']} {'non-constant' if subset == 'nonconstant' else 'all'}"
+            for m in SEARCH_CALLS:
+                c = cells[f"bm25_ordered_nonabstain@{m}"]
+                db, df = c["minus_bm25_top4"], c["minus_all_8"]
+                better, worse = c["tables_better_than_bm25_top4"], c["tables_worse_than_bm25_top4"]
+                lines.append(
+                    f"| {arm} | {label} | bm25_ordered_nonabstain@{m} | "
+                    f"{c['calls_mean']:.2f} ({c['calls_max']}) | "
+                    f"{_f(c['accuracy']['mean'])} {_ci(c['accuracy']['ci95'])} | "
+                    f"{_d(db['mean'])} {_ci(db['ci95'], True)} | {better} / {worse} | "
+                    f"{_d(df['mean'])} {_ci(df['ci95'], True)} |"
+                )
+    lines += ["", "First answering subset in BM25 order (position 1 is BM25 top 4):", ""]
+    lines += [
+        "| Arm | Tables | At position 1 | None of 70 answers | Mean position when found | Max |",
+        "|---|---|---:|---:|---:|---:|",
+    ]
+    for arm in ARMS:
+        for subset in ("nonconstant", "all"):
+            cells = posthoc["bm25_ordered_nonabstain"][arm][subset]
+            f = cells["first_answer_position"]
+            mean = "n/a" if f["mean_when_found"] is None else f"{f['mean_when_found']:.2f}"
+            lines.append(
+                f"| {arm} | {cells['tables']} {subset} | {f['at_1']} | {f['none_of_70']} | "
+                f"{mean} | {f['max_when_found']} |"
+            )
+    return lines
 
 
 def render_markdown(results: dict[str, Any]) -> str:
@@ -1101,6 +1293,7 @@ def render_markdown(results: dict[str, Any]) -> str:
             v = results["reply_stats"][arm][key]
             vals.append(f"{v:.3f}" if isinstance(v, float) else json.dumps(v, sort_keys=True))
         lines.append(f"| {key} | " + " | ".join(vals) + " |")
+    lines += _render_posthoc(results["posthoc"])
     eager = results.get("eager_sensitivity")
     if eager:
         lines += [

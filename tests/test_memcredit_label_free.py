@@ -437,6 +437,44 @@ def test_bm25_top4_is_am1b_retrieval_rank_on_the_dev_tables():
     assert checked == 89
 
 
+def test_bm25_ordered_stop_rule_reaches_the_nonabstain_choice():
+    ranks = [5, 0, 7, 1, 6, 2, 4, 3]
+    order = sorted(lf.FOUR_SETS, key=lambda m: lf.rank_key(m, ranks), reverse=True)
+    assert order[0] == lf.bm25_top_mask(ranks)
+    abstain = [False] * 256
+    for m in order[:11]:
+        abstain[m] = True
+    values = [0.0] * 256
+    values[order[11]] = 1.0
+    pool = _toy_pool(values, ranks=ranks, abstain=abstain)
+    out = lf.bm25_ordered_nonabstain(pool, values)
+    assert out["first_answer_position"] == 12
+    rows = out["rows"]
+    assert rows["bm25_ordered_nonabstain@8"] == {"u": 0.0, "calls": 8}
+    assert rows["bm25_ordered_nonabstain@16"] == {"u": 1.0, "calls": 12}
+    assert lf.select(pool, list(lf.FOUR_SETS), UTIL["nonabstain"]) == order[11]
+    # nothing answers: BM25 top 4 after reading m subsets
+    pool["abstain"] = [True] * 256
+    out = lf.bm25_ordered_nonabstain(pool, values)
+    assert out["first_answer_position"] is None
+    assert out["rows"]["bm25_ordered_nonabstain@26"] == {"u": 0.0, "calls": 26}
+
+
+def test_auroc_among_nonabstaining_ignores_abstentions():
+    values = [0.0] * 256
+    mean_lp = [-1.0] * 256
+    abstain = [False] * 256
+    sets = list(lf.FOUR_SETS)
+    for m in sets[:10]:
+        abstain[m], mean_lp[m] = True, -0.01  # confident abstentions
+    for m in sets[10:20]:
+        values[m], mean_lp[m] = 1.0, -0.5
+    pool = _toy_pool(values, mean_lp=mean_lp, abstain=abstain)
+    out = lf.auroc_among_nonabstaining(pool)
+    assert out["conf_mean"] == 1.0
+    assert lf.within_table_auroc(pool)["conf_mean"] < 1.0
+
+
 def test_crossfit_picks_a_dominant_candidate():
     per_table = []
     for q in range(10):
