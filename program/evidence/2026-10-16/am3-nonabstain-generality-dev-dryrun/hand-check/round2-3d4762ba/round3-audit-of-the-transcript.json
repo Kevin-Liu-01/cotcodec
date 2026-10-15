@@ -1,0 +1,33 @@
+{
+ "audit": {
+  "agent_ids": [
+   "a7ff0984a1dca10c1"
+  ],
+  "assistant_lines": 6,
+  "first_prompt_sha256": "d2f0e6502e35ed3b0aeba20c018830cfe30af2b6330ae502da98bc054f81ef44",
+  "first_timestamp": "2026-10-15T13:40:05.509000Z",
+  "instruction_files": [
+   [
+    "User",
+    "CLAUDE.md"
+   ],
+   [
+    "Project",
+    "CLAUDE.md"
+   ],
+   [
+    "AutoMem",
+    "MEMORY.md"
+   ]
+  ],
+  "last_timestamp": "2026-10-15T13:40:23.452000Z",
+  "models": [
+   "claude-opus-5-5"
+  ],
+  "pass": true,
+  "session_ids": [],
+  "tool_calls": 3,
+  "transcript_sha256": "3c6378fd086a684c54d10c2d6ac37b199dc22c7c164e8fc6176840430bda5158"
+ },
+ "note": "check 3's audit (commit acd58d73) applied to the 3d4762ba development labeller's transcript (the session's subagents/agent-a7ff0984a1dca10c1.jsonl, identical to the host's transcripts/first-01.jsonl); not_before is the modification time of the CLI's error file, 2026-10-15T13:39:51Z, since that run predates the recorded failure time"
+}

@@ -222,6 +222,29 @@ did not change. Round 2 used no GPU time.
 - `h1_gains_that_hedge` (development, descriptive): of the rule's gains, 0 of 4 (OLMo-2), 0 of 3
   (Qwen3.5-9B) and 1 of 1 (Qwen3-8B) hedge.
 
+## Round 3: after pre-freeze check 3 (CPU only)
+
+Check 3's fixes changed the operator scripts (the stage's claim, the subagent push from the
+session's `subagents/` directory with its attempt count, the receipt's checks, rerun-decision
+after the job ended, records written once through a temporary file, build attempts from recorded
+job ids, terminal Slurm states) and the hand check's audit and merge. No GPU, no model.
+
+- **The rehearsal at `acd58d73`** (`rehearsal/rehearse-acd58d73.log`): 56 of 56. ssh and scp are
+  stubbed onto the fake HOME and the claude CLI onto its authentication failure, so the Mac's
+  labelling script runs end to end on the host: the claim, the CLI's failure and exit 3, a second
+  claim refused, a CLI push outside `cli` refused, a scripted "subagent" transcript found among
+  the session's files and copied unmodified, the merge's audit, the receipt with its records, and
+  an extra transcript voiding the hand check. The other new cases: a build that fails before its
+  root exists, a state that is not terminal, rerun-decision before the job ended, repeated and
+  on a summary that is not an object, and repeated hand-sample and hand-merge.
+- **The new audit on the real development transcript** (`hand-check/round2-3d4762ba/round3-audit-of-the-transcript.json`):
+  the `3d4762ba` labeller's transcript passes (agent `a7ff0984a1dca10c1`, every assistant line
+  `claude-opus-5-5`, the absolute-path prompt first, three tool calls in the chunk's directory,
+  every line after the CLI's error file was written; instruction files `CLAUDE.md` (user,
+  project) and `MEMORY.md`).
+- **Tests**: the memcredit tests 132 passed at `acd58d73`, locally and on the host
+  (`logs/pytest-acd58d73.log`).
+
 ## Power (`power.json`)
 
 `scripts/memcredit_am3g.py power`, CPU, from AM3's committed `results.json`, `am1-keepset-search-v1`'s
@@ -271,7 +294,8 @@ committed `results.json` and AM3's host-only features. The registration's sectio
   merge records and the sample's counts and digests: `round1/` (at `0d030015`), `round2/` (at
   `c2eaa62b`), `round2-3d4762ba/` (at `3d4762ba`, with the text-free manifest). The sample,
   chunks, labels and transcripts stay on the host.
-- `rehearsal/`: the runbook rehearsal's script and its four logs (home paths written as `~`).
+- `rehearsal/`: the runbook rehearsal's script and its five logs (home paths written as `~`).
+  The fake-HOME directories it used on the host were deleted after round 3.
 - `ops/`: `jobs.log` and `preflight.log`. The scripts themselves are `ops/am3g/` at the commit.
 - The staging script searched every staged file for each of the 3,717 texts of at least 12
   characters (every distinct reply, and every question, answer, decoy and memory text of the

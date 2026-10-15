@@ -464,7 +464,13 @@ job's driver and workers record their own failures in `summary.json`).
   pass (OLMo-2 from either of its steps) and the primary judge's pass is complete; otherwise it is
   incomplete. Right after each GPU job ends, before extract reads it, `rerun-decision`
   (`am3g-rerun-decision.sh`) applies these rules, in this order, to the driver's `summary.json`
-  and the lane's `termination.env` (`rerun_decision`); the first that applies decides:
+  and the lane's `termination.env` (`rerun_decision`); the first that applies decides. It
+  decides a job once, only after the job ended (its saved `scontrol` record,
+  `R/ops/scontrol-JOB.txt`, and the lane's `termination.env` both exist; a repeat is refused),
+  and writes the decision through a temporary file, so a failed run leaves none. A
+  `summary.json` that is not a JSON object is a named V2 error. A job that ended without the
+  lane's termination record, or whose summary is such an error, cannot be decided, and its
+  population is VOID (V2, incomplete).
   1. **rerun** when the workload never started (lane reasons `gpu_prolog_unavailable`,
      `foreign_gpu_process`, `hard_stop_before_start`). Without a driver summary: **no-rerun**
      after the lane's hard stop, **rerun** otherwise.
@@ -478,12 +484,14 @@ job's driver and workers record their own failures in `summary.json`).
      **no-rerun** (the limit's own signal) when the lane's finish time (`finished_at`) is within
      300 s of its hard stop (`hard_stop_at`); **rerun** otherwise (a cancellation or a node
      event), whatever the steps record.
-  6. Otherwise, per essential unit in order, from its steps' records: **no-rerun** for a step
-     skipped for lack of time, a pass stopped by its `max_s` or the deadline, or a worker killed
-     as late (the budgets are part of the design); **rerun** for an engine that failed to start
-     (OLMo-2's batch-invariant step excepted, whose declared fallback decides), a failed smoke
-     check, a worker that ended without its done record (a crash), or a unit with no complete
-     pass for any other reason.
+  6. Otherwise, from the steps' records: the first incomplete essential unit, in the order
+     Qwen3-8B, OLMo-2, Qwen3.5-9B, judge32, decides, and within that unit (OLMo-2's two steps)
+     the first step's record that matches decides: **no-rerun** for a step skipped for lack of
+     time, a pass stopped by its `max_s` or the deadline, or a worker killed as late (the budgets
+     are part of the design); **rerun** for an engine that failed to start (OLMo-2's
+     batch-invariant step excepted, whose declared fallback decides), a failed smoke check, a
+     worker that ended without its done record (a crash), or a unit with no complete pass for
+     any other reason.
   A rerun is a new job of this registration with the same commit, image, inputs and seeds
   (`am3g-submit.sh ... rerun`), submitted as soon as the decision is made, and only when the
   decision record of the population's submitted job says "rerun" (the script refuses otherwise);
@@ -496,7 +504,9 @@ job's driver and workers record their own failures in `summary.json`).
   once with `--abstention-void REASON` (section 16); H1 stands. A failed image build is rebuilt
   once from the same capsule (`am3g-build.sh ... rebuild`, into its own build root
   `overlay-build-vllm-FREEZE8-r2`; `am3g-image.sh` reads the latest attempt); a second failure
-  stops the run before any GPU job, and nothing is read. A missing second-judge label affects only the second judge's descriptions: a reader and
+  stops the run before any GPU job, and nothing is read. The attempts are counted from the job
+  ids recorded as each build is submitted (`R/ops/build-attempts-FREEZE8.txt`), not from the
+  build roots, so a build that fails before its root exists still counts. A missing second-judge label affects only the second judge's descriptions: a reader and
   arm with any missing second-judge label is reported as incomplete under that judge.
 - **Named V2 errors in extract.** A run directory without `judge-items.json` (no judge step ran,
   because judge32 was skipped) is `VOID (V2, incomplete): the judge items (no judge step ran:
@@ -555,44 +565,82 @@ job's driver and workers record their own failures in `summary.json`).
     and the instructions, launched with the pinned prompt (`HAND_LABELLER_PROMPT`, SHA-256
     `98c35ceac9710033b095f01abe4a5fc98f6ed3a597b461e12a98ac213a7ae096`, with the chunk's three
     file names filled in): read the two files, label every line independently, write the labels
-    to the named output file, read nothing else and use no other tool. The registered launch is
-    the Claude Code CLI on the operator's Mac (`am3g-hand-label-mac.sh ... cli`): `claude -p
-    --model claude-opus-5-5 --restricted --strict-mcp-config --tools Read,Write
-    --permission-mode acceptEdits --no-session-persistence --output-format stream-json`, run in
-    the chunk's directory, so the tools are only Read and Write and file access is confined to
-    that directory; its stream-json transcript is kept per chunk.
-  - *The one fallback.* If the CLI cannot start a session on a stage's first chunk (the script
-    checks the transcript for a tool call or a non-error result), it launches nothing else and
-    keeps the error, whose SHA-256 the receipt records. Then the operator's Claude Code session
-    launches, per chunk and in order, one fresh subagent, model `claude-opus-5-5`, whose whole
-    prompt is the same pinned prompt naming the files by absolute path (`prompt-NN-abs.txt`),
-    saves its transcript, and pushes the stage with the launch "subagent", which the receipt
-    records. A subagent's tools are not limited by its launch, and its context carries the
-    session's standard project instructions (no file of the run, no label). Its compliance is
-    checked by the audit below. Disclosure: in drafting, the CLI could not authenticate ("Invalid
-    API key", an environment matter not fixed here), so both of the dry run's labelling runs used
-    the fallback (section 15).
-  - *Transcript audit.* `hand-merge` audits every chunk's transcript before it reads the chunk's
-    labels (`audit_transcript`). A transcript passes only if every line parses, every tool call
-    is a Read of one of the chunk's two input files or a Write of its output file (by file name),
-    and the output was written. The rows of a chunk whose transcript fails, or is missing, are
-    dropped, so its items go to the repair stage.
+    to the named output file, read nothing else and use no other tool.
+  - *The stage's claim.* `am3g-hand-label-mac.sh` first claims the stage on the host, atomically
+    and once (`mkdir R/hand/claim-STAGE`, with a line in `R/ops/jobs.log`); a stage already
+    claimed is refused, from any work directory.
+  - *The first launch: the CLI.* `am3g-hand-label-mac.sh ... cli` runs, in each chunk's
+    directory, `claude -p --model claude-opus-5-5 --restricted --strict-mcp-config --tools
+    Read,Write --permission-mode acceptEdits --no-session-persistence --output-format stream-json
+    --verbose`, so the tools are only Read and Write and file access is confined to that
+    directory; its stream-json transcript is kept per chunk. A CLI push happens only inside this
+    action. In drafting the CLI could not authenticate ("Invalid API key", an environment matter),
+    and it is expected to fail the same way at the registered run. It is still launched first, to
+    record that failure: when it cannot start a session on the stage's first chunk (the script
+    finds neither a tool call nor a result that is not an error), it launches nothing else, keeps
+    its output and the time (the receipt records the error's SHA-256 and the time) and exits 3.
+    No one enters or creates a credential to make the CLI start.
+  - *The expected launch: one subagent per chunk.* After that failure the operator's Claude Code
+    session launches, per chunk and in order, one fresh subagent, model `claude-opus-5-5`, whose
+    whole prompt is the chunk's pinned prompt naming its files by absolute path
+    (`prompt-NN-abs.txt`). Then `am3g-hand-label-mac.sh ... push subagent DIR`, DIR being that
+    session's `subagents/` directory, reads the first user message of every `agent-ID.jsonl`
+    there, and counts per chunk the transcripts whose message is the chunk's prompt (SHA-256 of
+    the stripped text). A chunk with exactly one gets that file, copied unmodified, as its
+    transcript; the launch record (`labeller-STAGE.json`, host only) holds the counts, the agent
+    ids, the number of files scanned, each chunk's directory and the CLI's failure time. More
+    than one transcript for any chunk is an extra labelling attempt: it voids the hand check
+    (`hand-merge` writes the final labels empty, so the join is "incomplete" and a directional
+    reading is JUDGE_DEPENDENT, section 7.1). None leaves the chunk unlabelled, for the repair
+    stage. The dry run's labelling used this launch (section 15).
+  - *What the subagent sees.* Its tools are not limited by its launch: the audit below checks
+    what it did. Its working directory is the repository (the operator session's), and its
+    context carries the session's instruction files (the user's and the project's `CLAUDE.md`
+    and the auto-memory index `MEMORY.md`), the git status with recent commit subjects, and the
+    skill and agent listings, but no file of the run and no label. The receipt records, per
+    chunk, the instruction files' types and names found in the transcript. So that nothing in
+    that context carries a result: from the first GPU job's submission until the hand-check
+    receipt is committed, the orchestrator writes no commit subject, memory note or file in the
+    repository that carries judge-derived counts or readings of this run.
+  - *Transcript audit.* `hand-merge` requires the launch record and audits every chunk's
+    transcript against it before it reads the chunk's labels (`audit_transcript`). A transcript
+    passes only if every line parses; every assistant line names the model `claude-opus-5-5`;
+    every tool-call block is a `tool_use` Read of one of the chunk's two input files or Write of
+    its output file, by a path in the chunk's own directory (the absolute paths of
+    `prompt-NN-abs.txt`, or bare names for the CLI), with no other block that calls a tool
+    (`server_tool_use` included); the output was written; the first user message, when the
+    transcript holds one (a subagent's always does; the CLI's stream-json does not echo it), is
+    the chunk's pinned prompt; and, for a subagent, every line carries the launch record's agent
+    id and a timestamp after the CLI's recorded failure. The rows of a chunk whose transcript
+    fails, or is missing, are dropped, so its items go to the repair stage.
   - *One labelling run and one repair.* The first stage labels every chunk once. `hand-merge`
     keeps the rows that parse, name an item of the stage once and carry a label of 0 or 1; the
-    items without such a row form the one repair stage, with its own chunks and prompts, labelled
-    the same way. After it the labels are final, complete or not; there is no third stage and no
-    other relabelling: no item is labelled again by choice and no label is edited. A correction
-    found after the join (an operator who disagrees with a label, say) is reported separately,
-    beside the registered result, and changes nothing in it.
-  - *Receipts before the join.* Each stage is receipted (`am3g-hand-receipt.sh`), text-free: the
-    labeller's model and launch, the prompt's SHA-256, the instructions', sample's and plan's
-    digests, every chunk's digest, every transcript's digest with its audit, the stage's raw
-    labels' digest and, after the last stage, the final labels' digest. The receipts are
-    committed to the repository before `analyze` joins the labels; that commit's id is passed to
-    `am3g-analyze.sh` as RECEIPT_COMMIT and logged at the head of its log, so a verifier can
-    check that the commit precedes the analysis. `analyze` refuses labels or a plan with another
-    digest, and the hand check is "incomplete" unless the labels cover exactly the recomputed
-    plan's items, each once, with 0 or 1.
+    items without such a row form the one repair stage, with its own claim, chunks and prompts,
+    labelled the same way. After it the labels are final, complete or not; there is no third
+    stage and no other relabelling: no item is labelled again by choice and no label is edited.
+    A correction found after the join (an operator who disagrees with a label, say) is reported
+    separately, beside the registered result, and changes nothing in it. `hand-sample` and
+    `hand-merge` each run once (a repeat is refused and leaves the first record), and write their
+    records through a temporary file.
+  - *Receipts before the join.* Each stage is receipted (`am3g-hand-receipt.sh`), text-free. The
+    receipt refuses a stage without a launch record, a subagent launch without the CLI's recorded
+    failure, and a transcript whose SHA-256 on the Mac differs from the audit's. It records the
+    labeller's model and launch, the CLI's error digest and failure time, the labelling attempts
+    per chunk and the matching transcripts in all, the agent ids, models, first-prompt digests
+    and times the audit found, the context's instruction files, the prompt's SHA-256, the
+    instructions', sample's and plan's digests, every chunk's digest, every transcript's digest
+    with its audit, a void, the stage's raw labels' digest and, after the last stage, the final
+    labels' digest. With the sample's and the merge's records and the manifest it goes to
+    `R/hand-check/`, which is committed, before `analyze` joins the labels, as the run's evidence
+    directory's `hand-check/`
+    (`program/evidence/RUNDATE/am3-nonabstain-generality-v1/hand-check/`, RUNDATE being the
+    held-out job's date); `am3g-stage-evidence.sh` later copies the same files to the same path,
+    so the staging shows no difference there. The commit's id is passed to `am3g-analyze.sh` as
+    RECEIPT_COMMIT and logged at the head of its log. `analyze` refuses labels or a plan with
+    another digest, and the hand check is "incomplete" unless the labels cover exactly the
+    recomputed plan's items, each once, with 0 or 1. The verifier checks that `results.json`'s
+    hand-check labels and plan digests equal the committed receipt's, and that the receipt
+    commit precedes the analysis log.
   - *Size and time.* No cap on items. About four items per discordant question (its two replies
     and a distractor's two). At the development rates of discordance (4 and 3 of 63) H1 draws
     about 22 and 17 discordant questions, about 90 and 70 items; at the anchor's held-out rate
@@ -651,7 +699,7 @@ and the power is P(b_hand >= k), with k = 7 at Holm's first step (alpha 0.025) a
 | half of it | OLMo-2 | 0.93-0.96 | 0.87-0.93 | 0.78-0.88 |
 | | Qwen3.5-9B | 0.72-0.83 | 0.62-0.75 | 0.49-0.65 |
 | a quarter of it | OLMo-2 | 0.31-0.47 | 0.23-0.38 | 0.16-0.28 |
-| | Qwen3.5-9B | 0.12-0.24 | 0.08-0.17 | 0.05-0.12 |
+| | Qwen3.5-9B | 0.12-0.23 | 0.08-0.17 | 0.05-0.12 |
 | the anchor's held-out rate (39 of 347) | both | 1.00 | 1.00 | 1.00 |
 
 a = 1 is the judge-only power above. In the dry run the hand labels confirmed all 7 of the
@@ -735,11 +783,14 @@ rule, the tests and the exact intervals involve no random draw.
     starts only if judge32 completed with time left; if judge8 is skipped, only the second
     judge's descriptions are lost.
   - **A hung engine start.** A step's `max_s` bounds its passes, not its engine start. An engine
-    start that hangs is stopped only when its worker overruns the job's deadline (the limit minus
-    the lane's 210 s) by 90 s; by then no later step can start, the worker is recorded as killed
-    late, and the rule of section 8 makes the job a time-budget void with no rerun. The
-    registration accepts this risk rather than change the GPU job's code after the dry run: every
-    engine start of these models in AM3's job 1466 and the dry run's job 1471 took 27-41 s.
+    start that hangs is stopped only near the job's end: usually by the lane's USR1, 180 s
+    before the limit, which the driver passes on, its watchdog then killing the worker as
+    "signal" (the lane's finish then falls within 300 s of its hard stop); otherwise when the
+    worker overruns the job's deadline (the limit minus the lane's 210 s) by 90 s, killed as
+    late. Either way no later step can start, and the rule of section 8 makes the job a
+    time-budget void with no rerun. The registration accepts this risk rather than change the
+    GPU job's code after the dry run: every engine start of these models in AM3's job 1466 and
+    the dry run's job 1471 took 27-41 s.
   - **A cold page cache.** The overhead model was measured in job 1471, whose engines may have
     read weights that earlier jobs had left in the node's page cache. A cold start reads up to
     about 65 GB (Qwen3-32B) from disk and can take tens of seconds longer per engine. On the
@@ -774,10 +825,14 @@ searches every staged file for every reply of 12 or more characters and every qu
 explanation, decoy and memory text of the two artifacts, and exits with an error on a hit; a
 staged tree with a hit is not committed. The blind hand check's files (the sample, the chunks
 and their prompts, the labels, whose notes may quote the texts, and the labellers' transcripts)
-stay on the host in `R/hand/`, made read-only after each step; during the labelling the
-operator's Mac holds a stage's chunks, outputs and transcripts in a work directory outside the
-repository. The repository gets the text-free receipts (digests, counts, the transcript audits),
-committed before the join, and the counts and digests that `hand-sample` and `hand-merge` print.
+stay on the host in `R/hand/`, made read-only after each step. The operator's Mac holds copies
+during the labelling: a stage's chunks, prompts, outputs and transcripts in the work directory W
+outside the repository, and the subagents' own transcripts in the operator session's
+`subagents/` directory (under `~/.claude/projects/`). Both are deleted from the Mac once the
+run's evidence is staged and committed; the host's copies remain the record. The repository
+gets the text-free receipts (digests, counts, the transcript audits, the launch record's counts
+and ids), committed before the join, and the counts and digests that `hand-sample` and
+`hand-merge` print.
 
 ## 13. Exclusions and infrastructure failures
 
@@ -934,6 +989,23 @@ no development GPU time.
   suite on the host at `3d4762ba`: 3,584 passed, 64 skipped and the same two `test_r04_*`
   failures.
 
+**Round 3 corrections, rerun on the CPU** (code at `acd58d73`; no GPU, no model). The runbook
+rehearsal, extended with ssh, scp and claude stubs so that the Mac's labelling script runs
+against the fake HOME, passed all 56 cases: the 40 above (the build cases now with a build that
+fails before its root exists, which no longer blocks the rebuild), and the stage's claim (a
+second claim refused from another work directory), a CLI push outside the `cli` action refused,
+the subagent push finding the one transcript among the session's files and copying it
+unmodified, the audit of model, prompt, agent id, paths and times passing, a repeated hand-sample
+and hand-merge refused with their records unchanged, the transcripts' digest list made
+read-only, the receipt with its records, an extra transcript for a chunk voiding the hand check
+(empty final labels, no repair stage, the void receipted), a rerun decision refused before the
+job ended and refused when repeated, a summary that is not a JSON object refused with a named V2
+error, and a state that is not terminal counted as running. The new audit, applied to the real
+transcript of the `3d4762ba` development labeller, passes (one agent id, every assistant line
+`claude-opus-5-5`, the absolute-path prompt first, three tool calls in the chunk's directory,
+every line after the CLI's failure; the instruction files `CLAUDE.md` (user and project) and
+`MEMORY.md`). The memcredit tests: 132 passed, locally and on the host.
+
 Development also set: the readers and engines (AM3), the 71 requests per pool, H2's status as a
 description (section 7.2), the abstention-judge validation items, and the step budgets (from the
 timings above, which match AM3's job 1466).
@@ -1013,9 +1085,11 @@ refuses to go on otherwise; `am3g-hand-label-mac.sh` refuses a dirty repository 
 another commit; `am3g-image.sh`, `am3g-job-state.sh`, `am3g-hand-receipt.sh` and
 `am3g-preflight.sh` read records only and run no repository code; `am3g-stage-evidence.sh` copies
 records and runs its text search with the system Python. No command waits: `am3g-job-state.sh`
-prints a job's state once and is polled (exit 1 while the job is pending or running), and right
-after a job ends it saves the whole `scontrol show job` record to `R/ops/scontrol-J.txt`, because
-Slurm accounting is disabled on the node and scontrol forgets ended jobs.
+prints a job's state once and is polled (exit 1 in any state that is not terminal), and when a
+job has ended (COMPLETED, FAILED, CANCELLED, TIMEOUT, OUT_OF_MEMORY, NODE_FAIL, PREEMPTED,
+BOOT_FAIL or DEADLINE) it saves the whole `scontrol show job` record to `R/ops/scontrol-J.txt`,
+because Slurm accounting is disabled on the node and scontrol forgets ended jobs;
+`am3g-rerun-decision.sh` refuses a job without that record.
 
 ```bash
 # On the operator's Mac, in the repository (the branch that holds FREEZE):
@@ -1061,20 +1135,23 @@ bash ops/am3g/am3g-hand-sample.sh reg FREEZE8 JOB_H JOB_A   # the blind sample, 
                                                             # -> R/hand (JOB_A left out when H2 is
                                                             # void)
 # On the Mac, in the repository at FREEZE (clean):
-bash ops/am3g/am3g-hand-label-mac.sh reg FREEZE8 first W cli
-#   exit 3 when the CLI cannot start a session: then, per chunk NN in order, one fresh subagent
-#   (model claude-opus-5-5) whose whole prompt is W/first/prompt-NN-abs.txt, its transcript saved
-#   as W/first/transcript-NN.jsonl, and:
-#   bash ops/am3g/am3g-hand-label-mac.sh reg FREEZE8 first W push subagent
+bash ops/am3g/am3g-hand-label-mac.sh reg FREEZE8 first W cli   # claims the stage on the host
+#   exit 3 when the CLI cannot start a session (expected): then, per chunk NN in order, one fresh
+#   subagent (model claude-opus-5-5) whose whole prompt is W/first/prompt-NN-abs.txt, and:
+#   bash ops/am3g/am3g-hand-label-mac.sh reg FREEZE8 first W push subagent \
+#     ~/.claude/projects/PROJECT/SESSION/subagents     # the operator session's subagents/
 # On the host:
 bash ops/am3g/am3g-hand-merge.sh reg FREEZE8 first     # audits the transcripts; the final labels,
                                                        # or the one repair stage's chunks
 bash ops/am3g/am3g-hand-receipt.sh reg FREEZE8 first
 #   if the merge wrote a repair stage: the same three steps with "repair" in place of "first"
 #   (am3g-hand-label-mac.sh, am3g-hand-merge.sh, am3g-hand-receipt.sh); no third stage
-#   commit R/hand-check/ to the repository (the receipts before the join); its id is RECEIPT_COMMIT
+#   commit R/hand-check/ as program/evidence/RUNDATE/am3-nonabstain-generality-v1/hand-check/
+#   (the receipts before the join; the staging copies the same files there); its id is
+#   RECEIPT_COMMIT; nothing judge-derived of this run is written to the repository before it
 RECEIPT_COMMIT=... bash ops/am3g/am3g-analyze.sh reg FREEZE8  # analyze twice (byte-identical), tests
 bash ops/am3g/am3g-stage-evidence.sh reg FREEZE8 heldout:JOB_H abstention:JOB_A
+#   after the evidence commit: delete W and the session's subagents/ transcripts on the Mac
 ```
 
 `am3g-analyze.sh` runs `scripts/memcredit_am3g.py analyze --heldout-features
@@ -1120,7 +1197,8 @@ Before the freeze, by the orchestrator:
 
 After the freeze: run section 16's commands once (the hand-label receipt is committed before
 `analyze`), commit the text-free outputs, and have a fresh verifier rerun `analyze` from a new
-clone.
+clone and check that `results.json`'s hand-check labels and plan digests equal the committed
+receipt's, and that the receipt commit precedes the analysis log's start line.
 
 ## 18. Priors (for the record; not tested)
 
@@ -1199,3 +1277,24 @@ model ran on a held-out or abstention question, and round 2 used no GPU time.
 | m8 | H2's judge was not hand-checked. | A descriptive H2 part of the hand check: every H2 discordant cell of the three readers with as many distractors, check "abstention", mixed into the same run and order; b2_hand and c2_hand with Holm, and agreement per population (sections 6.3 and 8). |
 | m9 | The held-out and abstention commands accepted any `--config`. | `check_config_binding` refuses any but the pinned config for those populations (section 8; tested). |
 | Info | The overhead model's warm cache; the licence wording; replies that hedge; the distractor shortfall; H2's opportunities and strata; which scripts refuse a dirty checkout. | Section 11 (cold cache: judge8's 55 s of slack on the fallback path, only the second judge at stake); section 7.1 (c near 0 by construction, so NONABSTAIN_HELPS means at least 7 hand-confirmed gains at Holm's first step; the effect size with its intervals is part of the licence; the read cost of up to 70 calls against 1; patterns chosen on Qwen3-8B's development replies); section 6.4 (the hedge flag and the gains that hedge); section 8 (the shortfalls recorded per reader); section 6.3 (b2 per correct top-4 abstention, and the near-miss strata); section 16 (which scripts check the checkout, and which read records only). |
+
+### Round 3
+
+Pre-freeze check 3 ran on `0d62badf`, confirmed the rehearsal (40 of 40), 34 rerun-rule cases of
+its own, the 52 pins, the config binding, the 130 tests, the dry run's labelling record against
+the protocol and the absence of text and of stdout traps, and found two major and seven minor
+items. The fixes are commit `acd58d73` (code, tests, operator scripts, rehearsal) and the commit
+that carries this section (section 15). No model ran and no GPU was used.
+
+| Item | Finding | Disposition |
+|---|---|---|
+| M1 | A relabelling or a chosen transcript left no record: `prepare` refused only an existing Mac work directory, `push subagent` needed only an error file's name, nothing counted the subagents per chunk or named the transcript kept, and the audit checked tool calls only. | `prepare` claims the stage on the host atomically (`mkdir R/hand/claim-STAGE`, a `jobs.log` line) and a claimed stage is refused; a CLI push happens only inside the `cli` action; `push subagent DIR` reads the operator session's `subagents/agent-ID.jsonl`, finds each chunk's transcript by its first message's SHA-256, copies it unmodified, and records per chunk the attempts, the agent id and the files scanned; the audit checks the model on every assistant line, the first prompt (with the absolute-path variant), the agent id and every timestamp after the CLI's recorded failure; the receipt records them and the count of matching transcripts. More than one transcript for a chunk voids the hand check (empty final labels: JUDGE_DEPENDENT for a directional reading). Section 8; tests; rehearsed, including the extra transcript. |
+| M2 | A rerun decision taken before the job ended was kept for good. | `am3g-rerun-decision.sh` refuses unless `R/ops/scontrol-JOB.txt` and `termination.env` both exist, decides once, and writes through a temporary file; a job that cannot be decided is VOID (V2). Rehearsed. |
+| m3 | A failed or repeated command could empty or overwrite a record. | Temporary file then move, and a refused repeat, for rerun-decision, hand-merge and hand-sample; a `summary.json` that is not a JSON object is a named V2 error. Tested and rehearsed. |
+| m4 | The rebuild limit keyed on a directory the builder creates late. | `am3g-build.sh` records each submitted job id in `R/ops/build-attempts-SHORT.txt` and counts attempts from it; `build_root` follows it. Rehearsed with a build that fails before its root exists. |
+| m5 | Audit paths matched by file name only; other tool-call block types passed. | Every Read and Write path must be in the chunk's own directory (absolute, or bare names for the CLI); any tool-call block other than a `tool_use` Read or Write fails, `server_tool_use` included. Tested. |
+| m6 | Section 8 implied the CLI might work. | Section 8: the CLI is expected to fail the same way and is launched first to record the failure; the subagent is the expected launch; no one enters or creates a credential to make the CLI start. |
+| m7 | What the fallback subagent sees was not disclosed or guarded. | Section 8 discloses its working directory (the repository) and context (`CLAUDE.md` files, `MEMORY.md`, git status with recent commit subjects, skill and agent listings); from the first GPU job until the receipt commit the orchestrator writes nothing judge-derived of this run to commit subjects, memory notes or repository files; the receipt records the instruction files' types and names; section 12 covers the Mac's copies (W and the session's `subagents/`) and their deletion after the evidence commit. |
+| m8 | The receipt did not enforce its inputs. | It refuses a missing launch record, a subagent launch without the CLI's error, and a Mac transcript digest that differs from the audit's; it carries the sample's and merge's records and the manifest, and is committed at the staging destination (`hand-check/` of the run's evidence directory), which the staging copies unchanged; the verifier checks `results.json`'s hand digests against it and that its commit precedes the analysis log (sections 8, 16 and 17). |
+| m9 | `am3g-job-state.sh` treated any state outside a short list as ended. | Only terminal Slurm states are ended; any other state is "running or unknown" (exit 1); exit 2 as before. Rehearsed. |
+| Info | 0.12-0.24; USR1; the first step's record within a reader; the digest list's mode; `--verbose`. | Section 9 reads 0.12-0.23; section 11 says a hung engine start is usually killed by the lane's USR1 as "signal", with the same outcome; section 8 says the first incomplete unit, and within it the first matching step's record, decides; `transcripts-STAGE.sha256` is read-only after the merge; section 8's CLI command has `--verbose`. |
