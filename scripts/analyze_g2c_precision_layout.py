@@ -604,7 +604,7 @@ def markdown(result: dict[str, Any]) -> str:
             block = model["subsets"].get(f"{arm}/all", {}).get("dec_vs_r1")
             if not block:
                 continue
-            c = con["arms"].get(arm, {})
+            c = con.get("arms", {}).get(arm, {})
             lines.append(
                 f"| {gc.ARM_LABELS[arm]} | {block['tokens']:,} | {fmt(block['mean_abs'])} "
                 f"{ci(c.get('mean_abs', {}).get('ci95'))} | {fmt(block['p99_abs'], 3)} | "
@@ -881,7 +881,7 @@ def plot(result: dict[str, Any], output: Path) -> None:
     # Summary: mean |d| with CIs per arm and model.
     ax = axes[0, 2]
     for m_i, model_id in enumerate(models):
-        con = result["mismatch"][model_id]["contrasts"]["dec_vs_r1"]["arms"]
+        con = result["mismatch"][model_id]["contrasts"]["dec_vs_r1"].get("arms", {})
         for k, arm in enumerate(ARMS):
             if arm not in con:
                 continue

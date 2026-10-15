@@ -406,3 +406,18 @@ def test_committed_g2b_seed42_subsets_reproduce_g2b(tmp_path: Path) -> None:
         assert block["tokens"] == theirs["tokens"]
         assert block["mean_abs"] == pytest.approx(theirs["mean_abs"], rel=1e-9)
         assert block["k3"] == pytest.approx(theirs["k3"], rel=1e-9)
+
+
+def test_report_survives_arms_without_shared_prompts(tmp_path: Path) -> None:
+    """Smoke-sized new arms on prompts G2b never ran: no contrasts, but tables and figure."""
+
+    rng = np.random.default_rng(5)
+    g2b = _per_token([_arm_seqs(rng, 1, 0), _arm_seqs(rng, 1, 0.004)], rng, g2b=True)
+    g2c = _per_token([_arm_seqs(rng, 1, 0), _arm_seqs(rng, 1, 0)], rng, g2b=False)
+    g2c["prompt_index"] = (g2c["prompt_index"] + 30).astype(np.int16)
+    data = analysis.combine(g2b, g2c)
+    settings = dict(gc.load_config()["analysis"]) | {"bootstrap_reps": 50}
+    result = analysis.analyze_model(data, settings)
+    assert "arms" not in result["contrasts"]["dec_vs_r1"]
+    assert "fp16 state" in analysis.markdown({"mismatch": {MODEL: result}})
+    analysis.plot({"mismatch": {MODEL: result}}, tmp_path / "f.png")
