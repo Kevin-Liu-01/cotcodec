@@ -2740,3 +2740,20 @@ CPU-only registration on the held-out tables, `am1-keepset-search-v1`.**
   program already holds, and it continues a confirmed line rather than
   opening a new mechanism, so no gauntlet wave runs. It carries no gauntlet
   score, which is disclosed. Two independent pre-freeze checks are required.
+
+**D116. In `am1-keepset-search-v1`, H-B is descriptive.**
+- The drafter showed that AM1's published held-out figures already fix H-B's
+  sign. On the retrieved arm:
+  - retrieval-rank regret is 0.343 over 251 tables, so BM25 top 4 is wrong on
+    exactly 86 non-constant tables;
+  - u(all 8) is 0.524, which is 182 of 347 questions;
+  - u(empty) is 0, so every constant table is all-zero.
+- So BM25 top 4 is right on at most 165 questions, against 182 for all 8. The
+  development lead (top 4 ahead of all 8, 4 tables against 0) has already
+  reversed on held-out data. A test whose direction is known before the run
+  cannot be confirmatory.
+- H-B is therefore reported with its exact test and intervals, and decides
+  nothing. The registration decides H-A (search against credit at equal
+  calls, oracle utility) and H-C (non-abstention BM25 search against BM25
+  top 4, label-free).
+- Pre-freeze checks: two, independent and sequential.
