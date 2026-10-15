@@ -40,6 +40,10 @@ and node below.
   - The receipt (`models/olmo-2-1124-7b-instruct.receipt.json`) records every file's SHA-256 and
     the artifact root `ec7f6955...`. The driver re-verified every file against it before the job
     ran. The registry entry is in `models/registry.yaml`.
+  - The model card's front matter and its "License and use" section say Apache 2.0. The same
+    section also says the model is "intended for research and educational use" and is "subject
+    to additional terms: Gemma Terms of Use". This research use fits those terms, and accessing
+    the model required accepting nothing.
   - vLLM 0.31.0 maps `Olmo2ForCausalLM` to its Transformers modeling backend
     (`_TRANSFORMERS_SUPPORTED_MODELS`). The selftest confirmed it resolves, and the engine log
     reads "Using Transformers modeling backend", with FlashAttention 3. No remote code was used.
@@ -95,8 +99,13 @@ against the pilot before any other reader's numbers were read.
 | Qwen3-8B labels against the pilot's second-judge labels | 8,825 of 8,946 cells (8,544 of 8,634 on identical replies) |
 
 - **What the 33 differences are.** They are the expected compiled-against-eager difference. The
-  pilot's tables come from job 1411's GPU-0 compile, which differs from eager mode in about 0.2%
-  of cells (pilot README). Here the anchor gains 22 cells and loses 11 against the tables.
+  pilot's tables come from job 1411's GPU-0 compile.
+  - Observed rate: 33 of 8,946 cells (0.37%). It is 0.18% on the 16 questions the pilot replayed
+    eagerly, and 0.43% on the other 47, which have no eager reference.
+  - At the reply level it is 3.5%, matching the pilot's 3.3%.
+  - In 32 of the 33 cells the reply differs from job 1411's. In 1 the reply is identical and only
+    the judge differs.
+  - Here the anchor gains 22 cells and loses 11 against the tables.
 - **The judges at the item level** (`posthoc.json`, post hoc). Over the 970 judge items AM3
   shares with job 1411:
   - Qwen3-32B eager gives the same label as Qwen3-32B compiled on 969 (one item: pilot yes, AM3
@@ -109,6 +118,9 @@ against the pilot before any other reader's numbers were read.
     0.524 and 0.444.
   - Gold: 0.556, 0.619 and 0.587, against 0.571, 0.619 and 0.587. One gold top-4 cell flipped
     under eager mode.
+  - Against AM1d's per-table records, the rule on the gold arm also lost 2788b940 and gained
+    caf03d32, which cancel out. Its chosen subset changed in 3 pools with no change in outcome,
+    and the oracle gained 1 retrieved question (0.603 against 0.587).
 - **Judge validation items.**
   - Qwen3-32B said yes to 58 of 58 reference answers, 0 of 63 "I don't know." and 4 of 62 other
     answers.
@@ -170,16 +182,29 @@ question moves accuracy by 0.016, and the 95% question-bootstrap intervals of ac
   - Qwen3-8B called 335-513 of the abstaining 4-subset replies correct in each reader-by-arm cell,
     14-20% of them.
   - Qwen3-32B called 0-8 correct, and 8 is the most (Qwen3.5-9B, retrieved).
-- So under the second judge the rule's gains shrink or vanish:
-  - Qwen3.5-9B on the gold arm: 4 against 3;
-  - every other cell keeps b > c, and none is separated.
+- **What the 6 losses are (post hoc; checked by the independent checker).**
+  - They fall on 3 questions: a2f3aa27 three times, gpt4_68e94288 twice, 71017277 once.
+  - None of the 63 questions is an abstention question. The judge prompt is LongMemEval's
+    non-abstention template, so "I don't know" is never a correct answer here.
+  - On all 3 questions, Qwen3-8B also said yes to the "I don't know." validation item, whose
+    expected answer is no.
+  - In 4 of the 6, the top-4 reply is a bare "I don't know". By the pilot's validation standard
+    these are judge errors.
+  - The other 2 (a2f3aa27, gold arm, the anchor and Qwen3.5-9B) are 24-word hedges that contain
+    both "I don't know" and the one-word gold answer. They are ambiguous.
+  - Qwen3-32B called all 6 wrong.
+  - Of the second judge's 2,569 "correct" abstentions, 2,463 (96%) are a bare "I don't know".
+- **So the second-judge losses mostly reflect that judge's error of accepting abstentions**, not
+  answers the rule broke. Under the second judge every cell still has b ≥ c, and none is
+  separated. Qwen3.5-9B on the gold arm, at 4 against 3, is the closest.
 
 **Nonabstain-BM25 against all 8 (descriptive).** It depends on the reader:
 - **OLMo-2, gold arm.** It is ahead (13 against 1 and 11 against 1, p ≤ 0.05 under both judges).
   OLMo-2 with all 8 gold-arm memories is right on only 0.317 (Qwen3-32B).
 - **Anchor, retrieved arm.** It is ahead (5 against 0 and 6 against 0), as AM1d found.
-- **Qwen3.5-9B.** All 8 is equal or better in every cell (1 against 2, 5 against 6, 1 against 0, 5
-  against 8). For this reader BM25 top 4 is below all 8, by 0.063 (retrieved) and 0.111 (gold)
+- **Qwen3.5-9B.** All 8 is equal or better in three of four cells (1 against 2, 5 against 6, and
+  5 against 8). In the fourth, the Qwen3-8B-judge retrieved cell, the rule is ahead: 1 against 0,
+  0.540 against 0.524. For this reader BM25 top 4 is below all 8, by 0.063 (retrieved) and 0.111 (gold)
   under Qwen3-32B.
 
 ## Abstention and the stop rule
@@ -215,7 +240,8 @@ question moves accuracy by 0.016, and the 95% question-bootstrap intervals of ac
   the rule even for the reader whose held-out result was 39 against 0. A held-out run would need
   new reader passes, about 49,000 requests per reader.
 - **Anything about other judges or about the second judge's correctness.**
-  - The second judge's losses rest on it calling abstentions correct.
+  - The second judge's losses rest on it calling abstentions correct. On these non-abstention
+    questions, most of those calls are judge errors (see (b)).
   - Its hand-check agreement in the pilot was 109 of 120 (κ 0.82), against 117 of 120 for
     Qwen3-32B.
   - For the anchor cells the second judge is the reader's own model.
@@ -243,7 +269,16 @@ question moves accuracy by 0.016, and the 95% question-bootstrap intervals of ac
   - the judge replay at the item level;
   - the abstention-pattern coverage.
   The pooled sums over arms in the text (22 against 0, 20 against 6) are descriptions, not tests:
-  the two arms share their questions.
+  the two arms share their questions, and the readers share them too. The pools include the
+  anchor, whose development questions are the ones the rule was chosen on. Without the anchor
+  they are 17 against 0 under the primary judge and 14 against 5 under the second.
+- **Text search during staging.** The staging script's search for reply texts in committed files
+  left out the strings "I don't know" and "I don't know." (2,445 distinct replies became 2,443).
+  The checker searched all 111 committed files. It found only those two strings, and no question
+  texts, no answers of 12 or more characters and no memory text.
+- **Home paths.** The ops scripts are committed exactly as they ran, so they contain the host
+  home path. This is the repository's existing convention for ops records, and no host address
+  appears anywhere.
 - **Directory date.** The directory carries the orchestrator's date (2026-10-16). Everything ran
   on 2026-10-15 UTC.
 
@@ -303,3 +338,18 @@ uv run --locked --offline python scripts/memcredit_am3.py analyze \
   `tests/test_memcredit_am3.py`, and the registry entry in `models/registry.yaml`.
 - Raw outputs stay on the host under `~/cotcodec-runs/stage0/am3-reader-replication/`:
   `runs/main/1466/am3/` holds the token ids, log-probs, reply texts and judge items.
+
+## Independent check
+
+A fresh checker reproduced every number in the main table and the abstention table, using its own
+code: its own loader, abstention flags, BM25 ordering, rule and exact McNemar test.
+- All 378 per-pool records were identical to `per-table.json.gz`.
+- It confirmed the anchor's validation and the mask mapping: bit i is pool position i, and BM25
+  top 4 is built from each position's rank.
+- It confirmed that the rule reads only abstention flags and BM25 ranks, and that the 63
+  questions are exactly the development split, with no held-out or abstention question.
+- It confirmed that the OLMo-2 receipt and file digests match the host copy, with no token
+  anywhere.
+- Its corrections are applied in this file. The one that changes a reading: the second judge's
+  losses are mostly that judge's error of accepting "I don't know" on questions that have
+  answers.

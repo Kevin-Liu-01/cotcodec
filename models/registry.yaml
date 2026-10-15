@@ -982,6 +982,7 @@ models:
     runtime: vllm-transformers-backend
     architecture_family: transformer
     license: apache-2.0
+    license_note: model card says intended for research and educational use and subject to additional terms (Gemma Terms of Use); no acceptance was required to access it
     access: public
     trust_remote_code: false
     publication_eligible: true
