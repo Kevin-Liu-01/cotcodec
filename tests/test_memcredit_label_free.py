@@ -33,7 +33,9 @@ FULL = lf.FULL
 
 
 def test_abstention_pattern_list_is_pinned():
-    assert lf.patterns_sha256() == lf.ABSTENTION_PATTERNS_SHA256
+    pinned = "031bee27e934a772f3419e38f9956d33dbea01096e6657e67426fd8a399d935f"  # 7465903f
+    assert lf.patterns_sha256() == pinned
+    assert lf.ABSTENTION_PATTERNS_SHA256 == pinned
     assert len(lf.ABSTENTION_PATTERNS) == 4
 
 

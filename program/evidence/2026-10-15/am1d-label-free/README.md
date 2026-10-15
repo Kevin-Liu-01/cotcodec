@@ -5,11 +5,15 @@ host CPU with no GPU, from the AM1 development pilot's recorded reader pass. No 
 applies.
 
 - **Development data only.** The data are the 63 development questions in two arms (126 tables).
-  **No confirmatory data was opened.** On the host, nothing under
-  `~/cotcodec-runs/stage0/am1-memory-credit-v1/` or `~/cotcodec-runs/stage0/am1-confirmatory/`
-  was read. Locally, no JSON or gz file under `program/evidence/2026-10-16/am1-confirmatory/` was
-  read. The script refuses any path that contains `am1-confirmatory` or `am1-memory-credit-v1`,
-  after resolving symlinks. It also pins the SHA-256 of every input it reads.
+  **No confirmatory data was used.**
+  - The script refuses any path that contains `am1-confirmatory` or `am1-memory-credit-v1`,
+    after resolving symlinks, and it pins the SHA-256 of every input it reads.
+  - The run scripts in `ops/` name only development inputs.
+  - Locally, the access times of all 60 confirmatory JSON and gz files in this worktree are older
+    than their checkout. They were never read here. This was checked by the independent checker.
+  - On the host, most files under the confirmatory directories would not record a read (relatime),
+    so access times cannot prove a negative there. The evidence on the host is the path refusal
+    and the run scripts.
 - **Raw pass used.** Job 1411, `reader-gpu0`: GPU 0, canonical order, compiled batch-invariant
   mode. Its labels come from job 1411's Qwen3-32B judge, `judge32-gpu0`. This is the pass whose
   labels made the committed tables. The eager replay (job 1441, `rd-eager-gpu0`, first 16
@@ -54,8 +58,9 @@ beat two zero-search baselines:
 | `vote@70` | 70 | 0.237 | -0.605 [-0.763, -0.447] | -0.500 [-0.658, -0.342] |
 | oracle search at 16 calls (needs labels) | 16 | 0.928 | +0.086 [+0.006, +0.183] | +0.191 [+0.073, +0.320] |
 
-- **No label-free search beats BM25 top 4 with a 95% interval above zero.** BM25 top 4 already
-  beats the full pool by +0.105 [+0.026, +0.211].
+- **No label-free search beats BM25 top 4 with a 95% interval above zero.** BM25 top 4 is ahead
+  of the full pool by +0.105 [+0.026, +0.211]. That rests on 4 tables against 0 (exact sign test
+  p = 0.125), so it is a lead, not a finding (see "The deployable question").
 - **The best rule in sample is `nonabstain@70`.** It reads all 70 4-subsets and keeps the
   best-ranked one by BM25 whose reply is not an abstention.
   - Its gain over BM25 top 4 is one table of 38, a single-session-preference question; the
@@ -67,13 +72,18 @@ beat two zero-search baselines:
     hoc, below).
 - **With random draws below 70 calls, every label-free search is below BM25 top 4 on the point
   estimate.**
-  - `nonabstain` loses 0.067 at 8 calls and 0.014 at 38 calls; both intervals include 0.
+  - `nonabstain` loses 0.067 at 8 calls and 0.014 at 38 calls; both seeded intervals include 0.
+    The seeded means at 8 calls run about 2 standard errors high: the 50 seeds share their draws
+    across utilities. The checker computed the exact expectation over draws by order statistics:
+    accuracy 0.761, and -0.081 [-0.157, -0.005] against BM25 top 4, so at 8 calls the interval
+    lies below zero. The script does not yet emit exact expectations.
   - Random draws often miss BM25 top 4. Non-abstention then picks among the answering subsets by
     BM25 rank alone.
 - **Confidence picks the wrong sets, and more search makes it worse.** Keeping the most
   confident reply is right on 0.208 of tables at 8 calls and 0.105 at 70 calls (mean log-prob).
-  - The reader's abstentions are its most confident replies. The median mean token log-prob is
-    -5e-6 for abstentions, -0.0037 for correct answers and -0.013 for wrong ones.
+  - The reader's abstentions are its most confident replies (post hoc, added at `ccd077e7`). The
+    median mean token log-prob is -5e-6 for abstentions, -0.0037 for correct answers and -0.013
+    for wrong ones.
   - 55% of the 4-subset replies on this arm abstain.
   - Within a table, confidence ranks the 4-subsets below chance: mean AUROC 0.33 for u.
 - **The subset vote fails for the same reason.** The majority reply is usually an abstention: 0.318
@@ -88,7 +98,9 @@ beat two zero-search baselines:
   the questions and score it on the other half, over 200 random splits:
   - the held-out gain over BM25 top 4 is -0.079 at 8 calls and -0.029 at 38 calls;
   - it is +0.025 at 70 calls: at least 0 in 95% of the held-out halves and positive in half of
-    them. The lowest is -0.368, from the one split that picked `nonabstain_conf_mean@70`.
+    them. The lowest is -0.368, from the one split that picked `nonabstain_conf_mean@70`. This
+    minimum is not in `results.json`. It was computed on the host, and the checker reproduced it
+    independently.
 - **The gold arm (51 tables) shows the same pattern.**
   - BM25 top 4 scores 0.706 and all 8 scores 0.725.
   - `nonabstain@70` and `agree_full@70` both reach 0.765: +0.059 [+0.000, +0.137] over BM25 top
@@ -98,11 +110,15 @@ beat two zero-search baselines:
 **The deployable question.** Does pruning by label-free search keep or improve accuracy compared
 with BM25 top 4 and with all 8? On this reader and prompt:
 
-- **Against all 8, retrieved arm:** pruning improves accuracy. BM25 top 4 already does so, and so
-  does `nonabstain` at 38 or more calls; these are the only label-free rules whose intervals lie
-  above all 8.
-- **Against all 8, gold arm:** no rule's interval lies above all 8, and BM25 top 4 is 0.020 below
-  it.
+- **Against all 8, retrieved arm:** pruning is ahead on the point estimate, but the evidence is
+  thin. BM25 top 4 is +0.105 [+0.026, +0.211] over all 8 on the 38 non-constant tables, which
+  is +0.063 [+0.016, +0.127] over all 63 questions. That rests on 4 tables favouring top 4 and
+  0 favouring all 8. The percentile bootstrap excludes 0, but an exact sign (McNemar) test gives
+  p = 0.125 two-sided. `nonabstain@70` over all 8 is 5 tables against 0 (p = 0.0625), and
+  `nonabstain@38` rests on the same tables. Treat "pruning beats the full pool" as a lead for the
+  held-out registration, not a finding.
+- **Against all 8, gold arm:** no label-free rule's interval lies above all 8, and BM25 top 4 is
+  0.020 below it (-0.016 [-0.079, +0.048] over all 63 questions; 2 tables against 3).
 - **Against BM25 top 4:** label-free search keeps accuracy only through non-abstention.
   - `nonabstain@70` ties BM25 top 4 or improves it by a table (three on the gold arm), and no gain
     is detectable.
@@ -398,8 +414,8 @@ The eager replay (job 1441) covers the first 16 questions, in 32 pools.
   across 8 tables.
 - **Replies.** 7,932 of the 8,192 table replies are identical.
 - **Method.** Every rule was recomputed from the eager replies and scored on the eager pass's own
-  judged tables. The numbers are point estimates on 7 retrieved and 12 gold non-constant tables
-  (`tables.md`).
+  judged tables. The numbers are point estimates, as means over all 16 questions per arm
+  (`tables.md`). Of these, 7 retrieved and 12 gold tables are non-constant.
 - **Retrieved arm.**
   - Confidence and vote reach 0.06-0.14 under both modes.
   - `nonabstain@70` equals BM25 top 4 under both, at 0.312 over the 16 questions.
@@ -429,7 +445,8 @@ The eager replay (job 1441) covers the first 16 questions, in 32 pools.
    the selected rule loses to BM25 top 4 on held-out halves.
 5. **Agreement with the full pool tracks the full pool.** Every 4-subset reply equal to the
    full-pool reply after normalization has the full pool's judged label: 1,763 of 1,763 retrieved
-   and 1,501 of 1,501 gold (counted on the host). So `agree_full` reproduces all 8's outcome
+   and 1,501 of 1,501 gold (post hoc, counted on the host and not emitted by the script; the
+   checker reproduced it by reply digest). So `agree_full` reproduces all 8's outcome
    whenever it finds an agreeing subset. It differs only when none of the read subsets agrees and
    the BM25 tie-break chooses. Its accuracy stays within 0.053 of all 8.
 6. **Pruning to BM25 top 4 beats the full pool on the retrieved arm** (+0.105 on non-constant
@@ -515,3 +532,27 @@ The defaults are 50 seeds from base 42 and 10,000 bootstrap resamples with seed 
 - `ops/` holds the host run script, the extract step's text-free stdout (the validation counts)
   and the host's pytest log.
 - Code is in `scripts/memcredit_label_free.py`. Tests are in `tests/test_memcredit_label_free.py`.
+
+## Independent check
+
+A fresh checker reran `analyze` on the host from a new `git archive` of `03e38932`. It ran once
+on the existing features and once on a fresh extract. `results.json`, `per-table.json.gz` and
+`tables.md` were byte-identical each time, and the fresh extract's feature digests equal the ones
+above.
+
+Its own code reproduced the following:
+- the top-4 and all-8 accuracies;
+- `nonabstain@70`;
+- the abstention rate (2,405 of 4,410), and its 2 correct abstentions;
+- the confidence AUROC (0.326);
+- the `agree_full` agreement;
+- the cross-fitted selection.
+
+The checker also confirmed these:
+- the abstention list was committed at `7465903f`, 05:50:10Z, before the host directory existed
+  (05:51:45Z) and before the first extract (05:52:01Z);
+- no label-free rule reads u, the reference answer or the table;
+- the BM25 top-4 mask equals AM1b's `retrieval_rank` keep set.
+
+Its corrections are applied in this file. The one that changes a reading: "pruning beats all 8"
+rests on 4 tables against 0, so it is now reported as a lead, not a finding.
