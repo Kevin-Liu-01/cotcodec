@@ -6016,3 +6016,21 @@ they say so.)
 - Verification. A fresh verifier reran analyze, byte-identical; extract digests reproduced;
   its own recomputation was exact.
 - Evidence: `program/evidence/2026-10-15/am3-nonabstain-generality-v1/RESULTS.md`.
+
+## 2026-10-15 — AM4 (EXPLORATORY, POST HOC, CPU only): read caps on the non-abstention keep rule
+
+- What it is. A read cap K on the stop rule, with a fallback to BM25 top 4 after K subsets that
+  all abstain. It was computed from `am3-nonabstain-generality-v1`'s registered features.
+- Reproduction. K = 70 reproduces the registered analysis (243 figures, 0 differences). The
+  orchestrator recomputed K = 8 and K = 70 independently from the committed `per-table.json.gz`,
+  and both match exactly.
+- Shape (retrieved arm, Qwen3-32B judge):
+  - At K = 8 the rule keeps 77-84% of the K = 70 gains: 31, 27 and 26 questions against 0, for
+    Qwen3-8B, OLMo-2 and Qwen3.5-9B.
+  - At K = 8 the cost on unanswerable questions is 3, 3 and 0 of 30 (against 5, 8 and 1 at
+    K = 70).
+  - Mean reads at K = 8 are 2.7-3.1 on answerable and 6.6-7.5 on unanswerable questions (against
+    11-14 and 43-59 at K = 70).
+- Status. The caps were examined on the same questions the rule was confirmed on. AM4 is post
+  hoc and licenses nothing, and any chosen K needs new questions.
+- Evidence: `program/evidence/2026-10-16/am4-read-caps/README.md`.
