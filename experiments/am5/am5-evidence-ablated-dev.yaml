@@ -1,0 +1,86 @@
+# AM5 (D120; EXPLORATORY, development split only): what the non-abstention keep rule costs when
+# the evidence is absent. Script: scripts/memcredit_am5.py.
+#
+# Construction: for each of the pilot's 63 development questions, every haystack session listed in
+# LongMemEval's answer_session_ids is removed, and the BM25 top-8 user-turn pool is built from what
+# remains with AM1's retrieved-arm functions (harness.memcredit rank_user_turns, memory_entry,
+# chronological, through memcredit_am3g.retrieved_pool). "I don't know" is then the correct reply
+# by construction, unless the answer also appears outside the evidence sessions (the leakage
+# check: LongMemEval's has_answer turn flags left in the ablated haystack and pools, pool memories
+# whose text equals an evidence turn's, and the normalized reference answer inside a pool memory).
+#
+# Per pool every reader answers the 70 4-subsets and the full pool (71 requests) with AM1's prompt,
+# greedy, 64 tokens; then the Qwen3-32B judge scores every distinct (question, reply) with
+# LongMemEval's non-abstention answer-check prompt against the reference answer. The rule's switch
+# rate is read from abstention flags (AM1d's four patterns), with no judge; the judge and a blind
+# agent hand check only test whether a switched answer, or a non-abstaining BM25 top-4 answer, is
+# correct by chance.
+schema_version: 1
+experiment_id: am5-evidence-ablated-dev
+claim_level: exploratory
+# 42: every engine seed (as am3g). 43, 44: unused here; the lane binds three seeds to --seeds.
+seeds: [42, 43, 44]
+
+# The readers (revisions, engines, chat templates), their steps, the model pins, the pilot's
+# prompt, pools, retriever and judges come unchanged from the frozen am3g config, which
+# memcredit_am3g.load_config validates before AM5 uses it.
+base:
+  config: experiments/am3/am3-nonabstain-generality-v1.yaml
+  config_sha256: "96fcd2186c43d6bdad7b1eb90e843aed39f0d56bad349799f8f1db6efb67d60e"
+
+population:
+  name: dev-ablated
+  # The pilot's 63 development questions (AM1's split, development part), in the split's order.
+  split: development
+  questions: 63
+  question_ids_sha256: "183ee4d3406786be721c4c846fa9f72f0fc2ae8c905dcb198eaaff17d78846fc"
+  # The pilot's development artifact (unchanged): prepare checks that the pool builder reproduces
+  # its retrieved pools, 63 of 63, before it removes any session.
+  dev_artifact_sha256: "15567cf14a0c38c1f9edec1f47feceb2a6fccf116338e5957182d03f1d996ebc"
+  arms: [retrieved]
+  # Built once on the host CPU by `memcredit_am5.py prepare` (host only; pool texts); pinned here
+  # before the image is built.
+  artifact_sha256: "PENDING"
+
+# The am3g steps AM5 runs, by id and unchanged: the three readers (OLMo-2's default-mode fallback
+# only if its batch-invariant step does not complete) and the primary judge. judge8 is not run.
+steps: [rd-qwen3-8b, rd-olmo2, rd-olmo2-default, rd-qwen35-9b-default, judge32]
+
+# One GPU job on one H100. Per step [min_start_s, max_s] as in am3g: a step starts only with
+# min_start_s left before the deadline (the limit minus the lane's 210 s), and its passes stop at
+# max_s. Expected passes, from job 1471 scaled to 4,473 requests per reader: about 35, 37 and 61 s;
+# the judge about 15 s. With every pass at its cap the judge still starts on the normal path and on
+# OLMo-2's fallback path (tests).
+job:
+  gpus: 1
+  minutes: 20
+  step_budgets:
+    rd-qwen3-8b: [190, 120]
+    rd-olmo2: [190, 120]
+    rd-olmo2-default: [190, 120]
+    rd-qwen35-9b-default: [250, 180]
+    judge32: [170, 90]
+
+# Physical GPU-h: the build (5-minute limit) plus this job (20-minute limit), 0.42 at the limits;
+# D120's budget for AM5 is 0.5.
+budget:
+  build_minutes: 5
+  cap_gpu_hours: 0.5
+  # Seconds outside a step's max_s, from job 1471 with margin (am3g's abstention overhead model).
+  overhead_model: {job: 100, reader: 70, failed_engine_step: 70, judge32: 80}
+
+analysis:
+  caps: [8, 70]
+  # AM3's committed development per-pool records (job 1466; byte-identical in the am3g dry run):
+  # the same questions' original, non-ablated pools, for the gain beside the cost.
+  am3_per_table:
+    path: program/evidence/2026-10-16/am3-reader-replication/per-table.json.gz
+    sha256: "0fc5635bad037588e521980536e4548eb51a6a3d9573e703b0f92010be72701e"
+
+# The blind hand check of every switched reply (at K = 70, which includes K = 8's) and every
+# non-abstaining BM25 top-4 reply on the ablated pools: one isolated agent with am3g's pinned
+# labeller prompt, which sees only the question, its type, the reference answer and the reply.
+hand_check:
+  seed: 44
+  labeller_model: claude-opus-5-5
+  chunk: 200
