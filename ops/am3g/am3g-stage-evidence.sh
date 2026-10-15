@@ -54,8 +54,6 @@ PY
   fi
   cp "$R/manifests/$POP-$SHORT".{yaml,dry-run.json,test-only.txt} "$E/manifests/" 2>/dev/null || true
   cp "$R/manifests/$POP-$SHORT".submit.txt "$R/manifests/$POP-$SHORT".rerun.txt "$E/manifests/" 2>/dev/null || true
-  mkdir -p "$E/selftests/$POP-$SHORT"
-  cp "$R/selftest-$POP-$SHORT"/{exits.txt,am3g-selftest.json,am3g-plan.json} "$E/selftests/$POP-$SHORT/" 2>/dev/null || true
   cp "$R/extract-$POP-$SHORT".{log,json} "$E/logs/" 2>/dev/null || true
   gzip -n -c "$R/extract-$POP-$SHORT.stderr" > "$E/logs/extract-$POP-$SHORT.stderr.gz" 2>/dev/null || true
 done

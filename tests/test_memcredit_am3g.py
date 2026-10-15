@@ -409,6 +409,22 @@ def test_the_feature_code_is_the_whole_import_closure_and_pinned():
     assert "experiments/am3/am3-nonabstain-generality-v1.yaml" in pins
 
 
+def test_every_code_pin_is_in_the_image():
+    """The GPU job's gate checks every pin inside the image, which the overlay build makes from
+    the capsule minus .dockerignore's entries (legacy/ among them): no pin may sit under one."""
+
+    ignored = {
+        line.strip()
+        for line in (ROOT / ".dockerignore").read_text().splitlines()
+        if line.strip() and not line.startswith(("#", "!")) and not set(line) & set("*?[")
+    }
+    pins = ks.code_pins(ROOT / g.REGISTRATION)
+    assert "legacy" in ignored
+    for path in pins:
+        parts = Path(path).parts
+        assert not any("/".join(parts[: i + 1]) in ignored for i in range(len(parts))), path
+
+
 def test_registration_freezes_on_a_scratch_ledger(tmp_path):
     spec = importlib.util.spec_from_file_location("preregister", ROOT / "scripts/preregister.py")
     prereg = importlib.util.module_from_spec(spec)

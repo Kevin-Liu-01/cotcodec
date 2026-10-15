@@ -165,7 +165,7 @@ It does not decide:
 | Readers | `Qwen/Qwen3-8B` @ `b968826d9c46dd6066d109eabc6255188de91218` (anchor; receipt `b9e3a74d...`, root `325ab760...`); `allenai/OLMo-2-1124-7B-Instruct` @ `470b1fba1ae01581f270116362ee4aa1b97f4c84` (receipt `4120a5c9...`, root `ec7f6955...`); `Qwen/Qwen3.5-9B` @ `c202236235762e1c871ad0ccb60c8ee5ba337b9a` (receipt `0a9e052d...`, root `9845026d...`). AM3's reader blocks, unchanged; full digests in the config (`models`) |
 | Judges | `Qwen/Qwen3-32B` @ `9216db5781bf21249d130ec9da846c4624c16137` (primary; receipt `06e4a7e9...`, root `8fcd9106...`); Qwen3-8B as above (second); AM1's engines and sampling |
 | Reader prompt | Step 0's template (the pilot config's `prompt`), SHA-256 of the template text `e63a0f995fe94ee72d6dcda7462a09c20e83f86dcc8252a53cdefb1ccf6fb37c`, thinking off for both Qwen readers |
-| Judge prompts | LongMemEval's `get_anscheck_prompt` (src/evaluation/evaluate_qa.py at `9e0b455f4ef0e2ab8f2e582289761153549043fc`, MIT): the answer-check templates as AM1 ported them (`harness.memcredit_study.JUDGE_TEMPLATES`, SHA-256 `2e27234d4c7d50a1fd99da3e8d3c97704a1f10cc9d52185924b6d8ece3ef71d4`), and the abstention template (`scripts/memcredit_am3g.py`, `ABSTENTION_TEMPLATE`), SHA-256 of its text `5c0b365a1e1d06db36377c735432b56e122ca3c428f89faf61d43a0d5a7e050b`, equal word for word to the program's archived port (`legacy/harness/memory_trials/longmemeval_judge.py`, which pinned the evaluator source `ecce9c4c...`; a test checks the two agree) |
+| Judge prompts | LongMemEval's `get_anscheck_prompt` (src/evaluation/evaluate_qa.py at `9e0b455f4ef0e2ab8f2e582289761153549043fc`, MIT): the answer-check templates as AM1 ported them (`harness.memcredit_study.JUDGE_TEMPLATES`, SHA-256 `2e27234d4c7d50a1fd99da3e8d3c97704a1f10cc9d52185924b6d8ece3ef71d4`), and the abstention template (`scripts/memcredit_am3g.py`, `ABSTENTION_TEMPLATE`), SHA-256 of its text `5c0b365a1e1d06db36377c735432b56e122ca3c428f89faf61d43a0d5a7e050b`, equal word for word to the program's archived port (`legacy/harness/memory_trials/longmemeval_judge.py`, SHA-256 `77aed59acdf42f0848f59f73cc3f61f0d625300b16a18b35797bae139b8dfee1`, read-only under `legacy/`, which pinned the evaluator source `ecce9c4c...`; a test checks the two agree on the host; the file is not in the image, so it is not a code pin of section 16) |
 | Abstention patterns | AM1d's four (`scripts/memcredit_label_free.py`), SHA-256 `031bee27e934a772f3419e38f9956d33dbea01096e6657e67426fd8a399d935f` |
 | Engine and image | vLLM 0.31.0 (`db9527a46873454610df6dbedf79a36d6bf1a7f6`), cotcodec-vllm cu129 overlay built by `scripts/build_vllm_overlay_on_h100.sh` from the freeze commit's source capsule on the base `docker.io/vllm/vllm-openai@sha256:b18abb2df97b8f798e81862bd93f872ea18613372e2c3adc0cc2ac21e66ac12f` (AM3's base); the image id is recorded by the build and every job checks it through the lane's provenance verification |
 | Code | section 16 |
@@ -526,6 +526,14 @@ Before the freeze the whole pipeline ran on the development split only, from com
   calibration items).
 - **Host CPU**: extract, analyze twice (byte-identical), `dryrun-compare`, `power` and the tests
   (81 passed).
+- **The gate inside the image** (ad hoc CPU jobs 1472 and 1473, no GRES): the GPU job's gate
+  checks every section 16 pin inside the image, and the first check found one pinned file
+  absent there, the archived prompt port under `legacy/`, which `.dockerignore` keeps out of
+  every image. The registered gate would have refused the GPU job after the freeze. The port is
+  no longer a code pin (section 4 records its digest; the test that compares it runs on the host),
+  a test now checks that no pin sits under a `.dockerignore` entry, and the second check, with
+  this draft's table mounted into the dry-run image, found all 39 pins present, differing only
+  in the two files changed after `eae156cf` (`tests/test_memcredit_am3g.py` and the staging script).
 - **Total 0.1898 GPU-h** of the 0.5 allowed (`program/state.json`, `gpu_hours_ledger`).
 
 **It reproduced AM3 exactly** (`dryrun-compare.json`, 20 of 20 checks):
@@ -557,7 +565,7 @@ parses this table and refuses to run unless every file matches.
 | File | Role | SHA-256 |
 |---|---|---|
 | `scripts/memcredit_am3g.py` | this registration: gate, abstention pools, driver and workers, extract, analyze, dry-run comparison, power | `614bafd5e1b624a4b5ada48c9c734c9880f8842b014be058efc9e12235f9d62a` |
-| `tests/test_memcredit_am3g.py` | its tests: config and pins, the gate, the abstention template against the archived port, pools, requests, judge items, Holm and H1's readings, H2's estimand, the natural mix, end to end on toy runs | `778c0d18d722a41c5342b0205a7c1afd80aec9589b8f175db8a54b6482b948b8` |
+| `tests/test_memcredit_am3g.py` | its tests: config and pins, the gate, the abstention template against the archived port, pools, requests, judge items, Holm and H1's readings, H2's estimand, the natural mix, end to end on toy runs | `6bcf5e562561b6824736cf43e6e5d467c630002703e08e691ee9debdf603b482` |
 | `experiments/am3/am3-nonabstain-generality-v1.yaml` | this registration's config | `d38efce48ee64e63c0845af0baf75c6ab1e846fb199c50379be6a286b228257a` |
 | `scripts/memcredit_am3.py` | AM3's engine helpers, rule, per-pool record and cell summary (imported) | `25f634edd29a23f2fdee12b0825013d624aa5305d49cf512f74fdf1827ea130f` |
 | `tests/test_memcredit_am3.py` | AM3's tests (also supply a pass writer to these tests) | `1ab5196ca553f8cc92deda0a728ec98987853ec81d3f75041561661659d848b3` |
@@ -575,7 +583,6 @@ parses this table and refuses to run unless every file matches.
 | `experiments/am1/memcredit-study-v1.yaml` | the pilot's config (prompt, pools, judges) | `ecdb5c11ff4eaf757ec6712c6f2c75d61c79882bb3d418202b7143abf90793db` |
 | `experiments/am1/am1-memory-credit-v1.yaml` | AM1's registration config (confirmatory set, demo exclusions) | `8466d6d42ace1477bb9b2377de8ed67027502ff11b179a369eed352fda212069` |
 | `experiments/am1/memcredit-split-v1.json` | the split (decoy pool) | `4fa1b774d4131080855d668ac8f00f5cb07d49cf741f2051d5f8d96577edb3e3` |
-| `legacy/harness/memory_trials/longmemeval_judge.py` | the archived official prompt port the tests check against | `77aed59acdf42f0848f59f73cc3f61f0d625300b16a18b35797bae139b8dfee1` |
 | `models/registry.yaml` | the readers' registry entries | `4a084c2f2a4d7f9c1cbdcc6ce3032f558ed3d3a8399428159627512f46a99a03` |
 | `scripts/fetch_open_model.py` | snapshot verification | `d995b59ece3c809edd70d6c60a78628ae5cb1ccc0ce8350cc455084d3787d29f` |
 | `scripts/submit_docker_research_job.py` | the lane's submitter | `660271655aa22ebd387a023e25d21e6a809c22699ec6314d9d535be74e17a994` |
@@ -595,7 +602,7 @@ parses this table and refuses to run unless every file matches.
 | `ops/am3g/am3g-submit.sh` | operator: lane manifest, dry run, submit, rerun | `d166590236aa9abe6f4a917ceccb62271c725874e533e25ff8b8088173c22fdd` |
 | `ops/am3g/am3g-extract.sh` | operator: extract | `721ad622375b9f33fbcef70332e0be3367f895ef29f858fc4050d1449a85fc5f` |
 | `ops/am3g/am3g-analyze.sh` | operator: analyze twice, tests | `ba9cfc3ac62948a8b04af37caab20419ece47142ef959a9ffd61c29d97ad78a9` |
-| `ops/am3g/am3g-stage-evidence.sh` | operator: text-free staging and the text search | `03c8d76dfbf694fbb5bcfd9fe395ca0f9b03cde6338d843fcb52567495c0c2ad` |
+| `ops/am3g/am3g-stage-evidence.sh` | operator: text-free staging and the text search | `d022a68182ac6c2675c3c4701004c2288ef4d26bc3743108e338a2b29a03a926` |
 
 Commands of the registered run, on the host, after the freeze. The names in capitals are values
 that exist only then: FREEZE, the freeze commit (full id; its first 8 characters where the
