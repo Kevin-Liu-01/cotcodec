@@ -65,9 +65,10 @@ PY
   echo "prepared $n chunks in $S" >&2
 }
 
-# 0 when the CLI ran chunk 01 (its transcript holds an assistant message); 1 when it could not
-# start a session there, in which case nothing else is launched and its output is kept as
-# cli-error-01.* for push.
+# 0 when the CLI ran chunk 01 (its transcript holds a tool call or a result that is not an
+# error); 1 when it could not start a session there (for instance an authentication error, which
+# the CLI reports as an assistant text and an error result), in which case nothing else is
+# launched and its output is kept as cli-error-01.* for push.
 run_cli() {
   local n=0 nn d chunk output t
   while read -r chunk output; do
@@ -76,7 +77,26 @@ run_cli() {
        --tools Read,Write --permission-mode acceptEdits --no-session-persistence \
        --output-format stream-json --verbose "$(cat "../prompt-$nn.txt")" < /dev/null > "$t" \
        2> "$S/transcript-$nn.stderr") || echo "chunk $nn: the labeller exited non-zero" >&2
-    if [[ "$n" == 1 ]] && ! grep -q '"type": *"assistant"' "$t"; then
+    if [[ "$n" == 1 ]] && ! python3 - "$t" <<'PY'
+import json, sys
+started = False
+for line in open(sys.argv[1], errors="replace"):
+    try:
+        entry = json.loads(line)
+    except ValueError:
+        continue
+    if not isinstance(entry, dict):
+        continue
+    if entry.get("type") == "result" and entry.get("is_error") is False:
+        started = True
+    message = entry.get("message")
+    content = message.get("content") if isinstance(message, dict) else None
+    if isinstance(content, list) and any(
+            isinstance(b, dict) and b.get("type") == "tool_use" for b in content):
+        started = True
+sys.exit(0 if started else 1)
+PY
+    then
       mv "$t" "$S/cli-error-01.jsonl"; mv "$S/transcript-01.stderr" "$S/cli-error-01.stderr"
       rm -f "$d/$output"
       echo "the CLI could not start a session on chunk 01 ($S/cli-error-01.*); the fallback" \
@@ -89,6 +109,8 @@ run_cli() {
 
 push() {
   [[ -f "$S/chunks.txt" ]] || { echo "nothing prepared in $S" >&2; exit 2; }
+  [[ "$LAUNCH" == cli || -f "$S/cli-error-01.stderr" ]] \
+    || { echo "the subagent launch applies only after the CLI could not start a session" >&2; exit 2; }
   ssh "$HOST" "test ! -e $R/hand/transcripts-$STAGE.sha256" < /dev/null \
     || { echo "stage $STAGE was pushed already" >&2; exit 2; }
   ssh "$HOST" "mkdir -p $R/hand/transcripts" < /dev/null
