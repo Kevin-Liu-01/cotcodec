@@ -1,7 +1,7 @@
 # am5-ablated-cost-v1: is the non-abstention keep rule's cost on questions whose evidence is absent below its gain on the same questions with their evidence? (LongMemEval-S, GPU)
 
-**Status: DRAFT, not frozen.** Drafted on branch `stage0/am5-ablated-cost` from `main` at
-`9d66c4c4`, as decision D121 specifies (`program/decisions.md`). The orchestrator freezes it with
+**Status: frozen in `program/preregistrations/ledger.jsonl`; see the ledger row for the freeze time and `git_head_at_freeze`.** Drafted on branch `stage0/am5-ablated-cost` from `main` at
+`9d66c4c4`, as decision D121 specifies (`program/decisions.md`). The orchestrator froze it with
 `scripts/preregister.py` after two independent pre-freeze checks (D121) and the checklist of
 section 17. A material change after the freeze is a new experiment id.
 
