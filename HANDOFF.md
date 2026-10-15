@@ -1,6 +1,6 @@
-# Handoff — 2026-10-11
+# Handoff — 2026-10-15
 
-## Resume here (2026-10-11)
+## Resume here (2026-10-15)
 
 - 2026-10-14: public history was rewritten (D99); commit ids from 2026-08-17 on changed.
   Resolve any recorded id with `scripts/verify_history_map.py resolve
@@ -57,8 +57,12 @@ for whatever gains actual results"; D80). Under that delegation:
     state keeps the 1.3-1.4x throughput at about 2x fp32's off-policy gap.
   - AM1 step 0 (D107): bit-exact reader replay works; exact credit tables are
     cheap. AM1 dev pilot (D111): memories interact, and leave-one-out credit
-    picks the wrong memories. **AM1 is frozen (row 23)**, and its confirmatory
-    run on 347 held-out questions is running (`ops/am1`).
+    picks the wrong memories. **AM1 confirmatory (row 23; D112): every gate
+    passes, and all five primary credit rules are MISSPECIFIED** for keeping
+    4 of 8 retrieved memories. Leave-one-out's regret is 0.277 [0.223, 0.333],
+    0.233 more than exact Shapley. A fresh verifier reproduced the analysis
+    byte for byte. Next is AM1b: a GPU-free cost curve of cheaper credit
+    rules, simulated from the committed 256-outcome tables.
   - The G2-RL gauntlet (does the state precision of rollouts change RL
     training?) is running.
   - The node also hosts LaMa and ROSE inference for another of Kevin's
@@ -78,8 +82,8 @@ See `pending_decisions_for_kevin` in `program/state.json`.
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
 `uv run python scripts/preregister.py check-chain`, 23 rows). Decisions taken
-on Kevin's behalf are D1-D111 in `program/decisions.md`. GPU-hours are in
-`program/state.json` (`gpu_hours_ledger`, physical hours): 10.37 in total.
+on Kevin's behalf are D1-D112 in `program/decisions.md`. GPU-hours are in
+`program/state.json` (`gpu_hours_ledger`, physical hours): 27.13 in total.
 
 | Registration | Outcome | Evidence |
 |---|---|---|
@@ -95,6 +99,7 @@ on Kevin's behalf are D1-D111 in `program/decisions.md`. GPU-hours are in
 | `q2-evaluator-mutation-v1-k2` | **VERIFIED** (job 1186, CPU only, from the freeze commit `7d9c881a`): gate 2 of 80 K2 pairs excluded (one task's reopen timed out after LibreOffice did not quit); the 78 compared pairs agree with the offline verdicts in both runs; 41 of 41 candidate events reproduced; no family dropped; the parent analysis now carries "VM fidelity checked (K2)". Its outputs name verdicts per mutant: read after the adjudication | `program/evidence/2026-10-11/q2-mutation-k2/k2-confirm-v1-job1186/` |
 | `r04-checker-nuisance-invariance-v1` | **Build arm DRIFT, locale arm DRIFT, route arm MINOR** (D89). LibreOffice 25.8 flips 18 of 92 golds and 26.2 flips 20; builds up to 24.8 flip none. de_DE, ar_EG and tr_TR flip 3 `compare_table` golds; ja_JP flips none. Headless convert flips 1 gold. Every discordance reproduced in two rounds. Not adjudicated | `program/evidence/2026-10-12/r04-nuisance-confirm/` |
 | `q2-stage1-successor-e-v1` | **DR2 Near-equivalent** (δ 0.00 pp, 90% [−2.44, +2.44]; each harness 263 of 904; π_small upper bound 0.1187 vs 0.12, about the Monte Carlo error); **DR5 NO-GO** (π_small 0.055, [0.010, 0.119]); 1,808 episodes, 0 losses; not externally anchored; two verifiers (D97) | `program/evidence/2026-10-12/q2-stage1-successor-e-run/RESULTS.md` |
+| `am1-memory-credit-v1` | **All gates pass; H2 MISSPECIFIED for all five primary rules** (D112). At B = 4 of 8 retrieved memories, leave-one-out regret is 0.277, 99% [0.223, 0.333], which is +0.233 [0.194, 0.273] more than exact Shapley. Every reader request and primary-judge item replayed bit for bit. Verified by a fresh rerun (11 of 11 outputs byte-identical). No gauntlet score (D111); agent hand labels (D9) | `program/evidence/2026-10-16/am1-confirmatory/RESULTS.md` |
 | `q2-zinv-reserve-validation-v1` | **PASS, descriptive** (D88). zinv accepts 13 of 13 held-out z-order equivalence mutants and newly accepts none of 15 violation mutants. The original comparator rejects 13 of 13 | `program/evidence/2026-10-12/q2-zinv-reserve-run/` |
 
 Gauntlet records: K1 v2 (45, honest exit), K1 v3 (51, 55, 56; honest exit, D54), Q1 Stage 0 (45, honest exit).
@@ -138,9 +143,7 @@ See `pending_decisions_for_kevin` in `program/state.json`. Still open:
 - review of D1-D82;
 - the host inotify limit behind N* = 32;
 - an optional human spot check (D9);
-- the outward actions: disclosures to Letta and xlang-ai, now including the
-  `compare_pptx_files` finding; licence requests; a history purge; key
-  rotation; a valid Anthropic API key.
+- the outward actions are shelved by Kevin (D101) and are not raised.
 
 ## Host checkouts
 

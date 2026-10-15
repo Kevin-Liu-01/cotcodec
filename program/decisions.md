@@ -2589,3 +2589,58 @@ AM1's confirmatory run.**
   two provider-distinct reviews did not run, and that is disclosed in its
   results.
 - G2's hand check uses agent labels unless Kevin chooses to label (D9).
+
+**D112. AM1 confirmatory result: leave-one-out memory credit picks the wrong
+memories to keep. Next memory step: a cost curve of cheaper credit rules,
+computed from the committed tables without a GPU.**
+- Run. `am1-memory-credit-v1` (ledger row 23, freeze `9ad36b10`), job 1458:
+  2 H100s, 1.53 GPU-h. It covers 347 held-out LongMemEval-S questions in two
+  arms (gold and BM25-retrieved pools of 8 memories each), with 256-subset
+  tables (`program/evidence/2026-10-16/am1-confirmatory/RESULTS.md`).
+- Gates. Every gate passed and no kill criterion fired:
+  - void: 0 incomplete tables;
+  - G1: 190,156 of 190,156 reader requests and 10,230 of 10,230 primary-judge
+    items bit-identical across GPUs and orders;
+  - G2: 322/322, 347/347, agent hand-check κ 0.867;
+  - K2: 12.4%; K3 no; K4: 251 tables.
+- H2 (retrieved arm, keep 4 of 8). All five primary rules are MISSPECIFIED.
+  Mean regret against the exact optimum, 99% intervals:
+  - leave-one-out 0.277 [0.223, 0.333];
+  - permutation Shapley-16 0.138 [0.096, 0.187];
+  - SNIPW-64 0.094 [0.058, 0.133];
+  - retrieval rank 0.343 [0.271, 0.418];
+  - raw attention 0.311 [0.235, 0.382].
+  Leave-one-out loses +0.233 [0.194, 0.273] more than exact Shapley on the
+  same tables. The registered program reading holds: per-memory deletion credit
+  is misspecified for keep/evict decisions on this benchmark (this reader, this
+  judge, BM25 user-turn pools, 4 of 8). The second judge gives the same
+  verdicts. Exact Shapley's own regret is 0.044 (99% [0.012, 0.080]), and no
+  claim is made about its adequacy.
+- Secondary readings:
+  - Interactions exceed the AND/OR baseline (+0.156 retrieved).
+  - Non-gold deletion labels sit barely above the swap floor, driven by the gold
+    arm. Only 12.8% survive the placebo control, against 64.1% for gold
+    memories.
+  - A content-free reorder changes 17.1% of answers.
+  - Cross-fitted attention heads predict necessity at AUROC 0.890, against
+    0.830 for the best cheap baseline.
+- Verification. A fresh verifier reran `analyze` from a new export, and 11 of
+  11 outputs were byte-identical. Its own implementation reproduced every
+  verdict. Its wording corrections are applied. Disclosures: no gauntlet score
+  (D111); agent hand labels (D9).
+- Next. Exact credit costs 256 reader calls per pool, which no deployed memory
+  system can pay. The committed tables hold each pool's full 256-outcome
+  vector, so any query-based credit rule can be simulated from them on a CPU.
+  - AM1b. Draw regret against reader calls for cheaper rules on the 126
+    development tables:
+    - sampled Banzhaf (maximum sample reuse);
+    - permutation Shapley and SNIPW at several sample counts;
+    - KernelSHAP;
+    - leave-one-in;
+    - greedy forward and backward selection.
+  - Exploratory, no GPU.
+  - If one rule looks adequate at a deployable cost, it gets a registration on
+    the 694 held-out tables. That registration must disclose that AM1 already
+    used those tables for other estimands.
+- Scope replication (a second reader family or retriever, about 3 GPU-h each)
+  stays a candidate. It is not started.
