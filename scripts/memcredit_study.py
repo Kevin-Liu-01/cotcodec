@@ -128,15 +128,19 @@ def load_pass(session_dir: Path, name: str) -> dict[str, Any]:
         for line in handle:
             row = json.loads(line)
             texts[int(row["request_index"])] = row["text"]
-    offsets = data["offsets"]
+    # Read each array once: an NpzFile decompresses the member again on every subscript.
+    offsets = data["offsets"].tolist()
+    token_ids = data["token_ids"].tolist()
+    logprobs = data["logprobs"].astype("<f4")
+    num_cached = data["num_cached"].tolist()
     rows: dict[int, dict[str, Any]] = {}
     for j, index in enumerate(data["request_index"].tolist()):
-        a, b = int(offsets[j]), int(offsets[j + 1])
+        a, b = offsets[j], offsets[j + 1]
         rows[int(index)] = {
-            "tokens": tuple(int(t) for t in data["token_ids"][a:b]),
-            "bits": data["logprobs"][a:b].astype("<f4").tobytes(),
+            "tokens": tuple(token_ids[a:b]),
+            "bits": logprobs[a:b].tobytes(),
             "finish": meta["finish_reasons"][j],
-            "cached": int(data["num_cached"][j]),
+            "cached": int(num_cached[j]),
             "text": texts.get(int(index)),
         }
     return {"meta": meta, "rows": rows}

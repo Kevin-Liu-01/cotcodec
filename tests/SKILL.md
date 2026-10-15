@@ -58,6 +58,12 @@ Each contract proves valid inputs pass and decision-bearing drift fails.
   Clopper-Pearson, the AND/OR spectra, LOO/Shapley regret, the analysis on a
   synthetic run, the request loop on a fake engine, and the lane's admission
   of the `memcredit_step0.py` command; no GPU or vLLM needed.
+- `test_memcredit_study.py` covers the AM1 study: config seeds, the split
+  (determinism, strata, digests, the frozen-registration gate), placebo
+  matching, the request table, the judge prompt against the archived official
+  port, estimators and structure classes, statistics, the driver's helpers,
+  the analysis and power simulation on a synthetic run, and the lane's
+  admission of the study commands; no GPU or vLLM needed.
 
 ## Patterns to follow / invariants
 <!-- agent-docs:fill:patterns -->

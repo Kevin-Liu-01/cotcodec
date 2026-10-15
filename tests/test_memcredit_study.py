@@ -396,3 +396,87 @@ def test_lane_admits_the_study_commands() -> None:
         ["python", "scripts/memcredit_analyze.py", "analyze"],
     ):  # fmt: skip
         assert all(submit.archived_memory_reference(arg) is None for arg in command), command
+
+
+# --------------------------------------------------------------------------- analysis (synthetic)
+
+
+analysis = _load("memcredit_analyze")
+step0 = _load("memcredit_step0")
+
+
+def _save(run: Path, worker: str, texts: list[str]) -> None:
+    out = run / "sessions" / worker
+    out.mkdir(parents=True, exist_ok=True)
+    indices = list(range(len(texts)))
+    ids = [f"{worker}/all/{i}" for i in indices]
+    state = {}
+    for ours, text in zip(ids, texts, strict=True):
+        st = step0.new_state()
+        st["token_ids"] = [7, len(text)]
+        st["logp"] = [-0.5, -0.25]
+        st["text"] = [text]
+        st["finished"] = True
+        st["finish_reason"] = "stop"
+        st["num_cached_tokens"] = 0
+        state[ours] = st
+    record = {"session": worker, "name": "all", "requests": len(texts), "status": "complete",
+              "info": {"wall_s": 1.0, "finished": len(texts), "unmatched": 0}}  # fmt: skip
+    step0.save_pass(out, "all", indices, ids, state, [10] * len(texts), record)
+    (out / "session.json").write_text(json.dumps({"gpu": {"uuid": worker}}))
+
+
+def test_analysis_on_a_synthetic_run(tmp_path: Path, artifact: dict, config: dict) -> None:
+    requests = ms.request_table(artifact, config["pools"]["arms"])
+    replies = []
+    for r in requests:
+        memories = ms.request_memories(artifact, r)
+        replies.append("Your car is blue." if any("blue" in m["text"] for m in memories)
+                       else "I don't know.")  # fmt: skip
+    _save(tmp_path, analysis.READER, replies)
+    _save(tmp_path, analysis.READER_AA, replies)
+    validation = ms.validation_items(artifact, config["judge"]["validation"])
+    items = ms.judge_item_table(artifact, dict(enumerate(replies)), requests, validation)
+    (tmp_path / "judge-items.json").write_text(json.dumps(items))
+    verdicts = ["yes" if "blue" in i["response"] else "no" for i in items]
+    for worker in (analysis.JUDGE, analysis.JUDGE_AA, analysis.JUDGE2):
+        _save(tmp_path, worker, verdicts)
+    out = tmp_path / "analysis"
+    config = dict(config, analysis=dict(config["analysis"], bootstrap={"resamples": 200,
+                                                                       "seed": 42}))
+    result = analysis.analyze(tmp_path, config, artifact, out, None, tmp_path / "private")
+    tables = json.loads((out / "tables.json").read_text())
+    assert all(t["complete"] for t in tables)
+    ident = result["headline"]["identity"]["reader_cross_gpu"]
+    assert ident["identical_tokens"] == ident["n_common"] == len(requests)
+    for t in tables:
+        s = t["summary"]
+        if t["arm"] == "gold":
+            expected = "single" if s["gold_in_pool"] == 1 else "or"
+            assert s["structure"] == expected, (t["question_id"], s["structure"])
+        if s["structure"] == "or":
+            # LOO gives two redundant gold memories 0: the B = 1 keep set is a coin toss.
+            assert t["regret"]["loo"]["1"]["mean"] > 0
+            assert t["regret"]["shapley_exact"]["1"]["mean"] == 0
+        if not s["constant"]:
+            assert t["regret"]["random"]["1"]["mean"] > 0
+            assert set(t["regret"]) >= {"loo", "perm_shapley_16", "snipw_64", "swap_mean"}
+            # deleting a gold memory and swapping it for filler agree here
+            p = t["placebo"]
+            assert p["reorder_ok"]
+    judge = json.loads((out / "judge.json").read_text())
+    assert judge["validation"]["validation:reference"]["primary"]["accuracy"] == 1.0
+    assert judge["validation"]["validation:idk"]["primary"]["accuracy"] == 1.0
+    h2 = json.loads((out / "h2.json").read_text())
+    assert h2["gold"]["4"]["shapley_exact"]["mean_regret"]["mean"] == 0.0
+    assert (out / "tables.md").read_text().startswith("# AM1 development pilot")
+    blob = (out / "tables.json").read_text() + (out / "headline.json").read_text()
+    assert "car is blue" not in blob and "filler turn" not in blob
+    assert (tmp_path / "private" / "rows.jsonl.gz").is_file()
+    sample = analysis.hand_sample(tmp_path, config, artifact)
+    assert len(sample) == len({(i["question_index"], i["response"]) for i in items
+                               if i["source"] == "reader"})  # fmt: skip
+    assert all("label" not in s for s in sample)
+    pw = analysis.power(out, dict(config, analysis=dict(config["analysis"],
+                                                       power={"simulations": 20, "seed": 43})), 50)
+    assert pw["heldout_questions"] == 50 and pw["statistics"]
