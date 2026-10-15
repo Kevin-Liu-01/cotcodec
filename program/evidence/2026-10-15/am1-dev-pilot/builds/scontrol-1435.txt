@@ -1,0 +1,29 @@
+JobId=1435 JobName=am1-study-aa
+   UserId=kevin(1004) GroupId=kevin(1004) MCS_label=N/A
+   Priority=4294900325 Nice=0 Account=(null) QOS=(null)
+   JobState=COMPLETED Reason=None Dependency=(null)
+   Requeue=0 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=00:11:04 TimeLimit=00:22:00 TimeMin=N/A
+   SubmitTime=2026-10-15T00:55:08 EligibleTime=2026-10-15T00:55:08
+   AccrueTime=2026-10-15T00:55:08
+   StartTime=2026-10-15T00:55:09 EndTime=2026-10-15T01:06:13 Deadline=N/A
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2026-10-15T00:55:09 Scheduler=Main
+   Partition=research AllocNode:Sid=fal-h100-01:1013350
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=fal-h100-01
+   BatchHost=fal-h100-01
+   NumNodes=1 NumCPUs=32 NumTasks=1 CPUs/Task=32 ReqB:S:C:T=0:0:*:*
+   TRES=cpu=32,mem=256G,node=1,billing=32
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   MinCPUsNode=32 MinMemoryNode=256G MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+   Command=/home/kevin/cotcodec-runs/stage0/am1-study/checkout/infra/slurm/host-single-node/docker-research.sbatch
+   WorkDir=/home/kevin/cotcodec-runs/stage0/am1-study/checkout
+   StdErr=/home/kevin/cotcodec-runs/stage0/am1-study/runs/aa/slurm-1435.out
+   StdIn=/dev/null
+   StdOut=/home/kevin/cotcodec-runs/stage0/am1-study/runs/aa/slurm-1435.out
+   Power=
+   TresPerNode=gres:gpu:h100:2
+   
+

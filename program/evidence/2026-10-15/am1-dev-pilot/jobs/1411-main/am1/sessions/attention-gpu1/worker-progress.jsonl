@@ -1,0 +1,2 @@
+{"attn_implementation": "eager", "event": "model-ready", "gpu": {"CUDA_VISIBLE_DEVICES": "1", "name": "NVIDIA H100 80GB HBM3", "pci_bus_id": 98, "uuid": "34c1e8e2-bec3-3ce7-c1be-618cb05ca896"}, "load_s": 7.3, "utc": "2026-10-15T00:30:28Z", "worker": "attention-gpu1"}
+{"event": "done", "exit": 0, "pools": 126, "utc": "2026-10-15T00:30:36Z", "worker": "attention-gpu1"}

@@ -1,0 +1,59 @@
+{
+  "batch_script_sha256": "2a10c9c72c22ab6dd5135061ff1b9b50977a468687180353d8cd7273acbaf1ec",
+  "command": [
+    "python",
+    "scripts/memcredit_study.py",
+    "run",
+    "--seeds",
+    "42",
+    "43",
+    "44",
+    "--output-dir",
+    "/outputs/am1",
+    "--allocation-minutes",
+    "40",
+    "--evidence",
+    "/inputs/study-artifact.json",
+    "--expected-evidence-sha256",
+    "15567cf14a0c38c1f9edec1f47feceb2a6fccf116338e5957182d03f1d996ebc"
+  ],
+  "container_profile": "vllm",
+  "cpus": 32,
+  "git_sha": "b94672f4daeb2b2383bf10b0d38b52d0c2bea80a",
+  "gpu_type": "h100",
+  "gpus": 2,
+  "image_id": "sha256:13e85fa7c4d12267560caea33ad81e7b89fd6aeae9555f87bd6dd9e8aed664a1",
+  "max_gpu_hours": 1.34,
+  "memory_gb": 256,
+  "minutes": 40,
+  "model": {
+    "artifact_root_sha256": "8fcd9106bfb1854a5b160c64a0ff3d3463208ab69854ae8c1cc26ba19dbf5714",
+    "cache_host_path": "/home/kevin/cotcodec-runs/hf-cache",
+    "model_id": "qwen3-32b",
+    "receipt_sha256": "06e4a7e981eee4f6c079fd6b02dc58e3a9fd798e0d806820383d873cf9cd1fd1",
+    "revision": "9216db5781bf21249d130ec9da846c4624c16137"
+  },
+  "name": "am1-study-dev",
+  "randomness_contract": "assignment-seed-matrix",
+  "run_root": "/home/kevin/cotcodec-runs/stage0/am1-study/runs/main",
+  "runtime": "docker-single-node-discovery-v1",
+  "schema_version": 1,
+  "seed_binding": {
+    "flag": "--seeds"
+  },
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "source_sha256": "5866114eddec9086033f4333c70fb5280894c34f7b00d654163925c699a4f43f",
+  "study_artifact": {
+    "container_path": "/inputs/study-artifact.json",
+    "host_path": "/home/kevin/cotcodec-runs/stage0/am1-study/prepare/study-artifact-b94672f4.json",
+    "license": "MIT",
+    "revision": "b94672f4daeb2b2383bf10b0d38b52d0c2bea80a",
+    "sha256": "15567cf14a0c38c1f9edec1f47feceb2a6fccf116338e5957182d03f1d996ebc",
+    "size_bytes": 2300015,
+    "source_id": "memcredit-study-dev-pools"
+  }
+}

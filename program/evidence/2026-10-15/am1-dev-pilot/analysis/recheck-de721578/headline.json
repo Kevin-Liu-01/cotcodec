@@ -1,0 +1,1116 @@
+{
+  "census": {
+    "gold": {
+      "by_type": {
+        "knowledge-update": {
+          "non-monotone": 6,
+          "single": 5
+        },
+        "multi-session": {
+          "and": 6,
+          "constant-0": 3,
+          "non-monotone": 9
+        },
+        "single-session-assistant": {
+          "single": 1
+        },
+        "single-session-preference": {
+          "constant-0": 2,
+          "non-monotone": 3
+        },
+        "single-session-user": {
+          "non-monotone": 1,
+          "single": 8
+        },
+        "temporal-reasoning": {
+          "constant-0": 7,
+          "monotone-mixed": 1,
+          "non-monotone": 11
+        }
+      },
+      "gold_in_pool": {
+        "1": 19,
+        "2": 33,
+        "3": 7,
+        "4": 1,
+        "5": 2,
+        "6": 1
+      },
+      "nonconstant": 51,
+      "nongold_relevant": 30,
+      "structure": {
+        "and": 6,
+        "constant-0": 12,
+        "monotone-mixed": 1,
+        "non-monotone": 30,
+        "single": 14
+      },
+      "tables": 63,
+      "u_empty_rate": 0.0,
+      "u_full_rate": 0.5873015873015873
+    },
+    "retrieved": {
+      "by_type": {
+        "knowledge-update": {
+          "constant-0": 2,
+          "monotone-mixed": 1,
+          "non-monotone": 6,
+          "or": 1,
+          "single": 1
+        },
+        "multi-session": {
+          "and": 2,
+          "constant-0": 12,
+          "monotone-mixed": 1,
+          "non-monotone": 3
+        },
+        "single-session-assistant": {
+          "single": 1
+        },
+        "single-session-preference": {
+          "constant-0": 3,
+          "non-monotone": 2
+        },
+        "single-session-user": {
+          "constant-0": 1,
+          "non-monotone": 2,
+          "or": 1,
+          "single": 5
+        },
+        "temporal-reasoning": {
+          "constant-0": 7,
+          "monotone-mixed": 1,
+          "non-monotone": 10,
+          "single": 1
+        }
+      },
+      "gold_in_pool": {
+        "0": 5,
+        "1": 25,
+        "2": 30,
+        "3": 3
+      },
+      "nonconstant": 38,
+      "nongold_relevant": 28,
+      "structure": {
+        "and": 2,
+        "constant-0": 25,
+        "monotone-mixed": 3,
+        "non-monotone": 23,
+        "or": 2,
+        "single": 8
+      },
+      "tables": 63,
+      "u_empty_rate": 0.0,
+      "u_full_rate": 0.4444444444444444
+    }
+  },
+  "claim_level": "exploratory",
+  "experiment_id": "memcredit-study-v1",
+  "identity": {
+    "judge_cross_gpu": {
+      "ci95_tokens": [
+        0.9978797655775986,
+        1.0
+      ],
+      "differing_total": 0,
+      "gpu_other": {
+        "CUDA_VISIBLE_DEVICES": "1",
+        "name": "NVIDIA H100 80GB HBM3",
+        "pci_bus_id": 98,
+        "uuid": "34c1e8e2-bec3-3ce7-c1be-618cb05ca896"
+      },
+      "gpu_ref": {
+        "CUDA_VISIBLE_DEVICES": "0",
+        "name": "NVIDIA H100 80GB HBM3",
+        "pci_bus_id": 97,
+        "uuid": "b23c3b4d-5413-4d75-cad3-74be85f8d058"
+      },
+      "identical_tokens": 1738,
+      "identical_tokens_and_logprob_bits": 1738,
+      "n_common": 1738
+    },
+    "reader_cross_gpu": {
+      "ci95_tokens": [
+        0.9673927658658672,
+        0.9710632401923904
+      ],
+      "differing_total": 1061,
+      "gpu_other": {
+        "CUDA_VISIBLE_DEVICES": "1",
+        "name": "NVIDIA H100 80GB HBM3",
+        "pci_bus_id": 98,
+        "uuid": "34c1e8e2-bec3-3ce7-c1be-618cb05ca896"
+      },
+      "gpu_ref": {
+        "CUDA_VISIBLE_DEVICES": "0",
+        "name": "NVIDIA H100 80GB HBM3",
+        "pci_bus_id": 97,
+        "uuid": "b23c3b4d-5413-4d75-cad3-74be85f8d058"
+      },
+      "identical_tokens": 33463,
+      "identical_tokens_and_logprob_bits": 4614,
+      "n_common": 34524
+    }
+  },
+  "kill": {
+    "am2_k2_flip_rates_below_1pct": false,
+    "am6": {
+      "best_cheap_auroc": 0.8876459262508835,
+      "best_internal_auroc": 0.9351953401086983,
+      "k1_cheap_within_0.03": false,
+      "k2_all_below_0.65": false
+    },
+    "k1_replay": {
+      "fires": true,
+      "g1": "FAIL"
+    },
+    "k2_constant_questions": {
+      "constant": 10,
+      "fires": false,
+      "questions": 63,
+      "share": 0.15873015873015872
+    },
+    "k3_interactions_do_not_matter": {
+      "fires": false,
+      "loo_optimal_rate": 0.5730337078651686,
+      "shapley_optimal_rate": 0.9213483146067416,
+      "share_nonconstant_order1_ge_0.9": 0.2696629213483146
+    },
+    "k4_coverage": {
+      "minimum": 150,
+      "nonconstant_retrieved_tables": 38,
+      "underpowered": true
+    }
+  },
+  "question_ids_sha256": "183ee4d3406786be721c4c846fa9f72f0fc2ae8c905dcb198eaaff17d78846fc",
+  "questions": 63,
+  "split": "development",
+  "verdicts": {
+    "am2": {
+      "dossier_k2_flip_rates_below_1pct": false,
+      "gold_label_survival": {
+        "ci": [
+          0.5595238095238095,
+          0.8392857142857143
+        ],
+        "clusters": 41,
+        "mean": 0.7078651685393258,
+        "units": 89
+      },
+      "nongold": "ABOVE_SWAP_FLOOR",
+      "nongold_deletion_minus_swap_only": 0.024408683443136407,
+      "nongold_deletion_minus_swap_only_ci95": [
+        0.0023304266008031312,
+        0.047122104811201486
+      ]
+    },
+    "am6": {
+      "best_cheap_auroc": 0.8876459262508835,
+      "best_internal_auroc": 0.9351953401086983,
+      "internal_signals_add_nothing": false,
+      "none_predicts_necessity": false
+    },
+    "claim_level": "exploratory",
+    "g1_replay": {
+      "judge": {
+        "complete": true,
+        "differing": 0,
+        "expected": 1738,
+        "missing": false,
+        "n_common": 1738
+      },
+      "reader": {
+        "complete": true,
+        "differing": 1061,
+        "expected": 34524,
+        "missing": false,
+        "n_common": 34524
+      },
+      "status": "FAIL"
+    },
+    "g2_judge": {
+      "hand_check_kappa": 0.95,
+      "hand_check_kappa_ci95": [
+        0.8831385642737896,
+        1.0
+      ],
+      "hand_check_n": 120,
+      "hand_labels_sha256": "d562042d3da57c83e427b3b28aad2a8bbff4185f360bbff9447070fc58343f89",
+      "idk_accuracy": 1.0,
+      "idk_n": 63,
+      "reference_non_preference_accuracy": 1.0,
+      "reference_non_preference_n": 58,
+      "status": "PASS"
+    },
+    "h2_blockers": [
+      "G1 FAIL: replay differs; kill criterion 1 fires (descriptive only)"
+    ],
+    "h2_primary": {
+      "attention_raw": {
+        "ci95": [
+          0.13157894736842105,
+          0.39473684210526316
+        ],
+        "ci99": [
+          0.07894736842105263,
+          0.4473684210526316
+        ],
+        "mean_regret": 0.2631578947368421,
+        "minus_exact_shapley": 0.18421052631578946,
+        "minus_exact_shapley_ci95": [
+          0.05263157894736842,
+          0.34210526315789475
+        ],
+        "tables": 38,
+        "verdict": "MISSPECIFIED"
+      },
+      "loo": {
+        "ci95": [
+          0.12092731829573937,
+          0.3164160401002506
+        ],
+        "ci99": [
+          0.09699248120300752,
+          0.34849624060150375
+        ],
+        "mean_regret": 0.2136591478696742,
+        "minus_exact_shapley": 0.13471177944862156,
+        "minus_exact_shapley_ci95": [
+          0.05087719298245614,
+          0.2265664160401002
+        ],
+        "tables": 38,
+        "verdict": "MISSPECIFIED"
+      },
+      "perm_shapley_16": {
+        "ci95": [
+          0.030263157894736846,
+          0.17715121136173764
+        ],
+        "ci99": [
+          0.016812865497076022,
+          0.20430242272347535
+        ],
+        "mean_regret": 0.09688805346700083,
+        "minus_exact_shapley": 0.01794068504594819,
+        "minus_exact_shapley_ci95": [
+          -0.07153299916457811,
+          0.10733082706766917
+        ],
+        "tables": 38,
+        "verdict": "INCONCLUSIVE"
+      },
+      "retrieval_rank": {
+        "ci95": [
+          0.02631578947368421,
+          0.23684210526315788
+        ],
+        "ci99": [
+          0.02631578947368421,
+          0.2894736842105263
+        ],
+        "mean_regret": 0.13157894736842105,
+        "minus_exact_shapley": 0.05263157894736842,
+        "minus_exact_shapley_ci95": [
+          -0.07894736842105263,
+          0.18421052631578946
+        ],
+        "tables": 38,
+        "verdict": "INCONCLUSIVE"
+      },
+      "snipw_64": {
+        "ci95": [
+          0.017543859649122806,
+          0.14022556390977442
+        ],
+        "ci99": [
+          0.008771929824561403,
+          0.16654135338345863
+        ],
+        "mean_regret": 0.07005012531328321,
+        "minus_exact_shapley": -0.008897243107769433,
+        "minus_exact_shapley_ci95": [
+          -0.09649122807017545,
+          0.0699248120300752
+        ],
+        "tables": 38,
+        "verdict": "INCONCLUSIVE"
+      }
+    },
+    "h2_qualifiers": [
+      "K4: fewer than 150 non-constant retrieved tables (underpowered)"
+    ],
+    "h2_read": false,
+    "h2_second_judge": {
+      "attention_raw": {
+        "ci95": [
+          0.15,
+          0.45
+        ],
+        "ci99": [
+          0.125,
+          0.475
+        ],
+        "mean_regret": 0.3,
+        "minus_exact_shapley": 0.25,
+        "minus_exact_shapley_ci95": [
+          0.1,
+          0.4
+        ],
+        "tables": 40,
+        "verdict": "MISSPECIFIED"
+      },
+      "loo": {
+        "ci95": [
+          0.12190476190476192,
+          0.31511904761904763
+        ],
+        "ci99": [
+          0.10071428571428571,
+          0.351547619047619
+        ],
+        "mean_regret": 0.21476190476190476,
+        "minus_exact_shapley": 0.16476190476190475,
+        "minus_exact_shapley_ci95": [
+          0.08559523809523809,
+          0.2567857142857143
+        ],
+        "tables": 40,
+        "verdict": "MISSPECIFIED"
+      },
+      "perm_shapley_16": {
+        "ci95": [
+          0.03611111111111111,
+          0.20436507936507936
+        ],
+        "ci99": [
+          0.01944444444444444,
+          0.23698412698412694
+        ],
+        "mean_regret": 0.1126984126984127,
+        "minus_exact_shapley": 0.0626984126984127,
+        "minus_exact_shapley_ci95": [
+          -0.008690476190476193,
+          0.14714285714285716
+        ],
+        "tables": 40,
+        "verdict": "INCONCLUSIVE"
+      },
+      "retrieval_rank": {
+        "ci95": [
+          0.075,
+          0.325
+        ],
+        "ci99": [
+          0.05,
+          0.375
+        ],
+        "mean_regret": 0.2,
+        "minus_exact_shapley": 0.15,
+        "minus_exact_shapley_ci95": [
+          0.025,
+          0.3
+        ],
+        "tables": 40,
+        "verdict": "INCONCLUSIVE"
+      },
+      "snipw_64": {
+        "ci95": [
+          0.008214285714285714,
+          0.12416666666666668
+        ],
+        "ci99": [
+          0.0,
+          0.14904761904761904
+        ],
+        "mean_regret": 0.05797619047619048,
+        "minus_exact_shapley": 0.007976190476190474,
+        "minus_exact_shapley_ci95": [
+          -0.075,
+          0.08285714285714285
+        ],
+        "tables": 40,
+        "verdict": "INCONCLUSIVE"
+      }
+    },
+    "h2_secondary": {
+      "gold": {
+        "1": {
+          "attention_raw": {
+            "ci95": [
+              0.0196078431372549,
+              0.19607843137254902
+            ],
+            "ci99": [
+              0.0,
+              0.21568627450980393
+            ],
+            "mean_regret": 0.09803921568627451,
+            "minus_exact_shapley": 0.09803921568627451,
+            "minus_exact_shapley_ci95": [
+              0.0196078431372549,
+              0.19607843137254902
+            ],
+            "tables": 51,
+            "verdict": "INCONCLUSIVE"
+          },
+          "loo": {
+            "ci95": [
+              0.031045751633986932,
+              0.1757703081232493
+            ],
+            "ci99": [
+              0.014705882352941176,
+              0.2004435107376284
+            ],
+            "mean_regret": 0.09540149393090569,
+            "minus_exact_shapley": 0.09540149393090569,
+            "minus_exact_shapley_ci95": [
+              0.031045751633986932,
+              0.1757703081232493
+            ],
+            "tables": 51,
+            "verdict": "INCONCLUSIVE"
+          },
+          "perm_shapley_16": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "ci99": [
+              0.0,
+              0.0
+            ],
+            "mean_regret": 0.0,
+            "minus_exact_shapley": 0.0,
+            "minus_exact_shapley_ci95": [
+              0.0,
+              0.0
+            ],
+            "tables": 51,
+            "verdict": "ADEQUATE"
+          },
+          "retrieval_rank": {
+            "ci95": [
+              0.0,
+              0.13725490196078433
+            ],
+            "ci99": [
+              0.0,
+              0.1568627450980392
+            ],
+            "mean_regret": 0.058823529411764705,
+            "minus_exact_shapley": 0.058823529411764705,
+            "minus_exact_shapley_ci95": [
+              0.0,
+              0.13725490196078433
+            ],
+            "tables": 51,
+            "verdict": "INCONCLUSIVE"
+          },
+          "snipw_64": {
+            "ci95": [
+              0.0,
+              0.05392156862745098
+            ],
+            "ci99": [
+              0.0,
+              0.0718954248366013
+            ],
+            "mean_regret": 0.017973856209150325,
+            "minus_exact_shapley": 0.017973856209150325,
+            "minus_exact_shapley_ci95": [
+              0.0,
+              0.05392156862745098
+            ],
+            "tables": 51,
+            "verdict": "INCONCLUSIVE"
+          }
+        },
+        "2": {
+          "attention_raw": {
+            "ci95": [
+              0.11764705882352941,
+              0.3333333333333333
+            ],
+            "ci99": [
+              0.0784313725490196,
+              0.37254901960784315
+            ],
+            "mean_regret": 0.21568627450980393,
+            "minus_exact_shapley": 0.17647058823529413,
+            "minus_exact_shapley_ci95": [
+              0.0784313725490196,
+              0.29411764705882354
+            ],
+            "tables": 51,
+            "verdict": "MISSPECIFIED"
+          },
+          "loo": {
+            "ci95": [
+              0.13804855275443512,
+              0.3376283846872082
+            ],
+            "ci99": [
+              0.10971055088702147,
+              0.36830065359477127
+            ],
+            "mean_regret": 0.2351540616246498,
+            "minus_exact_shapley": 0.19593837535014,
+            "minus_exact_shapley_ci95": [
+              0.10686274509803922,
+              0.28837535014005605
+            ],
+            "tables": 51,
+            "verdict": "MISSPECIFIED"
+          },
+          "perm_shapley_16": {
+            "ci95": [
+              0.0326797385620915,
+              0.1638344226579521
+            ],
+            "ci99": [
+              0.015250544662309368,
+              0.19346405228758168
+            ],
+            "mean_regret": 0.09411764705882351,
+            "minus_exact_shapley": 0.054901960784313725,
+            "minus_exact_shapley_ci95": [
+              0.006535947712418297,
+              0.11328976034858389
+            ],
+            "tables": 51,
+            "verdict": "INCONCLUSIVE"
+          },
+          "retrieval_rank": {
+            "ci95": [
+              0.0784313725490196,
+              0.27450980392156865
+            ],
+            "ci99": [
+              0.058823529411764705,
+              0.3137254901960784
+            ],
+            "mean_regret": 0.17647058823529413,
+            "minus_exact_shapley": 0.13725490196078433,
+            "minus_exact_shapley_ci95": [
+              0.058823529411764705,
+              0.23529411764705882
+            ],
+            "tables": 51,
+            "verdict": "MISSPECIFIED"
+          },
+          "snipw_64": {
+            "ci95": [
+              0.0130718954248366,
+              0.11764705882352941
+            ],
+            "ci99": [
+              0.0,
+              0.14285714285714285
+            ],
+            "mean_regret": 0.06442577030812324,
+            "minus_exact_shapley": 0.025210084033613443,
+            "minus_exact_shapley_ci95": [
+              -0.0196078431372549,
+              0.07656395891690009
+            ],
+            "tables": 51,
+            "verdict": "INCONCLUSIVE"
+          }
+        },
+        "3": {
+          "attention_raw": {
+            "ci95": [
+              0.19607843137254902,
+              0.43137254901960786
+            ],
+            "ci99": [
+              0.1568627450980392,
+              0.49019607843137253
+            ],
+            "mean_regret": 0.3137254901960784,
+            "minus_exact_shapley": 0.22875816993464054,
+            "minus_exact_shapley_ci95": [
+              0.10457516339869283,
+              0.35294117647058826
+            ],
+            "tables": 51,
+            "verdict": "MISSPECIFIED"
+          },
+          "loo": {
+            "ci95": [
+              0.19040616246498598,
+              0.4008870214752568
+            ],
+            "ci99": [
+              0.15863678804855277,
+              0.4295985060690943
+            ],
+            "mean_regret": 0.2926470588235294,
+            "minus_exact_shapley": 0.20767973856209146,
+            "minus_exact_shapley_ci95": [
+              0.12315592903828197,
+              0.298109243697479
+            ],
+            "tables": 51,
+            "verdict": "MISSPECIFIED"
+          },
+          "perm_shapley_16": {
+            "ci95": [
+              0.08467164643635233,
+              0.2633675692499222
+            ],
+            "ci99": [
+              0.06271397447868036,
+              0.2988795518207283
+            ],
+            "mean_regret": 0.1707594148770619,
+            "minus_exact_shapley": 0.08579209461562402,
+            "minus_exact_shapley_ci95": [
+              0.030236539060068467,
+              0.15614690320572672
+            ],
+            "tables": 51,
+            "verdict": "MISSPECIFIED"
+          },
+          "retrieval_rank": {
+            "ci95": [
+              0.19607843137254902,
+              0.47058823529411764
+            ],
+            "ci99": [
+              0.17647058823529413,
+              0.5098039215686274
+            ],
+            "mean_regret": 0.3333333333333333,
+            "minus_exact_shapley": 0.24836601307189546,
+            "minus_exact_shapley_ci95": [
+              0.13725490196078433,
+              0.37254901960784315
+            ],
+            "tables": 51,
+            "verdict": "MISSPECIFIED"
+          },
+          "snipw_64": {
+            "ci95": [
+              0.058823529411764705,
+              0.22198879551820727
+            ],
+            "ci99": [
+              0.045168067226890755,
+              0.26027077497665735
+            ],
+            "mean_regret": 0.13667133520074695,
+            "minus_exact_shapley": 0.051704014939309054,
+            "minus_exact_shapley_ci95": [
+              -0.006535947712418303,
+              0.11729691876750699
+            ],
+            "tables": 51,
+            "verdict": "INCONCLUSIVE"
+          }
+        },
+        "4": {
+          "attention_raw": {
+            "ci95": [
+              0.13725490196078433,
+              0.37254901960784315
+            ],
+            "ci99": [
+              0.11764705882352941,
+              0.4117647058823529
+            ],
+            "mean_regret": 0.2549019607843137,
+            "minus_exact_shapley": 0.17647058823529413,
+            "minus_exact_shapley_ci95": [
+              0.058823529411764705,
+              0.29411764705882354
+            ],
+            "tables": 51,
+            "verdict": "MISSPECIFIED"
+          },
+          "loo": {
+            "ci95": [
+              0.11092436974789917,
+              0.30084033613445377
+            ],
+            "ci99": [
+              0.08795518207282914,
+              0.3322128851540617
+            ],
+            "mean_regret": 0.20009337068160596,
+            "minus_exact_shapley": 0.12166199813258637,
+            "minus_exact_shapley_ci95": [
+              0.05770308123249299,
+              0.19607843137254902
+            ],
+            "tables": 51,
+            "verdict": "MISSPECIFIED"
+          },
+          "perm_shapley_16": {
+            "ci95": [
+              0.05272331154684096,
+              0.20798319327731093
+            ],
+            "ci99": [
+              0.03442265795206972,
+              0.2408807967631497
+            ],
+            "mean_regret": 0.12366946778711482,
+            "minus_exact_shapley": 0.04523809523809524,
+            "minus_exact_shapley_ci95": [
+              -0.016993464052287584,
+              0.11937441643323997
+            ],
+            "tables": 51,
+            "verdict": "INCONCLUSIVE"
+          },
+          "retrieval_rank": {
+            "ci95": [
+              0.11764705882352941,
+              0.35294117647058826
+            ],
+            "ci99": [
+              0.09803921568627451,
+              0.39215686274509803
+            ],
+            "mean_regret": 0.23529411764705882,
+            "minus_exact_shapley": 0.1568627450980392,
+            "minus_exact_shapley_ci95": [
+              0.058823529411764705,
+              0.2549019607843137
+            ],
+            "tables": 51,
+            "verdict": "MISSPECIFIED"
+          },
+          "snipw_64": {
+            "ci95": [
+              0.025863678804855274,
+              0.14323062558356675
+            ],
+            "ci99": [
+              0.0130718954248366,
+              0.16283846872082167
+            ],
+            "mean_regret": 0.07815126050420168,
+            "minus_exact_shapley": -0.0002801120448179327,
+            "minus_exact_shapley_ci95": [
+              -0.07189542483660132,
+              0.07133520074696545
+            ],
+            "tables": 51,
+            "verdict": "INCONCLUSIVE"
+          }
+        }
+      },
+      "retrieved": {
+        "1": {
+          "attention_raw": {
+            "ci95": [
+              0.0,
+              0.13157894736842105
+            ],
+            "ci99": [
+              0.0,
+              0.15789473684210525
+            ],
+            "mean_regret": 0.05263157894736842,
+            "minus_exact_shapley": 0.05263157894736842,
+            "minus_exact_shapley_ci95": [
+              0.0,
+              0.13157894736842105
+            ],
+            "tables": 38,
+            "verdict": "INCONCLUSIVE"
+          },
+          "loo": {
+            "ci95": [
+              0.08333333333333333,
+              0.27192982456140347
+            ],
+            "ci99": [
+              0.06359649122807016,
+              0.3048245614035087
+            ],
+            "mean_regret": 0.1732456140350877,
+            "minus_exact_shapley": 0.1732456140350877,
+            "minus_exact_shapley_ci95": [
+              0.08333333333333333,
+              0.27192982456140347
+            ],
+            "tables": 38,
+            "verdict": "MISSPECIFIED"
+          },
+          "perm_shapley_16": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "ci99": [
+              0.0,
+              0.0
+            ],
+            "mean_regret": 0.0,
+            "minus_exact_shapley": 0.0,
+            "minus_exact_shapley_ci95": [
+              0.0,
+              0.0
+            ],
+            "tables": 38,
+            "verdict": "ADEQUATE"
+          },
+          "retrieval_rank": {
+            "ci95": [
+              0.02631578947368421,
+              0.23684210526315788
+            ],
+            "ci99": [
+              0.02631578947368421,
+              0.2894736842105263
+            ],
+            "mean_regret": 0.13157894736842105,
+            "minus_exact_shapley": 0.13157894736842105,
+            "minus_exact_shapley_ci95": [
+              0.02631578947368421,
+              0.23684210526315788
+            ],
+            "tables": 38,
+            "verdict": "INCONCLUSIVE"
+          },
+          "snipw_64": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "ci99": [
+              0.0,
+              0.0
+            ],
+            "mean_regret": 0.0,
+            "minus_exact_shapley": 0.0,
+            "minus_exact_shapley_ci95": [
+              0.0,
+              0.0
+            ],
+            "tables": 38,
+            "verdict": "ADEQUATE"
+          }
+        },
+        "2": {
+          "attention_raw": {
+            "ci95": [
+              0.10526315789473684,
+              0.3684210526315789
+            ],
+            "ci99": [
+              0.07894736842105263,
+              0.42105263157894735
+            ],
+            "mean_regret": 0.23684210526315788,
+            "minus_exact_shapley": 0.23684210526315788,
+            "minus_exact_shapley_ci95": [
+              0.10526315789473684,
+              0.3684210526315789
+            ],
+            "tables": 38,
+            "verdict": "MISSPECIFIED"
+          },
+          "loo": {
+            "ci95": [
+              0.18189223057644108,
+              0.3942982456140351
+            ],
+            "ci99": [
+              0.15100250626566414,
+              0.431390977443609
+            ],
+            "mean_regret": 0.2837092731829574,
+            "minus_exact_shapley": 0.2837092731829574,
+            "minus_exact_shapley_ci95": [
+              0.18189223057644108,
+              0.3942982456140351
+            ],
+            "tables": 38,
+            "verdict": "MISSPECIFIED"
+          },
+          "perm_shapley_16": {
+            "ci95": [
+              0.0,
+              0.09941520467836255
+            ],
+            "ci99": [
+              0.0,
+              0.12207602339181285
+            ],
+            "mean_regret": 0.0402046783625731,
+            "minus_exact_shapley": 0.0402046783625731,
+            "minus_exact_shapley_ci95": [
+              0.0,
+              0.09941520467836255
+            ],
+            "tables": 38,
+            "verdict": "INCONCLUSIVE"
+          },
+          "retrieval_rank": {
+            "ci95": [
+              0.10526315789473684,
+              0.3684210526315789
+            ],
+            "ci99": [
+              0.07894736842105263,
+              0.42105263157894735
+            ],
+            "mean_regret": 0.23684210526315788,
+            "minus_exact_shapley": 0.23684210526315788,
+            "minus_exact_shapley_ci95": [
+              0.10526315789473684,
+              0.3684210526315789
+            ],
+            "tables": 38,
+            "verdict": "MISSPECIFIED"
+          },
+          "snipw_64": {
+            "ci95": [
+              0.008771929824561403,
+              0.13157894736842105
+            ],
+            "ci99": [
+              0.0,
+              0.16666666666666666
+            ],
+            "mean_regret": 0.061403508771929814,
+            "minus_exact_shapley": 0.061403508771929814,
+            "minus_exact_shapley_ci95": [
+              0.008771929824561403,
+              0.13157894736842105
+            ],
+            "tables": 38,
+            "verdict": "INCONCLUSIVE"
+          }
+        },
+        "3": {
+          "attention_raw": {
+            "ci95": [
+              0.13157894736842105,
+              0.39473684210526316
+            ],
+            "ci99": [
+              0.07894736842105263,
+              0.4473684210526316
+            ],
+            "mean_regret": 0.2631578947368421,
+            "minus_exact_shapley": 0.2236842105263158,
+            "minus_exact_shapley_ci95": [
+              0.10526315789473684,
+              0.35526315789473684
+            ],
+            "tables": 38,
+            "verdict": "MISSPECIFIED"
+          },
+          "loo": {
+            "ci95": [
+              0.16838972431077695,
+              0.38204887218045114
+            ],
+            "ci99": [
+              0.1443609022556391,
+              0.42017543859649126
+            ],
+            "mean_regret": 0.2725563909774436,
+            "minus_exact_shapley": 0.2330827067669173,
+            "minus_exact_shapley_ci95": [
+              0.13837719298245613,
+              0.33417919799498746
+            ],
+            "tables": 38,
+            "verdict": "MISSPECIFIED"
+          },
+          "perm_shapley_16": {
+            "ci95": [
+              0.026900584795321637,
+              0.18531746031746033
+            ],
+            "ci99": [
+              0.008771929824561403,
+              0.22153299916457814
+            ],
+            "mean_regret": 0.09647034252297411,
+            "minus_exact_shapley": 0.056996658312447795,
+            "minus_exact_shapley_ci95": [
+              -0.009649122807017551,
+              0.14058061821219717
+            ],
+            "tables": 38,
+            "verdict": "INCONCLUSIVE"
+          },
+          "retrieval_rank": {
+            "ci95": [
+              0.13157894736842105,
+              0.42105263157894735
+            ],
+            "ci99": [
+              0.07894736842105263,
+              0.4473684210526316
+            ],
+            "mean_regret": 0.2631578947368421,
+            "minus_exact_shapley": 0.2236842105263158,
+            "minus_exact_shapley_ci95": [
+              0.07894736842105263,
+              0.3684210526315789
+            ],
+            "tables": 38,
+            "verdict": "MISSPECIFIED"
+          },
+          "snipw_64": {
+            "ci95": [
+              0.017543859649122806,
+              0.11372180451127818
+            ],
+            "ci99": [
+              0.008771929824561403,
+              0.131265664160401
+            ],
+            "mean_regret": 0.06109022556390978,
+            "minus_exact_shapley": 0.021616541353383457,
+            "minus_exact_shapley_ci95": [
+              -0.031015037593984968,
+              0.06578947368421052
+            ],
+            "tables": 38,
+            "verdict": "INCONCLUSIVE"
+          }
+        }
+      }
+    },
+    "headline": {
+      "arm": "retrieved",
+      "budget": 4,
+      "loo_minus_exact_shapley": "LOO_LOSES_MORE_THAN_EXACT_SHAPLEY",
+      "program_reading": null,
+      "rule": "loo",
+      "verdict": null,
+      "verdict_as_computed": "MISSPECIFIED"
+    },
+    "k2_fires": false,
+    "k3_fires": false,
+    "k4_underpowered": true,
+    "program_decision": false,
+    "void": {
+      "by_arm": {
+        "gold": {
+          "incomplete": 0,
+          "share": 0.0,
+          "tables": 63
+        },
+        "retrieved": {
+          "incomplete": 0,
+          "share": 0.0,
+          "tables": 63
+        }
+      },
+      "fires": false
+    }
+  }
+}

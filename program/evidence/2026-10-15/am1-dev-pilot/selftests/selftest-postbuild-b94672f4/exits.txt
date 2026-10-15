@@ -1,0 +1,4 @@
+image sha256:13e85fa7c4d12267560caea33ad81e7b89fd6aeae9555f87bd6dd9e8aed664a1 src baked
+study selftest exit 0
+study plan exit 0
+pytest exit 1

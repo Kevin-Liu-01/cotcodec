@@ -1,0 +1,224 @@
+# am1-memory-credit-v1 (DRAFT registration, program/preregistrations/am1-memory-credit-v1.md):
+# the confirmatory run of AM1 on the HELD-OUT split of LongMemEval-S's usable questions.
+#
+# CONFIRMATORY once the registration is frozen; until then nothing may run it on held-out data:
+# scripts/memcredit_study_prepare.py refuses to build the held-out artifact, and
+# scripts/memcredit_study.py refuses to load it, unless the registration file's SHA-256 is in a
+# ledger row for this id. Everything except the experiment id, the claim level, the job and the
+# budget is the development pilot's config (experiments/am1/memcredit-study-v1.yaml), unchanged,
+# plus the pinned confirmatory question set (confirmatory_set, below), which runs instead of the
+# development split.
+schema_version: 1
+experiment_id: am1-memory-credit-v1
+claim_level: confirmatory
+
+# Declared before the run. 42: the split, the gold arm's distractors, engine seeds, permutation
+# Shapley and SNIPW draws (with 43 and 44), the bootstrap (with the hand check's kappa interval);
+# 43: the shuffled pass orders, the reorder placebo, the cross-fitting folds, the power
+# simulation; 44: the hand-check sample and the cross-question negatives of the judge validation.
+seeds: [42, 43, 44]
+
+source:
+  dataset: xiaowu0162/longmemeval-cleaned
+  file: longmemeval_s_cleaned.json
+  revision: "98d7416c24c778c2fee6e6f3006e7a073259d48f"
+  sha256: "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+  size_bytes: 277383467
+  license: MIT
+
+# Usable questions: Step 0's census definition (census/census-e87a6c1a.json, 416 of 500): no
+# abstention question, every gold turn a user turn, 1 to 6 gold turns. Every question type is kept.
+usable:
+  exclude_abstention: true
+  gold_roles: [user]
+  min_gold_turns: 1
+  max_gold_turns: 6
+  pool_size: 8
+
+# The split: per question type (sorted ids), random.Random(f"{seed}:{type}").shuffle, the first
+# round_half_up(fraction * n) ids are development, the rest held out.
+split:
+  seed: 42
+  development_fraction: 0.15
+  path: experiments/am1/memcredit-split-v1.json
+
+# The confirmatory question set (registration, section 4): the split's 353 held-out ids minus
+# Step 0's eight demo questions (experiments/am1/memcredit-step0-v1.yaml; their ids are in
+# program/evidence/2026-10-15/am1-step0/prepare/pools-summary.json). Step 0 ran full 256-subset
+# tables on them with this reader, prompt and pool rules before the split was drawn, and six of
+# them are held-out ids, so all eight are excluded from every estimand, gate and kill criterion
+# (two are development ids, already outside the held-out list). 347 questions remain.
+# scripts/memcredit_study_prepare.py checks the split file's SHA-256, the held-out ids' digest
+# and the confirmatory ids' digest (SHA-256 of the newline-joined ids, in the split's order), and
+# the driver and the analysis refuse an artifact whose questions differ from this set.
+confirmatory_set:
+  split_file_sha256: "4fa1b774d4131080855d668ac8f00f5cb07d49cf741f2051d5f8d96577edb3e3"
+  split_heldout_sha256: "9305024fece35c357db9ca2d10fb06ee684a37c6b055ef3174914ce04e65dba8"
+  exclude_question_ids: ["09ba9854", "25e5aa4f", "3d86fd0a", "618f13b2", "6aeb4375", "6e984301",
+                         "e6041065", "gpt4_70e84552"]
+  questions: 347
+  question_ids_sha256: "d4f024fbcda5394984a46c421cd938f2b6db6067fef0f21a5c6e72359b27e50a"
+
+retriever:
+  name: bm25-okapi-lucene-idf
+  unit: user-turn
+  k1: 1.5
+  b: 0.75
+
+# Step 0's two arms. retrieved: the BM25 top 8 user turns (the deployable pool). gold: every gold
+# user turn plus distractors drawn uniformly (seed 42, per question) from the other user turns
+# (the identification pool). Chronological order; bit i of a mask keeps memory i.
+pools:
+  size: 8
+  arms: [retrieved, gold]
+  max_memory_chars: 1500
+  distractor_seed: 42
+
+# AM2's content-placebo arms, per pool:
+#   swap: for each slot i, two variants that keep slot i's position and date and replace its
+#     text with a non-gold user turn of the same question that is in neither arm's pool, matched
+#     on length (|log(chars ratio)| within the first tolerance that leaves >= 2 candidates) and
+#     then on BM25 rank (nearest rank to memory i's), ties by length gap, session, turn;
+#   reorder: the full pool reversed, and the full pool in a seeded permutation (seed 43).
+placebo:
+  swap_variants: 2
+  length_log_tolerances: [0.2231435513, 0.4054651081, 0.6931471806]  # ln 1.25, ln 1.5, ln 2
+  reorder_seed: 43
+
+# Step 0's reader prompt, unchanged.
+prompt:
+  enable_thinking: false
+  no_memories: "(none)"
+  user: |-
+    Below are memories from your earlier conversations with the user. Each memory is something the user said, with the date of that conversation. Some memories may be irrelevant.
+
+    Memories:
+    {memories}
+
+    Current date: {question_date}
+    Question: {question}
+
+    Answer the question in one short sentence using the memories. If they do not contain the answer, say "I don't know".
+
+reader:
+  model_id: qwen3-8b
+  revision: "b968826d9c46dd6066d109eabc6255188de91218"
+  receipt_root: cotcodec-receipts-cpu-lane
+  engine:
+    dtype: bfloat16
+    max_model_len: 4096
+    gpu_memory_utilization: 0.85
+    max_num_seqs: 256
+    max_num_batched_tokens: 8192
+    enable_prefix_caching: true
+    logprobs_mode: raw_logprobs
+  sampling: {temperature: 0.0, max_tokens: 64, logprobs: 0}
+
+# The judge. LongMemEval's official answer check: get_anscheck_prompt in src/evaluation/
+# evaluate_qa.py of github.com/xiaowu0162/LongMemEval at 9e0b455f4ef0e2ab8f2e582289761153549043fc
+# (MIT), ported word for word in harness/memcredit_study.py (judge_prompt; the test checks it
+# against the archived port legacy/harness/memory_trials/longmemeval_judge.py, which pinned the
+# evaluator's SHA-256 ecce9c4c...). The official judge is gpt-4o-2024-08-06 at T 0 and 10 tokens;
+# here an open dense model in vLLM's batch-invariant mode, greedy, 10 tokens, thinking off. The
+# label is the official rule: "yes" occurs in the reply, case-folded.
+judge:
+  prompt_version: longmemeval-evaluate-qa-get-anscheck-prompt-v1@9e0b455f
+  primary:
+    model_id: qwen3-32b
+    revision: "9216db5781bf21249d130ec9da846c4624c16137"
+    receipt_root: cotcodec-receipts
+    engine:
+      dtype: bfloat16
+      max_model_len: 4096
+      gpu_memory_utilization: 0.92
+      max_num_seqs: 128
+      max_num_batched_tokens: 8192
+      enable_prefix_caching: true
+      logprobs_mode: raw_logprobs
+  secondary:
+    model_id: qwen3-8b
+    revision: "b968826d9c46dd6066d109eabc6255188de91218"
+    receipt_root: cotcodec-receipts-cpu-lane
+    engine:
+      dtype: bfloat16
+      max_model_len: 4096
+      gpu_memory_utilization: 0.85
+      max_num_seqs: 256
+      max_num_batched_tokens: 8192
+      enable_prefix_caching: true
+      logprobs_mode: raw_logprobs
+  sampling: {temperature: 0.0, max_tokens: 10, logprobs: 0}
+  enable_thinking: false
+  # Validation items, per question of the confirmatory set: the reference answer as the response
+  # (expected yes), "I don't know." (expected no) and the reference answer of another question of
+  # the set of the same type (a seeded derangement, seed 44; expected no; skipped for a type with
+  # one question).
+  validation:
+    idk_response: "I don't know."
+    derangement_seed: 44
+  # The hand check: a seeded sample (seed 44) of judged real replies, stratified by the primary
+  # judge's label only (half judged yes, half judged no, all of a side if it has fewer; not by
+  # question type), read and labelled from the question, the reference answer and the reply alone
+  # (blind to the judges' labels). G2 counts a labels file only if it labels exactly this sample.
+  hand_check:
+    size: 120
+    seed: 44
+
+# AM6's internal signals: HF transformers (in the image), Qwen3-8B in bf16 with eager attention,
+# one teacher-forced forward per pool of the full prompt plus the reader's greedy reply. For each
+# layer and head, the attention mass from the positions that predict the reply tokens onto each
+# memory's tokens (mean over those query positions).
+internal:
+  model_id: qwen3-8b
+  attn_implementation: eager
+  dtype: bfloat16
+  xfit_heads: 16
+  xfit_seed: 43
+
+analysis:
+  keep_budgets: [1, 2, 3, 4]
+  headline_budget: 4
+  permutation_shapley: [4, 16]
+  snipw_exposures: [64]
+  estimator_seeds: [42, 43, 44]
+  bootstrap: {resamples: 4000, seed: 42}
+  power: {simulations: 2000, seed: 43}
+
+# The confirmatory job (2 H100). The pilot found that compiled batch-invariant replay is exact
+# only for the same compiled kernels (inductor's timing-based autotune chose a different reduction
+# block in one of four fresh compiles and changed 3.1% of replies, 0.25% of judged cells), while
+# enforce_eager replay was bit-exact across GPUs, processes, jobs, orders and an in-engine
+# replicate, for the reader and the Qwen3-32B judge, at 1.06x the compiled reader pass's wall time
+# (program/evidence/2026-10-15/am1-dev-pilot/README.md, jobs 1435 and 1441). So every vLLM worker
+# runs eager: GPU 0 canonical (the tables), GPU 1 shuffled (the A/A replicate, gate G1).
+# Timing (registration, section 11): the shuffled pass loses most prefix-cache hits as pools grow
+# (53.6% at 32 pools, 39.5% at 126; an LRU simulation of the cache gives about 16-18% at 694), so
+# the eager shuffled pass is expected at about 2,400-2,700 s and the canonical one at about
+# 1,350 s. The reader workers get 3,600 s; the reader phase starts only with 4,620 s left (3,600
+# for the pass, about 60 for the engine and the smoke pass, 540 and 360 for the later phases).
+# An unfinished request in either reader pass is an infrastructure failure (gate G1), not a pass.
+job:
+  gpus: 2
+  minutes: 90
+  phases:
+    - id: reader
+      min_start_s: 4620
+      workers:
+        - {id: reader-gpu0, kind: reader, gpu: 0, order: canonical, enforce_eager: true, max_s: 3600}
+        - {id: reader-gpu1, kind: reader, gpu: 1, order: shuffled, enforce_eager: true, max_s: 3600}
+    - id: judge
+      min_start_s: 540
+      workers:
+        - {id: judge32-gpu0, kind: judge, judge: primary, gpu: 0, order: canonical, enforce_eager: true, max_s: 600}
+        - {id: judge32-gpu1, kind: judge, judge: primary, gpu: 1, order: shuffled, enforce_eager: true, max_s: 600}
+    - id: extra
+      min_start_s: 360
+      workers:
+        - {id: judge8-gpu0, kind: judge, judge: secondary, gpu: 0, order: canonical, enforce_eager: true, max_s: 420}
+        - {id: attention-gpu1, kind: attention, gpu: 1, max_s: 600}
+  shuffle_seed: 43
+  replicate_seed: 44
+
+# 90 minutes on 2 GPUs (3.0 GPU-h) plus the image build (about 0.02).
+budget:
+  total_physical_gpu_hours: 3.1

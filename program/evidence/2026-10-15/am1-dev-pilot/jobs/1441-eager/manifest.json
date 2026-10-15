@@ -1,0 +1,61 @@
+{
+  "batch_script_sha256": "2a10c9c72c22ab6dd5135061ff1b9b50977a468687180353d8cd7273acbaf1ec",
+  "command": [
+    "python",
+    "scripts/memcredit_study.py",
+    "run",
+    "--config",
+    "experiments/am1/memcredit-study-v1-eager.yaml",
+    "--seeds",
+    "42",
+    "43",
+    "44",
+    "--output-dir",
+    "/outputs/am1",
+    "--allocation-minutes",
+    "14",
+    "--evidence",
+    "/inputs/study-artifact.json",
+    "--expected-evidence-sha256",
+    "15567cf14a0c38c1f9edec1f47feceb2a6fccf116338e5957182d03f1d996ebc"
+  ],
+  "container_profile": "vllm",
+  "cpus": 32,
+  "git_sha": "a3365b8f7c28d4e95d81c829c7dc5d1f8e78af36",
+  "gpu_type": "h100",
+  "gpus": 2,
+  "image_id": "sha256:a821739ed4839a8aa09d8e28e73f0182eadf9e13e19bc280e1312c0611b13c86",
+  "max_gpu_hours": 0.47,
+  "memory_gb": 256,
+  "minutes": 14,
+  "model": {
+    "artifact_root_sha256": "8fcd9106bfb1854a5b160c64a0ff3d3463208ab69854ae8c1cc26ba19dbf5714",
+    "cache_host_path": "/home/kevin/cotcodec-runs/hf-cache",
+    "model_id": "qwen3-32b",
+    "receipt_sha256": "06e4a7e981eee4f6c079fd6b02dc58e3a9fd798e0d806820383d873cf9cd1fd1",
+    "revision": "9216db5781bf21249d130ec9da846c4624c16137"
+  },
+  "name": "am1-study-eager",
+  "randomness_contract": "assignment-seed-matrix",
+  "run_root": "/home/kevin/cotcodec-runs/stage0/am1-study/runs/eager",
+  "runtime": "docker-single-node-discovery-v1",
+  "schema_version": 1,
+  "seed_binding": {
+    "flag": "--seeds"
+  },
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "source_sha256": "86ca02008cca81fbcb7a3d734a55033c8d3afebf4207f4a4123ce69522954384",
+  "study_artifact": {
+    "container_path": "/inputs/study-artifact.json",
+    "host_path": "/home/kevin/cotcodec-runs/stage0/am1-study/prepare/study-artifact-b94672f4.json",
+    "license": "MIT",
+    "revision": "a3365b8f7c28d4e95d81c829c7dc5d1f8e78af36",
+    "sha256": "15567cf14a0c38c1f9edec1f47feceb2a6fccf116338e5957182d03f1d996ebc",
+    "size_bytes": 2300015,
+    "source_id": "memcredit-study-dev-pools"
+  }
+}

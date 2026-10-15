@@ -1,0 +1,42 @@
+{
+  "counts": {
+    "usable": 416,
+    "development": 63,
+    "heldout": 353,
+    "source_questions": 500
+  },
+  "per_type": {
+    "knowledge-update": {
+      "usable": 72,
+      "development": 11,
+      "heldout": 61
+    },
+    "multi-session": {
+      "usable": 120,
+      "development": 18,
+      "heldout": 102
+    },
+    "single-session-assistant": {
+      "usable": 5,
+      "development": 1,
+      "heldout": 4
+    },
+    "single-session-preference": {
+      "usable": 30,
+      "development": 5,
+      "heldout": 25
+    },
+    "single-session-user": {
+      "usable": 62,
+      "development": 9,
+      "heldout": 53
+    },
+    "temporal-reasoning": {
+      "usable": 127,
+      "development": 19,
+      "heldout": 108
+    }
+  },
+  "development_sha256": "183ee4d3406786be721c4c846fa9f72f0fc2ae8c905dcb198eaaff17d78846fc",
+  "heldout_sha256": "9305024fece35c357db9ca2d10fb06ee684a37c6b055ef3174914ce04e65dba8"
+}

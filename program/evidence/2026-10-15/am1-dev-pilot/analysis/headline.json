@@ -1,0 +1,180 @@
+{
+  "census": {
+    "gold": {
+      "by_type": {
+        "knowledge-update": {
+          "non-monotone": 6,
+          "single": 5
+        },
+        "multi-session": {
+          "and": 6,
+          "constant-0": 3,
+          "non-monotone": 9
+        },
+        "single-session-assistant": {
+          "single": 1
+        },
+        "single-session-preference": {
+          "constant-0": 2,
+          "non-monotone": 3
+        },
+        "single-session-user": {
+          "non-monotone": 1,
+          "single": 8
+        },
+        "temporal-reasoning": {
+          "constant-0": 7,
+          "monotone-mixed": 1,
+          "non-monotone": 11
+        }
+      },
+      "gold_in_pool": {
+        "1": 19,
+        "2": 33,
+        "3": 7,
+        "4": 1,
+        "5": 2,
+        "6": 1
+      },
+      "nonconstant": 51,
+      "nongold_relevant": 30,
+      "structure": {
+        "and": 6,
+        "constant-0": 12,
+        "monotone-mixed": 1,
+        "non-monotone": 30,
+        "single": 14
+      },
+      "tables": 63,
+      "u_empty_rate": 0.0,
+      "u_full_rate": 0.5873015873015873
+    },
+    "retrieved": {
+      "by_type": {
+        "knowledge-update": {
+          "constant-0": 2,
+          "monotone-mixed": 1,
+          "non-monotone": 6,
+          "or": 1,
+          "single": 1
+        },
+        "multi-session": {
+          "and": 2,
+          "constant-0": 12,
+          "monotone-mixed": 1,
+          "non-monotone": 3
+        },
+        "single-session-assistant": {
+          "single": 1
+        },
+        "single-session-preference": {
+          "constant-0": 3,
+          "non-monotone": 2
+        },
+        "single-session-user": {
+          "constant-0": 1,
+          "non-monotone": 2,
+          "or": 1,
+          "single": 5
+        },
+        "temporal-reasoning": {
+          "constant-0": 7,
+          "monotone-mixed": 1,
+          "non-monotone": 10,
+          "single": 1
+        }
+      },
+      "gold_in_pool": {
+        "0": 5,
+        "1": 25,
+        "2": 30,
+        "3": 3
+      },
+      "nonconstant": 38,
+      "nongold_relevant": 28,
+      "structure": {
+        "and": 2,
+        "constant-0": 25,
+        "monotone-mixed": 3,
+        "non-monotone": 23,
+        "or": 2,
+        "single": 8
+      },
+      "tables": 63,
+      "u_empty_rate": 0.0,
+      "u_full_rate": 0.4444444444444444
+    }
+  },
+  "claim_level": "exploratory",
+  "experiment_id": "memcredit-study-v1",
+  "identity": {
+    "judge_cross_gpu": {
+      "ci95_tokens": [
+        0.9978797655775986,
+        1.0
+      ],
+      "differing_total": 0,
+      "gpu_other": {
+        "CUDA_VISIBLE_DEVICES": "1",
+        "name": "NVIDIA H100 80GB HBM3",
+        "pci_bus_id": 98,
+        "uuid": "34c1e8e2-bec3-3ce7-c1be-618cb05ca896"
+      },
+      "gpu_ref": {
+        "CUDA_VISIBLE_DEVICES": "0",
+        "name": "NVIDIA H100 80GB HBM3",
+        "pci_bus_id": 97,
+        "uuid": "b23c3b4d-5413-4d75-cad3-74be85f8d058"
+      },
+      "identical_tokens": 1738,
+      "identical_tokens_and_logprob_bits": 1738,
+      "n_common": 1738
+    },
+    "reader_cross_gpu": {
+      "ci95_tokens": [
+        0.9673927658658672,
+        0.9710632401923904
+      ],
+      "differing_total": 1061,
+      "gpu_other": {
+        "CUDA_VISIBLE_DEVICES": "1",
+        "name": "NVIDIA H100 80GB HBM3",
+        "pci_bus_id": 98,
+        "uuid": "34c1e8e2-bec3-3ce7-c1be-618cb05ca896"
+      },
+      "gpu_ref": {
+        "CUDA_VISIBLE_DEVICES": "0",
+        "name": "NVIDIA H100 80GB HBM3",
+        "pci_bus_id": 97,
+        "uuid": "b23c3b4d-5413-4d75-cad3-74be85f8d058"
+      },
+      "identical_tokens": 33463,
+      "identical_tokens_and_logprob_bits": 4614,
+      "n_common": 34524
+    }
+  },
+  "kill": {
+    "am2_k2_flip_rates_below_1pct": false,
+    "am6": {
+      "best_cheap_auroc": 0.8876459262508835,
+      "best_internal_auroc": 0.9351953401086983,
+      "k1_cheap_within_0.03": false,
+      "k2_all_below_0.65": false
+    },
+    "k1_aa_differs": true,
+    "k2_constant_questions": {
+      "constant": 10,
+      "fires": false,
+      "questions": 63,
+      "share": 0.15873015873015872
+    },
+    "k3_interactions_do_not_matter": {
+      "fires": false,
+      "loo_optimal_rate": 0.5730337078651686,
+      "shapley_optimal_rate": 0.9213483146067416,
+      "share_nonconstant_order1_ge_0.9": 0.2696629213483146
+    }
+  },
+  "questions": 63,
+  "split": "development"
+}

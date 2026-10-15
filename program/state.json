@@ -468,7 +468,7 @@
     "Gauntleted packages that ended at honest exits and can advance only by your ruling (D24, D70, D76). S2 v3 (65) continues as S2 v4 under your delegation (D80 (iv)); its images are built and its registration is in a repair round before the freeze (D84). C5 Phase 1 (70-97 GPU-h) stays yours; its identification defect stands",
     "Shelved by Kevin (D101), not to be raised unless he asks: the outward items (disclosures, licence requests, host-admin request, publication, the GitHub Support request), key rotation and account items. Drafts are in the private archive."
   ],
-  "gpu_hours_spent_this_program": 24.0988,
+  "gpu_hours_spent_this_program": 25.585,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -1377,6 +1377,60 @@
       ],
       "outcome": "rollout vs trainer mean |dlogp| fp16 0.0151 / 0.0124 and bf16_b528 0.0357 / 0.0352, against G2b's fp32 0.0077 / 0.0074 and bf16 0.0357 / 0.0365; within-sequence slope fp16 +5.8e-4 / +4.5e-4 per 1K, bf16_b528 equal to bf16's; the drift tracks the state's number format, not the block layout (exploratory; program/evidence/2026-10-15/g2c-precision-vs-layout/README.md)",
       "basis": "physical (committed scontrol RunTime x 1 H100 each, 1 s above the lane intervals); Slurm limits 16 and 20 min; G2c total with builds and smokes 1.2158 of the 1.5 cap"
+    },
+    {
+      "experiment": "memcredit-study-v1 image build (EXPLORATORY AM1 development pilot, D104/D107): cotcodec-vllm cu129 overlay, commit b94672f4",
+      "gpu_hours": 0.0186,
+      "jobs": [
+        "1405 vLLM overlay build b94672f4 (1 H100; COMPLETED 0:0, 00:01:07)"
+      ],
+      "outcome": "image sha256:13e85fa7; offline build from the retained source capsule 5866114e; CPU selftests 1404 (pre-image) and 1408 (post-build) pass",
+      "basis": "physical (scontrol RunTime 00:01:07 on 1 H100); submitted with no G2c GPU job queued or running"
+    },
+    {
+      "experiment": "memcredit-study-v1 pilot job (EXPLORATORY AM1 development pilot): exact 256-subset tables on 63 development questions x 2 pool arms with AM2's placebo arms (Qwen3-8B reader, batch-invariant, GPU 0 canonical and GPU 1 shuffled), Qwen3-32B judge with LongMemEval's prompt on both GPUs, Qwen3-8B second judge, HF eager-attention signals",
+      "gpu_hours": 0.8917,
+      "jobs": [
+        "1411 phases reader, judge, extra (2 H100; COMPLETED 0:0, 00:26:45)"
+      ],
+      "outcome": "34,524 reader requests per GPU; judge agrees with a blind agent hand check on 117 of 120 (kappa 0.95); B = 4 keep-set regret vs the exact optimum (retrieved arm): leave-one-out 0.214 [0.121, 0.316], permutation Shapley-16 0.097, SNIPW-64 0.070, retrieval rank 0.132, raw attention 0.263, exact Shapley 0.079; 53 of 89 non-constant tables non-monotone; GPU-1 replicate differs in 3.1% of replies (a different compile; see the A/A rows) (exploratory; program/evidence/2026-10-15/am1-dev-pilot/README.md)",
+      "basis": "physical (scontrol RunTime 00:26:45 on 2 H100; lane 00:11:53Z-00:38:37Z); Slurm limit 40 min (1.33 GPU-h cap); about 15 of the 26.75 minutes both GPUs idled on a quadratic pass read (fixed in 9c3d0db8)"
+    },
+    {
+      "experiment": "memcredit-study-v1-aa image build (EXPLORATORY AM1 cross-GPU A/A diagnostic): commit 5aa1f35a",
+      "gpu_hours": 0.0172,
+      "jobs": [
+        "1432 vLLM overlay build 5aa1f35a (1 H100; COMPLETED 0:0, 00:01:02)"
+      ],
+      "outcome": "image sha256:93f45a6e; CPU post-build selftest 1436 passes",
+      "basis": "physical (scontrol RunTime 00:01:02 on 1 H100); submitted with no G2c GPU job queued or running"
+    },
+    {
+      "experiment": "memcredit-study-v1-aa diagnostic job (EXPLORATORY): reader on the first 16 development questions with fresh compiles on both GPUs, swapped compile caches and enforce_eager on both GPUs, then the Qwen3-32B judge",
+      "gpu_hours": 0.3689,
+      "jobs": [
+        "1435 phases fresh, swapcache, eager, judge (2 H100; COMPLETED 0:0, 00:11:04)"
+      ],
+      "outcome": "fresh compiles on both GPUs, copied caches and job 1411's GPU-1 pass agree bit for bit (8,768 of 8,768); job 1411's GPU-0 compile is the odd one (8,530 of 8,768 replies; its inductor autotune chose R0_BLOCK 2048 vs 4096 for one reduction); eager passes identical across GPUs; compiled vs eager differ in 3.4% of replies, 0.18% of judged cells (exploratory; program/evidence/2026-10-15/am1-dev-pilot/README.md)",
+      "basis": "physical (scontrol RunTime 00:11:04 on 2 H100); Slurm limit 22 min (0.73 GPU-h cap)"
+    },
+    {
+      "experiment": "memcredit-study-v1-eager image build (EXPLORATORY AM1 eager replay check): commit a3365b8f",
+      "gpu_hours": 0.0192,
+      "jobs": [
+        "1439 vLLM overlay build a3365b8f (1 H100; COMPLETED 0:0, 00:01:09)"
+      ],
+      "outcome": "image sha256:a821739e",
+      "basis": "physical (scontrol RunTime 00:01:09 on 1 H100); submitted with no G2c GPU job queued or running"
+    },
+    {
+      "experiment": "memcredit-study-v1-eager check job (EXPLORATORY): enforce_eager reader on GPU 0 (canonical plus a shuffled in-engine replicate) and GPU 1 (shuffled), Qwen3-32B judge eager on both GPUs",
+      "gpu_hours": 0.1706,
+      "jobs": [
+        "1441 phases reader, judge (2 H100; COMPLETED 0:0, 00:05:07)"
+      ],
+      "outcome": "eager replay bit-exact across GPUs, processes, orders, an in-engine replicate and jobs 1435/1441 (8,768 of 8,768 each); judge 573 of 573; judge labels identical across compiled and eager mode on 573 shared items; eager pass 1.06x the compiled pass's wall time (exploratory; program/evidence/2026-10-15/am1-dev-pilot/README.md)",
+      "basis": "physical (scontrol RunTime 00:05:07 on 2 H100); Slurm limit 14 min (0.47 GPU-h cap); pilot total 1.4862 of the 2.0 cap"
     }
   ],
   "results": [

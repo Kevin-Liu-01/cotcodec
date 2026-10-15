@@ -169,6 +169,22 @@ provenance.
   sessions, the A/A identity comparisons, the throughput pairs and the
   256-subset demo tables. AM1 entry points use `memcredit_*` names: the lanes
   refuse the archived memory names (`run_memory_*`, `*memory_model*`, ...).
+- AM1 study (`experiments/am1/memcredit-study-v1.yaml`; development pilot
+  exploratory, confirmatory run drafted as `am1-memory-credit-v1`):
+  `memcredit_study_prepare.py` (`split|artifact`) writes the seeded development
+  / held-out split (ids only) and the per-split study artifact with AM2's
+  placebo swaps and reorders (the held-out split only under a frozen
+  registration); `memcredit_study.py` (`plan|selftest|run|worker`) is the 2-GPU
+  job: the batch-invariant Qwen3-8B reader with a cross-GPU A/A replicate, the
+  batch-invariant Qwen3-32B judge with LongMemEval's official prompt and its
+  A/A, a Qwen3-8B second judge, and HF eager-attention signals;
+  `memcredit_analyze.py` (`analyze|hand-sample|aa|power`) computes the tables'
+  set functions, the credit estimators' keep-set regret, the placebo and
+  internal-signal analyses, the judge's validation, A/A identity across
+  workers and jobs, and the power simulation. Every entry point takes
+  `--config` (the pilot, `memcredit-study-v1-aa`, `memcredit-study-v1-eager`
+  or the registration's `am1-memory-credit-v1`); workers take `cache_from`,
+  `enforce_eager`, `questions` and a pass list.
 
 ## Patterns to follow / invariants
 <!-- agent-docs:fill:patterns -->

@@ -1,0 +1,3 @@
+study selftest exit 0
+study plan exit 0
+pytest exit 1

@@ -5838,3 +5838,41 @@ they say so.)
   by side, figure, problems; seed-42 per-token subsets, rollout texts, lane records, manifests,
   build, selftest and source-check records). Full per-token files and raw arrays stay on the
   host under `~/cotcodec-runs/stage0/g2c-precision-layout/` with SHA-256.
+
+## 2026-10-15 — AM1 development-set pilot (exploratory) and the draft registration am1-memory-credit-v1 (branch `stage0/am1-study`, not merged)
+
+- What ran. EXPLORATORY, 1.4862 physical GPU-h of the 2.0 cap: three overlay builds (1405,
+  1432, 1439) and three jobs on 2 H100 each: the pilot 1411 (00:26:45), the cross-GPU A/A
+  diagnostic 1435 (00:11:04) and the eager replay check 1441 (00:05:07). LongMemEval-S's 416
+  usable questions were split with seed 42 by type into 63 development and 353 held-out
+  questions (`experiments/am1/memcredit-split-v1.json`); only the development split was used.
+- Findings (exploratory; `program/evidence/2026-10-15/am1-dev-pilot/README.md`):
+  - Judge: Qwen3-32B in batch-invariant mode with LongMemEval's official answer-check prompt
+    agrees with a blind hand check (by the agent, not a human) on 117 of 120 replies (kappa
+    0.95); Qwen3-8B 109 (0.82); Step 0's containment rule 87 (0.45).
+  - Tables: 37 of 126 exact 256-subset tables are constant (all 0); of the 89 others, 53 are
+    non-monotone, 22 single-memory, 8 AND, 2 OR. H1: order >= 2 share 0.374, above the
+    gold-count AND/OR baseline by 0.121 [0.046, 0.198].
+  - H2 (B = 4 of 8, retrieved arm): keep-set regret against the exact optimum is 0.214 [0.121,
+    0.316] for leave-one-out, 0.097 for permutation Shapley-16, 0.070 for SNIPW-64, 0.132 for
+    retrieval rank, 0.263 for raw attention, 0.079 for exact Shapley, 0.576 for a random set;
+    the gold arm agrees.
+  - AM2: 70.8% of gold deletion labels survive length- and rank-matched swaps and reorders,
+    16.7% of non-gold ones; a content-free reorder flips 13.1% of pools.
+  - AM6: necessity AUROC 0.868 for raw attention, 0.935 for cross-fitted heads, 0.888 for the
+    reply-overlap baseline.
+  - Replay: compiled batch-invariant replay is exact only for the same compiled kernels. One of
+    four fresh reader compiles (job 1411, GPU 0, which made the pilot's tables) autotuned a
+    different inductor reduction block and changed 3.1% of replies (0.25% of judged cells);
+    copied compile caches and enforce_eager replay bit-exactly across GPUs, processes, orders
+    and jobs, eager at 1.06x the compiled pass's wall time.
+- Draft registration: `program/preregistrations/am1-memory-credit-v1.md` (DRAFT, not frozen, no
+  ledger row) with `experiments/am1/am1-memory-credit-v1.yaml`: the held-out run in eager mode,
+  H1 descriptive, H2 decisions per primary rule (MISSPECIFIED if the 99% lower bound of the B = 4
+  regret exceeds 0.05, ADEQUATE if the upper bound is below 0.02), gates (replay, judge with a
+  fresh hand check, constant tables, interactions), power simulated from the pilot, about 1.1
+  GPU-h expected under a 2.1 cap. The prepare script and the driver refuse held-out data unless
+  the registration is frozen.
+- Problems: a quadratic pass read idled both GPUs for about 15 of job 1411's 26.75 minutes (fixed
+  in `9c3d0db8`); G2c GPU jobs started beside job 1411; a transposition in the hand labels was
+  corrected against the agent's item notes (both files kept).

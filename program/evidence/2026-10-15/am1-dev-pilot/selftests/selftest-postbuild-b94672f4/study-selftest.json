@@ -1,0 +1,112 @@
+{
+  "attention_selftest": {
+    "layers": 28,
+    "mass_max_total": 0.606837272644043,
+    "mass_min": 3.9730008438709774e-07,
+    "model": "qwen3-0.6b-base",
+    "ok": true,
+    "pool": [
+      10,
+      "gold"
+    ],
+    "prompt_tokens": 531,
+    "shape": [
+      28,
+      16,
+      8
+    ],
+    "wall_s": 1.7
+  },
+  "judge_prompts": {
+    "primary": {
+      "fits": true,
+      "items": 251,
+      "len_max": 302,
+      "len_mean": 168.64940239043824,
+      "model_id": "qwen3-32b"
+    },
+    "secondary": {
+      "fits": true,
+      "items": 251,
+      "len_max": 302,
+      "len_mean": 168.64940239043824,
+      "model_id": "qwen3-8b"
+    }
+  },
+  "memory_spans": {
+    "ordered_and_complete": 126,
+    "pools": 126
+  },
+  "ok": true,
+  "parse_judgment": [
+    [
+      1,
+      true
+    ],
+    [
+      0,
+      true
+    ],
+    [
+      1,
+      false
+    ]
+  ],
+  "plan": {
+    "by_kind": {
+      "reorder": 252,
+      "swap": 2016,
+      "table": 32256
+    },
+    "experiment_id": "memcredit-study-v1",
+    "phases": [
+      {
+        "id": "reader",
+        "workers": [
+          "reader-gpu0",
+          "reader-gpu1"
+        ]
+      },
+      {
+        "id": "judge",
+        "workers": [
+          "judge32-gpu0",
+          "judge32-gpu1"
+        ]
+      },
+      {
+        "id": "extra",
+        "workers": [
+          "judge8-gpu0",
+          "attention-gpu1"
+        ]
+      }
+    ],
+    "pools": 126,
+    "questions": 63,
+    "reader_requests": 34524,
+    "split": "development",
+    "validation_items": 188
+  },
+  "reader_prompts": {
+    "fits": true,
+    "len_max": 1570,
+    "len_mean": 437.67822384428223,
+    "len_min": 109,
+    "requests": 34524,
+    "thinking_disabled": true,
+    "tokens_total": 15110403
+  },
+  "vllm_cited_files_sha256": {
+    "config/vllm.py": "057b0a7f80db28522ee46b41f9ae5bd7a0c1998a08e111c5a6ddcb8c08f07f8d",
+    "engine/arg_utils.py": "95be1adb96f55933f6a52260c8cb2181d04707401ca21d97c33108c5ab58f3ac",
+    "envs.py": "1d7101800f67b803a700fbf7489292cf1f0022b570085166ad407e6b1513dc15",
+    "model_executor/determinism/batch_invariant.py": "fd39330e48f8b209def7378b1b83fa009534617e8fc41230dc4f40a528309993",
+    "model_executor/determinism/batch_invariant_configs.py": "9fef5b173374b7fe01f199332bea7477fde6384f63d62bc5662722e55f0bdaa4",
+    "model_executor/layers/attention/attention.py": "bde77677fd0e95ea09c6a580dfaf09b57741e8183e00cb106e2d1cc64d8e03f2",
+    "sampling_params.py": "3c37c655a0a60851e3d96d946eb10d1cbb347dee6cd143f38a7fc18c6f66dd8b",
+    "v1/attention/backends/flash_attn.py": "ea53fb41165323f13094604051c73d44a579994fe5a427243aa9faafc280b1c2",
+    "v1/worker/gpu_worker.py": "43bd01925cd84f7d8a1d4a2ec30e289014a485fe4492a5343cbc893e8ed2f518"
+  },
+  "vllm_version": "0.31.0"
+}

@@ -1,0 +1,55 @@
+# AM1 development pilot (EXPLORATORY), main job: scripts/memcredit_study.py in the cotcodec-vllm
+# cu129 overlay built from the same commit. Phases reader (Qwen3-8B, batch-invariant, GPU 0
+# canonical and GPU 1 shuffled), judge (Qwen3-32B, batch-invariant, GPU 0 canonical and GPU 1
+# shuffled), extra (Qwen3-8B judge on GPU 0, HF eager-attention signals on GPU 1)
+# (experiments/am1/memcredit-study-v1.yaml) on 2 H100; Slurm limit 40 min = 1.33 GPU-h cap.
+# The lane's model is the judge, Qwen3-32B (full receipt in cotcodec-receipts); the reader,
+# Qwen3-8B, is re-verified by the driver against its full receipt in cotcodec-receipts-cpu-lane.
+runtime: docker-single-node-discovery-v1
+name: am1-study-dev
+image_id: sha256:13e85fa7c4d12267560caea33ad81e7b89fd6aeae9555f87bd6dd9e8aed664a1
+git_sha: "b94672f4daeb2b2383bf10b0d38b52d0c2bea80a"
+source_sha256: "5866114eddec9086033f4333c70fb5280894c34f7b00d654163925c699a4f43f"
+run_root: /home/kevin/cotcodec-runs/stage0/am1-study/runs/main
+container_profile: vllm
+resources:
+  gpu_type: h100
+  gpus: 2
+  cpus: 32
+  memory_gb: 256
+  minutes: 40
+budget:
+  max_gpu_hours: 1.34
+randomness_contract: assignment-seed-matrix
+seeds: [42, 43, 44]
+seed_binding:
+  flag: "--seeds"
+model:
+  cache_host_path: /home/kevin/cotcodec-runs/hf-cache
+  model_id: qwen3-32b
+  revision: "9216db5781bf21249d130ec9da846c4624c16137"
+  receipt_sha256: "06e4a7e981eee4f6c079fd6b02dc58e3a9fd798e0d806820383d873cf9cd1fd1"
+  artifact_root_sha256: "8fcd9106bfb1854a5b160c64a0ff3d3463208ab69854ae8c1cc26ba19dbf5714"
+study_artifact:
+  source_id: memcredit-study-dev-pools
+  revision: "b94672f4daeb2b2383bf10b0d38b52d0c2bea80a"
+  license: MIT
+  host_path: /home/kevin/cotcodec-runs/stage0/am1-study/prepare/study-artifact-b94672f4.json
+  sha256: "15567cf14a0c38c1f9edec1f47feceb2a6fccf116338e5957182d03f1d996ebc"
+  size_bytes: 2300015
+command:
+  - python
+  - scripts/memcredit_study.py
+  - run
+  - "--seeds"
+  - "42"
+  - "43"
+  - "44"
+  - "--output-dir"
+  - /outputs/am1
+  - "--allocation-minutes"
+  - "40"
+  - "--evidence"
+  - /inputs/study-artifact.json
+  - "--expected-evidence-sha256"
+  - "15567cf14a0c38c1f9edec1f47feceb2a6fccf116338e5957182d03f1d996ebc"
