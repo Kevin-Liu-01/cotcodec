@@ -759,26 +759,23 @@ def spearman(x: Sequence[float], y: Sequence[float]) -> float | None:
 def cluster_bootstrap(
     clusters: dict[str, list[float]], resamples: int, seed: int, alpha: float = 0.05
 ) -> dict[str, Any]:
-    """Mean over units with a percentile interval from resampling clusters with replacement."""
+    """Mean over units with a percentile interval from resampling clusters with replacement
+    (numpy ``default_rng(seed)``; each resample's statistic is the ratio of summed values to
+    summed unit counts over the drawn clusters)."""
+
+    import numpy as np
 
     keys = sorted(k for k, v in clusters.items() if v)
-    units = [x for k in keys for x in clusters[k]]
-    if not units:
+    if not keys:
         return {"mean": None, "ci": [None, None], "units": 0, "clusters": 0}
-    rng = random.Random(seed)
-    stats = []
-    for _ in range(resamples):
-        total = 0.0
-        count = 0
-        for _ in keys:
-            values = clusters[keys[rng.randrange(len(keys))]]
-            total += sum(values)
-            count += len(values)
-        stats.append(total / count)
-    stats.sort()
-    lo = stats[int(math.floor(alpha / 2 * (resamples - 1)))]
-    hi = stats[int(math.ceil((1 - alpha / 2) * (resamples - 1)))]
-    return {"mean": sum(units) / len(units), "ci": [lo, hi], "units": len(units),
+    sums = np.array([float(sum(clusters[k])) for k in keys])
+    counts = np.array([len(clusters[k]) for k in keys], dtype=float)
+    rng = np.random.default_rng(seed)
+    draws = rng.integers(0, len(keys), size=(resamples, len(keys)))
+    stats = np.sort(sums[draws].sum(axis=1) / counts[draws].sum(axis=1))
+    lo = float(stats[int(math.floor(alpha / 2 * (resamples - 1)))])
+    hi = float(stats[int(math.ceil((1 - alpha / 2) * (resamples - 1)))])
+    return {"mean": float(sums.sum() / counts.sum()), "ci": [lo, hi], "units": int(counts.sum()),
             "clusters": len(keys)}  # fmt: skip
 
 
