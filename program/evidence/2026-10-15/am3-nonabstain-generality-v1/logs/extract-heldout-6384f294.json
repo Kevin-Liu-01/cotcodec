@@ -1,0 +1,163 @@
+{
+  "comparisons": {
+    "anchor": {
+      "judge_item_replay": {
+        "primary": {
+          "compared": 5820,
+          "same": 5820
+        },
+        "secondary": {
+          "compared": 5820,
+          "same": 5820
+        }
+      },
+      "pass": true,
+      "r1_replies": {
+        "cells": 49274,
+        "compared": 49274,
+        "identical_bits": 49274,
+        "identical_text": 49274,
+        "identical_tokens": 49274,
+        "label_compared_identical_reply_primary": 49274,
+        "label_compared_identical_reply_secondary": 49274,
+        "label_compared_primary": 49274,
+        "label_compared_secondary": 49274,
+        "label_same_identical_reply_primary": 49274,
+        "label_same_identical_reply_secondary": 49274,
+        "label_same_primary": 49274,
+        "label_same_secondary": 49274,
+        "pass": true
+      },
+      "r2_labels_vs_tables": {
+        "cells": 49274,
+        "cells_same_label": 49274,
+        "pass": true,
+        "pools": 694
+      },
+      "reference": "job 1458 (AM1): reader-gpu0 (eager batch-invariant, canonical order), judge32-gpu0, judge8-gpu0",
+      "reference_sha256": {
+        "judge-items.json": "c3eec6515b4e654bb88cccef65dba1d88e210326bbf238c27c6f8dfa1c3a2999",
+        "sessions/judge32-gpu0/all.json": "5a36bbac383c6a5395c148dc837c75906cf806ff64969cc67ef770b417929300",
+        "sessions/judge32-gpu0/all.npz": "229cefd3fdadc060a89f5d16e6c7ab76d8a20f7f444bc88fd7d48740c6f9f7f6",
+        "sessions/judge32-gpu0/all.texts.jsonl.gz": "e2166086dfe773a4e52054d2dc6d58372adb7cde8a4e4a060e990a6e66fb53f4",
+        "sessions/judge8-gpu0/all.json": "33c280bf120a551fe41c9569cd2c350d31eca50da4b791b64867ec62a370883c",
+        "sessions/judge8-gpu0/all.npz": "9fe7bf7d1ac5a35478d8dc064d88f30e6f5f65631d664a74d5f8720f932d1ba7",
+        "sessions/judge8-gpu0/all.texts.jsonl.gz": "e31d77ad7f39a56d829b5ccbef033e56b5b99fe90d01725d03d837a82de95cae",
+        "sessions/reader-gpu0/all.json": "c8381bcbe4afe33e436ad101cbe313ef1608c40916dbd8a6e3a4c0191322e189",
+        "sessions/reader-gpu0/all.npz": "8f985d8a2b40ecbb4fcbed1c2a63323c3d4ce398da83eea5fef8bca137054776",
+        "sessions/reader-gpu0/all.texts.jsonl.gz": "b05d5d87f9b9c7445cb053d8e4830e2fcf105f04f7c265551773dd9665fcfd39"
+      }
+    }
+  },
+  "features_sha256": "ed417538177ba16c439a5ecde4d479f7cb97be9c04f7757ac9c7bb1773132ebe",
+  "population": "heldout",
+  "readers": {
+    "olmo-2-1124-7b-instruct": {
+      "batch_invariant": true,
+      "enforce_eager": true,
+      "finish": {
+        "length": 97,
+        "stop": 49177
+      },
+      "missing_logprobs": 0,
+      "pass_sha256": {
+        "sessions/rd-olmo2/all.json": "de6c945a170ecde37b374c19af6a5518cd8fa2da4e17b813e8ef800d9e39224b",
+        "sessions/rd-olmo2/all.npz": "f3072430bda52ffcecd54bd0bfff254ca82138fc31e6669966b6a1ad847c8ac9",
+        "sessions/rd-olmo2/all.texts.jsonl.gz": "30854fc84582d359f095e820d5d024b2a7f9d7de6c2e5d4ce555685ee2044bca"
+      },
+      "pools_complete": 694,
+      "pools_complete_primary": 694,
+      "requests": 49274,
+      "step": "rd-olmo2"
+    },
+    "qwen3-8b": {
+      "batch_invariant": true,
+      "enforce_eager": true,
+      "finish": {
+        "length": 213,
+        "stop": 49061
+      },
+      "missing_logprobs": 0,
+      "pass_sha256": {
+        "sessions/rd-qwen3-8b/all.json": "1fa23eb27dc6bf43191b3fe9af2d84de115057ad5131568933f0d61e8e6dbfd4",
+        "sessions/rd-qwen3-8b/all.npz": "f60df7f94414191333311c8ff74f55e257f7b681d349ef8cfbe18d591bcfeef9",
+        "sessions/rd-qwen3-8b/all.texts.jsonl.gz": "13629364da309f16e043966c83ad13f6389dc734feaf5763c7ecdf74086a3eea"
+      },
+      "pools_complete": 694,
+      "pools_complete_primary": 694,
+      "requests": 49274,
+      "step": "rd-qwen3-8b"
+    },
+    "qwen3.5-9b": {
+      "batch_invariant": false,
+      "enforce_eager": true,
+      "finish": {
+        "length": 33,
+        "stop": 49241
+      },
+      "missing_logprobs": 0,
+      "pass_sha256": {
+        "sessions/rd-qwen35-9b-default/all.json": "757ab21225b0f3509bcc8c58bfda5154590ddcf1ab398e64263bfa315dc487d9",
+        "sessions/rd-qwen35-9b-default/all.npz": "2e5d619c9d12b2aebdcdd593f003d2457d6e9609c01997ee28e60f887b386f89",
+        "sessions/rd-qwen35-9b-default/all.texts.jsonl.gz": "a8db6e9bfb36bb9db14e4f9be7038a32c5bc289421874c3c3e1e72fc66ca5e08"
+      },
+      "pools_complete": 694,
+      "pools_complete_primary": 694,
+      "requests": 49274,
+      "step": "rd-qwen35-9b-default"
+    }
+  },
+  "validation": {
+    "judge_items": 14317,
+    "judge_items_reader": 13277,
+    "judge_items_sha256": "b0e5823c98860c4399299ffd1055b49224b1b1eb3156f7210bfb4788411e9abd",
+    "judge_pass_sha256": {
+      "sessions/judge32/all.json": "790cdba00d350a6d810be0542d531d6fcf9cd93de3994a45a946e221065220ff",
+      "sessions/judge32/all.npz": "8c1b77bb552b3cd82f431c7ba15049b8ea903208e7293091604631fe8100ca38",
+      "sessions/judge32/all.texts.jsonl.gz": "7fcc587eb12d5faac51005d66832efb6b8f31bb7fd752c3bef1e09ab9bb6d61d",
+      "sessions/judge8/all.json": "46f9ab72928375e5ab3f476ce7d58ad1ac7c3cec8aac08dc2264fd15dbd72b5d",
+      "sessions/judge8/all.npz": "a031bdea3fbfa7300d1ae1913f8d1da7bc2f746564e5b58229b0df7c035bcfb7",
+      "sessions/judge8/all.texts.jsonl.gz": "04bd411257ed49bded0e3f24b30e1a8a7790cca0048defd04bfa44eb61a3a511"
+    },
+    "judge_validation": {
+      "primary": {
+        "validation:idk": {
+          "items": 347,
+          "missing": 0,
+          "yes": 0
+        },
+        "validation:other-answer": {
+          "items": 346,
+          "missing": 0,
+          "yes": 3
+        },
+        "validation:reference": {
+          "items": 322,
+          "missing": 0,
+          "yes": 322
+        }
+      },
+      "secondary": {
+        "validation:idk": {
+          "items": 347,
+          "missing": 0,
+          "yes": 49
+        },
+        "validation:other-answer": {
+          "items": 346,
+          "missing": 0,
+          "yes": 5
+        },
+        "validation:reference": {
+          "items": 322,
+          "missing": 0,
+          "yes": 322
+        }
+      }
+    },
+    "labelled": {
+      "primary": 14317,
+      "secondary": 14317
+    }
+  }
+}

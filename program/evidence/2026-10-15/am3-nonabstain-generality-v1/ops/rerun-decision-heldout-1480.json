@@ -1,0 +1,17 @@
+{
+  "decision": "complete",
+  "is_rerun": false,
+  "job_dir": "1480",
+  "lane_reason": "completed",
+  "population": "heldout",
+  "second_judge": "complete",
+  "steps": {
+    "judge32": "complete",
+    "judge8": "complete",
+    "rd-olmo2": "complete",
+    "rd-olmo2-default": "not-needed",
+    "rd-qwen3-8b": "complete",
+    "rd-qwen35-9b-default": "complete"
+  },
+  "why": "every essential step completed"
+}

@@ -1,0 +1,3 @@
+image sha256:674572dd988c45a510160f5be6e849697539fd985ea332aeef04c0d149de6bb1 population heldout
+am3g selftest exit 0
+am3g plan exit 0

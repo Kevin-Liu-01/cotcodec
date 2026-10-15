@@ -1,0 +1,4 @@
+d1363d755484fa369ed7bbb2cdd481cc135a2fb21cd258ad0863f606524edd17  ./all.npz
+242fd55a8e67f43fc71fb8befc0ade8cfb850ecd68f7abfb171c7c2fbee740c2  ./all.texts.jsonl.gz
+88ddbc4c3a9cb91c129ad8dbcdc5d83b43fa370b6307ccf4a91f4961a50feb8c  ./smoke.npz
+490a86baa87adbfd02559e109aa25c3e745b2af581671cdae5e81957154d0329  ./smoke.texts.jsonl.gz

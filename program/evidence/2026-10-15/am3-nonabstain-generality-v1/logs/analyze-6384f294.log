@@ -1,0 +1,12 @@
+start 2026-10-15T15:32:24Z commit 6384f2940e4ff30cfe287725d22eabc9c1392fa3 mode reg tag 6384f294
+hand-label receipt commit 417d114924ff04ea74975d0ac24b93d2abc3c20c; labels 2ff9f35371595a24; plan 918468a493f8ae4f
+analyze a exit 0
+analyze b exit 0
+analyze outputs byte-identical
+d0ff289663e51d2f74736ab2d24b409d2730a9a7ca589c3d00d77b1c9c0028ac  results.json
+921c0ea00342d20b9c014ecfdc4940b9a56bbdaf3dc5f987a4c3930ff3bf6eb7  per-table.json.gz
+4f18576a96be32d01b3770784259150433109ed090d0f9b859c6e483b0f254db  tables.md
+4a18d2cf39b9ee135728bf91819527ce55c488185085b120b7bcf870f9efb464  ~/cotcodec-runs/stage0/am3-nonabstain-generality-v1/private/features-abstention.json.gz
+ed417538177ba16c439a5ecde4d479f7cb97be9c04f7757ac9c7bb1773132ebe  ~/cotcodec-runs/stage0/am3-nonabstain-generality-v1/private/features-heldout.json.gz
+pytest exit 0 (132 passed in 4.52s)
+end 2026-10-15T15:32:35Z

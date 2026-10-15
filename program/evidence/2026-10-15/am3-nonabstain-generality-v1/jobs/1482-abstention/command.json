@@ -1,0 +1,19 @@
+[
+  "python",
+  "scripts/memcredit_am3g.py",
+  "run",
+  "--population",
+  "abstention",
+  "--seeds",
+  "42",
+  "43",
+  "44",
+  "--output-dir",
+  "/outputs/am3g",
+  "--allocation-minutes",
+  "30",
+  "--evidence",
+  "/inputs/study-artifact.json",
+  "--expected-evidence-sha256",
+  "f1c241baeaeddcd5690daa22337612843b049059c354fe25fe348947e346a0f5"
+]
