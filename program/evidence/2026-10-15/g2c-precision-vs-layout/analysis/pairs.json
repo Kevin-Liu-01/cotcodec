@@ -1,0 +1,149 @@
+{
+  "experiment_id": "g2c-precision-layout-v1",
+  "models": {
+    "qwen3.5-4b": {
+      "bf16_b528_vs_bf16": {
+        "identical_to_the_end": 27,
+        "identical_up_to_the_shorter": 66,
+        "pairs": 72,
+        "prefix_max": 31687,
+        "prefix_mean_abs_dlogp": 2.7095036889355914e-06,
+        "prefix_median": 31687.0,
+        "prefix_quartiles": [
+          7819.0,
+          31687.0
+        ],
+        "prefix_share_bit_equal_logp": 0.9995940385774484,
+        "prefix_tokens": 1529702
+      },
+      "bf16_b528_vs_fp32": {
+        "identical_to_the_end": 0,
+        "identical_up_to_the_shorter": 0,
+        "pairs": 72,
+        "prefix_max": 1723,
+        "prefix_mean_abs_dlogp": 0.005728761417139743,
+        "prefix_median": 270.5,
+        "prefix_quartiles": [
+          126.25,
+          455.25
+        ],
+        "prefix_share_bit_equal_logp": 0.1962865776081425,
+        "prefix_tokens": 25152
+      },
+      "bf16_vs_fp32": {
+        "identical_to_the_end": 0,
+        "identical_up_to_the_shorter": 0,
+        "pairs": 72,
+        "prefix_max": 1723,
+        "prefix_mean_abs_dlogp": 0.0057605502310120625,
+        "prefix_median": 259.5,
+        "prefix_quartiles": [
+          113.0,
+          438.5
+        ],
+        "prefix_share_bit_equal_logp": 0.19579632178155887,
+        "prefix_tokens": 23979
+      },
+      "fp16_vs_bf16": {
+        "identical_to_the_end": 0,
+        "identical_up_to_the_shorter": 0,
+        "pairs": 72,
+        "prefix_max": 1418,
+        "prefix_mean_abs_dlogp": 0.005384806069437754,
+        "prefix_median": 209.5,
+        "prefix_quartiles": [
+          97.5,
+          434.0
+        ],
+        "prefix_share_bit_equal_logp": 0.20394526065266144,
+        "prefix_tokens": 21849
+      },
+      "fp16_vs_fp32": {
+        "identical_to_the_end": 0,
+        "identical_up_to_the_shorter": 0,
+        "pairs": 72,
+        "prefix_max": 1418,
+        "prefix_mean_abs_dlogp": 0.004518427627735652,
+        "prefix_median": 242.5,
+        "prefix_quartiles": [
+          91.75,
+          454.25
+        ],
+        "prefix_share_bit_equal_logp": 0.22922718160618583,
+        "prefix_tokens": 24443
+      }
+    },
+    "qwen3.5-9b": {
+      "bf16_b528_vs_bf16": {
+        "identical_to_the_end": 0,
+        "identical_up_to_the_shorter": 0,
+        "pairs": 72,
+        "prefix_max": 2030,
+        "prefix_mean_abs_dlogp": 0.004434818194335085,
+        "prefix_median": 220.0,
+        "prefix_quartiles": [
+          124.5,
+          389.0
+        ],
+        "prefix_share_bit_equal_logp": 0.2664129400570885,
+        "prefix_tokens": 25224
+      },
+      "bf16_b528_vs_fp32": {
+        "identical_to_the_end": 0,
+        "identical_up_to_the_shorter": 0,
+        "pairs": 72,
+        "prefix_max": 1374,
+        "prefix_mean_abs_dlogp": 0.005278319542241643,
+        "prefix_median": 241.0,
+        "prefix_quartiles": [
+          173.5,
+          403.5
+        ],
+        "prefix_share_bit_equal_logp": 0.25689981970320375,
+        "prefix_tokens": 21631
+      },
+      "bf16_vs_fp32": {
+        "identical_to_the_end": 0,
+        "identical_up_to_the_shorter": 0,
+        "pairs": 72,
+        "prefix_max": 1400,
+        "prefix_mean_abs_dlogp": 0.005335595423055817,
+        "prefix_median": 249.5,
+        "prefix_quartiles": [
+          159.25,
+          393.75
+        ],
+        "prefix_share_bit_equal_logp": 0.2484737756784457,
+        "prefix_tokens": 22441
+      },
+      "fp16_vs_bf16": {
+        "identical_to_the_end": 0,
+        "identical_up_to_the_shorter": 0,
+        "pairs": 72,
+        "prefix_max": 1327,
+        "prefix_mean_abs_dlogp": 0.005230292271178511,
+        "prefix_median": 227.5,
+        "prefix_quartiles": [
+          133.5,
+          403.75
+        ],
+        "prefix_share_bit_equal_logp": 0.25698508589767793,
+        "prefix_tokens": 21188
+      },
+      "fp16_vs_fp32": {
+        "identical_to_the_end": 0,
+        "identical_up_to_the_shorter": 0,
+        "pairs": 72,
+        "prefix_max": 2130,
+        "prefix_mean_abs_dlogp": 0.004142400532933114,
+        "prefix_median": 260.5,
+        "prefix_quartiles": [
+          135.25,
+          471.25
+        ],
+        "prefix_share_bit_equal_logp": 0.3014489595816538,
+        "prefix_tokens": 27537
+      }
+    }
+  }
+}

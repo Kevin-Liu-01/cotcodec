@@ -1,0 +1,46 @@
+# g2c-precision-layout-v1 (EXPLORATORY) teacher-force: r1 unpacked (all 144) and r4 fp32 reference (32) on both arms of Qwen3.5-4B (rollout job 1418)
+# Slurm limit 16 min x 1 H100 = 0.2667 GPU-h cap; the drivers stop starting work 210 s before it.
+runtime: docker-single-node-discovery-v1
+name: g2c-tf-q35-4b
+image_id: sha256:ba5b3ce356398de10253caca1e7b709644ec640624479b024e34c03d5ba87d3e
+git_sha: "3833d544baa00eb088ba97513aa7e2766012e900"
+source_sha256: "3d3bea32b0780ff169239db20bd4049076b8ed73b4bc5122a70e1ccef4368dd2"
+run_root: /home/kevin/cotcodec-runs/stage0/g2c-precision-layout/runs/tf
+container_profile: default
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 16
+  memory_gb: 128
+  minutes: 16
+budget:
+  max_gpu_hours: 0.2667
+randomness_contract: deterministic
+seeds: []
+model:
+  cache_host_path: /home/kevin/cotcodec-runs/hf-cache
+  model_id: qwen3.5-4b
+  revision: "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a"
+  receipt_sha256: "75ebfc531acdcbc0c39bbf83ee7bf5267a3ddf02c4fafdf6181624612a0d3082"
+  artifact_root_sha256: "3b8a075149bffe4dea784db5b4b37bc0896688cba0b3de7d8d0f6e8ae6157b9e"
+study_artifact:
+  source_id: g2c-tf-input-qwen3.5-4b
+  revision: "3833d544baa00eb088ba97513aa7e2766012e900"
+  license: MIT
+  host_path: /home/kevin/cotcodec-runs/stage0/g2c-precision-layout/inputs/tf-input-qwen3.5-4b.json
+  sha256: "070d77a7b5b381fa33ab1b30e7d06eb0991898c30e1e2fd34989ed3c480c18d3"
+  size_bytes: 39464606
+command:
+  - "python"
+  - "scripts/run_g2c_teacher_force.py"
+  - "run"
+  - "--evidence"
+  - "/inputs/study-artifact.json"
+  - "--expected-evidence-sha256"
+  - "070d77a7b5b381fa33ab1b30e7d06eb0991898c30e1e2fd34989ed3c480c18d3"
+  - "--model"
+  - "qwen3.5-4b"
+  - "--output-dir"
+  - "/outputs/g2ctf"
+  - "--allocation-minutes"
+  - "16"

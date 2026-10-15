@@ -1,0 +1,41 @@
+# g2c-precision-layout-v1 (EXPLORATORY) rollouts: Qwen3.5-9B, arms fp16 then bf16_b528 on one H100: phase R (72 rollouts), one saturation wave (seed 42), prefill in the arm own engine settings
+# Slurm limit 37 min x 1 H100 = 0.6167 GPU-h cap; the drivers stop starting work 210 s before it.
+runtime: docker-single-node-discovery-v1
+name: g2c-rs-q35-9b
+image_id: sha256:7f6d49d75fe5d6cefd3fc348129c48e141ab607118a55b7897a47df8bf988ff3
+git_sha: "3833d544baa00eb088ba97513aa7e2766012e900"
+source_sha256: "3d3bea32b0780ff169239db20bd4049076b8ed73b4bc5122a70e1ccef4368dd2"
+run_root: /home/kevin/cotcodec-runs/stage0/g2c-precision-layout/runs/rs
+container_profile: vllm
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 16
+  memory_gb: 128
+  minutes: 37
+budget:
+  max_gpu_hours: 0.6167
+randomness_contract: assignment-seed-matrix
+seeds: [42, 43, 44]
+seed_binding:
+  flag: "--seeds"
+model:
+  cache_host_path: /home/kevin/cotcodec-runs/hf-cache
+  model_id: qwen3.5-9b
+  revision: "c202236235762e1c871ad0ccb60c8ee5ba337b9a"
+  receipt_sha256: "0a9e052d561b017c505adf5a1c6fcdc048522660a0db134486b84edbf3de5cb3"
+  artifact_root_sha256: "9845026dbe255e24b105224eebbb5436d315713b9a5c53c434137896b160c5b1"
+command:
+  - "python"
+  - "scripts/run_g2c_rollouts.py"
+  - "run"
+  - "--model"
+  - "qwen3.5-9b"
+  - "--seeds"
+  - "42"
+  - "43"
+  - "44"
+  - "--output-dir"
+  - "/outputs/g2c"
+  - "--allocation-minutes"
+  - "37"

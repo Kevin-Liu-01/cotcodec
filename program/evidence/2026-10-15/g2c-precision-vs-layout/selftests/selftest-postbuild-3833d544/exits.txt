@@ -1,0 +1,4 @@
+rollouts selftest exit 0
+teacher-force selftest exit 0
+rollouts plan exit 0
+source pass 2 exit 0

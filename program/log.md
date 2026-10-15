@@ -5766,3 +5766,52 @@ they say so.)
   and no result changed: the mechanism wording and a prescriptive RL line, the GPU-h basis,
   the 9B packed residual, the sampler's first sample and wave determinism, and the resume
   exemption.
+
+## 2026-10-15 — G2c exploratory: GDN state precision vs block layout in vLLM 0.31.0 (branch `stage0/g2c-precision-layout`, not merged)
+
+- EXPLORATORY follow-up to G2b (no preregistration, no decision rule, no confirmatory claim).
+  G2b's bf16 GDN state also halved the hybrid block (528 to 272 tokens), so its drift could not
+  be pinned on precision. Two new arms on G2b's prompts, seeds and engine settings (inherited by
+  hash from G2b's config): `fp16` (float16 state, vLLM's own 272-token block: bf16's layout and
+  memory) and `bf16_b528` (bf16 state with `block_size=528`: fp32's layout and block pool).
+  G2b's fp32 and bf16 arms were reused from their committed, hash-bound outputs, not rerun; the
+  same code recomputes G2b's committed numbers exactly. Config
+  `experiments/g2/g2c-precision-layout-v1.yaml`; `harness/g2c_precision_layout.py`,
+  `scripts/run_g2c_rollouts.py`, `scripts/run_g2c_teacher_force.py`,
+  `scripts/analyze_g2c_precision_layout.py`, `tests/test_g2c_precision_layout.py`. G2b's
+  scripts came in by merging `stage0/g2b-state-dtype` at `a213572e` (read-only on that branch).
+- The other off-diagonal cell, fp32 at 272-token blocks, cannot be run in vLLM 0.31.0 without
+  code changes. Read-only source (CPU jobs 1403, 1409): `platforms/interface.py`
+  `_align_hybrid_block_size` (lines 835-1018) aligns to max(16, user block), raises a block whose
+  attention page cannot hold the GDN page, and asserts attention page >= GDN page. The smoke's
+  dummy-weight probe confirmed it: fp32 with `block_size=272` resolved to 544. bf16 with 528 is
+  kept, its GDN page padded 97.01%.
+- GPU jobs (2026-10-15 00:10-00:54 UTC): builds 1406, 1407; smokes 1414 (probe and both arms)
+  and 1422 (teacher forcing); per model one H100 running both arms in turn (phase R, one wave,
+  prefill in each arm's own engine): 1418 (4B), 1420 (9B); teacher forcing r1 (all 144) and r4
+  (32): 1428, 1431. **1.2158 physical GPU-h of the 1.5 cap.** CPU: source checks 1403 and 1409
+  (with selftests), analysis dry runs 1423-1425 (two early failures, fixed), analyses 1433,
+  1437, 1438, checks @@CHECKS_JOB@@. No fresh-job resume test (AGENTS.md hard rule 2): the
+  disclosed exemption G2b used.
+- Readings (exploratory, one stack, 72 rollouts per arm and model):
+  - Precision drives the drift; the layout does not. bf16_b528's rollout-vs-trainer mean
+    |dlogp| is 0.0357 (4B) and 0.0352 (9B) against bf16's 0.0357 and 0.0365 (ratio 1.00 and
+    0.96), with the same within-sequence growth (+1.31e-3 vs +1.33e-3; +1.46e-3 vs +1.46e-3 per
+    1K). On the 4B its rollouts repeat G2b's bf16 rollouts token for token (66 of 72 identical up
+    to the shorter, 99.96% of decode log-probs bit-equal); on the 9B they diverge after a median
+    220 tokens with the same statistics. Its rollouts run as long as bf16's.
+  - fp16 at bf16's layout keeps 26% (4B) and 17% (9B) of bf16's excess mean |dlogp| over fp32
+    (0.0151 and 0.0124), 14% and 7% of the excess k3, and 43% and 31% of the excess slope. It is
+    not fp32: 2.0x and 1.7x, growing +5.8e-4 and +4.5e-4 per 1K, about 3x fp32 at 30K. Its
+    rollouts end like fp32's (54 vs 57 and 65 vs 65 EOS; paired 37-24 and 38-29, p 0.12 and
+    0.33).
+  - The drift stays in vLLM's decode path: prefill in each arm's own engine is at fp32 level.
+  - One wave per arm: fp16 keeps bf16's throughput (1.34x and 1.38x over G2b's fp32 wave).
+    bf16_b528 (fp32's pool, bf16 state bytes) gives 1.33x on the 4B and 1.23x on the 9B with
+    fp32's preemptions: the 4B gain is state bandwidth, the 9B gain about 58% bandwidth.
+  - Not separated: the dtype-specialized kernel instance from precision; within fp16, mantissa
+    from exponent range. No RL training ran.
+- Evidence: `program/evidence/2026-10-15/g2c-precision-vs-layout/` (README with the four arms side
+  by side, figure, problems; seed-42 per-token subsets, rollout texts, lane records, manifests,
+  build, selftest and source-check records). Full per-token files and raw arrays stay on the
+  host under `~/cotcodec-runs/stage0/g2c-precision-layout/` with SHA-256.

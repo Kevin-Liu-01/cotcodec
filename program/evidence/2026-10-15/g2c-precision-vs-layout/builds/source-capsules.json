@@ -1,0 +1,21 @@
+{
+  "3833d544": {
+    "archive": "/home/kevin/cotcodec-runs/stage0/g2c-precision-layout/capsule/source-3833d544.tar.gz",
+    "archive_format": "normalized-worktree-tar+gzip-mtime-zero",
+    "archive_sha256": "3d3bea32b0780ff169239db20bd4049076b8ed73b4bc5122a70e1ccef4368dd2",
+    "archive_sha256_recomputed": "3d3bea32b0780ff169239db20bd4049076b8ed73b4bc5122a70e1ccef4368dd2",
+    "data_excluded": true,
+    "file_count": 12005,
+    "file_manifest_sha256": "dfd28e120a737660c6e4aa3a430317c4783b1ac12138d4e7881b71dc3681af4f",
+    "git_sha": "3833d544baa00eb088ba97513aa7e2766012e900",
+    "git_tree": "74fa821ec956071976b9e9d6d976ac81128ca8ee",
+    "metadata_normalized": true,
+    "mode": "discovery",
+    "omitted_symlinks_sha256": "083d40f19e2e1aa87c37fc80cf422ceb7e9b7761cf452663d8080d9fa72f5a52",
+    "receipt_sha256": "cebc8def642c0f8fa66a09e0c401332a2dddc4d1c5c323c53811e4335d4c0e41",
+    "schema_version": 3,
+    "selected_ref": "HEAD",
+    "uv_lock_sha256": "4721104d055ec9d7488f82831c24b7e080124f27e9b850abd51c91024629b60f",
+    "worktree_clean": true
+  }
+}

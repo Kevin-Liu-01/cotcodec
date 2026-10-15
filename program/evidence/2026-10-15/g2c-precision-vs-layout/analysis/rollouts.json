@@ -1,0 +1,3821 @@
+{
+  "experiment_id": "g2c-precision-layout-v1",
+  "jobs": [
+    {
+      "arm": "fp16",
+      "block_size_setting": null,
+      "block_tokens": 272,
+      "engine": {
+        "block_size": 272,
+        "cache_config_info": {
+          "_block_size_resolved": "True",
+          "block_size": "272",
+          "cache_dtype": "auto",
+          "effective_attention_block_size": "272",
+          "enable_mamba_shared_prefix_checkpoint": "False",
+          "enable_prefix_caching": "False",
+          "engine": "0",
+          "gpu_memory_utilization": "0.9",
+          "is_attention_free": "False",
+          "kv_cache_dtype_skip_layers": "[]",
+          "kv_cache_layout": "None",
+          "kv_cache_max_concurrency": "57.07086614173228",
+          "kv_cache_memory_bytes": "None",
+          "kv_cache_size_tokens": "1913928",
+          "kv_offloading_backend": "native",
+          "kv_offloading_size": "None",
+          "kv_sharing_fast_prefill": "False",
+          "mamba_block_size": "33536",
+          "mamba_cache_dtype": "auto",
+          "mamba_cache_mode": "none",
+          "mamba_page_size_padded": "None",
+          "mamba_ssm_cache_dtype": "float16",
+          "num_cpu_blocks": "None",
+          "num_gpu_blocks": "7248",
+          "num_gpu_blocks_override": "None",
+          "prefix_cache_retention_interval": "0",
+          "prefix_caching_hash_algo": "sha256",
+          "prefix_match_unit": "None",
+          "replayssm_buffer_len": "16",
+          "skip_page_size_padded": "None",
+          "sliding_window": "None",
+          "swa_bounded_replay": "True",
+          "use_kda_recoverssm": "False",
+          "use_replayssm": "False",
+          "user_specified_block_size": "False",
+          "user_specified_mamba_block_size": "False"
+        },
+        "cache_dtype": "auto",
+        "enable_prefix_caching": false,
+        "gpu_memory_utilization": 0.9,
+        "init_s": 74.0,
+        "mamba_block_size": 33536,
+        "mamba_cache_dtype": "auto",
+        "mamba_cache_mode": "none",
+        "mamba_page_size_padded": null,
+        "mamba_ssm_cache_dtype": "float16",
+        "max_model_len": 33536,
+        "max_num_batched_tokens": 8192,
+        "max_num_seqs": 512,
+        "model_dtype": "torch.bfloat16",
+        "num_gpu_blocks": 7248
+      },
+      "gdn_state_mib_per_sequence": 25.125,
+      "job_dir": "g2c",
+      "log": {
+        "attention_block_tokens": 272.0,
+        "gdn_decode_kernel": "triton",
+        "kv_cache_tokens": 1913928.0,
+        "lines": [
+          "{\"arm\": \"fp16\", \"end_of_turn_id\": 248046, \"engine_kwargs\": {\"disable_log_stats\": false, \"dtype\": \"bfloat16\", \"enable_prefix_caching\": false, \"gpu_memory_utilization\": 0.9, \"limit_mm_per_prompt\": {\"image\": 0, \"video\": 0}, \"logprobs_mode\": \"raw_logprobs\", \"mamba_ssm_cache_dtype\": \"float16\", \"max_model",
+          "non-default args: {'tokenizer': '/model-cache/cotcodec-models/qwen3.5-4b', 'dtype': 'bfloat16', 'seed': 42, 'max_model_len': 33536, 'enable_prefix_caching': False, 'gpu_memory_utilization': 0.9, 'max_num_batched_tokens': 8192, 'max_num_seqs': 512, 'limit_mm_per_prompt': {'image': 0, 'video': 0}, 'ma",
+          "Qwen3.5 model specifies mamba_ssm_dtype='float32' in its config, but --mamba-ssm-cache-dtype='float16' was passed. Using the user-specified value.",
+          "Initializing a V1 LLM engine (v0.31.0) with config: model='/model-cache/cotcodec-models/qwen3.5-4b', speculative_config=None, tokenizer='/model-cache/cotcodec-models/qwen3.5-4b', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=to",
+          "Using FlashInfer GDN prefill kernel (requested=auto, head_k_dim=128).",
+          "FlashInfer GDN prefill is JIT-compiled; first run may take a while. Set --gdn-prefill-backend triton to skip JIT.",
+          "Falling back to the Triton GDN decode path: the fused CUDA kernel requires a BF16 GDN model with K=V=128, SiLU or sigmoid gating, non-interleaved GQA layout, BF16 convolution cache, BF16 or FP32 recurrent state, and a GPU with compute capability 8.0+",
+          "GDN decode kernel: triton",
+          "Setting attention block size to 272 tokens to ensure that attention page size is >= mamba page size.",
+          "Padding mamba page size by 1.49% to ensure that mamba page size and attention page size are exactly equal.",
+          "CUDA graph memory profiling is enabled (default since v0.21.0). The current --gpu-memory-utilization=0.9000 is equivalent to --gpu-memory-utilization=0.8863 without CUDA graph memory profiling. To maintain the same effective KV cache size as before, increase --gpu-memory-utilization to 0.9137. To di",
+          "GPU KV cache size: 1,913,928 tokens, Maximum concurrency for 33,536 tokens per request: 57.07x",
+          "Warming up Qwen GDN Triton kernels for model_type=qwen3_5_text.",
+          "Warmed Mamba batch_memcpy_kernel.",
+          "{\"arm\": \"fp16\", \"block_size\": 272, \"cache_config_info\": {\"_block_size_resolved\": \"True\", \"block_size\": \"272\", \"cache_dtype\": \"auto\", \"effective_attention_block_size\": \"272\", \"enable_mamba_shared_prefix_checkpoint\": \"False\", \"enable_prefix_caching\": \"False\", \"engine\": \"0\", \"gpu_memory_utilization\": \""
+        ],
+        "mamba_padding_pct": 1.49,
+        "max_concurrency": [
+          33536.0,
+          57.07
+        ]
+      },
+      "max_sequences_by_length": {
+        "1024": 1035,
+        "16384": 113,
+        "2048": 658,
+        "32768": 58,
+        "4096": 381,
+        "8192": 213
+      },
+      "model": "qwen3.5-4b",
+      "nonfinite_decode_logprobs": 0,
+      "phases": {
+        "R": {
+          "finished": 72,
+          "gen_seconds": 450.0,
+          "generation_tokens_delta": 1395611.0,
+          "info": {
+            "aborted": 0,
+            "drain_steps": 0,
+            "finished": 72,
+            "metric_errors": 0,
+            "stopped_by": null,
+            "unmatched": 0,
+            "wall_s": 389.383
+          },
+          "mean_kv_usage": 0.3151060930328619,
+          "mean_outputs_per_step": 42.589368000244136,
+          "mean_running": 40.42483660130719,
+          "mean_waiting": 0.0,
+          "metric_samples": 765,
+          "output_tok_per_s": 3584.1600686213833,
+          "output_tokens": 1395611,
+          "peak_kv_usage": 0.4258313785014489,
+          "peak_outputs_per_step": 72,
+          "peak_running": 72.0,
+          "peak_waiting": 0.0,
+          "preemptions_delta": 0.0,
+          "prompt_tokens_delta": 7881.0,
+          "requests": 72,
+          "steps": 32769,
+          "wall_s": 389.383
+        },
+        "S42": {
+          "complete": true,
+          "expected_output_tokens": 1048576,
+          "finished": 512,
+          "generation_tokens_delta": 1048576.0,
+          "info": {
+            "aborted": 0,
+            "drain_steps": 0,
+            "finished": 512,
+            "metric_errors": 0,
+            "stopped_by": null,
+            "unmatched": 0,
+            "wall_s": 52.514
+          },
+          "mean_kv_usage": 0.5402916614993896,
+          "mean_outputs_per_step": 509.264691597863,
+          "mean_running": 493.56962025316454,
+          "mean_waiting": 3.518987341772152,
+          "metric_samples": 79,
+          "output_tok_per_s": 19967.551510073503,
+          "output_tokens": 1048576,
+          "peak_kv_usage": 0.7937077411342625,
+          "peak_outputs_per_step": 512,
+          "peak_running": 512.0,
+          "peak_waiting": 278.0,
+          "preemptions_delta": 0.0,
+          "prompt_tokens_delta": 64848.0,
+          "requests": 512,
+          "status": "complete",
+          "steps": 2059,
+          "wall_s": 52.514
+        }
+      },
+      "prefill": {
+        "engine_block_size": 272,
+        "engine_mamba_ssm_cache_dtype": "float16",
+        "engine_num_gpu_blocks": 6472,
+        "prompt_tok_per_s": 52066.55788924374,
+        "scored": 72,
+        "sequences": 72,
+        "stopped": null,
+        "wall_s": 26.96
+      },
+      "prefill_log": {
+        "attention_block_tokens": 272.0,
+        "gdn_decode_kernel": "triton",
+        "kv_cache_tokens": 1709015.0,
+        "lines": [
+          "{\"arm\": \"fp16\", \"engine_kwargs\": {\"disable_log_stats\": false, \"dtype\": \"bfloat16\", \"enable_prefix_caching\": false, \"gpu_memory_utilization\": 0.8, \"limit_mm_per_prompt\": {\"image\": 0, \"video\": 0}, \"logprobs_mode\": \"raw_logprobs\", \"mamba_ssm_cache_dtype\": \"float16\", \"max_model_len\": 33536, \"max_num_bat",
+          "non-default args: {'tokenizer': '/model-cache/cotcodec-models/qwen3.5-4b', 'dtype': 'bfloat16', 'seed': 42, 'max_model_len': 33536, 'enable_prefix_caching': False, 'gpu_memory_utilization': 0.8, 'max_num_batched_tokens': 4096, 'max_num_seqs': 16, 'limit_mm_per_prompt': {'image': 0, 'video': 0}, 'mam",
+          "Qwen3.5 model specifies mamba_ssm_dtype='float32' in its config, but --mamba-ssm-cache-dtype='float16' was passed. Using the user-specified value.",
+          "Initializing a V1 LLM engine (v0.31.0) with config: model='/model-cache/cotcodec-models/qwen3.5-4b', speculative_config=None, tokenizer='/model-cache/cotcodec-models/qwen3.5-4b', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=to",
+          "Using FlashInfer GDN prefill kernel (requested=auto, head_k_dim=128).",
+          "FlashInfer GDN prefill is JIT-compiled; first run may take a while. Set --gdn-prefill-backend triton to skip JIT.",
+          "Falling back to the Triton GDN decode path: the fused CUDA kernel requires a BF16 GDN model with K=V=128, SiLU or sigmoid gating, non-interleaved GQA layout, BF16 convolution cache, BF16 or FP32 recurrent state, and a GPU with compute capability 8.0+",
+          "GDN decode kernel: triton",
+          "Setting attention block size to 272 tokens to ensure that attention page size is >= mamba page size.",
+          "Padding mamba page size by 1.49% to ensure that mamba page size and attention page size are exactly equal.",
+          "CUDA graph memory profiling is enabled (default since v0.21.0). The current --gpu-memory-utilization=0.8000 is equivalent to --gpu-memory-utilization=0.7983 without CUDA graph memory profiling. To maintain the same effective KV cache size as before, increase --gpu-memory-utilization to 0.8017. To di",
+          "GPU KV cache size: 1,709,015 tokens, Maximum concurrency for 33,536 tokens per request: 50.96x",
+          "Warming up Qwen GDN Triton kernels for model_type=qwen3_5_text.",
+          "Warmed Mamba batch_memcpy_kernel.",
+          "{\"arm\": \"fp16\", \"block_size\": 272, \"cache_config_info\": {\"_block_size_resolved\": \"True\", \"block_size\": \"272\", \"cache_dtype\": \"auto\", \"effective_attention_block_size\": \"272\", \"enable_mamba_shared_prefix_checkpoint\": \"False\", \"enable_prefix_caching\": \"False\", \"engine\": \"0\", \"gpu_memory_utilization\": \""
+        ],
+        "mamba_padding_pct": 1.49,
+        "max_concurrency": [
+          33536.0,
+          50.96
+        ]
+      },
+      "rollouts": [
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 13334,
+          "finish_reason": "stop",
+          "prompt_index": 1,
+          "seed": 42,
+          "tail_compress_ratio": 0.372
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 2559,
+          "finish_reason": "stop",
+          "prompt_index": 2,
+          "seed": 42,
+          "tail_compress_ratio": 0.38225
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 5948,
+          "finish_reason": "stop",
+          "prompt_index": 5,
+          "seed": 42,
+          "tail_compress_ratio": 0.41175
+        },
+        {
+          "boxed_matches_reference": false,
+          "completion_len": 2711,
+          "finish_reason": "stop",
+          "prompt_index": 6,
+          "seed": 42,
+          "tail_compress_ratio": 0.42375
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 16378,
+          "finish_reason": "stop",
+          "prompt_index": 8,
+          "seed": 42,
+          "tail_compress_ratio": 0.4115
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 16228,
+          "finish_reason": "stop",
+          "prompt_index": 13,
+          "seed": 42,
+          "tail_compress_ratio": 0.42275
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 21248,
+          "finish_reason": "stop",
+          "prompt_index": 14,
+          "seed": 42,
+          "tail_compress_ratio": 0.38575
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 5980,
+          "finish_reason": "stop",
+          "prompt_index": 15,
+          "seed": 42,
+          "tail_compress_ratio": 0.37775
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 25098,
+          "finish_reason": "stop",
+          "prompt_index": 17,
+          "seed": 42,
+          "tail_compress_ratio": 0.347
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 29684,
+          "finish_reason": "stop",
+          "prompt_index": 27,
+          "seed": 42,
+          "tail_compress_ratio": 0.40425
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 32,
+          "seed": 42,
+          "tail_compress_ratio": 0.33725
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 28238,
+          "finish_reason": "stop",
+          "prompt_index": 34,
+          "seed": 42,
+          "tail_compress_ratio": 0.35375
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 23324,
+          "finish_reason": "stop",
+          "prompt_index": 35,
+          "seed": 42,
+          "tail_compress_ratio": 0.40225
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 37,
+          "seed": 42,
+          "tail_compress_ratio": 0.41175
+        },
+        {
+          "boxed_matches_reference": false,
+          "completion_len": 29187,
+          "finish_reason": "stop",
+          "prompt_index": 38,
+          "seed": 42,
+          "tail_compress_ratio": 0.417
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 43,
+          "seed": 42,
+          "tail_compress_ratio": 0.441
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 17550,
+          "finish_reason": "stop",
+          "prompt_index": 47,
+          "seed": 42,
+          "tail_compress_ratio": 0.40725
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 2969,
+          "finish_reason": "stop",
+          "prompt_index": 51,
+          "seed": 42,
+          "tail_compress_ratio": 0.38525
+        },
+        {
+          "boxed_matches_reference": false,
+          "completion_len": 6166,
+          "finish_reason": "stop",
+          "prompt_index": 53,
+          "seed": 42,
+          "tail_compress_ratio": 0.3835
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 6049,
+          "finish_reason": "stop",
+          "prompt_index": 56,
+          "seed": 42,
+          "tail_compress_ratio": 0.36925
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 26085,
+          "finish_reason": "stop",
+          "prompt_index": 58,
+          "seed": 42,
+          "tail_compress_ratio": 0.39
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 27622,
+          "finish_reason": "stop",
+          "prompt_index": 61,
+          "seed": 42,
+          "tail_compress_ratio": 0.412
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 62,
+          "seed": 42,
+          "tail_compress_ratio": 0.33175
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 5270,
+          "finish_reason": "stop",
+          "prompt_index": 63,
+          "seed": 42,
+          "tail_compress_ratio": 0.4005
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 18540,
+          "finish_reason": "stop",
+          "prompt_index": 1,
+          "seed": 43,
+          "tail_compress_ratio": 0.3985
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 4538,
+          "finish_reason": "stop",
+          "prompt_index": 2,
+          "seed": 43,
+          "tail_compress_ratio": 0.42975
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 7335,
+          "finish_reason": "stop",
+          "prompt_index": 5,
+          "seed": 43,
+          "tail_compress_ratio": 0.42575
+        },
+        {
+          "boxed_matches_reference": false,
+          "completion_len": 2435,
+          "finish_reason": "stop",
+          "prompt_index": 6,
+          "seed": 43,
+          "tail_compress_ratio": 0.39575
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 12374,
+          "finish_reason": "stop",
+          "prompt_index": 8,
+          "seed": 43,
+          "tail_compress_ratio": 0.3955
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 25257,
+          "finish_reason": "stop",
+          "prompt_index": 13,
+          "seed": 43,
+          "tail_compress_ratio": 0.40525
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 10782,
+          "finish_reason": "stop",
+          "prompt_index": 14,
+          "seed": 43,
+          "tail_compress_ratio": 0.4005
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 6129,
+          "finish_reason": "stop",
+          "prompt_index": 15,
+          "seed": 43,
+          "tail_compress_ratio": 0.37525
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 17609,
+          "finish_reason": "stop",
+          "prompt_index": 17,
+          "seed": 43,
+          "tail_compress_ratio": 0.3755
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 26893,
+          "finish_reason": "stop",
+          "prompt_index": 27,
+          "seed": 43,
+          "tail_compress_ratio": 0.40125
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 32,
+          "seed": 43,
+          "tail_compress_ratio": 0.43975
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 34,
+          "seed": 43,
+          "tail_compress_ratio": 0.42075
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 12015,
+          "finish_reason": "stop",
+          "prompt_index": 35,
+          "seed": 43,
+          "tail_compress_ratio": 0.36175
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 37,
+          "seed": 43,
+          "tail_compress_ratio": 0.40425
+        },
+        {
+          "boxed_matches_reference": false,
+          "completion_len": 32463,
+          "finish_reason": "stop",
+          "prompt_index": 38,
+          "seed": 43,
+          "tail_compress_ratio": 0.4425
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 43,
+          "seed": 43,
+          "tail_compress_ratio": 0.40525
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 21091,
+          "finish_reason": "stop",
+          "prompt_index": 47,
+          "seed": 43,
+          "tail_compress_ratio": 0.36025
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 8398,
+          "finish_reason": "stop",
+          "prompt_index": 51,
+          "seed": 43,
+          "tail_compress_ratio": 0.41275
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 6815,
+          "finish_reason": "stop",
+          "prompt_index": 53,
+          "seed": 43,
+          "tail_compress_ratio": 0.38525
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 9349,
+          "finish_reason": "stop",
+          "prompt_index": 56,
+          "seed": 43,
+          "tail_compress_ratio": 0.41525
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 29783,
+          "finish_reason": "stop",
+          "prompt_index": 58,
+          "seed": 43,
+          "tail_compress_ratio": 0.392
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 61,
+          "seed": 43,
+          "tail_compress_ratio": 0.4315
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 22980,
+          "finish_reason": "stop",
+          "prompt_index": 62,
+          "seed": 43,
+          "tail_compress_ratio": 0.4145
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 7641,
+          "finish_reason": "stop",
+          "prompt_index": 63,
+          "seed": 43,
+          "tail_compress_ratio": 0.41625
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 26086,
+          "finish_reason": "stop",
+          "prompt_index": 1,
+          "seed": 44,
+          "tail_compress_ratio": 0.37075
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 5902,
+          "finish_reason": "stop",
+          "prompt_index": 2,
+          "seed": 44,
+          "tail_compress_ratio": 0.40775
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 8035,
+          "finish_reason": "stop",
+          "prompt_index": 5,
+          "seed": 44,
+          "tail_compress_ratio": 0.43875
+        },
+        {
+          "boxed_matches_reference": false,
+          "completion_len": 7005,
+          "finish_reason": "stop",
+          "prompt_index": 6,
+          "seed": 44,
+          "tail_compress_ratio": 0.41675
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 14296,
+          "finish_reason": "stop",
+          "prompt_index": 8,
+          "seed": 44,
+          "tail_compress_ratio": 0.379
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 13,
+          "seed": 44,
+          "tail_compress_ratio": 0.40775
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 22246,
+          "finish_reason": "stop",
+          "prompt_index": 14,
+          "seed": 44,
+          "tail_compress_ratio": 0.4185
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 5693,
+          "finish_reason": "stop",
+          "prompt_index": 15,
+          "seed": 44,
+          "tail_compress_ratio": 0.4095
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 17,
+          "seed": 44,
+          "tail_compress_ratio": 0.35075
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 22722,
+          "finish_reason": "stop",
+          "prompt_index": 27,
+          "seed": 44,
+          "tail_compress_ratio": 0.40275
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 32,
+          "seed": 44,
+          "tail_compress_ratio": 0.4255
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 34,
+          "seed": 44,
+          "tail_compress_ratio": 0.40375
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 23293,
+          "finish_reason": "stop",
+          "prompt_index": 35,
+          "seed": 44,
+          "tail_compress_ratio": 0.388
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 37,
+          "seed": 44,
+          "tail_compress_ratio": 0.414
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 38,
+          "seed": 44,
+          "tail_compress_ratio": 0.4185
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 43,
+          "seed": 44,
+          "tail_compress_ratio": 0.36825
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 21687,
+          "finish_reason": "stop",
+          "prompt_index": 47,
+          "seed": 44,
+          "tail_compress_ratio": 0.419
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 3410,
+          "finish_reason": "stop",
+          "prompt_index": 51,
+          "seed": 44,
+          "tail_compress_ratio": 0.39225
+        },
+        {
+          "boxed_matches_reference": false,
+          "completion_len": 15577,
+          "finish_reason": "stop",
+          "prompt_index": 53,
+          "seed": 44,
+          "tail_compress_ratio": 0.41425
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 6245,
+          "finish_reason": "stop",
+          "prompt_index": 56,
+          "seed": 44,
+          "tail_compress_ratio": 0.422
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 58,
+          "seed": 44,
+          "tail_compress_ratio": 0.37425
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 22415,
+          "finish_reason": "stop",
+          "prompt_index": 61,
+          "seed": 44,
+          "tail_compress_ratio": 0.43425
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 62,
+          "seed": 44,
+          "tail_compress_ratio": 0.253
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 7120,
+          "finish_reason": "stop",
+          "prompt_index": 63,
+          "seed": 44,
+          "tail_compress_ratio": 0.4105
+        }
+      ],
+      "smoke": false,
+      "state_dtype": "float16"
+    },
+    {
+      "arm": "bf16_b528",
+      "block_size_setting": 528,
+      "block_tokens": 528,
+      "engine": {
+        "block_size": 528,
+        "cache_config_info": {
+          "_block_size_resolved": "True",
+          "block_size": "528",
+          "cache_dtype": "auto",
+          "effective_attention_block_size": "528",
+          "enable_mamba_shared_prefix_checkpoint": "False",
+          "enable_prefix_caching": "False",
+          "engine": "0",
+          "gpu_memory_utilization": "0.9",
+          "is_attention_free": "False",
+          "kv_cache_dtype_skip_layers": "[]",
+          "kv_cache_layout": "None",
+          "kv_cache_max_concurrency": "55.71641791044776",
+          "kv_cache_memory_bytes": "None",
+          "kv_cache_size_tokens": "1868505",
+          "kv_offloading_backend": "native",
+          "kv_offloading_size": "None",
+          "kv_sharing_fast_prefill": "False",
+          "mamba_block_size": "33536",
+          "mamba_cache_dtype": "auto",
+          "mamba_cache_mode": "none",
+          "mamba_page_size_padded": "None",
+          "mamba_ssm_cache_dtype": "bfloat16",
+          "num_cpu_blocks": "None",
+          "num_gpu_blocks": "3733",
+          "num_gpu_blocks_override": "None",
+          "prefix_cache_retention_interval": "0",
+          "prefix_caching_hash_algo": "sha256",
+          "prefix_match_unit": "None",
+          "replayssm_buffer_len": "16",
+          "skip_page_size_padded": "None",
+          "sliding_window": "None",
+          "swa_bounded_replay": "True",
+          "use_kda_recoverssm": "False",
+          "use_replayssm": "False",
+          "user_specified_block_size": "True",
+          "user_specified_mamba_block_size": "False"
+        },
+        "cache_dtype": "auto",
+        "enable_prefix_caching": false,
+        "gpu_memory_utilization": 0.9,
+        "init_s": 57.5,
+        "mamba_block_size": 33536,
+        "mamba_cache_dtype": "auto",
+        "mamba_cache_mode": "none",
+        "mamba_page_size_padded": null,
+        "mamba_ssm_cache_dtype": "bfloat16",
+        "max_model_len": 33536,
+        "max_num_batched_tokens": 8192,
+        "max_num_seqs": 512,
+        "model_dtype": "torch.bfloat16",
+        "num_gpu_blocks": 3733
+      },
+      "gdn_state_mib_per_sequence": 25.125,
+      "job_dir": "g2c",
+      "log": {
+        "gdn_decode_kernel": "triton",
+        "kv_cache_tokens": 1868505.0,
+        "lines": [
+          "{\"arm\": \"bf16_b528\", \"end_of_turn_id\": 248046, \"engine_kwargs\": {\"block_size\": 528, \"disable_log_stats\": false, \"dtype\": \"bfloat16\", \"enable_prefix_caching\": false, \"gpu_memory_utilization\": 0.9, \"limit_mm_per_prompt\": {\"image\": 0, \"video\": 0}, \"logprobs_mode\": \"raw_logprobs\", \"mamba_ssm_cache_dtype",
+          "non-default args: {'tokenizer': '/model-cache/cotcodec-models/qwen3.5-4b', 'dtype': 'bfloat16', 'seed': 42, 'max_model_len': 33536, 'block_size': 528, 'enable_prefix_caching': False, 'gpu_memory_utilization': 0.9, 'max_num_batched_tokens': 8192, 'max_num_seqs': 512, 'limit_mm_per_prompt': {'image': ",
+          "Qwen3.5 model specifies mamba_ssm_dtype='float32' in its config, but --mamba-ssm-cache-dtype='bfloat16' was passed. Using the user-specified value.",
+          "Initializing a V1 LLM engine (v0.31.0) with config: model='/model-cache/cotcodec-models/qwen3.5-4b', speculative_config=None, tokenizer='/model-cache/cotcodec-models/qwen3.5-4b', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=to",
+          "Using FlashInfer GDN prefill kernel (requested=auto, head_k_dim=128).",
+          "FlashInfer GDN prefill is JIT-compiled; first run may take a while. Set --gdn-prefill-backend triton to skip JIT.",
+          "Falling back to the Triton GDN decode path: torch.ops._C.fused_gdn_decode_post_conv_mtp is not built",
+          "GDN decode kernel: triton",
+          "Padding mamba page size by 97.01% to ensure that mamba page size and attention page size are exactly equal.",
+          "CUDA graph memory profiling is enabled (default since v0.21.0). The current --gpu-memory-utilization=0.9000 is equivalent to --gpu-memory-utilization=0.8863 without CUDA graph memory profiling. To maintain the same effective KV cache size as before, increase --gpu-memory-utilization to 0.9137. To di",
+          "GPU KV cache size: 1,868,505 tokens, Maximum concurrency for 33,536 tokens per request: 55.72x",
+          "Warming up Qwen GDN Triton kernels for model_type=qwen3_5_text.",
+          "Warmed Mamba batch_memcpy_kernel.",
+          "{\"arm\": \"bf16_b528\", \"block_size\": 528, \"cache_config_info\": {\"_block_size_resolved\": \"True\", \"block_size\": \"528\", \"cache_dtype\": \"auto\", \"effective_attention_block_size\": \"528\", \"enable_mamba_shared_prefix_checkpoint\": \"False\", \"enable_prefix_caching\": \"False\", \"engine\": \"0\", \"gpu_memory_utilizatio"
+        ],
+        "mamba_padding_pct": 97.01,
+        "max_concurrency": [
+          33536.0,
+          55.72
+        ]
+      },
+      "max_sequences_by_length": {
+        "1024": 746,
+        "16384": 106,
+        "2048": 533,
+        "32768": 56,
+        "4096": 339,
+        "8192": 196
+      },
+      "model": "qwen3.5-4b",
+      "nonfinite_decode_logprobs": 0,
+      "phases": {
+        "R": {
+          "finished": 31,
+          "gen_seconds": 450.0,
+          "generation_tokens_delta": 1614521.0,
+          "info": {
+            "aborted": 41,
+            "drain_steps": 0,
+            "finished": 31,
+            "metric_errors": 0,
+            "stopped_by": "time budget",
+            "unmatched": 0,
+            "wall_s": 450.642
+          },
+          "mean_kv_usage": 0.47407692980729266,
+          "mean_outputs_per_step": 50.950549103761674,
+          "mean_running": 48.31859410430839,
+          "mean_waiting": 0.0,
+          "metric_samples": 882,
+          "output_tok_per_s": 3582.713107078346,
+          "output_tokens": 1614521,
+          "peak_kv_usage": 0.7031082529474812,
+          "peak_outputs_per_step": 72,
+          "peak_running": 72.0,
+          "peak_waiting": 0.0,
+          "preemptions_delta": 0.0,
+          "prompt_tokens_delta": 7881.0,
+          "requests": 72,
+          "steps": 31688,
+          "wall_s": 450.642
+        },
+        "S42": {
+          "complete": true,
+          "expected_output_tokens": 1048576,
+          "finished": 512,
+          "generation_tokens_delta": 1048576.0,
+          "info": {
+            "aborted": 0,
+            "drain_steps": 0,
+            "finished": 512,
+            "metric_errors": 0,
+            "stopped_by": null,
+            "unmatched": 0,
+            "wall_s": 53.122
+          },
+          "mean_kv_usage": 0.7563270364415863,
+          "mean_outputs_per_step": 487.7097674418605,
+          "mean_running": 485.375,
+          "mean_waiting": 4.4875,
+          "metric_samples": 80,
+          "output_tok_per_s": 19739.01585030684,
+          "output_tokens": 1048576,
+          "peak_kv_usage": 0.9989281886387996,
+          "peak_outputs_per_step": 512,
+          "peak_running": 512.0,
+          "peak_waiting": 281.0,
+          "preemptions_delta": 36.0,
+          "prompt_tokens_delta": 64848.0,
+          "requests": 512,
+          "status": "complete",
+          "steps": 2150,
+          "wall_s": 53.122
+        }
+      },
+      "prefill": {
+        "engine_block_size": 528,
+        "engine_mamba_ssm_cache_dtype": "bfloat16",
+        "engine_num_gpu_blocks": 3334,
+        "prompt_tok_per_s": 50720.906341366994,
+        "scored": 72,
+        "sequences": 72,
+        "stopped": null,
+        "wall_s": 31.99
+      },
+      "prefill_log": {
+        "gdn_decode_kernel": "triton",
+        "kv_cache_tokens": 1668791.0,
+        "lines": [
+          "{\"arm\": \"bf16_b528\", \"engine_kwargs\": {\"block_size\": 528, \"disable_log_stats\": false, \"dtype\": \"bfloat16\", \"enable_prefix_caching\": false, \"gpu_memory_utilization\": 0.8, \"limit_mm_per_prompt\": {\"image\": 0, \"video\": 0}, \"logprobs_mode\": \"raw_logprobs\", \"mamba_ssm_cache_dtype\": \"bfloat16\", \"max_model_",
+          "non-default args: {'tokenizer': '/model-cache/cotcodec-models/qwen3.5-4b', 'dtype': 'bfloat16', 'seed': 42, 'max_model_len': 33536, 'block_size': 528, 'enable_prefix_caching': False, 'gpu_memory_utilization': 0.8, 'max_num_batched_tokens': 4096, 'max_num_seqs': 16, 'limit_mm_per_prompt': {'image': 0",
+          "Qwen3.5 model specifies mamba_ssm_dtype='float32' in its config, but --mamba-ssm-cache-dtype='bfloat16' was passed. Using the user-specified value.",
+          "Initializing a V1 LLM engine (v0.31.0) with config: model='/model-cache/cotcodec-models/qwen3.5-4b', speculative_config=None, tokenizer='/model-cache/cotcodec-models/qwen3.5-4b', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=to",
+          "Using FlashInfer GDN prefill kernel (requested=auto, head_k_dim=128).",
+          "FlashInfer GDN prefill is JIT-compiled; first run may take a while. Set --gdn-prefill-backend triton to skip JIT.",
+          "Falling back to the Triton GDN decode path: torch.ops._C.fused_gdn_decode_post_conv_mtp is not built",
+          "GDN decode kernel: triton",
+          "Padding mamba page size by 97.01% to ensure that mamba page size and attention page size are exactly equal.",
+          "CUDA graph memory profiling is enabled (default since v0.21.0). The current --gpu-memory-utilization=0.8000 is equivalent to --gpu-memory-utilization=0.7983 without CUDA graph memory profiling. To maintain the same effective KV cache size as before, increase --gpu-memory-utilization to 0.8017. To di",
+          "GPU KV cache size: 1,668,791 tokens, Maximum concurrency for 33,536 tokens per request: 49.76x",
+          "Warming up Qwen GDN Triton kernels for model_type=qwen3_5_text.",
+          "Warmed Mamba batch_memcpy_kernel.",
+          "{\"arm\": \"bf16_b528\", \"block_size\": 528, \"cache_config_info\": {\"_block_size_resolved\": \"True\", \"block_size\": \"528\", \"cache_dtype\": \"auto\", \"effective_attention_block_size\": \"528\", \"enable_mamba_shared_prefix_checkpoint\": \"False\", \"enable_prefix_caching\": \"False\", \"engine\": \"0\", \"gpu_memory_utilizatio"
+        ],
+        "mamba_padding_pct": 97.01,
+        "max_concurrency": [
+          33536.0,
+          49.76
+        ]
+      },
+      "rollouts": [
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 9038,
+          "finish_reason": "stop",
+          "prompt_index": 1,
+          "seed": 42,
+          "tail_compress_ratio": 0.41225
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 3229,
+          "finish_reason": "stop",
+          "prompt_index": 2,
+          "seed": 42,
+          "tail_compress_ratio": 0.37275
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 5962,
+          "finish_reason": "stop",
+          "prompt_index": 5,
+          "seed": 42,
+          "tail_compress_ratio": 0.41175
+        },
+        {
+          "boxed_matches_reference": false,
+          "completion_len": 4047,
+          "finish_reason": "stop",
+          "prompt_index": 6,
+          "seed": 42,
+          "tail_compress_ratio": 0.39625
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31688,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 8,
+          "seed": 42,
+          "tail_compress_ratio": 0.39825
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31688,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 13,
+          "seed": 42,
+          "tail_compress_ratio": 0.3515
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 14,
+          "seed": 42,
+          "tail_compress_ratio": 0.40925
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 8118,
+          "finish_reason": "stop",
+          "prompt_index": 15,
+          "seed": 42,
+          "tail_compress_ratio": 0.39475
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 17,
+          "seed": 42,
+          "tail_compress_ratio": 0.41425
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 27,
+          "seed": 42,
+          "tail_compress_ratio": 0.4205
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 32,
+          "seed": 42,
+          "tail_compress_ratio": 0.334
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 34,
+          "seed": 42,
+          "tail_compress_ratio": 0.30075
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 13635,
+          "finish_reason": "stop",
+          "prompt_index": 35,
+          "seed": 42,
+          "tail_compress_ratio": 0.35725
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 37,
+          "seed": 42,
+          "tail_compress_ratio": 0.41025
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 38,
+          "seed": 42,
+          "tail_compress_ratio": 0.42875
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 43,
+          "seed": 42,
+          "tail_compress_ratio": 0.34975
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 47,
+          "seed": 42,
+          "tail_compress_ratio": 0.41475
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 6354,
+          "finish_reason": "stop",
+          "prompt_index": 51,
+          "seed": 42,
+          "tail_compress_ratio": 0.427
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 8294,
+          "finish_reason": "stop",
+          "prompt_index": 53,
+          "seed": 42,
+          "tail_compress_ratio": 0.36525
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 7839,
+          "finish_reason": "stop",
+          "prompt_index": 56,
+          "seed": 42,
+          "tail_compress_ratio": 0.41
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 58,
+          "seed": 42,
+          "tail_compress_ratio": 0.4065
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 61,
+          "seed": 42,
+          "tail_compress_ratio": 0.39
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 62,
+          "seed": 42,
+          "tail_compress_ratio": 0.358
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 9289,
+          "finish_reason": "stop",
+          "prompt_index": 63,
+          "seed": 42,
+          "tail_compress_ratio": 0.38725
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 1,
+          "seed": 43,
+          "tail_compress_ratio": 0.36
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 2319,
+          "finish_reason": "stop",
+          "prompt_index": 2,
+          "seed": 43,
+          "tail_compress_ratio": 0.3825
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 5528,
+          "finish_reason": "stop",
+          "prompt_index": 5,
+          "seed": 43,
+          "tail_compress_ratio": 0.4215
+        },
+        {
+          "boxed_matches_reference": false,
+          "completion_len": 2113,
+          "finish_reason": "stop",
+          "prompt_index": 6,
+          "seed": 43,
+          "tail_compress_ratio": 0.35475
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 30104,
+          "finish_reason": "stop",
+          "prompt_index": 8,
+          "seed": 43,
+          "tail_compress_ratio": 0.37125
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 13,
+          "seed": 43,
+          "tail_compress_ratio": 0.3935
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 27365,
+          "finish_reason": "stop",
+          "prompt_index": 14,
+          "seed": 43,
+          "tail_compress_ratio": 0.39375
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 5487,
+          "finish_reason": "stop",
+          "prompt_index": 15,
+          "seed": 43,
+          "tail_compress_ratio": 0.39425
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 17,
+          "seed": 43,
+          "tail_compress_ratio": 0.39025
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 27,
+          "seed": 43,
+          "tail_compress_ratio": 0.377
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 32,
+          "seed": 43,
+          "tail_compress_ratio": 0.37975
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 34,
+          "seed": 43,
+          "tail_compress_ratio": 0.37875
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 13023,
+          "finish_reason": "stop",
+          "prompt_index": 35,
+          "seed": 43,
+          "tail_compress_ratio": 0.381
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 37,
+          "seed": 43,
+          "tail_compress_ratio": 0.36975
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 38,
+          "seed": 43,
+          "tail_compress_ratio": 0.41725
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 43,
+          "seed": 43,
+          "tail_compress_ratio": 0.411
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 47,
+          "seed": 43,
+          "tail_compress_ratio": 0.392
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 12203,
+          "finish_reason": "stop",
+          "prompt_index": 51,
+          "seed": 43,
+          "tail_compress_ratio": 0.39375
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 4723,
+          "finish_reason": "stop",
+          "prompt_index": 53,
+          "seed": 43,
+          "tail_compress_ratio": 0.35225
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 7541,
+          "finish_reason": "stop",
+          "prompt_index": 56,
+          "seed": 43,
+          "tail_compress_ratio": 0.3995
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 58,
+          "seed": 43,
+          "tail_compress_ratio": 0.3985
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 61,
+          "seed": 43,
+          "tail_compress_ratio": 0.3865
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 62,
+          "seed": 43,
+          "tail_compress_ratio": 0.3735
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 8322,
+          "finish_reason": "stop",
+          "prompt_index": 63,
+          "seed": 43,
+          "tail_compress_ratio": 0.40625
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 1,
+          "seed": 44,
+          "tail_compress_ratio": 0.33575
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 3376,
+          "finish_reason": "stop",
+          "prompt_index": 2,
+          "seed": 44,
+          "tail_compress_ratio": 0.40025
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 17972,
+          "finish_reason": "stop",
+          "prompt_index": 5,
+          "seed": 44,
+          "tail_compress_ratio": 0.45675
+        },
+        {
+          "boxed_matches_reference": false,
+          "completion_len": 2673,
+          "finish_reason": "stop",
+          "prompt_index": 6,
+          "seed": 44,
+          "tail_compress_ratio": 0.40075
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 8,
+          "seed": 44,
+          "tail_compress_ratio": 0.389
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 13,
+          "seed": 44,
+          "tail_compress_ratio": 0.39225
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 14,
+          "seed": 44,
+          "tail_compress_ratio": 0.4195
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 5615,
+          "finish_reason": "stop",
+          "prompt_index": 15,
+          "seed": 44,
+          "tail_compress_ratio": 0.3745
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 17,
+          "seed": 44,
+          "tail_compress_ratio": 0.37575
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 27,
+          "seed": 44,
+          "tail_compress_ratio": 0.3955
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 32,
+          "seed": 44,
+          "tail_compress_ratio": 0.40875
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 34,
+          "seed": 44,
+          "tail_compress_ratio": 0.356
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 25312,
+          "finish_reason": "stop",
+          "prompt_index": 35,
+          "seed": 44,
+          "tail_compress_ratio": 0.381
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 37,
+          "seed": 44,
+          "tail_compress_ratio": 0.36925
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 38,
+          "seed": 44,
+          "tail_compress_ratio": 0.38925
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 43,
+          "seed": 44,
+          "tail_compress_ratio": 0.402
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 27656,
+          "finish_reason": "stop",
+          "prompt_index": 47,
+          "seed": 44,
+          "tail_compress_ratio": 0.37925
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 7240,
+          "finish_reason": "stop",
+          "prompt_index": 51,
+          "seed": 44,
+          "tail_compress_ratio": 0.42225
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 13428,
+          "finish_reason": "stop",
+          "prompt_index": 53,
+          "seed": 44,
+          "tail_compress_ratio": 0.382
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 9788,
+          "finish_reason": "stop",
+          "prompt_index": 56,
+          "seed": 44,
+          "tail_compress_ratio": 0.4135
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 58,
+          "seed": 44,
+          "tail_compress_ratio": 0.37875
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 61,
+          "seed": 44,
+          "tail_compress_ratio": 0.39225
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 31687,
+          "finish_reason": "cut_at_time_budget",
+          "prompt_index": 62,
+          "seed": 44,
+          "tail_compress_ratio": 0.41175
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 7759,
+          "finish_reason": "stop",
+          "prompt_index": 63,
+          "seed": 44,
+          "tail_compress_ratio": 0.3975
+        }
+      ],
+      "smoke": false,
+      "state_dtype": "bfloat16"
+    },
+    {
+      "arm": "fp16",
+      "block_size_setting": null,
+      "block_tokens": 272,
+      "engine": {
+        "block_size": 272,
+        "cache_config_info": {
+          "_block_size_resolved": "True",
+          "block_size": "272",
+          "cache_dtype": "auto",
+          "effective_attention_block_size": "272",
+          "enable_mamba_shared_prefix_checkpoint": "False",
+          "enable_prefix_caching": "False",
+          "engine": "0",
+          "gpu_memory_utilization": "0.9",
+          "is_attention_free": "False",
+          "kv_cache_dtype_skip_layers": "[]",
+          "kv_cache_layout": "None",
+          "kv_cache_max_concurrency": "47.95275590551181",
+          "kv_cache_memory_bytes": "None",
+          "kv_cache_size_tokens": "1608143",
+          "kv_offloading_backend": "native",
+          "kv_offloading_size": "None",
+          "kv_sharing_fast_prefill": "False",
+          "mamba_block_size": "33536",
+          "mamba_cache_dtype": "auto",
+          "mamba_cache_mode": "none",
+          "mamba_page_size_padded": "None",
+          "mamba_ssm_cache_dtype": "float16",
+          "num_cpu_blocks": "None",
+          "num_gpu_blocks": "6090",
+          "num_gpu_blocks_override": "None",
+          "prefix_cache_retention_interval": "0",
+          "prefix_caching_hash_algo": "sha256",
+          "prefix_match_unit": "None",
+          "replayssm_buffer_len": "16",
+          "skip_page_size_padded": "None",
+          "sliding_window": "None",
+          "swa_bounded_replay": "True",
+          "use_kda_recoverssm": "False",
+          "use_replayssm": "False",
+          "user_specified_block_size": "False",
+          "user_specified_mamba_block_size": "False"
+        },
+        "cache_dtype": "auto",
+        "enable_prefix_caching": false,
+        "gpu_memory_utilization": 0.9,
+        "init_s": 75.5,
+        "mamba_block_size": 33536,
+        "mamba_cache_dtype": "auto",
+        "mamba_cache_mode": "none",
+        "mamba_page_size_padded": null,
+        "mamba_ssm_cache_dtype": "float16",
+        "max_model_len": 33536,
+        "max_num_batched_tokens": 8192,
+        "max_num_seqs": 512,
+        "model_dtype": "torch.bfloat16",
+        "num_gpu_blocks": 6090
+      },
+      "gdn_state_mib_per_sequence": 25.125,
+      "job_dir": "g2c",
+      "log": {
+        "attention_block_tokens": 272.0,
+        "gdn_decode_kernel": "triton",
+        "kv_cache_tokens": 1608143.0,
+        "lines": [
+          "{\"arm\": \"fp16\", \"end_of_turn_id\": 248046, \"engine_kwargs\": {\"disable_log_stats\": false, \"dtype\": \"bfloat16\", \"enable_prefix_caching\": false, \"gpu_memory_utilization\": 0.9, \"limit_mm_per_prompt\": {\"image\": 0, \"video\": 0}, \"logprobs_mode\": \"raw_logprobs\", \"mamba_ssm_cache_dtype\": \"float16\", \"max_model",
+          "non-default args: {'tokenizer': '/model-cache/cotcodec-models/qwen3.5-9b', 'dtype': 'bfloat16', 'seed': 42, 'max_model_len': 33536, 'enable_prefix_caching': False, 'gpu_memory_utilization': 0.9, 'max_num_batched_tokens': 8192, 'max_num_seqs': 512, 'limit_mm_per_prompt': {'image': 0, 'video': 0}, 'ma",
+          "Qwen3.5 model specifies mamba_ssm_dtype='float32' in its config, but --mamba-ssm-cache-dtype='float16' was passed. Using the user-specified value.",
+          "Initializing a V1 LLM engine (v0.31.0) with config: model='/model-cache/cotcodec-models/qwen3.5-9b', speculative_config=None, tokenizer='/model-cache/cotcodec-models/qwen3.5-9b', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=to",
+          "Using FlashInfer GDN prefill kernel (requested=auto, head_k_dim=128).",
+          "FlashInfer GDN prefill is JIT-compiled; first run may take a while. Set --gdn-prefill-backend triton to skip JIT.",
+          "Falling back to the Triton GDN decode path: the fused CUDA kernel requires a BF16 GDN model with K=V=128, SiLU or sigmoid gating, non-interleaved GQA layout, BF16 convolution cache, BF16 or FP32 recurrent state, and a GPU with compute capability 8.0+",
+          "GDN decode kernel: triton",
+          "Setting attention block size to 272 tokens to ensure that attention page size is >= mamba page size.",
+          "Padding mamba page size by 1.49% to ensure that mamba page size and attention page size are exactly equal.",
+          "CUDA graph memory profiling is enabled (default since v0.21.0). The current --gpu-memory-utilization=0.9000 is equivalent to --gpu-memory-utilization=0.8857 without CUDA graph memory profiling. To maintain the same effective KV cache size as before, increase --gpu-memory-utilization to 0.9143. To di",
+          "GPU KV cache size: 1,608,143 tokens, Maximum concurrency for 33,536 tokens per request: 47.95x",
+          "Warming up Qwen GDN Triton kernels for model_type=qwen3_5_text.",
+          "Warmed Mamba batch_memcpy_kernel.",
+          "{\"arm\": \"fp16\", \"block_size\": 272, \"cache_config_info\": {\"_block_size_resolved\": \"True\", \"block_size\": \"272\", \"cache_dtype\": \"auto\", \"effective_attention_block_size\": \"272\", \"enable_mamba_shared_prefix_checkpoint\": \"False\", \"enable_prefix_caching\": \"False\", \"engine\": \"0\", \"gpu_memory_utilization\": \""
+        ],
+        "mamba_padding_pct": 1.49,
+        "max_concurrency": [
+          33536.0,
+          47.95
+        ]
+      },
+      "max_sequences_by_length": {
+        "1024": 869,
+        "16384": 95,
+        "2048": 553,
+        "32768": 49,
+        "4096": 320,
+        "8192": 179
+      },
+      "model": "qwen3.5-9b",
+      "nonfinite_decode_logprobs": 0,
+      "phases": {
+        "R": {
+          "finished": 72,
+          "gen_seconds": 570.0,
+          "generation_tokens_delta": 1229766.0,
+          "info": {
+            "aborted": 0,
+            "drain_steps": 0,
+            "finished": 72,
+            "metric_errors": 0,
+            "stopped_by": null,
+            "unmatched": 0,
+            "wall_s": 419.671
+          },
+          "mean_kv_usage": 0.295526458541732,
+          "mean_outputs_per_step": 37.52833470658244,
+          "mean_running": 37.07151515151515,
+          "mean_waiting": 0.0,
+          "metric_samples": 825,
+          "output_tok_per_s": 2930.30969497535,
+          "output_tokens": 1229766,
+          "peak_kv_usage": 0.4128756774511414,
+          "peak_outputs_per_step": 72,
+          "peak_running": 72.0,
+          "peak_waiting": 0.0,
+          "preemptions_delta": 0.0,
+          "prompt_tokens_delta": 7881.0,
+          "requests": 72,
+          "steps": 32769,
+          "wall_s": 419.671
+        },
+        "S42": {
+          "complete": true,
+          "expected_output_tokens": 1048576,
+          "finished": 512,
+          "generation_tokens_delta": 1048576.0,
+          "info": {
+            "aborted": 0,
+            "drain_steps": 0,
+            "finished": 512,
+            "metric_errors": 0,
+            "stopped_by": null,
+            "unmatched": 0,
+            "wall_s": 64.882
+          },
+          "mean_kv_usage": 0.6412463490898083,
+          "mean_outputs_per_step": 509.264691597863,
+          "mean_running": 495.6666666666667,
+          "mean_waiting": 3.235294117647059,
+          "metric_samples": 102,
+          "output_tok_per_s": 16161.277395887919,
+          "output_tokens": 1048576,
+          "peak_kv_usage": 0.9420266053539169,
+          "peak_outputs_per_step": 512,
+          "peak_running": 512.0,
+          "peak_waiting": 279.0,
+          "preemptions_delta": 0.0,
+          "prompt_tokens_delta": 64848.0,
+          "requests": 512,
+          "status": "complete",
+          "steps": 2059,
+          "wall_s": 64.882
+        }
+      },
+      "prefill": {
+        "engine_block_size": 272,
+        "engine_mamba_ssm_cache_dtype": "float16",
+        "engine_num_gpu_blocks": 5322,
+        "prompt_tok_per_s": 32593.788376160737,
+        "scored": 72,
+        "sequences": 72,
+        "stopped": null,
+        "wall_s": 37.97
+      },
+      "prefill_log": {
+        "attention_block_tokens": 272.0,
+        "gdn_decode_kernel": "triton",
+        "kv_cache_tokens": 1405343.0,
+        "lines": [
+          "{\"arm\": \"fp16\", \"engine_kwargs\": {\"disable_log_stats\": false, \"dtype\": \"bfloat16\", \"enable_prefix_caching\": false, \"gpu_memory_utilization\": 0.8, \"limit_mm_per_prompt\": {\"image\": 0, \"video\": 0}, \"logprobs_mode\": \"raw_logprobs\", \"mamba_ssm_cache_dtype\": \"float16\", \"max_model_len\": 33536, \"max_num_bat",
+          "non-default args: {'tokenizer': '/model-cache/cotcodec-models/qwen3.5-9b', 'dtype': 'bfloat16', 'seed': 42, 'max_model_len': 33536, 'enable_prefix_caching': False, 'gpu_memory_utilization': 0.8, 'max_num_batched_tokens': 4096, 'max_num_seqs': 16, 'limit_mm_per_prompt': {'image': 0, 'video': 0}, 'mam",
+          "Qwen3.5 model specifies mamba_ssm_dtype='float32' in its config, but --mamba-ssm-cache-dtype='float16' was passed. Using the user-specified value.",
+          "Initializing a V1 LLM engine (v0.31.0) with config: model='/model-cache/cotcodec-models/qwen3.5-9b', speculative_config=None, tokenizer='/model-cache/cotcodec-models/qwen3.5-9b', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=to",
+          "Using FlashInfer GDN prefill kernel (requested=auto, head_k_dim=128).",
+          "FlashInfer GDN prefill is JIT-compiled; first run may take a while. Set --gdn-prefill-backend triton to skip JIT.",
+          "Falling back to the Triton GDN decode path: the fused CUDA kernel requires a BF16 GDN model with K=V=128, SiLU or sigmoid gating, non-interleaved GQA layout, BF16 convolution cache, BF16 or FP32 recurrent state, and a GPU with compute capability 8.0+",
+          "GDN decode kernel: triton",
+          "Setting attention block size to 272 tokens to ensure that attention page size is >= mamba page size.",
+          "Padding mamba page size by 1.49% to ensure that mamba page size and attention page size are exactly equal.",
+          "CUDA graph memory profiling is enabled (default since v0.21.0). The current --gpu-memory-utilization=0.8000 is equivalent to --gpu-memory-utilization=0.7982 without CUDA graph memory profiling. To maintain the same effective KV cache size as before, increase --gpu-memory-utilization to 0.8018. To di",
+          "GPU KV cache size: 1,405,343 tokens, Maximum concurrency for 33,536 tokens per request: 41.91x",
+          "Warming up Qwen GDN Triton kernels for model_type=qwen3_5_text.",
+          "Warmed Mamba batch_memcpy_kernel.",
+          "{\"arm\": \"fp16\", \"block_size\": 272, \"cache_config_info\": {\"_block_size_resolved\": \"True\", \"block_size\": \"272\", \"cache_dtype\": \"auto\", \"effective_attention_block_size\": \"272\", \"enable_mamba_shared_prefix_checkpoint\": \"False\", \"enable_prefix_caching\": \"False\", \"engine\": \"0\", \"gpu_memory_utilization\": \""
+        ],
+        "mamba_padding_pct": 1.49,
+        "max_concurrency": [
+          33536.0,
+          41.91
+        ]
+      },
+      "rollouts": [
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 20928,
+          "finish_reason": "stop",
+          "prompt_index": 1,
+          "seed": 42,
+          "tail_compress_ratio": 0.4025
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 2594,
+          "finish_reason": "stop",
+          "prompt_index": 2,
+          "seed": 42,
+          "tail_compress_ratio": 0.407
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 5526,
+          "finish_reason": "stop",
+          "prompt_index": 5,
+          "seed": 42,
+          "tail_compress_ratio": 0.4175
+        },
+        {
+          "boxed_matches_reference": false,
+          "completion_len": 4403,
+          "finish_reason": "stop",
+          "prompt_index": 6,
+          "seed": 42,
+          "tail_compress_ratio": 0.4035
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 14406,
+          "finish_reason": "stop",
+          "prompt_index": 8,
+          "seed": 42,
+          "tail_compress_ratio": 0.38825
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 28301,
+          "finish_reason": "stop",
+          "prompt_index": 13,
+          "seed": 42,
+          "tail_compress_ratio": 0.3885
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 14695,
+          "finish_reason": "stop",
+          "prompt_index": 14,
+          "seed": 42,
+          "tail_compress_ratio": 0.41125
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 3089,
+          "finish_reason": "stop",
+          "prompt_index": 15,
+          "seed": 42,
+          "tail_compress_ratio": 0.403
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 19827,
+          "finish_reason": "stop",
+          "prompt_index": 17,
+          "seed": 42,
+          "tail_compress_ratio": 0.365
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 26708,
+          "finish_reason": "stop",
+          "prompt_index": 27,
+          "seed": 42,
+          "tail_compress_ratio": 0.3795
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 30122,
+          "finish_reason": "stop",
+          "prompt_index": 32,
+          "seed": 42,
+          "tail_compress_ratio": 0.403
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 34,
+          "seed": 42,
+          "tail_compress_ratio": 0.355
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 9865,
+          "finish_reason": "stop",
+          "prompt_index": 35,
+          "seed": 42,
+          "tail_compress_ratio": 0.364
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 21198,
+          "finish_reason": "stop",
+          "prompt_index": 37,
+          "seed": 42,
+          "tail_compress_ratio": 0.4035
+        },
+        {
+          "boxed_matches_reference": false,
+          "completion_len": 24629,
+          "finish_reason": "stop",
+          "prompt_index": 38,
+          "seed": 42,
+          "tail_compress_ratio": 0.39175
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 25263,
+          "finish_reason": "stop",
+          "prompt_index": 43,
+          "seed": 42,
+          "tail_compress_ratio": 0.3755
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 16656,
+          "finish_reason": "stop",
+          "prompt_index": 47,
+          "seed": 42,
+          "tail_compress_ratio": 0.40114971257185705
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 4671,
+          "finish_reason": "stop",
+          "prompt_index": 51,
+          "seed": 42,
+          "tail_compress_ratio": 0.41275
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 3446,
+          "finish_reason": "stop",
+          "prompt_index": 53,
+          "seed": 42,
+          "tail_compress_ratio": 0.38625
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 5036,
+          "finish_reason": "stop",
+          "prompt_index": 56,
+          "seed": 42,
+          "tail_compress_ratio": 0.40625
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 32737,
+          "finish_reason": "stop",
+          "prompt_index": 58,
+          "seed": 42,
+          "tail_compress_ratio": 0.39375
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 23283,
+          "finish_reason": "stop",
+          "prompt_index": 61,
+          "seed": 42,
+          "tail_compress_ratio": 0.40925
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 30940,
+          "finish_reason": "stop",
+          "prompt_index": 62,
+          "seed": 42,
+          "tail_compress_ratio": 0.39575
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 8254,
+          "finish_reason": "stop",
+          "prompt_index": 63,
+          "seed": 42,
+          "tail_compress_ratio": 0.4325
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 11435,
+          "finish_reason": "stop",
+          "prompt_index": 1,
+          "seed": 43,
+          "tail_compress_ratio": 0.396
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 2813,
+          "finish_reason": "stop",
+          "prompt_index": 2,
+          "seed": 43,
+          "tail_compress_ratio": 0.3965
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 5398,
+          "finish_reason": "stop",
+          "prompt_index": 5,
+          "seed": 43,
+          "tail_compress_ratio": 0.38925
+        },
+        {
+          "boxed_matches_reference": false,
+          "completion_len": 6914,
+          "finish_reason": "stop",
+          "prompt_index": 6,
+          "seed": 43,
+          "tail_compress_ratio": 0.4295
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 12271,
+          "finish_reason": "stop",
+          "prompt_index": 8,
+          "seed": 43,
+          "tail_compress_ratio": 0.41775
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 24464,
+          "finish_reason": "stop",
+          "prompt_index": 13,
+          "seed": 43,
+          "tail_compress_ratio": 0.39075
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 21593,
+          "finish_reason": "stop",
+          "prompt_index": 14,
+          "seed": 43,
+          "tail_compress_ratio": 0.39975
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 6955,
+          "finish_reason": "stop",
+          "prompt_index": 15,
+          "seed": 43,
+          "tail_compress_ratio": 0.411
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 23298,
+          "finish_reason": "stop",
+          "prompt_index": 17,
+          "seed": 43,
+          "tail_compress_ratio": 0.3805
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 14679,
+          "finish_reason": "stop",
+          "prompt_index": 27,
+          "seed": 43,
+          "tail_compress_ratio": 0.38425
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 32,
+          "seed": 43,
+          "tail_compress_ratio": 0.37625
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 29195,
+          "finish_reason": "stop",
+          "prompt_index": 34,
+          "seed": 43,
+          "tail_compress_ratio": 0.38225
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 11035,
+          "finish_reason": "stop",
+          "prompt_index": 35,
+          "seed": 43,
+          "tail_compress_ratio": 0.381
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 37,
+          "seed": 43,
+          "tail_compress_ratio": 0.435
+        },
+        {
+          "boxed_matches_reference": false,
+          "completion_len": 16952,
+          "finish_reason": "stop",
+          "prompt_index": 38,
+          "seed": 43,
+          "tail_compress_ratio": 0.4125
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 43,
+          "seed": 43,
+          "tail_compress_ratio": 0.31225
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 13273,
+          "finish_reason": "stop",
+          "prompt_index": 47,
+          "seed": 43,
+          "tail_compress_ratio": 0.418
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 3773,
+          "finish_reason": "stop",
+          "prompt_index": 51,
+          "seed": 43,
+          "tail_compress_ratio": 0.37675
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 4674,
+          "finish_reason": "stop",
+          "prompt_index": 53,
+          "seed": 43,
+          "tail_compress_ratio": 0.3925
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 6941,
+          "finish_reason": "stop",
+          "prompt_index": 56,
+          "seed": 43,
+          "tail_compress_ratio": 0.444
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 28491,
+          "finish_reason": "stop",
+          "prompt_index": 58,
+          "seed": 43,
+          "tail_compress_ratio": 0.43725
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 23541,
+          "finish_reason": "stop",
+          "prompt_index": 61,
+          "seed": 43,
+          "tail_compress_ratio": 0.4155
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 62,
+          "seed": 43,
+          "tail_compress_ratio": 0.4445
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 10423,
+          "finish_reason": "stop",
+          "prompt_index": 63,
+          "seed": 43,
+          "tail_compress_ratio": 0.44175
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 11888,
+          "finish_reason": "stop",
+          "prompt_index": 1,
+          "seed": 44,
+          "tail_compress_ratio": 0.397
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 4783,
+          "finish_reason": "stop",
+          "prompt_index": 2,
+          "seed": 44,
+          "tail_compress_ratio": 0.4225
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 10763,
+          "finish_reason": "stop",
+          "prompt_index": 5,
+          "seed": 44,
+          "tail_compress_ratio": 0.452
+        },
+        {
+          "boxed_matches_reference": false,
+          "completion_len": 3759,
+          "finish_reason": "stop",
+          "prompt_index": 6,
+          "seed": 44,
+          "tail_compress_ratio": 0.431
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 14824,
+          "finish_reason": "stop",
+          "prompt_index": 8,
+          "seed": 44,
+          "tail_compress_ratio": 0.388
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 23791,
+          "finish_reason": "stop",
+          "prompt_index": 13,
+          "seed": 44,
+          "tail_compress_ratio": 0.40475
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 24616,
+          "finish_reason": "stop",
+          "prompt_index": 14,
+          "seed": 44,
+          "tail_compress_ratio": 0.399
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 5869,
+          "finish_reason": "stop",
+          "prompt_index": 15,
+          "seed": 44,
+          "tail_compress_ratio": 0.37725
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 30781,
+          "finish_reason": "stop",
+          "prompt_index": 17,
+          "seed": 44,
+          "tail_compress_ratio": 0.37775
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 16142,
+          "finish_reason": "stop",
+          "prompt_index": 27,
+          "seed": 44,
+          "tail_compress_ratio": 0.41325
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 32,
+          "seed": 44,
+          "tail_compress_ratio": 0.44425
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 31700,
+          "finish_reason": "stop",
+          "prompt_index": 34,
+          "seed": 44,
+          "tail_compress_ratio": 0.40775
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 11258,
+          "finish_reason": "stop",
+          "prompt_index": 35,
+          "seed": 44,
+          "tail_compress_ratio": 0.40625
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 21814,
+          "finish_reason": "stop",
+          "prompt_index": 37,
+          "seed": 44,
+          "tail_compress_ratio": 0.419
+        },
+        {
+          "boxed_matches_reference": false,
+          "completion_len": 27875,
+          "finish_reason": "stop",
+          "prompt_index": 38,
+          "seed": 44,
+          "tail_compress_ratio": 0.41925
+        },
+        {
+          "boxed_matches_reference": false,
+          "completion_len": 26673,
+          "finish_reason": "stop",
+          "prompt_index": 43,
+          "seed": 44,
+          "tail_compress_ratio": 0.4005
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 10511,
+          "finish_reason": "stop",
+          "prompt_index": 47,
+          "seed": 44,
+          "tail_compress_ratio": 0.361
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 6151,
+          "finish_reason": "stop",
+          "prompt_index": 51,
+          "seed": 44,
+          "tail_compress_ratio": 0.414
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 12142,
+          "finish_reason": "stop",
+          "prompt_index": 53,
+          "seed": 44,
+          "tail_compress_ratio": 0.396
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 6001,
+          "finish_reason": "stop",
+          "prompt_index": 56,
+          "seed": 44,
+          "tail_compress_ratio": 0.4275
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 23059,
+          "finish_reason": "stop",
+          "prompt_index": 58,
+          "seed": 44,
+          "tail_compress_ratio": 0.37825
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 15368,
+          "finish_reason": "stop",
+          "prompt_index": 61,
+          "seed": 44,
+          "tail_compress_ratio": 0.4385
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 62,
+          "seed": 44,
+          "tail_compress_ratio": 0.41825
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 5927,
+          "finish_reason": "stop",
+          "prompt_index": 63,
+          "seed": 44,
+          "tail_compress_ratio": 0.4085
+        }
+      ],
+      "smoke": false,
+      "state_dtype": "float16"
+    },
+    {
+      "arm": "bf16_b528",
+      "block_size_setting": 528,
+      "block_tokens": 528,
+      "engine": {
+        "block_size": 528,
+        "cache_config_info": {
+          "_block_size_resolved": "True",
+          "block_size": "528",
+          "cache_dtype": "auto",
+          "effective_attention_block_size": "528",
+          "enable_mamba_shared_prefix_checkpoint": "False",
+          "enable_prefix_caching": "False",
+          "engine": "0",
+          "gpu_memory_utilization": "0.9",
+          "is_attention_free": "False",
+          "kv_cache_dtype_skip_layers": "[]",
+          "kv_cache_layout": "None",
+          "kv_cache_max_concurrency": "46.82089552238806",
+          "kv_cache_memory_bytes": "None",
+          "kv_cache_size_tokens": "1570185",
+          "kv_offloading_backend": "native",
+          "kv_offloading_size": "None",
+          "kv_sharing_fast_prefill": "False",
+          "mamba_block_size": "33536",
+          "mamba_cache_dtype": "auto",
+          "mamba_cache_mode": "none",
+          "mamba_page_size_padded": "None",
+          "mamba_ssm_cache_dtype": "bfloat16",
+          "num_cpu_blocks": "None",
+          "num_gpu_blocks": "3137",
+          "num_gpu_blocks_override": "None",
+          "prefix_cache_retention_interval": "0",
+          "prefix_caching_hash_algo": "sha256",
+          "prefix_match_unit": "None",
+          "replayssm_buffer_len": "16",
+          "skip_page_size_padded": "None",
+          "sliding_window": "None",
+          "swa_bounded_replay": "True",
+          "use_kda_recoverssm": "False",
+          "use_replayssm": "False",
+          "user_specified_block_size": "True",
+          "user_specified_mamba_block_size": "False"
+        },
+        "cache_dtype": "auto",
+        "enable_prefix_caching": false,
+        "gpu_memory_utilization": 0.9,
+        "init_s": 59.2,
+        "mamba_block_size": 33536,
+        "mamba_cache_dtype": "auto",
+        "mamba_cache_mode": "none",
+        "mamba_page_size_padded": null,
+        "mamba_ssm_cache_dtype": "bfloat16",
+        "max_model_len": 33536,
+        "max_num_batched_tokens": 8192,
+        "max_num_seqs": 512,
+        "model_dtype": "torch.bfloat16",
+        "num_gpu_blocks": 3137
+      },
+      "gdn_state_mib_per_sequence": 25.125,
+      "job_dir": "g2c",
+      "log": {
+        "gdn_decode_kernel": "triton",
+        "kv_cache_tokens": 1570185.0,
+        "lines": [
+          "{\"arm\": \"bf16_b528\", \"end_of_turn_id\": 248046, \"engine_kwargs\": {\"block_size\": 528, \"disable_log_stats\": false, \"dtype\": \"bfloat16\", \"enable_prefix_caching\": false, \"gpu_memory_utilization\": 0.9, \"limit_mm_per_prompt\": {\"image\": 0, \"video\": 0}, \"logprobs_mode\": \"raw_logprobs\", \"mamba_ssm_cache_dtype",
+          "non-default args: {'tokenizer': '/model-cache/cotcodec-models/qwen3.5-9b', 'dtype': 'bfloat16', 'seed': 42, 'max_model_len': 33536, 'block_size': 528, 'enable_prefix_caching': False, 'gpu_memory_utilization': 0.9, 'max_num_batched_tokens': 8192, 'max_num_seqs': 512, 'limit_mm_per_prompt': {'image': ",
+          "Qwen3.5 model specifies mamba_ssm_dtype='float32' in its config, but --mamba-ssm-cache-dtype='bfloat16' was passed. Using the user-specified value.",
+          "Initializing a V1 LLM engine (v0.31.0) with config: model='/model-cache/cotcodec-models/qwen3.5-9b', speculative_config=None, tokenizer='/model-cache/cotcodec-models/qwen3.5-9b', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=to",
+          "Using FlashInfer GDN prefill kernel (requested=auto, head_k_dim=128).",
+          "FlashInfer GDN prefill is JIT-compiled; first run may take a while. Set --gdn-prefill-backend triton to skip JIT.",
+          "Falling back to the Triton GDN decode path: torch.ops._C.fused_gdn_decode_post_conv_mtp is not built",
+          "GDN decode kernel: triton",
+          "Padding mamba page size by 97.01% to ensure that mamba page size and attention page size are exactly equal.",
+          "CUDA graph memory profiling is enabled (default since v0.21.0). The current --gpu-memory-utilization=0.9000 is equivalent to --gpu-memory-utilization=0.8857 without CUDA graph memory profiling. To maintain the same effective KV cache size as before, increase --gpu-memory-utilization to 0.9143. To di",
+          "GPU KV cache size: 1,570,185 tokens, Maximum concurrency for 33,536 tokens per request: 46.82x",
+          "Warming up Qwen GDN Triton kernels for model_type=qwen3_5_text.",
+          "Warmed Mamba batch_memcpy_kernel.",
+          "{\"arm\": \"bf16_b528\", \"block_size\": 528, \"cache_config_info\": {\"_block_size_resolved\": \"True\", \"block_size\": \"528\", \"cache_dtype\": \"auto\", \"effective_attention_block_size\": \"528\", \"enable_mamba_shared_prefix_checkpoint\": \"False\", \"enable_prefix_caching\": \"False\", \"engine\": \"0\", \"gpu_memory_utilizatio"
+        ],
+        "mamba_padding_pct": 97.01,
+        "max_concurrency": [
+          33536.0,
+          46.82
+        ]
+      },
+      "max_sequences_by_length": {
+        "1024": 627,
+        "16384": 89,
+        "2048": 448,
+        "32768": 47,
+        "4096": 285,
+        "8192": 165
+      },
+      "model": "qwen3.5-9b",
+      "nonfinite_decode_logprobs": 0,
+      "phases": {
+        "R": {
+          "finished": 72,
+          "gen_seconds": 570.0,
+          "generation_tokens_delta": 1552481.0,
+          "info": {
+            "aborted": 0,
+            "drain_steps": 0,
+            "finished": 72,
+            "metric_errors": 0,
+            "stopped_by": null,
+            "unmatched": 0,
+            "wall_s": 525.667
+          },
+          "mean_kv_usage": 0.4899239032347633,
+          "mean_outputs_per_step": 47.37651438859898,
+          "mean_running": 44.89601554907677,
+          "mean_waiting": 0.0,
+          "metric_samples": 1029,
+          "output_tok_per_s": 2953.3545000922636,
+          "output_tokens": 1552481,
+          "peak_kv_usage": 0.6734693877551021,
+          "peak_outputs_per_step": 72,
+          "peak_running": 72.0,
+          "peak_waiting": 0.0,
+          "preemptions_delta": 0.0,
+          "prompt_tokens_delta": 7881.0,
+          "requests": 72,
+          "steps": 32769,
+          "wall_s": 525.667
+        },
+        "S42": {
+          "complete": true,
+          "expected_output_tokens": 1048576,
+          "finished": 512,
+          "generation_tokens_delta": 1048576.0,
+          "info": {
+            "aborted": 0,
+            "drain_steps": 0,
+            "finished": 512,
+            "metric_errors": 0,
+            "stopped_by": null,
+            "unmatched": 0,
+            "wall_s": 73.04
+          },
+          "mean_kv_usage": 0.7418268024422884,
+          "mean_outputs_per_step": 382.97151205259314,
+          "mean_running": 410.3688524590164,
+          "mean_waiting": 22.065573770491802,
+          "metric_samples": 122,
+          "output_tok_per_s": 14356.188389923329,
+          "output_tokens": 1048576,
+          "peak_kv_usage": 1.0,
+          "peak_outputs_per_step": 512,
+          "peak_running": 512.0,
+          "peak_waiting": 279.0,
+          "preemptions_delta": 114.0,
+          "prompt_tokens_delta": 64848.0,
+          "requests": 512,
+          "status": "complete",
+          "steps": 2738,
+          "wall_s": 73.04
+        }
+      },
+      "prefill": {
+        "engine_block_size": 528,
+        "engine_mamba_ssm_cache_dtype": "bfloat16",
+        "engine_num_gpu_blocks": 2741,
+        "prompt_tok_per_s": 32220.754334134148,
+        "scored": 72,
+        "sequences": 72,
+        "stopped": null,
+        "wall_s": 48.43
+      },
+      "prefill_log": {
+        "gdn_decode_kernel": "triton",
+        "kv_cache_tokens": 1371972.0,
+        "lines": [
+          "{\"arm\": \"bf16_b528\", \"engine_kwargs\": {\"block_size\": 528, \"disable_log_stats\": false, \"dtype\": \"bfloat16\", \"enable_prefix_caching\": false, \"gpu_memory_utilization\": 0.8, \"limit_mm_per_prompt\": {\"image\": 0, \"video\": 0}, \"logprobs_mode\": \"raw_logprobs\", \"mamba_ssm_cache_dtype\": \"bfloat16\", \"max_model_",
+          "non-default args: {'tokenizer': '/model-cache/cotcodec-models/qwen3.5-9b', 'dtype': 'bfloat16', 'seed': 42, 'max_model_len': 33536, 'block_size': 528, 'enable_prefix_caching': False, 'gpu_memory_utilization': 0.8, 'max_num_batched_tokens': 4096, 'max_num_seqs': 16, 'limit_mm_per_prompt': {'image': 0",
+          "Qwen3.5 model specifies mamba_ssm_dtype='float32' in its config, but --mamba-ssm-cache-dtype='bfloat16' was passed. Using the user-specified value.",
+          "Initializing a V1 LLM engine (v0.31.0) with config: model='/model-cache/cotcodec-models/qwen3.5-9b', speculative_config=None, tokenizer='/model-cache/cotcodec-models/qwen3.5-9b', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=to",
+          "Using FlashInfer GDN prefill kernel (requested=auto, head_k_dim=128).",
+          "FlashInfer GDN prefill is JIT-compiled; first run may take a while. Set --gdn-prefill-backend triton to skip JIT.",
+          "Falling back to the Triton GDN decode path: torch.ops._C.fused_gdn_decode_post_conv_mtp is not built",
+          "GDN decode kernel: triton",
+          "Padding mamba page size by 97.01% to ensure that mamba page size and attention page size are exactly equal.",
+          "CUDA graph memory profiling is enabled (default since v0.21.0). The current --gpu-memory-utilization=0.8000 is equivalent to --gpu-memory-utilization=0.7982 without CUDA graph memory profiling. To maintain the same effective KV cache size as before, increase --gpu-memory-utilization to 0.8018. To di",
+          "GPU KV cache size: 1,371,972 tokens, Maximum concurrency for 33,536 tokens per request: 40.91x",
+          "Warming up Qwen GDN Triton kernels for model_type=qwen3_5_text.",
+          "Warmed Mamba batch_memcpy_kernel.",
+          "{\"arm\": \"bf16_b528\", \"block_size\": 528, \"cache_config_info\": {\"_block_size_resolved\": \"True\", \"block_size\": \"528\", \"cache_dtype\": \"auto\", \"effective_attention_block_size\": \"528\", \"enable_mamba_shared_prefix_checkpoint\": \"False\", \"enable_prefix_caching\": \"False\", \"engine\": \"0\", \"gpu_memory_utilizatio"
+        ],
+        "mamba_padding_pct": 97.01,
+        "max_concurrency": [
+          33536.0,
+          40.91
+        ]
+      },
+      "rollouts": [
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 1,
+          "seed": 42,
+          "tail_compress_ratio": 0.38575
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 3312,
+          "finish_reason": "stop",
+          "prompt_index": 2,
+          "seed": 42,
+          "tail_compress_ratio": 0.40625
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 5148,
+          "finish_reason": "stop",
+          "prompt_index": 5,
+          "seed": 42,
+          "tail_compress_ratio": 0.41525
+        },
+        {
+          "boxed_matches_reference": false,
+          "completion_len": 4889,
+          "finish_reason": "stop",
+          "prompt_index": 6,
+          "seed": 42,
+          "tail_compress_ratio": 0.42225
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 19057,
+          "finish_reason": "stop",
+          "prompt_index": 8,
+          "seed": 42,
+          "tail_compress_ratio": 0.395
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 13,
+          "seed": 42,
+          "tail_compress_ratio": 0.37475
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 21246,
+          "finish_reason": "stop",
+          "prompt_index": 14,
+          "seed": 42,
+          "tail_compress_ratio": 0.39925
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 7406,
+          "finish_reason": "stop",
+          "prompt_index": 15,
+          "seed": 42,
+          "tail_compress_ratio": 0.38975
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 17,
+          "seed": 42,
+          "tail_compress_ratio": 0.39725
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 18900,
+          "finish_reason": "stop",
+          "prompt_index": 27,
+          "seed": 42,
+          "tail_compress_ratio": 0.40025
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 32,
+          "seed": 42,
+          "tail_compress_ratio": 0.41425
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 34,
+          "seed": 42,
+          "tail_compress_ratio": 0.39575
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 9290,
+          "finish_reason": "stop",
+          "prompt_index": 35,
+          "seed": 42,
+          "tail_compress_ratio": 0.38225
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 37,
+          "seed": 42,
+          "tail_compress_ratio": 0.4595
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 38,
+          "seed": 42,
+          "tail_compress_ratio": 0.44525
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 43,
+          "seed": 42,
+          "tail_compress_ratio": 0.4095
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 28362,
+          "finish_reason": "stop",
+          "prompt_index": 47,
+          "seed": 42,
+          "tail_compress_ratio": 0.42
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 4086,
+          "finish_reason": "stop",
+          "prompt_index": 51,
+          "seed": 42,
+          "tail_compress_ratio": 0.3835
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 5176,
+          "finish_reason": "stop",
+          "prompt_index": 53,
+          "seed": 42,
+          "tail_compress_ratio": 0.37775
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 10071,
+          "finish_reason": "stop",
+          "prompt_index": 56,
+          "seed": 42,
+          "tail_compress_ratio": 0.4165
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 58,
+          "seed": 42,
+          "tail_compress_ratio": 0.38525
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 61,
+          "seed": 42,
+          "tail_compress_ratio": 0.43525
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 62,
+          "seed": 42,
+          "tail_compress_ratio": 0.39775
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 20203,
+          "finish_reason": "stop",
+          "prompt_index": 63,
+          "seed": 42,
+          "tail_compress_ratio": 0.43375
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 11209,
+          "finish_reason": "stop",
+          "prompt_index": 1,
+          "seed": 43,
+          "tail_compress_ratio": 0.39025
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 3875,
+          "finish_reason": "stop",
+          "prompt_index": 2,
+          "seed": 43,
+          "tail_compress_ratio": 0.40075
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 3656,
+          "finish_reason": "stop",
+          "prompt_index": 5,
+          "seed": 43,
+          "tail_compress_ratio": 0.42525
+        },
+        {
+          "boxed_matches_reference": false,
+          "completion_len": 6246,
+          "finish_reason": "stop",
+          "prompt_index": 6,
+          "seed": 43,
+          "tail_compress_ratio": 0.4205
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 25173,
+          "finish_reason": "stop",
+          "prompt_index": 8,
+          "seed": 43,
+          "tail_compress_ratio": 0.40725
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 13,
+          "seed": 43,
+          "tail_compress_ratio": 0.35775
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 23480,
+          "finish_reason": "stop",
+          "prompt_index": 14,
+          "seed": 43,
+          "tail_compress_ratio": 0.418
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 11030,
+          "finish_reason": "stop",
+          "prompt_index": 15,
+          "seed": 43,
+          "tail_compress_ratio": 0.39075
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 17,
+          "seed": 43,
+          "tail_compress_ratio": 0.34875
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 27,
+          "seed": 43,
+          "tail_compress_ratio": 0.395
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 32,
+          "seed": 43,
+          "tail_compress_ratio": 0.43075
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 34,
+          "seed": 43,
+          "tail_compress_ratio": 0.34325
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 11255,
+          "finish_reason": "stop",
+          "prompt_index": 35,
+          "seed": 43,
+          "tail_compress_ratio": 0.3785
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 37,
+          "seed": 43,
+          "tail_compress_ratio": 0.42075
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 38,
+          "seed": 43,
+          "tail_compress_ratio": 0.4195
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 43,
+          "seed": 43,
+          "tail_compress_ratio": 0.37725
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 47,
+          "seed": 43,
+          "tail_compress_ratio": 0.37575
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 9026,
+          "finish_reason": "stop",
+          "prompt_index": 51,
+          "seed": 43,
+          "tail_compress_ratio": 0.41725
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 2931,
+          "finish_reason": "stop",
+          "prompt_index": 53,
+          "seed": 43,
+          "tail_compress_ratio": 0.3905
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 4378,
+          "finish_reason": "stop",
+          "prompt_index": 56,
+          "seed": 43,
+          "tail_compress_ratio": 0.38875
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 58,
+          "seed": 43,
+          "tail_compress_ratio": 0.44575
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 31065,
+          "finish_reason": "stop",
+          "prompt_index": 61,
+          "seed": 43,
+          "tail_compress_ratio": 0.44275
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 62,
+          "seed": 43,
+          "tail_compress_ratio": 0.45825
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 14444,
+          "finish_reason": "stop",
+          "prompt_index": 63,
+          "seed": 43,
+          "tail_compress_ratio": 0.43025
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 25004,
+          "finish_reason": "stop",
+          "prompt_index": 1,
+          "seed": 44,
+          "tail_compress_ratio": 0.37325
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 6310,
+          "finish_reason": "stop",
+          "prompt_index": 2,
+          "seed": 44,
+          "tail_compress_ratio": 0.4015
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 14491,
+          "finish_reason": "stop",
+          "prompt_index": 5,
+          "seed": 44,
+          "tail_compress_ratio": 0.435
+        },
+        {
+          "boxed_matches_reference": false,
+          "completion_len": 2441,
+          "finish_reason": "stop",
+          "prompt_index": 6,
+          "seed": 44,
+          "tail_compress_ratio": 0.381
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 26968,
+          "finish_reason": "stop",
+          "prompt_index": 8,
+          "seed": 44,
+          "tail_compress_ratio": 0.3975
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 13,
+          "seed": 44,
+          "tail_compress_ratio": 0.38875
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 25767,
+          "finish_reason": "stop",
+          "prompt_index": 14,
+          "seed": 44,
+          "tail_compress_ratio": 0.374
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 3999,
+          "finish_reason": "stop",
+          "prompt_index": 15,
+          "seed": 44,
+          "tail_compress_ratio": 0.36975
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 17,
+          "seed": 44,
+          "tail_compress_ratio": 0.37125
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 27,
+          "seed": 44,
+          "tail_compress_ratio": 0.4565
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 32,
+          "seed": 44,
+          "tail_compress_ratio": 0.37225
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 34,
+          "seed": 44,
+          "tail_compress_ratio": 0.365
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 7332,
+          "finish_reason": "stop",
+          "prompt_index": 35,
+          "seed": 44,
+          "tail_compress_ratio": 0.3845
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 37,
+          "seed": 44,
+          "tail_compress_ratio": 0.38925
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 38,
+          "seed": 44,
+          "tail_compress_ratio": 0.4095
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 43,
+          "seed": 44,
+          "tail_compress_ratio": 0.4315
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 7853,
+          "finish_reason": "stop",
+          "prompt_index": 47,
+          "seed": 44,
+          "tail_compress_ratio": 0.373
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 6966,
+          "finish_reason": "stop",
+          "prompt_index": 51,
+          "seed": 44,
+          "tail_compress_ratio": 0.40625
+        },
+        {
+          "boxed_matches_reference": false,
+          "completion_len": 13280,
+          "finish_reason": "stop",
+          "prompt_index": 53,
+          "seed": 44,
+          "tail_compress_ratio": 0.41975
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 8447,
+          "finish_reason": "stop",
+          "prompt_index": 56,
+          "seed": 44,
+          "tail_compress_ratio": 0.4235
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 58,
+          "seed": 44,
+          "tail_compress_ratio": 0.411
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 29514,
+          "finish_reason": "stop",
+          "prompt_index": 61,
+          "seed": 44,
+          "tail_compress_ratio": 0.44225
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 32768,
+          "finish_reason": "length",
+          "prompt_index": 62,
+          "seed": 44,
+          "tail_compress_ratio": 0.40975
+        },
+        {
+          "boxed_matches_reference": true,
+          "completion_len": 10619,
+          "finish_reason": "stop",
+          "prompt_index": 63,
+          "seed": 44,
+          "tail_compress_ratio": 0.376
+        }
+      ],
+      "smoke": false,
+      "state_dtype": "bfloat16"
+    },
+    {
+      "arm": "fp16",
+      "block_size_setting": null,
+      "block_tokens": 272,
+      "engine": {
+        "block_size": 272,
+        "cache_config_info": {
+          "_block_size_resolved": "True",
+          "block_size": "272",
+          "cache_dtype": "auto",
+          "effective_attention_block_size": "272",
+          "enable_mamba_shared_prefix_checkpoint": "False",
+          "enable_prefix_caching": "False",
+          "engine": "0",
+          "gpu_memory_utilization": "0.9",
+          "is_attention_free": "False",
+          "kv_cache_dtype_skip_layers": "[]",
+          "kv_cache_layout": "None",
+          "kv_cache_max_concurrency": "57.07086614173228",
+          "kv_cache_memory_bytes": "None",
+          "kv_cache_size_tokens": "1913928",
+          "kv_offloading_backend": "native",
+          "kv_offloading_size": "None",
+          "kv_sharing_fast_prefill": "False",
+          "mamba_block_size": "33536",
+          "mamba_cache_dtype": "auto",
+          "mamba_cache_mode": "none",
+          "mamba_page_size_padded": "None",
+          "mamba_ssm_cache_dtype": "float16",
+          "num_cpu_blocks": "None",
+          "num_gpu_blocks": "7248",
+          "num_gpu_blocks_override": "None",
+          "prefix_cache_retention_interval": "0",
+          "prefix_caching_hash_algo": "sha256",
+          "prefix_match_unit": "None",
+          "replayssm_buffer_len": "16",
+          "skip_page_size_padded": "None",
+          "sliding_window": "None",
+          "swa_bounded_replay": "True",
+          "use_kda_recoverssm": "False",
+          "use_replayssm": "False",
+          "user_specified_block_size": "False",
+          "user_specified_mamba_block_size": "False"
+        },
+        "cache_dtype": "auto",
+        "enable_prefix_caching": false,
+        "gpu_memory_utilization": 0.9,
+        "init_s": 62.8,
+        "mamba_block_size": 33536,
+        "mamba_cache_dtype": "auto",
+        "mamba_cache_mode": "none",
+        "mamba_page_size_padded": null,
+        "mamba_ssm_cache_dtype": "float16",
+        "max_model_len": 33536,
+        "max_num_batched_tokens": 8192,
+        "max_num_seqs": 512,
+        "model_dtype": "torch.bfloat16",
+        "num_gpu_blocks": 7248
+      },
+      "gdn_state_mib_per_sequence": 25.125,
+      "job_dir": "g2c",
+      "log": {
+        "attention_block_tokens": 272.0,
+        "gdn_decode_kernel": "triton",
+        "kv_cache_tokens": 1913928.0,
+        "lines": [
+          "{\"arm\": \"fp16\", \"end_of_turn_id\": 248046, \"engine_kwargs\": {\"disable_log_stats\": false, \"dtype\": \"bfloat16\", \"enable_prefix_caching\": false, \"gpu_memory_utilization\": 0.9, \"limit_mm_per_prompt\": {\"image\": 0, \"video\": 0}, \"logprobs_mode\": \"raw_logprobs\", \"mamba_ssm_cache_dtype\": \"float16\", \"max_model",
+          "non-default args: {'tokenizer': '/model-cache/cotcodec-models/qwen3.5-4b', 'dtype': 'bfloat16', 'seed': 42, 'max_model_len': 33536, 'enable_prefix_caching': False, 'gpu_memory_utilization': 0.9, 'max_num_batched_tokens': 8192, 'max_num_seqs': 512, 'limit_mm_per_prompt': {'image': 0, 'video': 0}, 'ma",
+          "Qwen3.5 model specifies mamba_ssm_dtype='float32' in its config, but --mamba-ssm-cache-dtype='float16' was passed. Using the user-specified value.",
+          "Initializing a V1 LLM engine (v0.31.0) with config: model='/model-cache/cotcodec-models/qwen3.5-4b', speculative_config=None, tokenizer='/model-cache/cotcodec-models/qwen3.5-4b', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=to",
+          "Using FlashInfer GDN prefill kernel (requested=auto, head_k_dim=128).",
+          "FlashInfer GDN prefill is JIT-compiled; first run may take a while. Set --gdn-prefill-backend triton to skip JIT.",
+          "Falling back to the Triton GDN decode path: the fused CUDA kernel requires a BF16 GDN model with K=V=128, SiLU or sigmoid gating, non-interleaved GQA layout, BF16 convolution cache, BF16 or FP32 recurrent state, and a GPU with compute capability 8.0+",
+          "GDN decode kernel: triton",
+          "Setting attention block size to 272 tokens to ensure that attention page size is >= mamba page size.",
+          "Padding mamba page size by 1.49% to ensure that mamba page size and attention page size are exactly equal.",
+          "CUDA graph memory profiling is enabled (default since v0.21.0). The current --gpu-memory-utilization=0.9000 is equivalent to --gpu-memory-utilization=0.8863 without CUDA graph memory profiling. To maintain the same effective KV cache size as before, increase --gpu-memory-utilization to 0.9137. To di",
+          "GPU KV cache size: 1,913,928 tokens, Maximum concurrency for 33,536 tokens per request: 57.07x",
+          "Warming up Qwen GDN Triton kernels for model_type=qwen3_5_text.",
+          "Warmed Mamba batch_memcpy_kernel.",
+          "{\"arm\": \"fp16\", \"block_size\": 272, \"cache_config_info\": {\"_block_size_resolved\": \"True\", \"block_size\": \"272\", \"cache_dtype\": \"auto\", \"effective_attention_block_size\": \"272\", \"enable_mamba_shared_prefix_checkpoint\": \"False\", \"enable_prefix_caching\": \"False\", \"engine\": \"0\", \"gpu_memory_utilization\": \""
+        ],
+        "mamba_padding_pct": 1.49,
+        "max_concurrency": [
+          33536.0,
+          57.07
+        ]
+      },
+      "max_sequences_by_length": {
+        "1024": 1035,
+        "16384": 113,
+        "2048": 658,
+        "32768": 58,
+        "4096": 381,
+        "8192": 213
+      },
+      "model": "qwen3.5-4b",
+      "nonfinite_decode_logprobs": 0,
+      "phases": {
+        "R": {
+          "finished": 12,
+          "gen_seconds": 40.0,
+          "generation_tokens_delta": 9216.0,
+          "info": {
+            "aborted": 0,
+            "drain_steps": 0,
+            "finished": 12,
+            "metric_errors": 0,
+            "stopped_by": null,
+            "unmatched": 0,
+            "wall_s": 3.837
+          },
+          "mean_kv_usage": 0.006899406651028,
+          "mean_outputs_per_step": 11.98439531859558,
+          "mean_running": 9.333333333333334,
+          "mean_waiting": 0.0,
+          "metric_samples": 9,
+          "output_tok_per_s": 2401.876465989054,
+          "output_tokens": 9216,
+          "peak_kv_usage": 0.010349109976542037,
+          "peak_outputs_per_step": 12,
+          "peak_running": 12.0,
+          "peak_waiting": 0.0,
+          "preemptions_delta": 0.0,
+          "prompt_tokens_delta": 1473.0,
+          "requests": 12,
+          "steps": 769,
+          "wall_s": 3.837
+        },
+        "S42": {
+          "complete": true,
+          "expected_output_tokens": 8192,
+          "finished": 64,
+          "generation_tokens_delta": 8192.0,
+          "info": {
+            "aborted": 0,
+            "drain_steps": 0,
+            "finished": 64,
+            "metric_errors": 0,
+            "stopped_by": null,
+            "unmatched": 0,
+            "wall_s": 0.983
+          },
+          "mean_kv_usage": 0.012234947794489673,
+          "mean_outputs_per_step": 62.534351145038165,
+          "mean_running": 21.333333333333332,
+          "mean_waiting": 0.0,
+          "metric_samples": 3,
+          "output_tok_per_s": 8333.672431332656,
+          "output_tokens": 8192,
+          "peak_kv_usage": 0.03670484338346902,
+          "peak_outputs_per_step": 64,
+          "peak_running": 64.0,
+          "peak_waiting": 0.0,
+          "preemptions_delta": 0.0,
+          "prompt_tokens_delta": 8106.0,
+          "requests": 64,
+          "status": "complete",
+          "steps": 131,
+          "wall_s": 0.983
+        }
+      },
+      "prefill": {
+        "engine_block_size": 272,
+        "engine_mamba_ssm_cache_dtype": "float16",
+        "engine_num_gpu_blocks": 6472,
+        "prompt_tok_per_s": 50350.58422870235,
+        "scored": 12,
+        "sequences": 12,
+        "stopped": null,
+        "wall_s": 0.21
+      },
+      "prefill_log": {
+        "attention_block_tokens": 272.0,
+        "gdn_decode_kernel": "triton",
+        "kv_cache_tokens": 1709015.0,
+        "lines": [
+          "{\"arm\": \"fp16\", \"engine_kwargs\": {\"disable_log_stats\": false, \"dtype\": \"bfloat16\", \"enable_prefix_caching\": false, \"gpu_memory_utilization\": 0.8, \"limit_mm_per_prompt\": {\"image\": 0, \"video\": 0}, \"logprobs_mode\": \"raw_logprobs\", \"mamba_ssm_cache_dtype\": \"float16\", \"max_model_len\": 33536, \"max_num_bat",
+          "non-default args: {'tokenizer': '/model-cache/cotcodec-models/qwen3.5-4b', 'dtype': 'bfloat16', 'seed': 42, 'max_model_len': 33536, 'enable_prefix_caching': False, 'gpu_memory_utilization': 0.8, 'max_num_batched_tokens': 4096, 'max_num_seqs': 16, 'limit_mm_per_prompt': {'image': 0, 'video': 0}, 'mam",
+          "Qwen3.5 model specifies mamba_ssm_dtype='float32' in its config, but --mamba-ssm-cache-dtype='float16' was passed. Using the user-specified value.",
+          "Initializing a V1 LLM engine (v0.31.0) with config: model='/model-cache/cotcodec-models/qwen3.5-4b', speculative_config=None, tokenizer='/model-cache/cotcodec-models/qwen3.5-4b', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=to",
+          "Using FlashInfer GDN prefill kernel (requested=auto, head_k_dim=128).",
+          "FlashInfer GDN prefill is JIT-compiled; first run may take a while. Set --gdn-prefill-backend triton to skip JIT.",
+          "Falling back to the Triton GDN decode path: the fused CUDA kernel requires a BF16 GDN model with K=V=128, SiLU or sigmoid gating, non-interleaved GQA layout, BF16 convolution cache, BF16 or FP32 recurrent state, and a GPU with compute capability 8.0+",
+          "GDN decode kernel: triton",
+          "Setting attention block size to 272 tokens to ensure that attention page size is >= mamba page size.",
+          "Padding mamba page size by 1.49% to ensure that mamba page size and attention page size are exactly equal.",
+          "CUDA graph memory profiling is enabled (default since v0.21.0). The current --gpu-memory-utilization=0.8000 is equivalent to --gpu-memory-utilization=0.7983 without CUDA graph memory profiling. To maintain the same effective KV cache size as before, increase --gpu-memory-utilization to 0.8017. To di",
+          "GPU KV cache size: 1,709,015 tokens, Maximum concurrency for 33,536 tokens per request: 50.96x",
+          "Warming up Qwen GDN Triton kernels for model_type=qwen3_5_text.",
+          "Warmed Mamba batch_memcpy_kernel.",
+          "{\"arm\": \"fp16\", \"block_size\": 272, \"cache_config_info\": {\"_block_size_resolved\": \"True\", \"block_size\": \"272\", \"cache_dtype\": \"auto\", \"effective_attention_block_size\": \"272\", \"enable_mamba_shared_prefix_checkpoint\": \"False\", \"enable_prefix_caching\": \"False\", \"engine\": \"0\", \"gpu_memory_utilization\": \""
+        ],
+        "mamba_padding_pct": 1.49,
+        "max_concurrency": [
+          33536.0,
+          50.96
+        ]
+      },
+      "rollouts": [
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 768,
+          "finish_reason": "length",
+          "prompt_index": 3,
+          "seed": 42,
+          "tail_compress_ratio": 0.4282261962300628
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 768,
+          "finish_reason": "length",
+          "prompt_index": 14,
+          "seed": 42,
+          "tail_compress_ratio": 0.3374922021210231
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 768,
+          "finish_reason": "length",
+          "prompt_index": 31,
+          "seed": 42,
+          "tail_compress_ratio": 0.4406779661016949
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 768,
+          "finish_reason": "length",
+          "prompt_index": 35,
+          "seed": 42,
+          "tail_compress_ratio": 0.46403326403326406
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 768,
+          "finish_reason": "length",
+          "prompt_index": 3,
+          "seed": 43,
+          "tail_compress_ratio": 0.44139650872817954
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 768,
+          "finish_reason": "length",
+          "prompt_index": 14,
+          "seed": 43,
+          "tail_compress_ratio": 0.3942632170978628
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 768,
+          "finish_reason": "length",
+          "prompt_index": 31,
+          "seed": 43,
+          "tail_compress_ratio": 0.45380774032459426
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 768,
+          "finish_reason": "length",
+          "prompt_index": 35,
+          "seed": 43,
+          "tail_compress_ratio": 0.45649629340616465
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 768,
+          "finish_reason": "length",
+          "prompt_index": 3,
+          "seed": 44,
+          "tail_compress_ratio": 0.44759615384615387
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 768,
+          "finish_reason": "length",
+          "prompt_index": 14,
+          "seed": 44,
+          "tail_compress_ratio": 0.4087193460490463
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 768,
+          "finish_reason": "length",
+          "prompt_index": 31,
+          "seed": 44,
+          "tail_compress_ratio": 0.4419176398279041
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 768,
+          "finish_reason": "length",
+          "prompt_index": 35,
+          "seed": 44,
+          "tail_compress_ratio": 0.44108352144469526
+        }
+      ],
+      "smoke": true,
+      "state_dtype": "float16"
+    },
+    {
+      "arm": "bf16_b528",
+      "block_size_setting": 528,
+      "block_tokens": 528,
+      "engine": {
+        "block_size": 528,
+        "cache_config_info": {
+          "_block_size_resolved": "True",
+          "block_size": "528",
+          "cache_dtype": "auto",
+          "effective_attention_block_size": "528",
+          "enable_mamba_shared_prefix_checkpoint": "False",
+          "enable_prefix_caching": "False",
+          "engine": "0",
+          "gpu_memory_utilization": "0.9",
+          "is_attention_free": "False",
+          "kv_cache_dtype_skip_layers": "[]",
+          "kv_cache_layout": "None",
+          "kv_cache_max_concurrency": "55.71641791044776",
+          "kv_cache_memory_bytes": "None",
+          "kv_cache_size_tokens": "1868505",
+          "kv_offloading_backend": "native",
+          "kv_offloading_size": "None",
+          "kv_sharing_fast_prefill": "False",
+          "mamba_block_size": "33536",
+          "mamba_cache_dtype": "auto",
+          "mamba_cache_mode": "none",
+          "mamba_page_size_padded": "None",
+          "mamba_ssm_cache_dtype": "bfloat16",
+          "num_cpu_blocks": "None",
+          "num_gpu_blocks": "3733",
+          "num_gpu_blocks_override": "None",
+          "prefix_cache_retention_interval": "0",
+          "prefix_caching_hash_algo": "sha256",
+          "prefix_match_unit": "None",
+          "replayssm_buffer_len": "16",
+          "skip_page_size_padded": "None",
+          "sliding_window": "None",
+          "swa_bounded_replay": "True",
+          "use_kda_recoverssm": "False",
+          "use_replayssm": "False",
+          "user_specified_block_size": "True",
+          "user_specified_mamba_block_size": "False"
+        },
+        "cache_dtype": "auto",
+        "enable_prefix_caching": false,
+        "gpu_memory_utilization": 0.9,
+        "init_s": 57.8,
+        "mamba_block_size": 33536,
+        "mamba_cache_dtype": "auto",
+        "mamba_cache_mode": "none",
+        "mamba_page_size_padded": null,
+        "mamba_ssm_cache_dtype": "bfloat16",
+        "max_model_len": 33536,
+        "max_num_batched_tokens": 8192,
+        "max_num_seqs": 512,
+        "model_dtype": "torch.bfloat16",
+        "num_gpu_blocks": 3733
+      },
+      "gdn_state_mib_per_sequence": 25.125,
+      "job_dir": "g2c",
+      "log": {
+        "gdn_decode_kernel": "triton",
+        "kv_cache_tokens": 1868505.0,
+        "lines": [
+          "{\"arm\": \"bf16_b528\", \"end_of_turn_id\": 248046, \"engine_kwargs\": {\"block_size\": 528, \"disable_log_stats\": false, \"dtype\": \"bfloat16\", \"enable_prefix_caching\": false, \"gpu_memory_utilization\": 0.9, \"limit_mm_per_prompt\": {\"image\": 0, \"video\": 0}, \"logprobs_mode\": \"raw_logprobs\", \"mamba_ssm_cache_dtype",
+          "non-default args: {'tokenizer': '/model-cache/cotcodec-models/qwen3.5-4b', 'dtype': 'bfloat16', 'seed': 42, 'max_model_len': 33536, 'block_size': 528, 'enable_prefix_caching': False, 'gpu_memory_utilization': 0.9, 'max_num_batched_tokens': 8192, 'max_num_seqs': 512, 'limit_mm_per_prompt': {'image': ",
+          "Qwen3.5 model specifies mamba_ssm_dtype='float32' in its config, but --mamba-ssm-cache-dtype='bfloat16' was passed. Using the user-specified value.",
+          "Initializing a V1 LLM engine (v0.31.0) with config: model='/model-cache/cotcodec-models/qwen3.5-4b', speculative_config=None, tokenizer='/model-cache/cotcodec-models/qwen3.5-4b', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=to",
+          "Using FlashInfer GDN prefill kernel (requested=auto, head_k_dim=128).",
+          "FlashInfer GDN prefill is JIT-compiled; first run may take a while. Set --gdn-prefill-backend triton to skip JIT.",
+          "Falling back to the Triton GDN decode path: torch.ops._C.fused_gdn_decode_post_conv_mtp is not built",
+          "GDN decode kernel: triton",
+          "Padding mamba page size by 97.01% to ensure that mamba page size and attention page size are exactly equal.",
+          "CUDA graph memory profiling is enabled (default since v0.21.0). The current --gpu-memory-utilization=0.9000 is equivalent to --gpu-memory-utilization=0.8863 without CUDA graph memory profiling. To maintain the same effective KV cache size as before, increase --gpu-memory-utilization to 0.9137. To di",
+          "GPU KV cache size: 1,868,505 tokens, Maximum concurrency for 33,536 tokens per request: 55.72x",
+          "Warming up Qwen GDN Triton kernels for model_type=qwen3_5_text.",
+          "Warmed Mamba batch_memcpy_kernel.",
+          "{\"arm\": \"bf16_b528\", \"block_size\": 528, \"cache_config_info\": {\"_block_size_resolved\": \"True\", \"block_size\": \"528\", \"cache_dtype\": \"auto\", \"effective_attention_block_size\": \"528\", \"enable_mamba_shared_prefix_checkpoint\": \"False\", \"enable_prefix_caching\": \"False\", \"engine\": \"0\", \"gpu_memory_utilizatio"
+        ],
+        "mamba_padding_pct": 97.01,
+        "max_concurrency": [
+          33536.0,
+          55.72
+        ]
+      },
+      "max_sequences_by_length": {
+        "1024": 746,
+        "16384": 106,
+        "2048": 533,
+        "32768": 56,
+        "4096": 339,
+        "8192": 196
+      },
+      "model": "qwen3.5-4b",
+      "nonfinite_decode_logprobs": 0,
+      "phases": {
+        "R": {
+          "finished": 12,
+          "gen_seconds": 40.0,
+          "generation_tokens_delta": 9216.0,
+          "info": {
+            "aborted": 0,
+            "drain_steps": 0,
+            "finished": 12,
+            "metric_errors": 0,
+            "stopped_by": null,
+            "unmatched": 0,
+            "wall_s": 3.743
+          },
+          "mean_kv_usage": 0.011254019292604488,
+          "mean_outputs_per_step": 11.98439531859558,
+          "mean_running": 9.333333333333334,
+          "mean_waiting": 0.0,
+          "metric_samples": 9,
+          "output_tok_per_s": 2462.1960993855196,
+          "output_tokens": 9216,
+          "peak_kv_usage": 0.01607717041800638,
+          "peak_outputs_per_step": 12,
+          "peak_running": 12.0,
+          "peak_waiting": 0.0,
+          "preemptions_delta": 0.0,
+          "prompt_tokens_delta": 1473.0,
+          "requests": 12,
+          "steps": 769,
+          "wall_s": 3.743
+        },
+        "S42": {
+          "complete": true,
+          "expected_output_tokens": 8192,
+          "finished": 64,
+          "generation_tokens_delta": 8192.0,
+          "info": {
+            "aborted": 0,
+            "drain_steps": 0,
+            "finished": 64,
+            "metric_errors": 0,
+            "stopped_by": null,
+            "unmatched": 0,
+            "wall_s": 0.97
+          },
+          "mean_kv_usage": 0.023043944265809208,
+          "mean_outputs_per_step": 62.534351145038165,
+          "mean_running": 21.333333333333332,
+          "mean_waiting": 0.0,
+          "metric_samples": 3,
+          "output_tok_per_s": 8445.360824742269,
+          "output_tokens": 8192,
+          "peak_kv_usage": 0.06913183279742763,
+          "peak_outputs_per_step": 64,
+          "peak_running": 64.0,
+          "peak_waiting": 0.0,
+          "preemptions_delta": 0.0,
+          "prompt_tokens_delta": 8106.0,
+          "requests": 64,
+          "status": "complete",
+          "steps": 131,
+          "wall_s": 0.97
+        }
+      },
+      "prefill": {
+        "engine_block_size": 528,
+        "engine_mamba_ssm_cache_dtype": "bfloat16",
+        "engine_num_gpu_blocks": 3334,
+        "prompt_tok_per_s": 50419.212998606614,
+        "scored": 12,
+        "sequences": 12,
+        "stopped": null,
+        "wall_s": 0.21
+      },
+      "prefill_log": {
+        "gdn_decode_kernel": "triton",
+        "kv_cache_tokens": 1668791.0,
+        "lines": [
+          "{\"arm\": \"bf16_b528\", \"engine_kwargs\": {\"block_size\": 528, \"disable_log_stats\": false, \"dtype\": \"bfloat16\", \"enable_prefix_caching\": false, \"gpu_memory_utilization\": 0.8, \"limit_mm_per_prompt\": {\"image\": 0, \"video\": 0}, \"logprobs_mode\": \"raw_logprobs\", \"mamba_ssm_cache_dtype\": \"bfloat16\", \"max_model_",
+          "non-default args: {'tokenizer': '/model-cache/cotcodec-models/qwen3.5-4b', 'dtype': 'bfloat16', 'seed': 42, 'max_model_len': 33536, 'block_size': 528, 'enable_prefix_caching': False, 'gpu_memory_utilization': 0.8, 'max_num_batched_tokens': 4096, 'max_num_seqs': 16, 'limit_mm_per_prompt': {'image': 0",
+          "Qwen3.5 model specifies mamba_ssm_dtype='float32' in its config, but --mamba-ssm-cache-dtype='bfloat16' was passed. Using the user-specified value.",
+          "Initializing a V1 LLM engine (v0.31.0) with config: model='/model-cache/cotcodec-models/qwen3.5-4b', speculative_config=None, tokenizer='/model-cache/cotcodec-models/qwen3.5-4b', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=to",
+          "Using FlashInfer GDN prefill kernel (requested=auto, head_k_dim=128).",
+          "FlashInfer GDN prefill is JIT-compiled; first run may take a while. Set --gdn-prefill-backend triton to skip JIT.",
+          "Falling back to the Triton GDN decode path: torch.ops._C.fused_gdn_decode_post_conv_mtp is not built",
+          "GDN decode kernel: triton",
+          "Padding mamba page size by 97.01% to ensure that mamba page size and attention page size are exactly equal.",
+          "CUDA graph memory profiling is enabled (default since v0.21.0). The current --gpu-memory-utilization=0.8000 is equivalent to --gpu-memory-utilization=0.7983 without CUDA graph memory profiling. To maintain the same effective KV cache size as before, increase --gpu-memory-utilization to 0.8017. To di",
+          "GPU KV cache size: 1,668,791 tokens, Maximum concurrency for 33,536 tokens per request: 49.76x",
+          "Warming up Qwen GDN Triton kernels for model_type=qwen3_5_text.",
+          "Warmed Mamba batch_memcpy_kernel.",
+          "{\"arm\": \"bf16_b528\", \"block_size\": 528, \"cache_config_info\": {\"_block_size_resolved\": \"True\", \"block_size\": \"528\", \"cache_dtype\": \"auto\", \"effective_attention_block_size\": \"528\", \"enable_mamba_shared_prefix_checkpoint\": \"False\", \"enable_prefix_caching\": \"False\", \"engine\": \"0\", \"gpu_memory_utilizatio"
+        ],
+        "mamba_padding_pct": 97.01,
+        "max_concurrency": [
+          33536.0,
+          49.76
+        ]
+      },
+      "rollouts": [
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 768,
+          "finish_reason": "length",
+          "prompt_index": 3,
+          "seed": 42,
+          "tail_compress_ratio": 0.4235745088643987
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 768,
+          "finish_reason": "length",
+          "prompt_index": 14,
+          "seed": 42,
+          "tail_compress_ratio": 0.3888888888888889
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 768,
+          "finish_reason": "length",
+          "prompt_index": 31,
+          "seed": 42,
+          "tail_compress_ratio": 0.42578912021490933
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 768,
+          "finish_reason": "length",
+          "prompt_index": 35,
+          "seed": 42,
+          "tail_compress_ratio": 0.45584627964022895
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 768,
+          "finish_reason": "length",
+          "prompt_index": 3,
+          "seed": 43,
+          "tail_compress_ratio": 0.4447211155378486
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 768,
+          "finish_reason": "length",
+          "prompt_index": 14,
+          "seed": 43,
+          "tail_compress_ratio": 0.3982708933717579
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 768,
+          "finish_reason": "length",
+          "prompt_index": 31,
+          "seed": 43,
+          "tail_compress_ratio": 0.4541343669250646
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 768,
+          "finish_reason": "length",
+          "prompt_index": 35,
+          "seed": 43,
+          "tail_compress_ratio": 0.4748764415156507
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 768,
+          "finish_reason": "length",
+          "prompt_index": 3,
+          "seed": 44,
+          "tail_compress_ratio": 0.4215291750503018
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 768,
+          "finish_reason": "length",
+          "prompt_index": 14,
+          "seed": 44,
+          "tail_compress_ratio": 0.4087193460490463
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 768,
+          "finish_reason": "length",
+          "prompt_index": 31,
+          "seed": 44,
+          "tail_compress_ratio": 0.43243243243243246
+        },
+        {
+          "boxed_matches_reference": null,
+          "completion_len": 768,
+          "finish_reason": "length",
+          "prompt_index": 35,
+          "seed": 44,
+          "tail_compress_ratio": 0.4699599465954606
+        }
+      ],
+      "smoke": true,
+      "state_dtype": "bfloat16"
+    },
+    {
+      "arm": "probe_fp32_b272",
+      "job_dir": "g2c",
+      "log": {
+        "attention_block_tokens": 544.0,
+        "gdn_decode_kernel": "triton",
+        "kv_cache_tokens": 1921870.0,
+        "lines": [
+          "Using FlashInfer GDN prefill kernel (requested=auto, head_k_dim=128).",
+          "FlashInfer GDN prefill is JIT-compiled; first run may take a while. Set --gdn-prefill-backend triton to skip JIT.",
+          "Falling back to the Triton GDN decode path: torch.ops._C.fused_gdn_decode_post_conv_mtp is not built",
+          "GDN decode kernel: triton",
+          "Setting attention block size to 544 tokens to ensure that attention page size is >= mamba page size.",
+          "Padding mamba page size by 3.82% to ensure that mamba page size and attention page size are exactly equal.",
+          "GPU KV cache size: 1,921,870 tokens, Maximum concurrency for 33,536 tokens per request: 57.31x",
+          "Warming up Qwen GDN Triton kernels for model_type=qwen3_5_text.",
+          "Warmed Mamba batch_memcpy_kernel."
+        ],
+        "mamba_padding_pct": 3.82,
+        "max_concurrency": [
+          33536.0,
+          57.31
+        ]
+      },
+      "model": "qwen3.5-4b",
+      "probe": {
+        "engine": {
+          "block_size": 544,
+          "cache_config_info": {
+            "_block_size_resolved": "True",
+            "block_size": "544",
+            "cache_dtype": "auto",
+            "effective_attention_block_size": "544",
+            "enable_mamba_shared_prefix_checkpoint": "False",
+            "enable_prefix_caching": "False",
+            "engine": "0",
+            "gpu_memory_utilization": "0.9",
+            "is_attention_free": "False",
+            "kv_cache_dtype_skip_layers": "[]",
+            "kv_cache_layout": "None",
+            "kv_cache_max_concurrency": "57.30769230769231",
+            "kv_cache_memory_bytes": "None",
+            "kv_cache_size_tokens": "1921870",
+            "kv_offloading_backend": "native",
+            "kv_offloading_size": "None",
+            "kv_sharing_fast_prefill": "False",
+            "mamba_block_size": "33536",
+            "mamba_cache_dtype": "auto",
+            "mamba_cache_mode": "none",
+            "mamba_page_size_padded": "None",
+            "mamba_ssm_cache_dtype": "float32",
+            "num_cpu_blocks": "None",
+            "num_gpu_blocks": "3725",
+            "num_gpu_blocks_override": "None",
+            "prefix_cache_retention_interval": "0",
+            "prefix_caching_hash_algo": "sha256",
+            "prefix_match_unit": "None",
+            "replayssm_buffer_len": "16",
+            "skip_page_size_padded": "None",
+            "sliding_window": "None",
+            "swa_bounded_replay": "True",
+            "use_kda_recoverssm": "False",
+            "use_replayssm": "False",
+            "user_specified_block_size": "True",
+            "user_specified_mamba_block_size": "False"
+          },
+          "cache_dtype": "auto",
+          "enable_prefix_caching": false,
+          "gpu_memory_utilization": 0.9,
+          "mamba_block_size": 33536,
+          "mamba_cache_dtype": "auto",
+          "mamba_cache_mode": "none",
+          "mamba_page_size_padded": null,
+          "mamba_ssm_cache_dtype": "float32",
+          "max_model_len": 33536,
+          "max_num_batched_tokens": 8192,
+          "max_num_seqs": 512,
+          "model_dtype": "torch.bfloat16",
+          "num_gpu_blocks": 3725
+        },
+        "engine_kwargs": {
+          "block_size": 272,
+          "disable_log_stats": false,
+          "dtype": "bfloat16",
+          "enable_prefix_caching": false,
+          "enforce_eager": true,
+          "gpu_memory_utilization": 0.9,
+          "limit_mm_per_prompt": {
+            "image": 0,
+            "video": 0
+          },
+          "load_format": "dummy",
+          "logprobs_mode": "raw_logprobs",
+          "mamba_ssm_cache_dtype": "auto",
+          "max_model_len": 33536,
+          "max_num_batched_tokens": 8192,
+          "max_num_seqs": 512,
+          "model": "/model-cache/cotcodec-models/qwen3.5-4b",
+          "seed": 42,
+          "tokenizer": "/model-cache/cotcodec-models/qwen3.5-4b",
+          "trust_remote_code": false
+        },
+        "init_s": 39.3,
+        "model": "qwen3.5-4b",
+        "utc": "2026-10-15T00:12:35Z"
+      },
+      "smoke": true
+    }
+  ]
+}

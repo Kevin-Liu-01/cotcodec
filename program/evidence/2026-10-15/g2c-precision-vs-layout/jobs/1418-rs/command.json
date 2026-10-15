@@ -1,0 +1,15 @@
+[
+  "python",
+  "scripts/run_g2c_rollouts.py",
+  "run",
+  "--model",
+  "qwen3.5-4b",
+  "--seeds",
+  "42",
+  "43",
+  "44",
+  "--output-dir",
+  "/outputs/g2c",
+  "--allocation-minutes",
+  "32"
+]

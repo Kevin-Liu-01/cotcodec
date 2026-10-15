@@ -1,0 +1,22 @@
+2026-10-14T23:49:10Z CPU source check (block size) submitted: 1403 (no GRES)
+2026-10-15T00:10:24Z vLLM overlay build job 1406 submitted (git 3833d544, archive 3d3bea32, 1 H100, limit 5 min)
+2026-10-15T00:10:25Z research source-overlay build job 1407 submitted (base cotcodec-research ed5d5a93 500f3b02, 1 H100, limit 5 min)
+2026-10-15T00:11:43Z build done: 1406 vLLM overlay 7f6d49d7 (RunTime 00:01:04, PASS), 1407 research overlay ba5b3ce3 (RunTime 00:00:20)
+2026-10-15T00:11:43Z post-build CPU selftest submitted: 1409 (images 7f6d49d7, ba5b3ce3; no GRES)
+2026-10-15T00:12:17Z post-build CPU selftest 1409 done: rollouts selftest, teacher-force selftest, plan and source pass 2 all exit 0
+2026-10-15T00:12:17Z smoke rollouts 4B (probe + both arms) submitted: 1414 (smoke-rs-q35-4b.yaml)
+2026-10-15T00:18:25Z smoke 1414 done: COMPLETED 0:0 RunTime 00:05:34; probe fp32+block 272 resolved to 544 (padding 3.82%); fp16 272/7248 blocks; bf16_b528 528/3733 blocks (padding 97.01%); both arms R, S42 and prefill complete, 0 non-finite log-probs
+2026-10-15T00:18:25Z rollouts 4b (fp16, bf16_b528) submitted: 1418 (rs-q35-4b.yaml)
+2026-10-15T00:18:26Z rollouts 9b (fp16, bf16_b528) submitted: 1420 (rs-q35-9b.yaml)
+2026-10-15T00:18:33Z smoke teacher-force 4B submitted: 1422 (smoke-tf-q35-4b.yaml)
+2026-10-15T00:19:56Z CPU analysis dry run on the smoke outputs submitted: 1423 (no GRES; not data)
+2026-10-15T00:20:06Z CPU analysis dry run resubmitted (1423 failed at once: [[ under /bin/sh): 1424 (no GRES; not data)
+2026-10-15T00:21:13Z CPU analysis dry run at df4f35d4 on the smoke outputs submitted: 1425 (no GRES; not data)
+2026-10-15T00:40:38Z rollouts 4B 1418 done: COMPLETED 0:0 RunTime 00:21:37; fp16 72/72 ended in 389 s (54 EOS, 18 cap), bf16_b528 31 EOS 41 cut at 450 s; waves 19968 and 19739 tok/s; prefill both complete; 0 non-finite
+2026-10-15T00:40:39Z teacher-force 4B submitted: 1428 (tf-q35-4b.yaml)
+2026-10-15T00:43:26Z rollouts 9B 1420 done: COMPLETED 0:0 RunTime 00:24:36; fp16 72/72 ended in 420 s (65 EOS, 7 cap), bf16_b528 72/72 ended in 526 s (40 EOS, 32 cap); waves 16161 and 14356 tok/s; prefill both complete; 0 non-finite
+2026-10-15T00:43:27Z teacher-force 9B submitted: 1431 (tf-q35-9b.yaml)
+2026-10-15T00:54:21Z teacher-force done: 1428 4B COMPLETED 0:0 RunTime 00:08:31 (r1 144, r4 32), 1431 9B COMPLETED 0:0 RunTime 00:10:15 (r1 144, r4 32)
+2026-10-15T00:54:21Z CPU analysis (both models, git df4f35d4) submitted: 1433 (no GRES)
+2026-10-15T00:54:38Z note: smoke teacher-force 1422 COMPLETED 0:0 RunTime 00:01:00 as observed at completion (r1 24, r4 4); the scontrol captures of 1414, 1418 and 1420 taken at completion were overwritten at 00:54Z by a re-capture after their records expired; their RunTimes as observed at completion (00:05:34, 00:21:37, 00:24:36) are in the lines above and match the lane intervals within 1 s
+2026-10-15T00:58:26Z CPU analysis (both models, git 7f7143af, adds the same-seed pairs) submitted: 1437 (no GRES)

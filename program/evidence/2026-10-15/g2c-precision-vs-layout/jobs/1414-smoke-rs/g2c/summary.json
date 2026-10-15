@@ -1,0 +1,369 @@
+{
+  "allocation_minutes": 14.0,
+  "arms": {
+    "bf16_b528": {
+      "prefill": {
+        "argv": [
+          "/usr/local/bin/python",
+          "/workspace/cotcodec/scripts/run_g2c_rollouts.py",
+          "prefill-worker",
+          "--model",
+          "qwen3.5-4b",
+          "--arm",
+          "bf16_b528",
+          "--input",
+          "/outputs/g2c/qwen3.5-4b-bf16_b528/tf-sequences.json",
+          "--output-dir",
+          "/outputs/g2c",
+          "--deadline",
+          "1792023768.000"
+        ],
+        "exit": 0,
+        "gpu_memory_after_mib": [
+          0
+        ],
+        "started_at": "2026-10-15T00:16:49Z",
+        "status": "complete",
+        "wall_s": 61.0,
+        "worker_done": {
+          "exit": 0,
+          "utc": "2026-10-15T00:17:46Z"
+        }
+      },
+      "rollouts": {
+        "argv": [
+          "/usr/local/bin/python",
+          "/workspace/cotcodec/scripts/run_g2c_rollouts.py",
+          "worker",
+          "--model",
+          "qwen3.5-4b",
+          "--arm",
+          "bf16_b528",
+          "--output-dir",
+          "/outputs/g2c",
+          "--deadline",
+          "1792023768.000",
+          "--smoke"
+        ],
+        "exit": 0,
+        "gpu_memory_after_mib": [
+          0
+        ],
+        "started_at": "2026-10-15T00:15:36Z",
+        "status": "complete",
+        "wall_s": 73.0,
+        "worker_done": {
+          "exit": 0,
+          "utc": "2026-10-15T00:16:45Z"
+        }
+      },
+      "sequences": 12
+    },
+    "fp16": {
+      "prefill": {
+        "argv": [
+          "/usr/local/bin/python",
+          "/workspace/cotcodec/scripts/run_g2c_rollouts.py",
+          "prefill-worker",
+          "--model",
+          "qwen3.5-4b",
+          "--arm",
+          "fp16",
+          "--input",
+          "/outputs/g2c/qwen3.5-4b-fp16/tf-sequences.json",
+          "--output-dir",
+          "/outputs/g2c",
+          "--deadline",
+          "1792023768.000"
+        ],
+        "exit": 0,
+        "gpu_memory_after_mib": [
+          0
+        ],
+        "started_at": "2026-10-15T00:14:35Z",
+        "status": "complete",
+        "wall_s": 61.0,
+        "worker_done": {
+          "exit": 0,
+          "utc": "2026-10-15T00:15:32Z"
+        }
+      },
+      "rollouts": {
+        "argv": [
+          "/usr/local/bin/python",
+          "/workspace/cotcodec/scripts/run_g2c_rollouts.py",
+          "worker",
+          "--model",
+          "qwen3.5-4b",
+          "--arm",
+          "fp16",
+          "--output-dir",
+          "/outputs/g2c",
+          "--deadline",
+          "1792023768.000",
+          "--smoke"
+        ],
+        "exit": 0,
+        "gpu_memory_after_mib": [
+          0
+        ],
+        "started_at": "2026-10-15T00:13:17Z",
+        "status": "complete",
+        "wall_s": 78.0,
+        "worker_done": {
+          "exit": 0,
+          "utc": "2026-10-15T00:14:31Z"
+        }
+      },
+      "sequences": 12
+    }
+  },
+  "claim_level": "exploratory",
+  "deadline_source": "job.env started_at",
+  "deadline_utc": "2026-10-15T00:22:48Z",
+  "experiment_id": "g2c-precision-layout-v1",
+  "finished_at": "2026-10-15T00:17:50Z",
+  "job": "rollouts",
+  "model": "qwen3.5-4b",
+  "plan": {
+    "arms": {
+      "bf16_b528": {
+        "block_size": 528,
+        "engine_kwargs": {
+          "block_size": 528,
+          "disable_log_stats": false,
+          "dtype": "bfloat16",
+          "enable_prefix_caching": false,
+          "gpu_memory_utilization": 0.9,
+          "limit_mm_per_prompt": {
+            "image": 0,
+            "video": 0
+          },
+          "logprobs_mode": "raw_logprobs",
+          "mamba_ssm_cache_dtype": "bfloat16",
+          "max_model_len": 33536,
+          "max_num_batched_tokens": 8192,
+          "max_num_seqs": 512,
+          "model": "/model-cache/cotcodec-models/qwen3.5-4b",
+          "seed": 42,
+          "tokenizer": "/model-cache/cotcodec-models/qwen3.5-4b",
+          "trust_remote_code": false
+        },
+        "prefill_engine_kwargs": {
+          "block_size": 528,
+          "disable_log_stats": false,
+          "dtype": "bfloat16",
+          "enable_prefix_caching": false,
+          "gpu_memory_utilization": 0.8,
+          "limit_mm_per_prompt": {
+            "image": 0,
+            "video": 0
+          },
+          "logprobs_mode": "raw_logprobs",
+          "mamba_ssm_cache_dtype": "bfloat16",
+          "max_model_len": 33536,
+          "max_num_batched_tokens": 4096,
+          "max_num_seqs": 16,
+          "model": "/model-cache/cotcodec-models/qwen3.5-4b",
+          "seed": 42,
+          "tokenizer": "/model-cache/cotcodec-models/qwen3.5-4b",
+          "trust_remote_code": false
+        },
+        "rollout_max_tokens": 768,
+        "rollout_requests": 12,
+        "saturation_requests_per_wave": {
+          "42": 64
+        },
+        "state_dtype": "bfloat16"
+      },
+      "fp16": {
+        "block_size": null,
+        "engine_kwargs": {
+          "disable_log_stats": false,
+          "dtype": "bfloat16",
+          "enable_prefix_caching": false,
+          "gpu_memory_utilization": 0.9,
+          "limit_mm_per_prompt": {
+            "image": 0,
+            "video": 0
+          },
+          "logprobs_mode": "raw_logprobs",
+          "mamba_ssm_cache_dtype": "float16",
+          "max_model_len": 33536,
+          "max_num_batched_tokens": 8192,
+          "max_num_seqs": 512,
+          "model": "/model-cache/cotcodec-models/qwen3.5-4b",
+          "seed": 42,
+          "tokenizer": "/model-cache/cotcodec-models/qwen3.5-4b",
+          "trust_remote_code": false
+        },
+        "prefill_engine_kwargs": {
+          "disable_log_stats": false,
+          "dtype": "bfloat16",
+          "enable_prefix_caching": false,
+          "gpu_memory_utilization": 0.8,
+          "limit_mm_per_prompt": {
+            "image": 0,
+            "video": 0
+          },
+          "logprobs_mode": "raw_logprobs",
+          "mamba_ssm_cache_dtype": "float16",
+          "max_model_len": 33536,
+          "max_num_batched_tokens": 4096,
+          "max_num_seqs": 16,
+          "model": "/model-cache/cotcodec-models/qwen3.5-4b",
+          "seed": 42,
+          "tokenizer": "/model-cache/cotcodec-models/qwen3.5-4b",
+          "trust_remote_code": false
+        },
+        "rollout_max_tokens": 768,
+        "rollout_requests": 12,
+        "saturation_requests_per_wave": {
+          "42": 64
+        },
+        "state_dtype": "float16"
+      }
+    },
+    "gen_seconds": 40,
+    "probe_engine_kwargs": {
+      "block_size": 272,
+      "disable_log_stats": false,
+      "dtype": "bfloat16",
+      "enable_prefix_caching": false,
+      "enforce_eager": true,
+      "gpu_memory_utilization": 0.9,
+      "limit_mm_per_prompt": {
+        "image": 0,
+        "video": 0
+      },
+      "load_format": "dummy",
+      "logprobs_mode": "raw_logprobs",
+      "mamba_ssm_cache_dtype": "auto",
+      "max_model_len": 33536,
+      "max_num_batched_tokens": 8192,
+      "max_num_seqs": 512,
+      "model": "/model-cache/cotcodec-models/qwen3.5-4b",
+      "seed": 42,
+      "tokenizer": "/model-cache/cotcodec-models/qwen3.5-4b",
+      "trust_remote_code": false
+    }
+  },
+  "probe": {
+    "argv": [
+      "/usr/local/bin/python",
+      "/workspace/cotcodec/scripts/run_g2c_rollouts.py",
+      "probe-worker",
+      "--model",
+      "qwen3.5-4b",
+      "--output-dir",
+      "/outputs/g2c"
+    ],
+    "exit": 0,
+    "gpu_memory_after_mib": [
+      0
+    ],
+    "probe": {
+      "engine": {
+        "block_size": 544,
+        "cache_config_info": {
+          "_block_size_resolved": "True",
+          "block_size": "544",
+          "cache_dtype": "auto",
+          "effective_attention_block_size": "544",
+          "enable_mamba_shared_prefix_checkpoint": "False",
+          "enable_prefix_caching": "False",
+          "engine": "0",
+          "gpu_memory_utilization": "0.9",
+          "is_attention_free": "False",
+          "kv_cache_dtype_skip_layers": "[]",
+          "kv_cache_layout": "None",
+          "kv_cache_max_concurrency": "57.30769230769231",
+          "kv_cache_memory_bytes": "None",
+          "kv_cache_size_tokens": "1921870",
+          "kv_offloading_backend": "native",
+          "kv_offloading_size": "None",
+          "kv_sharing_fast_prefill": "False",
+          "mamba_block_size": "33536",
+          "mamba_cache_dtype": "auto",
+          "mamba_cache_mode": "none",
+          "mamba_page_size_padded": "None",
+          "mamba_ssm_cache_dtype": "float32",
+          "num_cpu_blocks": "None",
+          "num_gpu_blocks": "3725",
+          "num_gpu_blocks_override": "None",
+          "prefix_cache_retention_interval": "0",
+          "prefix_caching_hash_algo": "sha256",
+          "prefix_match_unit": "None",
+          "replayssm_buffer_len": "16",
+          "skip_page_size_padded": "None",
+          "sliding_window": "None",
+          "swa_bounded_replay": "True",
+          "use_kda_recoverssm": "False",
+          "use_replayssm": "False",
+          "user_specified_block_size": "True",
+          "user_specified_mamba_block_size": "False"
+        },
+        "cache_dtype": "auto",
+        "enable_prefix_caching": false,
+        "gpu_memory_utilization": 0.9,
+        "mamba_block_size": 33536,
+        "mamba_cache_dtype": "auto",
+        "mamba_cache_mode": "none",
+        "mamba_page_size_padded": null,
+        "mamba_ssm_cache_dtype": "float32",
+        "max_model_len": 33536,
+        "max_num_batched_tokens": 8192,
+        "max_num_seqs": 512,
+        "model_dtype": "torch.bfloat16",
+        "num_gpu_blocks": 3725
+      },
+      "engine_kwargs": {
+        "block_size": 272,
+        "disable_log_stats": false,
+        "dtype": "bfloat16",
+        "enable_prefix_caching": false,
+        "enforce_eager": true,
+        "gpu_memory_utilization": 0.9,
+        "limit_mm_per_prompt": {
+          "image": 0,
+          "video": 0
+        },
+        "load_format": "dummy",
+        "logprobs_mode": "raw_logprobs",
+        "mamba_ssm_cache_dtype": "auto",
+        "max_model_len": 33536,
+        "max_num_batched_tokens": 8192,
+        "max_num_seqs": 512,
+        "model": "/model-cache/cotcodec-models/qwen3.5-4b",
+        "seed": 42,
+        "tokenizer": "/model-cache/cotcodec-models/qwen3.5-4b",
+        "trust_remote_code": false
+      },
+      "init_s": 39.3,
+      "model": "qwen3.5-4b",
+      "utc": "2026-10-15T00:12:35Z"
+    },
+    "started_at": "2026-10-15T00:12:29Z",
+    "wall_s": 48.0,
+    "worker_done": {
+      "exit": 0,
+      "utc": "2026-10-15T00:13:14Z"
+    }
+  },
+  "signal": null,
+  "smoke": true,
+  "started_at": "2026-10-15T00:12:26Z",
+  "tf_input_sequences": 24,
+  "tf_input_sha256": "39b171a174c631f30d5e9bfd750472e288d069d81e9f3d670ed207b7459d491a",
+  "verification": {
+    "artifact_root_sha256": "3b8a075149bffe4dea784db5b4b37bc0896688cba0b3de7d8d0f6e8ae6157b9e",
+    "mode": "full",
+    "model_id": "qwen3.5-4b",
+    "receipt": "/model-cache/cotcodec-receipts/qwen3.5-4b.json",
+    "receipt_sha256": "75ebfc531acdcbc0c39bbf83ee7bf5267a3ddf02c4fafdf6181624612a0d3082",
+    "repo_id": "Qwen/Qwen3.5-4B",
+    "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+    "total_bytes": 9342907469,
+    "verified_by": "lane (model-verification.txt)"
+  }
+}
