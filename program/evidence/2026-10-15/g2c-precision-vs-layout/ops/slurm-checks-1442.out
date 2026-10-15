@@ -1,0 +1,24 @@
+git 1e7ed6760d470e23c62c767791d385c8901537f2
+All checks passed!
+ruff check exit 0
+7 files already formatted
+ruff format exit 0
+.....................................                                    [100%]
+37 passed in 4.48s
+full pytest exit 1
+  /home/kevin/cotcodec-runs/stage0/g2c-precision-layout/checkout-1e7ed676/harness/q2_stage1/analysis.py:105: RuntimeWarning: Mean of empty slice
+    "pi_small": np.nanmean(pis, axis=-1),
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_r04_evidence.py::test_analysis_reproduces_from_the_committed_mirror[r04-registered-v1]
+FAILED tests/test_r04_nuisance.py::test_power_run_is_deterministic_and_committed
+2 failed, 3291 passed, 64 skipped, 233 warnings in 390.96s (0:06:30)
+architecture validator exit 0
+provider model registry PASS: 7 models, 5 providers
+provider validator exit 0
+seed-42 reproduction exit 0
+seed-42 rows, committed subsets vs full analysis: largest relative difference 0
+base a213572e tests/test_r04_evidence.py: 1 failed, 7 passed in 14.25s
+base a213572e tests/test_r04_nuisance.py: 1 failed, 51 passed in 1.39s
+done

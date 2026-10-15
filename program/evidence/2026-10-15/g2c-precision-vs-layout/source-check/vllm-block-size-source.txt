@@ -1,0 +1,1137 @@
+image sha256:f86cd2c181940e9db5c49930750d6bcd496e532af2fa0401024675d372592ff1
+== vllm '0.31.0'
+
+######## 1. where the hybrid attention block size is set and the mamba page padded
+== grep -rn Setting attention block size|Padding mamba page size (vllm/)
+platforms/interface.py:809:                "Setting attention block size to %d tokens so the quantized "
+platforms/interface.py:990:                "Setting attention block size to %d tokens "
+platforms/interface.py:1014:                "Padding mamba page size by %.2f%% to ensure "
+platforms/xpu.py:467:            "[XPU]Setting attention block size to %d tokens to ensure multiple of %d, "
+6f5f0f7f304a3899c50a3a558eecd07f66675910befbfa251bc9779ee05a7775  platforms/interface.py
+d13a446c60c0cc3d16902f75170646d87d6e4b5f153725290a2a4830b0b6b5b2  platforms/xpu.py
+== platforms/interface.py:710-821 (pattern 'Setting attention block size|Padding mamba page size', hit line 809)
+   710	    @classmethod
+   711	    def _align_heterogeneous_kv_block_size(
+   712	        cls,
+   713	        vllm_config: "VllmConfig",
+   714	        backend_cls: "type[AttentionBackend]",
+   715	    ) -> None:
+   716	        """Align block size when several KV dtypes share one block pool.
+   717	
+   718	        A quantized primary (e.g. nvfp4) shares the block pool with one or more
+   719	        higher-precision "padded specs" (skip layers today; the first/last-N
+   720	        sibling in the future). A padded spec's per-token page is larger than
+   721	        the primary's *and not an integer multiple of it*, so the trivial
+   722	        ``unify_kv_cache_spec_page_size`` cannot reconcile them. We do it here
+   723	        instead, before the specs are built:
+   724	
+   725	        1. Bump the primary ``block_size`` (kernel-aligned) until the primary
+   726	           page is large enough to cover the largest padded-spec page.
+   727	        2. Record that shared page in each padded spec's ``*_page_size_padded``
+   728	           hint, so it pads up to the shared page.
+   729	
+   730	        ``unify`` then sees equal pages and stays trivial.
+   731	
+   732	        To add a padded-spec type: append its per-token page to ``padded_pages``
+   733	        and set its ``*_page_size_padded`` hint below.
+   734	        """
+   735	        from vllm.config.vllm import set_current_vllm_config
+   736	        from vllm.utils.math_utils import cdiv
+   737	        from vllm.utils.torch_utils import STR_DTYPE_TO_TORCH_DTYPE
+   738	        from vllm.v1.attention.backend import MultipleOf
+   739	        from vllm.v1.kv_cache_interface import FullAttentionSpec, get_kv_quant_mode
+   740	
+   741	        cache_config = vllm_config.cache_config
+   742	        model_config = vllm_config.model_config
+   743	        parallel_config = vllm_config.parallel_config
+   744	        if not model_config:
+   745	            return
+   746	
+   747	        def per_token_page_bytes(dtype: "torch.dtype", cache_dtype: str) -> int:
+   748	            """Bytes one token occupies in one layer, for the given dtype."""
+   749	            spec = FullAttentionSpec(
+   750	                block_size=1,
+   751	                num_kv_heads=model_config.get_num_kv_heads(parallel_config),
+   752	                head_size=model_config.get_head_size(),
+   753	                dtype=dtype,
+   754	                kv_quant_mode=get_kv_quant_mode(cache_dtype),
+   755	            )
+   756	            # The backend owns its packing
+   757	            return backend_cls.customize_spec(spec).page_size_bytes
+   758	
+   759	        primary_dtype = (
+   760	            STR_DTYPE_TO_TORCH_DTYPE[cache_config.cache_dtype]
+   761	            if cache_config.cache_dtype != "auto"
+   762	            else model_config.dtype
+   763	        )
+   764	        primary_page = per_token_page_bytes(primary_dtype, cache_config.cache_dtype)
+   765	
+   766	        # Per-token page of every higher-precision padded spec sharing the pool.
+   767	        padded_pages: list[int] = []
+   768	        if cache_config.kv_cache_dtype_skip_layers:
+   769	            padded_pages.append(per_token_page_bytes(model_config.dtype, "auto"))
+   770	        # To add the first/last-N sibling:
+   771	        #   padded_pages.append(per_token_page_bytes(<sibling_dtype>, "auto"))
+   772	        if not padded_pages:
+   773	            return
+   774	
+   775	        largest_padded_page = max(padded_pages)
+   776	        assert largest_padded_page >= primary_page, (
+   777	            f"padded-spec per-token page ({largest_padded_page}B) < primary "
+   778	            f"({primary_page}B); a higher-precision padded spec must not be "
+   779	            "smaller than the quantized primary."
+   780	        )
+   781	        if largest_padded_page == primary_page:
+   782	            # Pages already match per token; ``unify`` reconciles the differing
+   783	            # block sizes by integer scaling, so no bump or padding is needed.
+   784	            return
+   785	
+   786	        # Smallest block the kernel supports, and the granularity the primary
+   787	        # block is rounded up to (never below the already-chosen block_size).
+   788	        with set_current_vllm_config(vllm_config):
+   789	            supported = backend_cls.get_supported_kernel_block_sizes()
+   790	        smallest_kernel_block = min(
+   791	            s.base if isinstance(s, MultipleOf) else s for s in supported
+   792	        )
+   793	        block_alignment = max(smallest_kernel_block, cache_config.block_size)
+   794	
+   795	        # Bytes one padded-spec page spans at its own smallest kernel block;
+   796	        # also cover any mamba page a hybrid model already padded.
+   797	        required_page = max(
+   798	            largest_padded_page * smallest_kernel_block,
+   799	            cache_config.mamba_page_size_padded or 0,
+   800	        )
+   801	
+   802	        # Smallest kernel-aligned primary block whose page covers required_page.
+   803	        primary_block_size = block_alignment * cdiv(
+   804	            required_page, block_alignment * primary_page
+   805	        )
+   806	        if cache_config.block_size < primary_block_size:
+   807	            cache_config.block_size = primary_block_size
+   808	            logger.info(
+   809	                "Setting attention block size to %d tokens so the quantized "
+   810	                "primary KV page covers the higher-precision padded-spec page.",
+   811	                primary_block_size,
+   812	            )
+   813	
+   814	        # The shared page that every padded spec (and mamba) pads up to.
+   815	        shared_page = cache_config.block_size * primary_page
+   816	        if cache_config.kv_cache_dtype_skip_layers:
+   817	            cache_config.skip_page_size_padded = shared_page
+   818	        # To add the first/last-N sibling:
+   819	        #   cache_config.sibling_page_size_padded = shared_page
+   820	        if cache_config.mamba_page_size_padded is not None:
+   821	            cache_config.mamba_page_size_padded = shared_page
+== platforms/interface.py:834-1018 (pattern 'Setting attention block size|Padding mamba page size', hit line 990)
+   834	    @classmethod
+   835	    def _align_hybrid_block_size(
+   836	        cls,
+   837	        vllm_config: "VllmConfig",
+   838	        backend_cls: "type[AttentionBackend]",
+   839	    ) -> None:
+   840	        """For hybrid attention/mamba models, ensure that the attention page
+   841	        size is >= the mamba page size, and pad the mamba page size to match.
+   842	        """
+   843	        from math import lcm
+   844	
+   845	        from vllm.config.vllm import set_current_vllm_config
+   846	        from vllm.model_executor.models import ModelRegistry
+   847	        from vllm.utils.math_utils import cdiv
+   848	        from vllm.utils.torch_utils import STR_DTYPE_TO_TORCH_DTYPE
+   849	        from vllm.v1.attention.backend import MultipleOf
+   850	        from vllm.v1.kv_cache_interface import (
+   851	            FullAttentionSpec,
+   852	            MambaSpec,
+   853	            MLAAttentionSpec,
+   854	            get_kv_quant_mode,
+   855	        )
+   856	
+   857	        cache_config = vllm_config.cache_config
+   858	        model_config = vllm_config.model_config
+   859	        parallel_config = vllm_config.parallel_config
+   860	
+   861	        if cache_config.cache_dtype == "auto":
+   862	            kv_cache_dtype = model_config.dtype
+   863	        else:
+   864	            kv_cache_dtype = STR_DTYPE_TO_TORCH_DTYPE[cache_config.cache_dtype]
+   865	
+   866	        kv_quant_mode = get_kv_quant_mode(cache_config.cache_dtype)
+   867	
+   868	        # Compute attention page size for 1 token
+   869	        if model_config.use_mla:
+   870	            attn_page_size_1_token = MLAAttentionSpec(
+   871	                block_size=1,
+   872	                num_kv_heads=model_config.get_num_kv_heads(parallel_config),
+   873	                head_size=model_config.get_head_size(),
+   874	                dtype=kv_cache_dtype,
+   875	                cache_dtype_str=cache_config.cache_dtype,
+   876	                kv_quant_mode=kv_quant_mode,
+   877	            ).page_size_bytes
+   878	        elif cache_config.cache_dtype.startswith("turboquant_"):
+   879	            # TQ has a packed K|V layout; the standard FullAttentionSpec
+   880	            # formula over-sizes it and trips unify_kv_cache_spec_page_size
+   881	            # when all attention layers are TQ. With mixed skip+TQ the skip
+   882	            # layers still use the standard layout — take max so mamba
+   883	            # padding covers the largest actual page.
+   884	            from vllm.v1.attention.backends.turboquant_attn import (
+   885	                TurboQuantAttentionBackend,
+   886	            )
+   887	
+   888	            tq_spec = FullAttentionSpec(
+   889	                block_size=1,
+   890	                num_kv_heads=model_config.get_num_kv_heads(parallel_config),
+   891	                head_size=model_config.get_head_size(),
+   892	                dtype=kv_cache_dtype,
+   893	                kv_quant_mode=kv_quant_mode,
+   894	            )
+   895	            tq_page = TurboQuantAttentionBackend.customize_spec(tq_spec).page_size_bytes
+   896	            if cache_config.kv_cache_dtype_skip_layers:
+   897	                skip_page = FullAttentionSpec(
+   898	                    block_size=1,
+   899	                    num_kv_heads=model_config.get_num_kv_heads(parallel_config),
+   900	                    head_size=model_config.get_head_size(),
+   901	                    dtype=model_config.dtype,
+   902	                ).page_size_bytes
+   903	                # lcm, not max: skip_page is often not a multiple of
+   904	                # tq_page, so max would leave per-layer page sizes
+   905	                # un-unifiable downstream.
+   906	                attn_page_size_1_token = lcm(tq_page, skip_page)
+   907	            else:
+   908	                attn_page_size_1_token = tq_page
+   909	        else:
+   910	            attn_spec = FullAttentionSpec(
+   911	                block_size=1,
+   912	                num_kv_heads=model_config.get_num_kv_heads(parallel_config),
+   913	                head_size=model_config.get_head_size(),
+   914	                dtype=kv_cache_dtype,
+   915	                kv_quant_mode=kv_quant_mode,
+   916	            )
+   917	            attn_page_size_1_token = backend_cls.customize_spec(
+   918	                attn_spec
+   919	            ).page_size_bytes
+   920	
+   921	        # Compute mamba page size
+   922	        model_cls, _ = ModelRegistry.resolve_model_cls(
+   923	            model_config.architecture,
+   924	            model_config=model_config,
+   925	        )
+   926	        # Qwen4Exp has multiple Mamba state layouts with different sizes.
+   927	        if hasattr(model_cls, "get_mamba_specs_from_config"):
+   928	            mamba_page_size = max(
+   929	                spec.page_size_bytes
+   930	                for spec in model_cls.get_mamba_specs_from_config(vllm_config)
+   931	            )
+   932	        else:
+   933	            mamba_page_size = MambaSpec(
+   934	                shapes=model_cls.get_mamba_state_shape_from_config(vllm_config),
+   935	                dtypes=model_cls.get_mamba_state_dtype_from_config(vllm_config),
+   936	                block_size=-1,
+   937	            ).page_size_bytes
+   938	
+   939	        if mamba_page_size == 0:
+   940	            return
+   941	
+   942	        # mamba_block_size here should either be user specified value or None
+   943	        mamba_block_size = (
+   944	            cache_config.mamba_block_size
+   945	            if cache_config.user_specified_mamba_block_size
+   946	            else None
+   947	        )
+   948	
+   949	        # Get kernel block alignment from the backend's supported sizes
+   950	        with set_current_vllm_config(vllm_config):
+   951	            kernel_block_alignment_size = max(
+   952	                min(
+   953	                    s.base if isinstance(s, MultipleOf) else s
+   954	                    for s in backend_cls.get_supported_kernel_block_sizes()
+   955	                ),
+   956	                cache_config.block_size,
+   957	            )
+   958	            if model_config.use_mla:
+   959	                # TRTLLM/FlashInfer MLA decode kernels require the physical
+   960	                # number of kernel blocks to be aligned to 128 / kernel_block_size.
+   961	                # For hybrid MLA/Mamba models, make the manager block size a
+   962	                # multiple of 128 so split kernel blocks keep that invariant.
+   963	                kernel_block_alignment_size = max(kernel_block_alignment_size, 128)
+   964	
+   965	        if cache_config.mamba_cache_mode == "all":
+   966	            # With prefix caching, align to mamba chunk size for kernel perf
+   967	            # TODO(tdoublep): this constraint can be relaxed fairly
+   968	            # easily by changing the way we layout chunks in the
+   969	            # mamba2 kernels.
+   970	            base_chunk_size = mamba_block_size or model_config.get_mamba_chunk_size()
+   971	            assert base_chunk_size is not None
+   972	            attn_tokens_per_mamba_state = cdiv(mamba_page_size, attn_page_size_1_token)
+   973	            chunk_size = lcm(base_chunk_size, kernel_block_alignment_size)
+   974	            attn_block_size = chunk_size * cdiv(attn_tokens_per_mamba_state, chunk_size)
+   975	            cache_config.mamba_block_size = attn_block_size
+   976	        else:
+   977	            # Without prefix caching, use minimum block size that satisfies
+   978	            # both backend alignment and mamba page size compatibility
+   979	            attn_block_size = kernel_block_alignment_size * cdiv(
+   980	                mamba_page_size,
+   981	                kernel_block_alignment_size * attn_page_size_1_token,
+   982	            )
+   983	            indexer_align = cls._get_indexer_block_alignment(vllm_config)
+   984	            if indexer_align:
+   985	                attn_block_size = indexer_align * cdiv(attn_block_size, indexer_align)
+   986	
+   987	        if cache_config.block_size < attn_block_size:
+   988	            cache_config.block_size = attn_block_size
+   989	            logger.info(
+   990	                "Setting attention block size to %d tokens "
+   991	                "to ensure that attention page size is >= mamba page size.",
+   992	                attn_block_size,
+   993	            )
+   994	
+   995	        if cache_config.mamba_cache_mode == "align":
+   996	            cache_config.mamba_block_size = cache_config.block_size
+   997	
+   998	        # Pad mamba page size to exactly match attention page size
+   999	        attn_page_size = cache_config.block_size * attn_page_size_1_token
+  1000	        assert attn_page_size >= mamba_page_size
+  1001	
+  1002	        if attn_page_size == mamba_page_size:
+  1003	            return
+  1004	
+  1005	        if (
+  1006	            cache_config.mamba_page_size_padded is None
+  1007	            or cache_config.mamba_page_size_padded != attn_page_size
+  1008	        ):
+  1009	            cache_config.mamba_page_size_padded = attn_page_size
+  1010	            mamba_padding_pct = (
+  1011	                100 * (attn_page_size - mamba_page_size) / mamba_page_size
+  1012	            )
+  1013	            logger.info(
+  1014	                "Padding mamba page size by %.2f%% to ensure "
+  1015	                "that mamba page size and attention page size are "
+  1016	                "exactly equal.",
+  1017	                mamba_padding_pct,
+  1018	            )
+== platforms/xpu.py:424-473 (pattern 'Setting attention block size|Padding mamba page size', hit line 467)
+   424	    @classmethod
+   425	    def update_block_size_for_backend(cls, vllm_config: "VllmConfig") -> None:
+   426	        super().update_block_size_for_backend(vllm_config)
+   427	        from vllm.config.vllm import get_layers_from_vllm_config
+   428	        from vllm.model_executor.layers.attention_layer_base import (
+   429	            AttentionLayerBase,
+   430	        )
+   431	        from vllm.utils.math_utils import cdiv
+   432	
+   433	        cache_config = vllm_config.cache_config
+   434	        # special fix for GDN since kernel only supports block size dividable by 64
+   435	        attn_layers = get_layers_from_vllm_config(
+   436	            vllm_config,
+   437	            AttentionLayerBase,  # type: ignore[type-abstract]
+   438	        )
+   439	
+   440	        kernel_block_size = None
+   441	        for layer in attn_layers.values():
+   442	            b = layer.get_attn_backend()
+   443	            if b.get_name() == "GDN_ATTN":
+   444	                kernel_block_size = 64
+   445	                break
+   446	
+   447	        if kernel_block_size is None:
+   448	            return
+   449	        new_block_size = (
+   450	            cdiv(cache_config.block_size, kernel_block_size) * kernel_block_size
+   451	        )
+   452	        if new_block_size == cache_config.block_size:
+   453	            return
+   454	
+   455	        if cache_config.mamba_cache_mode == "align":
+   456	            cache_config.mamba_block_size = new_block_size
+   457	        original_mamba_page_size_padded = cache_config.mamba_page_size_padded
+   458	        if cache_config.mamba_page_size_padded is not None:
+   459	            attn_page_size_1_token = (
+   460	                cache_config.mamba_page_size_padded // cache_config.block_size
+   461	            )
+   462	            cache_config.mamba_page_size_padded = (
+   463	                new_block_size * attn_page_size_1_token
+   464	            )
+   465	        cache_config.block_size = new_block_size
+   466	        logger.info(
+   467	            "[XPU]Setting attention block size to %d tokens to ensure multiple of %d, "
+   468	            "set mamba_page_size_padded to %d bytes accordingly, before was %d bytes.",
+   469	            new_block_size,
+   470	            kernel_block_size,
+   471	            cache_config.mamba_page_size_padded,
+   472	            original_mamba_page_size_padded,
+   473	        )
+
+######## 2. user_specified_block_size, _block_size_resolved, effective_attention_block_size
+== grep -rn user_specified_block_size|_block_size_resolved|effective_attention_block_size (vllm/)
+v1/engine/core_client.py:585:        self._effective_attention_block_sizes: set[int | None] = set()
+v1/engine/core_client.py:830:        self._effective_attention_block_sizes.add(
+v1/engine/core_client.py:831:            response.effective_attention_block_size if response is not None else None
+v1/engine/core_client.py:833:        sizes = self._effective_attention_block_sizes
+v1/engine/core_client.py:834:        vllm_config.cache_config.effective_attention_block_size = (
+v1/engine/core.py:177:        self._initialize_effective_attention_block_size()
+v1/engine/core.py:386:    def _initialize_effective_attention_block_size(self) -> None:
+v1/engine/core.py:388:        cache_config.effective_attention_block_size = None
+v1/engine/core.py:397:        cache_config.effective_attention_block_size = (
+v1/engine/core.py:1715:            effective_attention_block_size=(
+v1/engine/core.py:1716:                self.vllm_config.cache_config.effective_attention_block_size
+v1/engine/__init__.py:106:    effective_attention_block_size: int | None = None
+v1/attention/selector.py:132:    if cache_config is not None and cache_config.user_specified_block_size:
+platforms/interface.py:687:        if not cache_config.user_specified_block_size:
+platforms/cpu.py:257:            if cache_config.user_specified_block_size and cache_config.block_size != 16:
+platforms/cpu.py:266:                cache_config.user_specified_block_size
+platforms/cpu.py:275:        elif not cache_config.user_specified_block_size:
+config/cache.py:76:    user_specified_block_size: bool = field(default=False, init=False)
+config/cache.py:226:    effective_attention_block_size: int | None = field(default=None, init=False)
+config/cache.py:292:            "user_specified_block_size",
+config/cache.py:294:            "_block_size_resolved",
+config/cache.py:298:            "effective_attention_block_size",
+config/cache.py:316:    _block_size_resolved: bool = field(default=False, init=False)
+config/cache.py:330:        if self._block_size_resolved:
+config/cache.py:332:        self._block_size_resolved = True
+config/cache.py:336:            self.user_specified_block_size = True
+models/hy_v4/nvidia/attention.py:604:            if cache_config is not None and cache_config.user_specified_block_size
+a9b2a804c9c353e7bded64081bf920c79432d4e44ca180c05e275c69e642a280  config/cache.py
+== grep config/cache.py: block_size|BlockSize|page_size_padded
+73:    block_size: int = Field(default=None, gt=0)  # type: ignore[assignment]
+76:    user_specified_block_size: bool = field(default=False, init=False)
+77:    """Whether block_size was explicitly provided. Derived automatically."""
+78:    user_specified_mamba_block_size: bool = field(default=False, init=False)
+79:    """Whether mamba_block_size was explicitly provided. Derived automatically."""
+97:    `block_size` is divisible by it, enabling cache hits at boundaries
+101:    This equals to the `hash_block_size` used throughout the KV cache code.
+170:    mamba_page_size_padded: int | None = None
+173:    skip_page_size_padded: int | None = None
+178:    mamba_block_size: int | None = Field(default=None, gt=0)
+194:    - "all": cache the mamba state of all tokens at position i * block_size.
+196:      when the token is at position i * block_size. This is the default when prefix
+214:    mode flushes are most efficient when mamba_block_size is a multiple of
+226:    effective_attention_block_size: int | None = field(default=None, init=False)
+230:    group-aware capacity since num_gpu_blocks * block_size can be wrong
+290:            "mamba_page_size_padded",
+291:            "skip_page_size_padded",
+292:            "user_specified_block_size",
+293:            "user_specified_mamba_block_size",
+294:            "_block_size_resolved",
+298:            "effective_attention_block_size",
+316:    _block_size_resolved: bool = field(default=False, init=False)
+317:    """Guard against pydantic re-running _apply_block_size_default."""
+319:    @field_validator("block_size", mode="wrap")
+327:    def _apply_block_size_default(self) -> "CacheConfig":
+330:        if self._block_size_resolved:
+332:        self._block_size_resolved = True
+333:        if self.block_size is None:
+334:            self.block_size = self.DEFAULT_BLOCK_SIZE
+336:            self.user_specified_block_size = True
+337:        if self.mamba_block_size is not None:
+338:            self.user_specified_mamba_block_size = True
+== config/cache.py:326-339 (pattern 'user_specified_block_size = |_block_size_resolved =|def effective_attention_block_size', hit line 332)
+   326	    @model_validator(mode="after")
+   327	    def _apply_block_size_default(self) -> "CacheConfig":
+   328	        # Pydantic re-runs validators when CacheConfig is nested inside
+   329	        # another pydantic model (e.g. VllmConfig). Guard against that.
+   330	        if self._block_size_resolved:
+   331	            return self
+   332	        self._block_size_resolved = True
+   333	        if self.block_size is None:
+   334	            self.block_size = self.DEFAULT_BLOCK_SIZE
+   335	        else:
+   336	            self.user_specified_block_size = True
+   337	        if self.mamba_block_size is not None:
+   338	            self.user_specified_mamba_block_size = True
+   339	        return self
+
+######## 3. the CLI / EngineArgs block_size
+95be1adb96f55933f6a52260c8cb2181d04707401ca21d97c33108c5ab58f3ac  engine/arg_utils.py
+== grep engine/arg_utils.py: block.size
+394:                "safetensors_prefetch_block_size",
+489:    safetensors_prefetch_block_size: int = LoadConfig.safetensors_prefetch_block_size
+571:    block_size: int | None = None
+785:    mamba_block_size: int | None = get_field(CacheConfig, "mamba_block_size")
+1045:            "--safetensors-prefetch-block-size",
+1046:            **load_kwargs["safetensors_prefetch_block_size"],
+1324:        cache_group.add_argument("--block-size", **cache_kwargs["block_size"])
+1368:            "--mamba-block-size", **cache_kwargs["mamba_block_size"]
+2016:            safetensors_prefetch_block_size=self.safetensors_prefetch_block_size,
+2209:            block_size=self.block_size,  # type: ignore[arg-type]
+2224:            mamba_block_size=self.mamba_block_size,
+
+######## 4. platform hook (cuda) and callers of the hybrid update
+27bd20e6fe42dd70b72fe58ce12cb615a2385776f0ac705349646c67ca68bb26  platforms/cuda.py
+== grep platforms/cuda.py: block_size
+426:        # kpool paged-MQA indexer: the storage block (block_size /
+427:        # index_kpool) is virtually split into pool pages, so block_size
+507:        if attn_selector_config.block_size is not None:
+512:                and reasons == ["block_size not supported"]
+521:                    attn_selector_config.block_size,
+6f5f0f7f304a3899c50a3a558eecd07f66675910befbfa251bc9779ee05a7775  platforms/interface.py
+== grep platforms/interface.py: def |block_size
+616:    def _preferred_block_size_for_backends(
+619:        default_block_size: int,
+624:        ``supports_block_size`` may be overridden to accept exact sizes only
+638:                return backend_classes[0].get_preferred_block_size(default_block_size)
+639:            if all(b.supports_block_size(default_block_size) for b in backend_classes):
+640:                return default_block_size
+645:                    for s in b.get_supported_kernel_block_sizes()
+654:                if all(b.supports_block_size(candidate) for b in backend_classes):
+659:                f"{b.get_name()}: {b.get_supported_kernel_block_sizes()}"
+666:    def update_block_size_for_backend(cls, vllm_config: "VllmConfig") -> None:
+667:        """Ensure block_size is compatible with the attention backend.
+668:        For hybrid models, also aligns block_size with mamba page sizes.
+686:        # select_common_block_size().
+687:        if not cache_config.user_specified_block_size:
+688:            preferred = cls._preferred_block_size_for_backends(
+697:            cache_config.block_size = preferred
+702:            cls._align_hybrid_block_size(vllm_config, backend_classes[0])
+708:            cls._align_heterogeneous_kv_block_size(vllm_config, backend_classes[0])
+711:    def _align_heterogeneous_kv_block_size(
+725:        1. Bump the primary ``block_size`` (kernel-aligned) until the primary
+750:                block_size=1,
+787:        # block is rounded up to (never below the already-chosen block_size).
+789:            supported = backend_cls.get_supported_kernel_block_sizes()
+793:        block_alignment = max(smallest_kernel_block, cache_config.block_size)
+803:        primary_block_size = block_alignment * cdiv(
+806:        if cache_config.block_size < primary_block_size:
+807:            cache_config.block_size = primary_block_size
+811:                primary_block_size,
+815:        shared_page = cache_config.block_size * primary_page
+824:    def _get_indexer_block_alignment(cls, vllm_config: "VllmConfig") -> int | None:
+825:        """Extra ``block_size`` multiple a sparse indexer needs, else ``None``.
+828:        into pool pages, so ``block_size`` must be a multiple of
+835:    def _align_hybrid_block_size(
+871:                block_size=1,
+889:                block_size=1,
+898:                    block_size=1,
+911:                block_size=1,
+936:                block_size=-1,
+942:        # mamba_block_size here should either be user specified value or None
+943:        mamba_block_size = (
+944:            cache_config.mamba_block_size
+945:            if cache_config.user_specified_mamba_block_size
+954:                    for s in backend_cls.get_supported_kernel_block_sizes()
+956:                cache_config.block_size,
+960:                # number of kernel blocks to be aligned to 128 / kernel_block_size.
+970:            base_chunk_size = mamba_block_size or model_config.get_mamba_chunk_size()
+974:            attn_block_size = chunk_size * cdiv(attn_tokens_per_mamba_state, chunk_size)
+975:            cache_config.mamba_block_size = attn_block_size
+979:            attn_block_size = kernel_block_alignment_size * cdiv(
+985:                attn_block_size = indexer_align * cdiv(attn_block_size, indexer_align)
+987:        if cache_config.block_size < attn_block_size:
+988:            cache_config.block_size = attn_block_size
+992:                attn_block_size,
+996:            cache_config.mamba_block_size = cache_config.block_size
+999:        attn_page_size = cache_config.block_size * attn_page_size_1_token
+== grep -rn update_block_size_for_backend|verify_and_update_config\(|_align_hybrid_block_size|HybridAttentionMambaModelConfig (vllm/)
+v1/engine/core_client.py:849:        # Sync block_size: may be enlarged by _align_hybrid_block_size in the
+v1/executor/multiproc_executor.py:696:        current_platform.update_block_size_for_backend(vllm_config)
+v1/executor/ray_executor.py:381:            current_platform.update_block_size_for_backend(worker.vllm_config)
+v1/executor/uniproc_executor.py:75:        current_platform.update_block_size_for_backend(self.vllm_config)
+platforms/interface.py:666:    def update_block_size_for_backend(cls, vllm_config: "VllmConfig") -> None:
+platforms/interface.py:702:            cls._align_hybrid_block_size(vllm_config, backend_classes[0])
+platforms/interface.py:835:    def _align_hybrid_block_size(
+platforms/xpu.py:425:    def update_block_size_for_backend(cls, vllm_config: "VllmConfig") -> None:
+platforms/xpu.py:426:        super().update_block_size_for_backend(vllm_config)
+platforms/cpu.py:516:    def update_block_size_for_backend(cls, vllm_config: "VllmConfig") -> None:
+platforms/cpu.py:526:        cls._align_hybrid_block_size(vllm_config, backend_classes[0])
+config/vllm.py:1434:        self.try_verify_and_update_config()
+config/vllm.py:2766:    def try_verify_and_update_config(self):
+config/vllm.py:2782:            HybridAttentionMambaModelConfig,
+config/vllm.py:2795:            cls.verify_and_update_config(self)
+config/vllm.py:2798:            HybridAttentionMambaModelConfig.verify_and_update_config(self)
+config/vllm.py:2804:            SequenceClassificationConfig.verify_and_update_config(self)
+config/vllm.py:3385:        Called after Platform.update_block_size_for_backend() has
+model_executor/models/config.py:20:    def verify_and_update_config(vllm_config: "VllmConfig") -> None:
+model_executor/models/config.py:30:    def verify_and_update_config(cls, vllm_config: "VllmConfig") -> None:
+model_executor/models/config.py:45:    def verify_and_update_config(vllm_config: "VllmConfig") -> None:
+model_executor/models/config.py:55:    def verify_and_update_config(vllm_config: "VllmConfig") -> None:
+model_executor/models/config.py:70:    def verify_and_update_config(vllm_config: "VllmConfig") -> None:
+model_executor/models/config.py:211:    def verify_and_update_config(vllm_config: "VllmConfig") -> None:
+model_executor/models/config.py:275:    def verify_and_update_config(cls, vllm_config: "VllmConfig") -> None:
+model_executor/models/config.py:285:        Gemma4Config.verify_and_update_config(vllm_config)
+model_executor/models/config.py:421:    def verify_and_update_config(vllm_config: "VllmConfig") -> None:
+model_executor/models/config.py:462:class HybridAttentionMambaModelConfig(VerifyAndUpdateConfig):
+model_executor/models/config.py:464:    def verify_and_update_config(cls, vllm_config: "VllmConfig") -> None:
+model_executor/models/config.py:468:        Platform.update_block_size_for_backend(), which runs after model
+model_executor/models/config.py:476:        MambaModelConfig.verify_and_update_config(vllm_config)
+model_executor/models/config.py:629:    def verify_and_update_config(cls, vllm_config: "VllmConfig") -> None:
+model_executor/models/config.py:701:    def verify_and_update_config(cls, vllm_config: "VllmConfig") -> None:
+model_executor/models/config.py:710:    def verify_and_update_config(cls, vllm_config: "VllmConfig") -> None:
+model_executor/models/config.py:821:    def verify_and_update_config(vllm_config: "VllmConfig") -> None:
+model_executor/models/config.py:848:    def verify_and_update_config(vllm_config: "VllmConfig") -> None:
+model_executor/models/config.py:849:        Qwen3_5ForConditionalGenerationConfig.verify_and_update_config(vllm_config)
+model_executor/models/config.py:880:    def verify_and_update_config(vllm_config: "VllmConfig") -> None:
+model_executor/models/config.py:881:        Qwen3_5ForConditionalGenerationConfig.verify_and_update_config(vllm_config)
+model_executor/models/config.py:920:    def verify_and_update_config(vllm_config: "VllmConfig") -> None:
+
+######## 5. attention kernel block size (logical block split for the kernel)
+== grep -rn kernel_block_size|get_supported_kernel_block_sizes|kv lcm block sizes (vllm/)
+v1/hisparse/binding.py:83:    kernel_block_sizes: list[int],
+v1/hisparse/binding.py:93:    kv_caches = allocate_kv_cache(device_config, device, layout, kernel_block_sizes)
+v1/hisparse/binding.py:107:        kernel_block_size = kernel_block_sizes[host_group_id]
+v1/hisparse/binding.py:109:            kernel_block_size = spec.storage_block_size
+v1/hisparse/binding.py:116:            kernel_block_size=kernel_block_size,
+v1/hisparse/binding.py:125:    kernel_block_sizes: list[int],
+v1/hisparse/binding.py:137:            kernel_block_sizes,
+v1/core/kv_cache_utils.py:773:    logger.info("kv lcm block sizes %s", scheduler_block_size)
+v1/kv_cache_interface.py:207:    def get_num_kernel_states(self, kernel_block_size: int) -> int:
+v1/kv_cache_interface.py:209:            return kernel_block_size // self.tokens_per_state
+v1/kv_cache_interface.py:298:    kernel_block_size: int | None = None,
+v1/kv_cache_interface.py:301:    bs = kernel_block_size if kernel_block_size is not None else spec.block_size
+v1/kv_cache_interface.py:319:    kernel_block_size: int | None = None,
+v1/kv_cache_interface.py:327:        *compute_layer_kv_cache_shape_bytes(spec, num_blocks, kernel_block_size),
+v1/kv_cache_interface.py:332:        assert kernel_block_size is None or kernel_block_size == spec.block_size, (
+v1/kv_cache_interface.py:359:    kernel_block_size: int | None = None,
+v1/kv_cache_interface.py:370:        spec, num_blocks, kernel_block_size
+v1/kv_cache_interface.py:384:                f"{kernel_block_size} tokens. Reduce --block-size to "
+v1/kv_cache_interface.py:385:                f"{kernel_block_size} or set VLLM_KV_CACHE_LAYOUT to a "
+v1/kv_cache_interface.py:399:        kernel_block_size,
+v1/spec_decode/llm_base_proposer.py:1712:        kernel_block_sizes: list[int] | None = None,
+v1/spec_decode/llm_base_proposer.py:1746:                    kernel_block_size = (
+v1/spec_decode/llm_base_proposer.py:1747:                        kernel_block_sizes[self.kv_cache_gid]
+v1/spec_decode/llm_base_proposer.py:1748:                        if kernel_block_sizes is not None
+v1/spec_decode/llm_base_proposer.py:1749:                        and self.kv_cache_gid < len(kernel_block_sizes)
+v1/spec_decode/llm_base_proposer.py:1761:                        kernel_block_size=kernel_block_size,
+v1/spec_decode/llm_base_proposer.py:1768:        if kernel_block_sizes is not None and 0 <= self.kv_cache_gid < len(
+v1/spec_decode/llm_base_proposer.py:1769:            kernel_block_sizes
+v1/spec_decode/llm_base_proposer.py:1775:            self.block_size = kernel_block_sizes[self.kv_cache_gid]
+v1/spec_decode/step3p5.py:177:        kernel_block_sizes: list[int] | None = None,
+v1/spec_decode/step3p5.py:224:                kernel_block_size = (
+v1/spec_decode/step3p5.py:225:                    kernel_block_sizes[gid]
+v1/spec_decode/step3p5.py:226:                    if kernel_block_sizes is not None and gid < len(kernel_block_sizes)
+v1/spec_decode/step3p5.py:238:                    kernel_block_size=kernel_block_size,
+v1/spec_decode/gemma4.py:229:        kernel_block_sizes: list[int] | None = None,
+v1/spec_decode/gemma4.py:271:                kernel_block_size = (
+v1/spec_decode/gemma4.py:272:                    kernel_block_sizes[gid]
+v1/spec_decode/gemma4.py:273:                    if kernel_block_sizes is not None and gid < len(kernel_block_sizes)
+v1/spec_decode/gemma4.py:285:                    kernel_block_size=kernel_block_size,
+v1/attention/backends/rocm_aiter_fa.py:855:    def get_supported_kernel_block_sizes(kv_cache_spec=None) -> list[int | MultipleOf]:
+v1/attention/backends/flex_attention.py:157:    def get_supported_kernel_block_sizes(kv_cache_spec=None) -> list[int | MultipleOf]:
+v1/attention/backends/turboquant_attn.py:164:    def get_supported_kernel_block_sizes(kv_cache_spec=None) -> list[int | MultipleOf]:
+v1/attention/backends/flash_attn.py:355:    def get_supported_kernel_block_sizes(
+v1/attention/backends/rocm_attn.py:179:    def get_supported_kernel_block_sizes(kv_cache_spec=None) -> list[int | MultipleOf]:
+v1/attention/backends/rocm_aiter_unified_attn.py:67:    def get_supported_kernel_block_sizes(kv_cache_spec=None) -> list[int | MultipleOf]:
+v1/attention/backends/hpc_attn.py:291:    def get_supported_kernel_block_sizes(kv_cache_spec=None) -> list[int | MultipleOf]:
+v1/attention/backends/mla/flashinfer_mla_sparse.py:85:    def get_supported_kernel_block_sizes(kv_cache_spec=None) -> list[int | MultipleOf]:
+v1/attention/backends/mla/flashinfer_mla_sparse.py:174:    def get_supported_kernel_block_sizes(kv_cache_spec=None) -> list[int | MultipleOf]:
+v1/attention/backends/mla/flashmla_sparse.py:142:    def get_supported_kernel_block_sizes(kv_cache_spec=None) -> list[int | MultipleOf]:
+v1/attention/backends/mla/flashmla.py:58:    def get_supported_kernel_block_sizes(kv_cache_spec=None) -> list[int | MultipleOf]:
+v1/attention/backends/mla/tokenspeed_mla.py:90:    def get_supported_kernel_block_sizes(kv_cache_spec=None) -> list[int | MultipleOf]:
+v1/attention/backends/mla/flashinfer_mla_sparse_sm90.py:149:    def get_supported_kernel_block_sizes(kv_cache_spec=None) -> list[int | MultipleOf]:
+v1/attention/backends/mla/sparse_swa.py:153:    def get_supported_kernel_block_sizes(kv_cache_spec=None) -> list[int | MultipleOf]:
+v1/attention/backends/mla/indexer.py:203:    def get_supported_kernel_block_sizes(kv_cache_spec=None) -> list[int | MultipleOf]:
+v1/attention/backends/mla/indexer.py:231:    def get_supported_kernel_block_sizes(kv_cache_spec=None) -> list[int | MultipleOf]:
+v1/attention/backends/mla/indexer.py:260:    def get_supported_kernel_block_sizes(kv_cache_spec=None) -> list[int | MultipleOf]:
+v1/attention/backends/mla/indexer.py:277:    def get_supported_kernel_block_sizes(kv_cache_spec=None) -> list[int | MultipleOf]:
+v1/attention/backends/mla/indexer.py:1293:            kernel_block_size = self.kernel_block_size
+v1/attention/backends/mla/indexer.py:1295:                kernel_block_size is not None
+v1/attention/backends/mla/indexer.py:1296:                and self.kv_cache_spec.block_size != kernel_block_size
+== v1/core/kv_cache_utils.py:739-833 (pattern 'kv lcm block sizes', hit line 773)
+   739	def resolve_kv_cache_block_sizes(
+   740	    kv_cache_config: KVCacheConfig,
+   741	    vllm_config: VllmConfig,
+   742	) -> tuple[int, int]:
+   743	    """Resolve (scheduler_block_size, hash_block_size).
+   744	
+   745	    - ``scheduler_block_size`` is the token-alignment invariant used by the
+   746	      scheduler (e.g. for ``num_computed_tokens`` rounding). Single group:
+   747	      ``cache_config.block_size * dcp``. Multiple groups: LCM of every
+   748	      group's effective block size. Attention groups are scaled by DCP;
+   749	      Mamba groups keep their full per-rank state and are not scaled.
+   750	    - ``hash_block_size`` is the granularity at which ``Request.block_hashes``
+   751	      is computed. Single group: equals scheduler block size. Multiple groups:
+   752	      ``cache_config.prefix_match_unit`` override if set, else the GCD of
+   753	      group block sizes; every group's block size must be divisible by it.
+   754	      Returns the scheduler block size (i.e. disables finer hashing) if block
+   755	      hashing is inactive or a mamba group is not using cache mode "align".
+   756	    """
+   757	    cache_config = vllm_config.cache_config
+   758	    dcp = vllm_config.parallel_config.decode_context_parallel_size
+   759	    groups = kv_cache_config.kv_cache_groups
+   760	
+   761	    if len(groups) <= 1:
+   762	        if groups and not groups[0].kv_cache_spec.dcp_sharded:
+   763	            dcp = 1
+   764	        bs = cache_config.block_size * dcp
+   765	        return bs, bs
+   766	
+   767	    group_block_sizes = [
+   768	        resolve_dcp_kv_block_size(g.kv_cache_spec, dcp) for g in groups
+   769	    ]
+   770	    scheduler_block_size = math.lcm(*group_block_sizes)
+   771	
+   772	    logger.info("kv cache group sizes %s", group_block_sizes)
+   773	    logger.info("kv lcm block sizes %s", scheduler_block_size)
+   774	
+   775	    # Block hashes are only consumed by prefix caching and KV connectors
+   776	    # (P/D, offloading); when neither is active, keep hash_block_size equal
+   777	    # to the scheduler block size.
+   778	    connector_enabled = vllm_config.kv_transfer_config is not None
+   779	    if not (cache_config.enable_prefix_caching or connector_enabled):
+   780	        return scheduler_block_size, scheduler_block_size
+   781	
+   782	    # Mamba groups outside align mode break divisibility; back off to the
+   783	    # scheduler block size. Read the mode from the resolved group spec because
+   784	    # its block size may have been updated independently of cache_config.
+   785	    if any(
+   786	        isinstance(spec, MambaSpec) and spec.mamba_cache_mode != "align"
+   787	        for group in groups
+   788	        for spec in iter_layer_specs(group.kv_cache_spec)
+   789	    ):
+   790	        return scheduler_block_size, scheduler_block_size
+   791	
+   792	    hashing_sizes = [
+   793	        block_size
+   794	        for group, block_size in zip(groups, group_block_sizes)
+   795	        if group.kv_cache_spec.prefix_cacheable
+   796	    ] or group_block_sizes
+   797	    requested = cache_config.prefix_match_unit
+   798	    hash_block_size = requested if requested is not None else math.gcd(*hashing_sizes)
+   799	    if any(bs % hash_block_size != 0 for bs in hashing_sizes):
+   800	        raise ValueError(
+   801	            f"Invalid prefix_match_unit={hash_block_size}; prefix-cacheable "
+   802	            "KV cache group block sizes must be divisible by prefix_match_unit. "
+   803	            f"Got group block sizes={group_block_sizes}, "
+   804	            f"prefix-cacheable={hashing_sizes}."
+   805	        )
+   806	    prefix_alignments = {
+   807	        spec.tokens_per_state
+   808	        for group in groups
+   809	        for spec in iter_layer_specs(group.kv_cache_spec)
+   810	        if spec.prefix_cacheable
+   811	        and isinstance(spec.tokens_per_state, int)
+   812	        and spec.tokens_per_state > 1
+   813	    }
+   814	    has_partial_mamba_group = any(
+   815	        isinstance(spec, MambaSpec)
+   816	        and spec.mamba_cache_mode == "align"
+   817	        and (
+   818	            (dcp == 1 and block_size > hash_block_size)
+   819	            or (dcp > 1 and block_size >= hash_block_size)
+   820	        )
+   821	        for group, block_size in zip(groups, group_block_sizes)
+   822	        for spec in iter_layer_specs(group.kv_cache_spec)
+   823	    )
+   824	    cache_hit_alignment = (
+   825	        hash_block_size if has_partial_mamba_group else scheduler_block_size
+   826	    )
+   827	    if any(cache_hit_alignment % alignment for alignment in prefix_alignments):
+   828	        raise ValueError(
+   829	            f"Invalid prefix_match_unit={hash_block_size}; prefix-cache boundaries "
+   830	            "must align with each spec's per-state compression. "
+   831	            f"Got alignments={sorted(prefix_alignments)}."
+   832	        )
+   833	    return scheduler_block_size, hash_block_size
+
+######## 6. the GDN (mamba) spec page size and padding
+99ca1d725c949b216d6911fb846c6f3333873fe79852c579a8505fdfcd447e47  v1/kv_cache_interface.py
+== v1/kv_cache_interface.py:314-350 (pattern 'page_size_padded', hit line 330)
+   314	def compute_layout_strides(
+   315	    spec: KVCacheSpec,
+   316	    num_blocks: int,
+   317	    num_layers: int,
+   318	    layout: KVCacheLayout,
+   319	    kernel_block_size: int | None = None,
+   320	    fixed_strides: tuple[int | None, ...] = (None,) * 5,
+   321	) -> tuple[int, ...]:
+   322	    """Byte strides in logical ``[L, B, H, N, C]`` axis order."""
+   323	    assert len(fixed_strides) == 5
+   324	    assert all(stride is None or stride > 0 for stride in fixed_strides)
+   325	    shape = (
+   326	        num_layers,
+   327	        *compute_layer_kv_cache_shape_bytes(spec, num_blocks, kernel_block_size),
+   328	    )
+   329	    order = layout.stride_order
+   330	    padded_page_size = getattr(spec, "page_size_padded", None)
+   331	    if padded_page_size is not None:
+   332	        assert kernel_block_size is None or kernel_block_size == spec.block_size, (
+   333	            "Padded KV pages do not support kernel block splitting."
+   334	        )
+   335	        page_grid_end = max(order.index(_DIM_L), order.index(_DIM_B)) + 1
+   336	        page_grid_shape = tuple(shape[dim] for dim in order[:page_grid_end])
+   337	        assert prod(page_grid_shape) == num_layers * num_blocks, (
+   338	            "Page padding requires dimensions outside the page tail to be L, B, "
+   339	            f"or singleton; got {layout.name} with shape {shape}."
+   340	        )
+   341	
+   342	    strides = [0] * 5
+   343	    current_stride = 1
+   344	    for physical_idx, dim in reversed(tuple(enumerate(order))):
+   345	        if padded_page_size is not None and physical_idx == page_grid_end - 1:
+   346	            current_stride = max(current_stride, padded_page_size)
+   347	            assert current_stride % padded_page_size == 0
+   348	        strides[dim] = fixed_strides[dim] or current_stride
+   349	        current_stride = strides[dim] * shape[dim]
+   350	    return tuple(strides)
+== v1/kv_cache_interface.py:482-512 (pattern 'page_size_padded', hit line 497)
+   482	    def has_layer_views(self) -> bool:
+   483	        return False
+   484	
+   485	
+   486	@dataclass(frozen=True, kw_only=True)
+   487	class AttentionSpec(KVCacheSpec):
+   488	    dcp_sharded: bool = True
+   489	    max_tp_shards: int | None = None
+   490	    """Distinct shards this cache splits into across TP; TP ranks beyond this
+   491	    hold replicas. None: unknown, treated as not replicated."""
+   492	    num_kv_heads: int
+   493	    head_size: int
+   494	    dtype: torch.dtype
+   495	    head_size_v: int = None  # type: ignore[assignment]
+   496	    kv_quant_mode: KVQuantMode = KVQuantMode.NONE
+   497	    page_size_padded: int | None = None
+   498	    num_head_slots: int | None = None
+   499	    """H of the logical ``[B, H, N, C]`` page when packing diverges from one
+   500	    slot per KV head. None means one slot per KV head. Published by the backend.
+   501	    """
+   502	    state_content_bytes: int | None = None
+   503	    """C in bytes when packed; None means dense K/V content."""
+   504	    tokens_per_state: int | Fraction = 1
+   505	    """Tokens covered by one stored state. Ints > 1 compress multiple tokens
+   506	    into one state (DSv4 sparse MLA); fractions < 1 store multiple states per
+   507	    token (Whisper block pooling: ``Fraction(1, block_pool_size)``)."""
+   508	
+   509	    def __post_init__(self):
+   510	        super().__post_init__()
+   511	        if self.head_size_v is None:
+   512	            object.__setattr__(self, "head_size_v", self.head_size)
+== v1/kv_cache_interface.py:531-536 (pattern 'page_size_padded', hit line 533)
+   531	    @property
+   532	    def page_size_bytes(self) -> int:
+   533	        if self.page_size_padded is not None:
+   534	            assert self.page_size_padded >= self.unpadded_page_size_bytes
+   535	            return self.page_size_padded
+   536	        return self.unpadded_page_size_bytes
+== v1/kv_cache_interface.py:597-649 (pattern 'page_size_padded', hit line 627)
+   597	    @classmethod
+   598	    def merge(cls, specs: list[Self]) -> Self:
+   599	        """Merge a list of FullAttentionSpec objects into a single
+   600	        FullAttentionSpec object.
+   601	        """
+   602	        assert all(isinstance(spec, FullAttentionSpec) for spec in specs), (
+   603	            "All attention layers in the same KV cache group must be FullAttentionSpec."
+   604	        )
+   605	
+   606	        sliding_window = set(
+   607	            spec.sliding_window for spec in specs if spec.sliding_window is not None
+   608	        )
+   609	        attention_chunk_size = set(
+   610	            spec.attention_chunk_size
+   611	            for spec in specs
+   612	            if spec.attention_chunk_size is not None
+   613	        )
+   614	        assert not any(isinstance(spec, MLAAttentionSpec) for spec in specs), (
+   615	            "MLAAttentionSpec should be merged in MLAAttentionSpec.merge"
+   616	        )
+   617	        merged_spec = cls(
+   618	            block_size=specs[0].block_size,
+   619	            block_stride_alignment=specs[0].block_stride_alignment,
+   620	            num_kv_heads=specs[0].num_kv_heads,
+   621	            head_size=specs[0].head_size,
+   622	            head_size_v=specs[0].head_size_v,
+   623	            dtype=specs[0].dtype,
+   624	            kv_quant_mode=specs[0].kv_quant_mode,
+   625	            dcp_sharded=specs[0].dcp_sharded,
+   626	            max_tp_shards=specs[0].max_tp_shards,
+   627	            page_size_padded=specs[0].page_size_padded,
+   628	            num_head_slots=specs[0].num_head_slots,
+   629	            state_content_bytes=specs[0].state_content_bytes,
+   630	            tokens_per_state=specs[0].tokens_per_state,
+   631	            sliding_window=cls.merge_window_sizes(sliding_window),
+   632	            attention_chunk_size=cls.merge_window_sizes(attention_chunk_size),
+   633	            # If any layer in the group is non-causal, treat the group as
+   634	            # non-causal so the engine core disables incompatible scheduling.
+   635	            non_causal=any(spec.non_causal for spec in specs),
+   636	        )
+   637	        for spec in specs:
+   638	            for f in fields(AttentionSpec):
+   639	                assert getattr(spec, f.name) == getattr(merged_spec, f.name), (
+   640	                    "All attention layers in the same KV cache group must have "
+   641	                    "the same attention spec."
+   642	                )
+   643	        assert (merged_spec.sliding_window is not None) + (
+   644	            merged_spec.attention_chunk_size is not None
+   645	        ) <= 1, (
+   646	            "Model with both sliding window layers and chunked local attention "
+   647	            "layers is not supported."
+   648	        )
+   649	        return merged_spec
+== v1/kv_cache_interface.py:652-658 (pattern 'page_size_padded', hit line 658)
+   652	def _apply_alignment_padding(spec: MLAAttentionSpec | SlidingWindowMLASpec):
+   653	    if spec.alignment is None:
+   654	        return
+   655	    actual_page_size = spec.real_page_size_bytes
+   656	    padded_page_size = round_up(actual_page_size, spec.alignment)
+   657	    if padded_page_size != actual_page_size:
+   658	        object.__setattr__(spec, "page_size_padded", padded_page_size)
+== v1/kv_cache_interface.py:682-735 (pattern 'page_size_padded', hit line 715)
+   682	    @classmethod
+   683	    def merge(cls, specs: list[Self]) -> Self:
+   684	        assert all(isinstance(spec, MLAAttentionSpec) for spec in specs), (
+   685	            "All attention layers in the same KV cache group must be MLAAttentionSpec."
+   686	        )
+   687	        cache_dtype_str_set = set(spec.cache_dtype_str for spec in specs)
+   688	        tokens_per_state_set = set(spec.tokens_per_state for spec in specs)
+   689	        model_version_set = set(spec.model_version for spec in specs)
+   690	        cache_role_set = {spec.cache_role for spec in specs}
+   691	        index_group_leader_set = {spec.is_index_group_leader for spec in specs}
+   692	        storage_block_size_set = set(spec.storage_block_size for spec in specs)
+   693	        block_stride_alignment_set = {spec.block_stride_alignment for spec in specs}
+   694	        assert (
+   695	            len(cache_dtype_str_set) == 1
+   696	            and len(tokens_per_state_set) == 1
+   697	            and len(model_version_set) == 1
+   698	            and len(cache_role_set) == 1
+   699	            and len(index_group_leader_set) == 1
+   700	            and len(storage_block_size_set) == 1
+   701	            and len(block_stride_alignment_set) == 1
+   702	        ), (
+   703	            "All attention layers in the same KV cache group must use the same "
+   704	            "quantization method, tokens per state, model version, cache role, "
+   705	            "index-sharing role, storage block size and block stride alignment."
+   706	        )
+   707	        merged_spec = cls(
+   708	            block_size=specs[0].block_size,
+   709	            num_kv_heads=specs[0].num_kv_heads,
+   710	            head_size=specs[0].head_size,
+   711	            dtype=specs[0].dtype,
+   712	            kv_quant_mode=specs[0].kv_quant_mode,
+   713	            dcp_sharded=specs[0].dcp_sharded,
+   714	            max_tp_shards=specs[0].max_tp_shards,
+   715	            page_size_padded=specs[0].page_size_padded,
+   716	            num_head_slots=specs[0].num_head_slots,
+   717	            state_content_bytes=specs[0].state_content_bytes,
+   718	            cache_dtype_str=cache_dtype_str_set.pop(),
+   719	            tokens_per_state=tokens_per_state_set.pop(),
+   720	            model_version=model_version_set.pop(),
+   721	            cache_role=cache_role_set.pop(),
+   722	            is_index_group_leader=index_group_leader_set.pop(),
+   723	            storage_block_size=storage_block_size_set.pop(),
+   724	            block_stride_alignment=block_stride_alignment_set.pop(),
+   725	            non_causal_multi_token_decode=any(
+   726	                spec.non_causal_multi_token_decode for spec in specs
+   727	            ),
+   728	        )
+   729	        for spec in specs:
+   730	            for f in fields(AttentionSpec):
+   731	                assert getattr(spec, f.name) == getattr(merged_spec, f.name), (
+   732	                    "All attention layers in the same KV cache group must have "
+   733	                    "the same attention spec."
+   734	                )
+   735	        return merged_spec
+== v1/kv_cache_interface.py:758-787 (pattern 'page_size_padded', hit line 779)
+   758	    @classmethod
+   759	    def merge(cls, specs: list[RSWASpec]) -> RSWASpec:
+   760	        assert all(isinstance(spec, RSWASpec) for spec in specs), (
+   761	            "All attention layers in the same KV cache group must be RSWASpec."
+   762	        )
+   763	        rswa_windows = {spec.rswa_window for spec in specs}
+   764	        assert len(rswa_windows) == 1, (
+   765	            f"All R-SWA layers must share the same rswa_window, got {rswa_windows}"
+   766	        )
+   767	        # Delegate common field merging to the parent, then reattach rswa_window.
+   768	        base = FullAttentionSpec.merge(specs)  # type: ignore[arg-type]
+   769	        return cls(
+   770	            block_size=base.block_size,
+   771	            block_stride_alignment=base.block_stride_alignment,
+   772	            num_kv_heads=base.num_kv_heads,
+   773	            head_size=base.head_size,
+   774	            head_size_v=base.head_size_v,
+   775	            dtype=base.dtype,
+   776	            kv_quant_mode=base.kv_quant_mode,
+   777	            dcp_sharded=base.dcp_sharded,
+   778	            max_tp_shards=base.max_tp_shards,
+   779	            page_size_padded=base.page_size_padded,
+   780	            num_head_slots=base.num_head_slots,
+   781	            state_content_bytes=base.state_content_bytes,
+   782	            tokens_per_state=base.tokens_per_state,
+   783	            sliding_window=base.sliding_window,
+   784	            attention_chunk_size=base.attention_chunk_size,
+   785	            non_causal=base.non_causal,
+   786	            rswa_window=rswa_windows.pop(),
+   787	        )
+== v1/kv_cache_interface.py:957-1002 (pattern 'page_size_padded', hit line 993)
+   957	    @classmethod
+   958	    def merge(cls, specs: list[Self]) -> Self:
+   959	        assert all(isinstance(spec, SlidingWindowMLASpec) for spec in specs), (
+   960	            "All attention layers in the same KV cache group must be "
+   961	            "SlidingWindowMLASpec."
+   962	        )
+   963	        cache_dtype_str_set = set(spec.cache_dtype_str for spec in specs)
+   964	        tokens_per_state_set = set(spec.tokens_per_state for spec in specs)
+   965	        model_version_set = set(spec.model_version for spec in specs)
+   966	        sliding_window_set = set(spec.sliding_window for spec in specs)
+   967	        extra_retained_set = set(spec.extra_retained_tokens for spec in specs)
+   968	        bounded_replay_set = set(spec.bounded_replay for spec in specs)
+   969	        block_stride_alignment_set = {spec.block_stride_alignment for spec in specs}
+   970	        assert len({spec.dcp_sharded for spec in specs}) == 1
+   971	        assert len({spec.max_tp_shards for spec in specs}) == 1
+   972	        assert (
+   973	            len(cache_dtype_str_set) == 1
+   974	            and len(tokens_per_state_set) == 1
+   975	            and len(model_version_set) == 1
+   976	            and len(sliding_window_set) == 1
+   977	            and len(extra_retained_set) == 1
+   978	            and len(bounded_replay_set) == 1
+   979	            and len(block_stride_alignment_set) == 1
+   980	        ), (
+   981	            "All attention layers in the same KV cache group must use the same "
+   982	            "quantization method, tokens per state, model version, sliding "
+   983	            "window size, retained token count, and replay policy."
+   984	        )
+   985	        return cls(
+   986	            block_size=specs[0].block_size,
+   987	            block_stride_alignment=block_stride_alignment_set.pop(),
+   988	            num_kv_heads=specs[0].num_kv_heads,
+   989	            head_size=specs[0].head_size,
+   990	            dtype=specs[0].dtype,
+   991	            dcp_sharded=specs[0].dcp_sharded,
+   992	            max_tp_shards=specs[0].max_tp_shards,
+   993	            page_size_padded=specs[0].page_size_padded,
+   994	            num_head_slots=specs[0].num_head_slots,
+   995	            state_content_bytes=specs[0].state_content_bytes,
+   996	            sliding_window=sliding_window_set.pop(),
+   997	            extra_retained_tokens=extra_retained_set.pop(),
+   998	            cache_dtype_str=cache_dtype_str_set.pop(),
+   999	            tokens_per_state=tokens_per_state_set.pop(),
+  1000	            model_version=model_version_set.pop(),
+  1001	            bounded_replay=bounded_replay_set.pop(),
+  1002	        )
+== v1/kv_cache_interface.py:1030-1060 (pattern 'page_size_padded', hit line 1045)
+  1030	        return all(isinstance(spec, KpoolTailSpec) for spec in kv_cache_specs.values())
+  1031	
+  1032	    @property
+  1033	    def prefix_cacheable(self) -> bool:
+  1034	        return False
+  1035	
+  1036	    @property
+  1037	    def uses_slot_mapping(self) -> bool:
+  1038	        return False
+  1039	
+  1040	
+  1041	@dataclass(frozen=True)
+  1042	class MambaSpec(KVCacheSpec):
+  1043	    shapes: tuple[tuple[int, ...], ...]
+  1044	    dtypes: tuple[torch.dtype, ...]
+  1045	    page_size_padded: int | None = None
+  1046	    mamba_type: MambaAttentionBackendEnum = MambaAttentionBackendEnum.MAMBA2
+  1047	    mamba_cache_mode: str = "none"
+  1048	    num_speculative_blocks: int = 0
+  1049	    num_prefill_checkpoint_blocks: int = 0
+  1050	    prefill_checkpoint_alignment: int | None = None
+  1051	    num_heads: int = 1
+  1052	    tokens_per_state: int = -1
+  1053	    # False: the state is sharded across TP ranks (e.g. GDN). True: every TP
+  1054	    # rank holds the full state (e.g. the replicated PLE conv state).
+  1055	    tp_replicated: bool = False
+  1056	
+  1057	    @property
+  1058	    def state_content_size_bytes(self) -> int:
+  1059	        return sum(
+  1060	            prod(shape) * get_dtype_size(dtype)
+== v1/kv_cache_interface.py:1068-1077 (pattern 'page_size_padded', hit line 1074)
+  1068	    @property
+  1069	    def page_size_bytes(self) -> int:
+  1070	        page_size = sum(
+  1071	            prod(shape) * get_dtype_size(dtype)
+  1072	            for (shape, dtype) in zip(self.shapes, self.dtypes)
+  1073	        )
+  1074	        if self.page_size_padded is not None:
+  1075	            assert self.page_size_padded >= page_size
+  1076	            return self.page_size_padded
+  1077	        return page_size
+== v1/kv_cache_interface.py:1180-1230 (pattern 'page_size_padded', hit line 1211)
+  1180	    @classmethod
+  1181	    def merge(cls, specs: list[Self]) -> Self:
+  1182	        """Merge a list of FullAttentionSpec objects into a single
+  1183	        FullAttentionSpec object.
+  1184	        """
+  1185	        assert all(isinstance(spec, FullAttentionSpec) for spec in specs), (
+  1186	            "All attention layers in the same KV cache group must be FullAttentionSpec."
+  1187	        )
+  1188	
+  1189	        sliding_window = set(
+  1190	            spec.sliding_window for spec in specs if spec.sliding_window is not None
+  1191	        )
+  1192	        attention_chunk_size = set(
+  1193	            spec.attention_chunk_size
+  1194	            for spec in specs
+  1195	            if spec.attention_chunk_size is not None
+  1196	        )
+  1197	        assert not any(isinstance(spec, MLAAttentionSpec) for spec in specs), (
+  1198	            "MLAAttentionSpec should be merged in MLAAttentionSpec.merge"
+  1199	        )
+  1200	        merged_spec = cls(
+  1201	            block_size=specs[0].block_size,
+  1202	            num_kv_heads=specs[0].num_kv_heads,
+  1203	            head_size=specs[0].head_size,
+  1204	            head_size_v=specs[0].head_size_v,
+  1205	            sink_len=specs[0].sink_len,
+  1206	            block_stride_alignment=specs[0].block_stride_alignment,
+  1207	            dtype=specs[0].dtype,
+  1208	            kv_quant_mode=specs[0].kv_quant_mode,
+  1209	            dcp_sharded=specs[0].dcp_sharded,
+  1210	            max_tp_shards=specs[0].max_tp_shards,
+  1211	            page_size_padded=specs[0].page_size_padded,
+  1212	            num_head_slots=specs[0].num_head_slots,
+  1213	            state_content_bytes=specs[0].state_content_bytes,
+  1214	            sliding_window=cls.merge_window_sizes(sliding_window),
+  1215	            attention_chunk_size=cls.merge_window_sizes(attention_chunk_size),
+  1216	            non_causal=any(spec.non_causal for spec in specs),
+  1217	        )
+  1218	        for spec in specs:
+  1219	            for f in fields(AttentionSpec):
+  1220	                assert getattr(spec, f.name) == getattr(merged_spec, f.name), (
+  1221	                    "All attention layers in the same KV cache group must have "
+  1222	                    "the same attention spec."
+  1223	                )
+  1224	        assert (merged_spec.sliding_window is not None) + (
+  1225	            merged_spec.attention_chunk_size is not None
+  1226	        ) <= 1, (
+  1227	            "Model with both sliding window layers and chunked local attention "
+  1228	            "layers is not supported."
+  1229	        )
+  1230	        return merged_spec
+
+######## 7. flash-attn backend supported kernel block sizes
+ea53fb41165323f13094604051c73d44a579994fe5a427243aa9faafc280b1c2  v1/attention/backends/flash_attn.py
+== v1/attention/backends/flash_attn.py:10-40 (pattern 'def get_supported_kernel_block_sizes|MultipleOf', hit line 25)
+    10	import numpy as np
+    11	import torch
+    12	
+    13	from vllm.model_executor.layers.attention import Attention
+    14	from vllm.model_executor.warmup.jit_warmup import VllmJitKernel, WarmupChoices
+    15	from vllm.platforms import current_platform
+    16	from vllm.utils.torch_utils import (
+    17	    PIN_MEMORY,
+    18	    canonicalize_singleton_dim_strides,
+    19	    is_quantized_kv_cache,
+    20	)
+    21	from vllm.v1.attention.backend import (
+    22	    AttentionBackend,
+    23	    AttentionImpl,
+    24	    AttentionType,
+    25	    MultipleOf,
+    26	)
+    27	from vllm.v1.attention.backends.fa_utils import (
+    28	    FA4_HD256_PAGE_SIZE,
+    29	    flash_attn_supports_kv_cache_dtype,
+    30	    flash_attn_supports_quant_query_input,
+    31	    get_flash_attn_version,
+    32	    is_fa_version_supported,
+    33	    is_flash_attn_varlen_func_available,
+    34	    uses_fa4_hd256_kernel,
+    35	)
+    36	from vllm.v1.attention.backends.utils import (
+    37	    fill_mm_prefix_query_ranges,
+    38	    get_dcp_local_seq_lens,
+    39	    get_num_attention_heads_from_layers,
+    40	)
+== v1/attention/backends/flash_attn.py:354-363 (pattern 'def get_supported_kernel_block_sizes|MultipleOf', hit line 355)
+   354	    @classmethod
+   355	    def get_supported_kernel_block_sizes(
+   356	        cls, kv_cache_spec: KVCacheSpec | None = None
+   357	    ) -> list[int | MultipleOf]:
+   358	        if block_size := cls._get_sm90_fa4_fp8_kv_block_size(kv_cache_spec):
+   359	            return [block_size]
+   360	        if block_size := cls._get_fa4_hd256_block_size(kv_cache_spec):
+   361	            # Sliding-window specs select the smallest advertised size.
+   362	            return [block_size]
+   363	        return [MultipleOf(16)]
