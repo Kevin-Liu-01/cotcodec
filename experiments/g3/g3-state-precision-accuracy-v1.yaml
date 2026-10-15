@@ -156,6 +156,31 @@ pilot:
     seeds: [42]
     gen_seconds: 600
 
+# The main run, declared after the pilot (jobs 1498 and 1500, fp32 only; their outputs are not
+# in the analysis). Sizing from the pilot (analysis-pilot-4bbf141c/pilot.json):
+#   math: accuracy 0.90 (4B) and 0.93 (9B); mean per-question p(1-p) 0.042 and 0.031 (48
+#   questions x 2 seeds), so a paired difference over 134 questions with k seeds has a 95%
+#   half-width of about 1.96 * sqrt(2 m / (134 k)): k = 3 gives +-2.8 (4B) and +-2.4 (9B) points,
+#   k = 4 +-2.4 and +-2.1. Mean length 13.7K (4B) and 12.5K (9B) tokens; 7-8% hit 32,768.
+#   A block-pool simulation fitted to the pilot's step times gives about 1,050-1,400 s of math
+#   per engine at k = 3 (more if a 16-bit state lengthens the reasoning, as bf16 did in G2b),
+#   and 1,400-1,900 s at k = 4.
+#   long context: prefill at 37.9K (4B) and 27.7K (9B) prompt tok/s, 2.9 and 3.9 s per question
+#   per engine; replies of about 20 tokens.
+# Within the 4.0 GPU-h cap (0.39 used by the builds and the pilot): k = 3 for math on all 134
+# questions, and the first 100 long-context questions of the selection order. The pilot's 12
+# long-context questions are the first 12 of these 100 (the pilot is sizing only).
+main:
+  arms: [fp32, fp16, bf16]
+  math:
+    questions: 134
+    seeds: [42, 43, 44]
+    gen_seconds: 2100
+  lme:
+    questions: 100
+    seeds: [42]
+    gen_seconds: 600
+
 analysis:
   bootstrap_reps: 10000
   bootstrap_seed: 42
