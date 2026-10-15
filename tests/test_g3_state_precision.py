@@ -373,6 +373,13 @@ def test_score_and_analyze_end_to_end(tmp_path: Path) -> None:
     text = analysis.tables_md(results)
     assert "| qwen3.5-4b | math | correct | 4 | 100.0 | 100.0 | 75.0 |" in text
     assert len(results["throughput"]) == 6
+    # q3 hit the cap ("length") but its boxed answer is scored; under an 8K cap every 3-token
+    # rollout counts, so the by-cap curve at 32,768 equals plain accuracy here.
+    assert cell["by_cap"]["32768"]["bf16_minus_fp32"]["diff"] == pytest.approx(-0.25)
+    assert set(cell["by_seed"]) == {"42", "43"}
+    math_rows = [t for t in results["throughput"] if t["task"] == "math"]
+    assert all(t["solved"] == (8 if t["arm"] != "bf16" else 6) for t in math_rows)
+    assert "solved problems per engine-second" in text
 
 
 def test_lme_extra_phase_is_long_context_only() -> None:

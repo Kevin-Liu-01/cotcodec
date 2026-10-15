@@ -39,6 +39,7 @@ if str(PROJECT_ROOT) not in sys.path:
 from harness import g3_state_precision as g3  # noqa: E402
 
 MATH_CAP_REASON = "length"
+CAPS = (8192, 16384, 24576, 32768)
 
 
 # --------------------------------------------------------------------------- loading
@@ -382,8 +383,36 @@ def analyze(
                         "p90_len": float(np.percentile([r["completion_len"] for r in ar], 90)),
                     }
                 cell["by_arm"] = ended
+                # Accuracy under a shorter output cap: correct and ended within L tokens (the
+                # tokens before L do not depend on the cap, so this is what a cap at L gives).
+                cell["by_cap"] = {}
+                for cap in CAPS:
+                    for r in sub:
+                        r["correct_cap"] = int(bool(r["correct"]) and r["completion_len"] <= cap)
+                    cell["by_cap"][str(cap)] = paired_summary(
+                        sub, "correct_cap", arms, reps, seed, None
+                    )
+                # By seed (submission order: seed 42 first; descriptive).
+                cell["by_seed"] = {
+                    str(s): paired_summary(
+                        [r for r in sub if r["seed"] == s], "correct", arms, reps, seed, None
+                    )
+                    for s in sorted({r["seed"] for r in sub})
+                }
             results["cells"][f"{model}/{task}"] = cell
     results["throughput"] = [t for t in throughput if t["phase"] in ("main", "lme_extra")]
+    for t in results["throughput"]:
+        if t["task"] != "math":
+            continue
+        rs = [
+            r
+            for r in main
+            if r["model"] == t["model"] and r["arm"] == t["arm"] and r["task"] == "math"
+        ]
+        solved = sum(r["correct"] for r in rs)
+        t["solved"] = solved
+        t["solved_per_engine_s"] = solved / t["wall_s"] if t["wall_s"] else None
+        t["tokens_per_solved"] = t["output_tokens"] / solved if solved else None
     return results
 
 
@@ -484,6 +513,35 @@ def tables_md(results: dict[str, Any]) -> str:
                     f"{fmt_pct(v['accuracy_among_eos'])} | {v['median_len']:.0f} | "
                     f"{v['p90_len']:.0f} |"
                 )
+    if any("by_cap" in c for c in results["cells"].values()):
+        lines += [
+            "",
+            "## Math accuracy under a shorter output cap (correct and ended within L tokens)",
+            "",
+            "| Model | Cap L | fp32 | fp16 | bf16 | fp16 - fp32 [95%] | bf16 - fp32 [95%] |",
+            "|---|---:|---:|---:|---:|---|---|",
+        ]
+        for name, cell in results["cells"].items():
+            for cap, c in cell.get("by_cap", {}).items():
+                row = [name.split("/")[0], cap] + [fmt_pct(c[a]["mean"]) for a in arms]
+                for a in arms[1:]:
+                    d = c[f"{a}_minus_fp32"]
+                    row.append(f"{100 * d['diff']:+.1f} {fmt_ci(d['ci95'])}")
+                lines.append("| " + " | ".join(row) + " |")
+        lines += [
+            "",
+            "## Math accuracy by seed (seed 42 submitted first; descriptive)",
+            "",
+            "| Model | Seed | fp32 | fp16 | bf16 | fp16 - fp32 [95%] | bf16 - fp32 [95%] |",
+            "|---|---:|---:|---:|---:|---|---|",
+        ]
+        for name, cell in results["cells"].items():
+            for sd, c in cell.get("by_seed", {}).items():
+                row = [name.split("/")[0], sd] + [fmt_pct(c[a]["mean"]) for a in arms]
+                for a in arms[1:]:
+                    d = c[f"{a}_minus_fp32"]
+                    row.append(f"{100 * d['diff']:+.1f} {fmt_ci(d['ci95'])}")
+                lines.append("| " + " | ".join(row) + " |")
     lines += [
         "",
         "## Throughput (one engine per model x arm x task)",
@@ -501,6 +559,22 @@ def tables_md(results: dict[str, Any]) -> str:
             f"{(t['mean_running'] or 0):.0f} | {t['preemptions']:.0f} | "
             f"{100 * (t['peak_kv_usage'] or 0):.0f}% | {t['num_gpu_blocks']} x {t['block_size']} |"
         )
+    solved = [t for t in results["throughput"] if t.get("solved") is not None]
+    if solved:
+        lines += [
+            "",
+            "## Math: solved problems per engine-second (fixed request set)",
+            "",
+            "| Model | Arm | Solved (of requests) | Wall (s) | Solved per 1,000 s | Output tokens "
+            "per solved |",
+            "|---|---|---:|---:|---:|---:|",
+        ]
+        for t in sorted(solved, key=lambda t: (t["model"], arms.index(t["arm"]))):
+            lines.append(
+                f"| {t['model']} | {t['arm']} | {t['solved']} ({t['requests']}) | "
+                f"{t['wall_s']:.0f} | {1000 * t['solved_per_engine_s']:.1f} | "
+                f"{t['tokens_per_solved']:.0f} |"
+            )
     return "\n".join(lines) + "\n"
 
 
