@@ -2463,3 +2463,44 @@ achieved; exact credit tables are cheap; AM1's full study is feasible.**
   - a cross-GPU A/A check;
   - pool designs that produce mixed interaction structures, so that H2 (the
     keep-set regret against the exact optimum) can fire.
+
+**D108. G2b (exploratory): a bf16 GDN recurrent state is a 1.3-1.4x
+throughput lever that makes hybrid rollouts about 5x more off-policy,
+growing with length, and changes behaviour.**
+- What ran. Exploratory, 1.84 physical GPU-h. vLLM 0.31.0's
+  `--mamba-ssm-cache-dtype` (source cited) was set to bfloat16 against the
+  checkpoint's float32, on Qwen3.5-4B, Qwen3.5-9B and the one-GPU
+  Qwen3.6-35B-A3B. The runs were 72 long reasoning rollouts per arm (24
+  MATH-500 L5 prompts, seeds 42-44) and saturation waves. The rollouts were
+  teacher-forced through the unpacked and packed varlen HF+FLA paths, an fp32
+  reference and vLLM prefill. A fresh checker passed it, and its wording item
+  was fixed (`6ee0d672`).
+- Findings (exploratory):
+  - bf16 halves the state (49.1 to 25.1 MiB per sequence) and doubles the
+    block pool.
+    - Saturation throughput rises 1.33x on the 4B and 1.38x on the 9B
+      (preemptions 114 to 0). The one-GPU MoE goes from 51 to 99 running
+      sequences, at 1.37x.
+    - The gain shrinks with length: 4-20% more 32K sequences fit.
+  - Rollout-vs-trainer mismatch rises from 0.0077 to 0.036 mean |Δlogp|
+    (4.6-4.9x; k3 18-21x). Ratios outside [0.8, 1.25] go from 0.03% to
+    3.7-3.9%.
+  - The mismatch grows with position: within-sequence slope about
+    +1.4e-3 per 1K for bf16, against flat to 32K for fp32, so 7-8x at
+    28-32K. This holds in every entropy bin and every seed.
+  - The data place the drift in vLLM's bf16-state decode path, since prefill
+    in bf16 state stays as close to the trainer as fp32 does. Precision is not
+    separated from the block layout and kernel instance.
+  - bf16-state rollouts reason markedly longer on the same prompts and seeds:
+    on the 9B, 35 of 72 hit the 32K cap against 7 (paired sign test
+    p 2e-9), with similar answer accuracy among those that ended.
+  - The packed varlen trainer path matches the unpacked one, so packing is not
+    a mismatch source on this stack.
+  - With fp32 state, the hybrids show no position drift to 32K, extending
+    D106.
+- Next:
+  - G2c, now running, separates precision from layout with fp16 state and a
+    forced-block control.
+  - An RL training comparison (fp32 vs reduced-precision state rollouts) would
+    test whether this off-policy gap matters for training. It exceeds 8 GPU-h,
+    so it goes through the gauntlet first.

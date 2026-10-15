@@ -51,8 +51,11 @@ for whatever gains actual results"; D80). Under that delegation:
     LongMemEval.
   - The exploratory inference baseline is done (D105). Dense models are
     KV-starved, and the hybrids' fp32 GDN state caps concurrency.
-  - G2b is running (`stage0/g2b-state-dtype`): the bf16 GDN state as a
-    concurrency lever, its mismatch cost, and the packed trainer path.
+  - **G2b (D108):** bf16 GDN state gives 1.33-1.38x throughput, but makes
+    rollouts about 5x more off-policy, growing with length, and longer.
+    G2c is running: precision vs layout, with fp16 state.
+  - AM1 step 0 (D107): bit-exact reader replay works; exact credit tables are
+    cheap.
 - The public-history purge ran (D99). Old commit ids resolve through
   `program/history-rewrite-2026-10-14/` (the map plus an 11-row supplement,
   D100). No GitHub Support request (D101).
@@ -68,7 +71,7 @@ See `pending_decisions_for_kevin` in `program/state.json`.
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
 `uv run python scripts/preregister.py check-chain`, 22 rows). Decisions taken
-on Kevin's behalf are D1-D106 in `program/decisions.md`. GPU-hours are in
+on Kevin's behalf are D1-D108 in `program/decisions.md`. GPU-hours are in
 `program/state.json` (`gpu_hours_ledger`, physical hours): 10.37 in total.
 
 | Registration | Outcome | Evidence |
