@@ -745,8 +745,8 @@ parses this table and refuses to run unless every file matches.
 
 | File | Role | SHA-256 |
 |---|---|---|
-| `scripts/memcredit_am3g.py` | this registration: gate, abstention pools, driver and workers, extract, analyze, dry-run comparison, power | `21c3704e10f6c8780b198744a639b301911fec11761bce5c9dce5b68b3cfa07c` |
-| `tests/test_memcredit_am3g.py` | its tests: config and pins, the gate, the pins inside the image, the abstention template against the archived port, pools, requests, judge items, the anchor replay checks R1 and R2, Holm and H1's readings, H2's estimand, the natural mix, end to end on toy runs | `71bcafb9a6c21ea2d5e9c62be0180c03414815c85b8d487292ddfedd1d639fe4` |
+| `scripts/memcredit_am3g.py` | this registration: gate, abstention pools, driver and workers, extract, analyze, dry-run comparison, power | `3c3b48d3ea27bf69f74d51af4991be026e1c12013e02e442544dcd7b758ccd7e` |
+| `tests/test_memcredit_am3g.py` | its tests: config and pins, the gate, the pins inside the image, the abstention template against the archived port, pools, requests, judge items, the anchor replay checks R1 and R2, Holm and H1's readings, H2's estimand, the natural mix, end to end on toy runs | `5e487262e7128669b7b6779bdb8cafb6a7b7a79af93d5403ca9e9f448f20a76e` |
 | `experiments/am3/am3-nonabstain-generality-v1.yaml` | this registration's config | `96fcd2186c43d6bdad7b1eb90e843aed39f0d56bad349799f8f1db6efb67d60e` |
 | `scripts/memcredit_am3.py` | AM3's engine helpers, rule, per-pool record and cell summary (imported) | `25f634edd29a23f2fdee12b0825013d624aa5305d49cf512f74fdf1827ea130f` |
 | `tests/test_memcredit_am3.py` | AM3's tests (also supply a pass writer to these tests) | `1ab5196ca553f8cc92deda0a728ec98987853ec81d3f75041561661659d848b3` |
@@ -776,7 +776,7 @@ parses this table and refuses to run unless every file matches.
 | `ops/am3g/am3g-checkout.sh` | operator: clean clone from a bundle | `fef6cba73c929da5f4af7147ff7edc1fb27c2f5afc4cbf6731b5da24a0df27dd` |
 | `ops/am3g/am3g-prepare-abstention.sh` | operator: the abstention artifact (before the freeze) | `bc93c751efcec2f25a35bc046beea3f212757c09ed8dc5c17a849a483d895425` |
 | `ops/am3g/am3g-capsule.sh` | operator: source capsule | `73b19889a335c204e754f3565c30ca51c239297b63c4ef9d3cf282a1f5caa579` |
-| `ops/am3g/am3g-preflight.sh` | operator: queue and GPU check | `3cdbea426fa31f3e29bf9b64131dc81480e103f1bc3f3e4693a6c1aec89b3594` |
+| `ops/am3g/am3g-preflight.sh` | operator: queue and GPU check | `6c1ac55cccca8d8e8478ec8403bd3123f61c397e3b04e5ba488e63e3faa35035` |
 | `ops/am3g/am3g-build.sh` | operator: image build | `df2c3ec803fd0dc8bb5c6a82b222d7b05df5bfc170e3c657aa98c5bf3f599ada` |
 | `ops/am3g/am3g-selftest-cpu.sbatch` | operator: CPU selftest in the image | `7fbbe82d36e6c86efb3c4cba19ef799783fa3033fa0f97f803e6b40edd2e7919` |
 | `ops/am3g/am3g-selftest.sh` | operator: submits the CPU selftest | `5b7eae57d1d031850760ee2dee31c5bbadb91e34064c0afc0458c2d905f77309` |
@@ -789,9 +789,9 @@ parses this table and refuses to run unless every file matches.
 | `ops/am3g/am3g-image.sh` | operator: the built image id, after its provenance and receipt checks | `eece44202eee8172dac412ccdc8e3c5f8adf377d070914692bddae1872bfa65d` |
 | `ops/am3g/am3g-rerun-decision.sh` | operator: the mechanical rerun rule | `9f7aaa98d44f291e81aa612e1e9612bf6b8c2c6872df82bdde5ddda0a07224c1` |
 | `ops/am3g/am3g-hand-sample.sh` | operator: H1's blind hand-check sample | `82e5a34db467e9fc6660c33f1794eb2fb6c1863303ededa4e62ca3491fdbee78` |
-| `ops/am3g/am3g-hand-receipt.sh` | operator: the hand labels' receipt, committed before the join | `4a4b5977b4bade2e931fbd152d4825e4b06824aaf894d42da72ef9493aa73998` |
-| `ops/am3g/am3g-hand-label-mac.sh` | operator, on the Mac: the registered labelling of one stage, chunk by chunk | `57915bc5c10eeb0c8135c2930cedd7320e5b3786b52eddb26803239938be3684` |
-| `ops/am3g/am3g-hand-merge.sh` | operator: merges a labelling stage; writes the one repair stage | `7d98d4b02f73596ff64a9437fc438ba363dec7b4b2dfbb01624a4a69efdeffe4` |
+| `ops/am3g/am3g-hand-receipt.sh` | operator: the hand labels' receipt, committed before the join | `82909d09e78b4afb1ac75d458c1005d984dab98776818aa231cfee468195e6a6` |
+| `ops/am3g/am3g-hand-label-mac.sh` | operator, on the Mac: the registered labelling of one stage, chunk by chunk | `a99fe4a84b6d74e1102a3e0750ba2da5ba8d851e07d263bc5e2bd368ed3ffb20` |
+| `ops/am3g/am3g-hand-merge.sh` | operator: merges a labelling stage; writes the one repair stage | `1282e19908c6cb35485a31595fa79ae32c80c26b6ae0983fe67cd42cbb7bd04e` |
 | `scripts/verify_compute_provenance.py` | the lane, inside the container: image provenance | `ca62d62ae5c0e820a08574d5c5b1227c4495a24f3abcf342a1ae3ff1958d54ba` |
 | `scripts/check_compute_env.sh` | the lane, inside the container: environment doctor | `76fc5d64f7e84fd1e93340688b6be845d97f01c4791981c31ac8e70d66ff08ff` |
 | `scripts/exec_research_workload.py` | the lane, inside the container: runs the workload | `bb3abd1dd11e8ec9336fc181ac1999b1deea00e08e05d0fff3227111eaa6e4c1` |

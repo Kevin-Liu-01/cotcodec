@@ -1210,12 +1210,74 @@ def test_hand_sample_is_blind_and_matches_the_plan(tmp_path, monkeypatch):
     _hand_sample_fixture(tmp_path, monkeypatch)
 
 
+def _write_transcript(hand_dir, stage, n, chunk, extra=(), wrote=True):
+    """A labeller transcript in the CLI's stream-json form: Read the two inputs, any ``extra``
+    calls, then Write the output."""
+
+    tdir = hand_dir / "transcripts"
+    tdir.mkdir(exist_ok=True)
+    calls = [("Read", "hand-check-instructions.txt"), ("Read", chunk["chunk"]), *extra]
+    if wrote:
+        calls.append(("Write", chunk["output"]))
+    lines = [json.dumps({"type": "system", "subtype": "init", "tools": ["Read", "Write"]})]
+    for k, (name, target) in enumerate(calls):
+        tool_input = {"file_path": f"/w/{stage}-{n:02d}/{target}"} if target else {"command": "ls"}
+        block = {"type": "tool_use", "id": f"t{k}", "name": name, "input": tool_input}
+        message = {"role": "assistant", "content": [block]}
+        lines.append(json.dumps({"type": "assistant", "message": message}))
+        lines.append(json.dumps({"type": "user", "message": {"role": "user", "content": [
+            {"type": "tool_result", "tool_use_id": f"t{k}", "content": "ok"}]}}))  # fmt: skip
+    (tdir / f"{stage}-{n:02d}.jsonl").write_text("\n".join(lines) + "\n")
+
+
+def test_audit_transcript_admits_only_the_two_reads_and_the_write(tmp_path):
+    chunk = {"chunk": "hand-first-chunk-01.jsonl", "output": "hand-labels-first-01.jsonl"}
+    allowed = {"hand-check-instructions.txt", chunk["chunk"]}
+
+    def audit():
+        return g.audit_transcript(tmp_path / "transcripts" / "first-01.jsonl", allowed,
+                                  chunk["output"])  # fmt: skip
+
+    assert audit() == {"pass": False, "why": "no transcript", "tool_calls": 0}
+    _write_transcript(tmp_path, "first", 1, chunk)
+    assert audit()["pass"] and audit()["tool_calls"] == 3
+    _write_transcript(tmp_path, "first", 1, chunk, extra=[("Bash", "")])
+    assert not audit()["pass"] and audit()["other_calls"] == ["Bash"]
+    _write_transcript(tmp_path, "first", 1, chunk, extra=[("Read", "features.json.gz")])
+    assert audit()["other_calls"] == ["Read features.json.gz"]
+    _write_transcript(tmp_path, "first", 1, chunk, extra=[("Write", "elsewhere.jsonl")])
+    assert not audit()["pass"]
+    _write_transcript(tmp_path, "first", 1, chunk, wrote=False)
+    assert audit()["why"] == "the output was not written"
+    path = tmp_path / "transcripts" / "first-01.jsonl"
+    _write_transcript(tmp_path, "first", 1, chunk)
+    path.write_text(path.read_text() + "{truncated\n")
+    assert not audit()["pass"] and audit()["unreadable_lines"] == 1
+
+
+def test_hand_merge_drops_a_chunk_whose_transcript_fails_the_audit(tmp_path, monkeypatch):
+    hand_dir, rows = _hand_sample_fixture(tmp_path, monkeypatch)
+    manifest = json.loads((hand_dir / "hand-manifest.json").read_text())
+    for n, chunk in enumerate(manifest["first"], start=1):
+        lines = [json.dumps({"item_id": i, "label": 1, "note": ""}) for i in chunk["items"]]
+        (hand_dir / chunk["output"]).write_text("\n".join(lines) + "\n")
+        _write_transcript(hand_dir, "first", n, chunk, extra=[("Glob", "")] if n == 1 else ())
+    first = g.cmd_hand_merge(g.argparse.Namespace(hand_dir=str(hand_dir), stage="first"))
+    assert first["chunks_failing_the_transcript_audit"] == [manifest["first"][0]["output"]]
+    assert first["items_lacking_a_valid_row"] == len(manifest["first"][0]["items"])
+    manifest = json.loads((hand_dir / "hand-manifest.json").read_text())
+    assert [i for c in manifest["repair"] for i in c["items"]] == manifest["first"][0]["items"]
+    # The raw file keeps whatever every chunk held, the failing chunk's rows included.
+    raw = (hand_dir / "hand-labels-first-raw.jsonl").read_text().splitlines()
+    assert len(raw) == len(rows)
+
+
 def test_hand_merge_runs_one_stage_and_one_repair(tmp_path, monkeypatch):
     hand_dir, rows = _hand_sample_fixture(tmp_path, monkeypatch)
     manifest = json.loads((hand_dir / "hand-manifest.json").read_text())
     ids = manifest["items"]
     # The first stage: chunk 1 complete, one row of chunk 2 malformed, one repeated, chunk 3
-    # missing altogether.
+    # missing altogether (no output, no transcript).
     for n, chunk in enumerate(manifest["first"]):
         if n == 2:
             continue
@@ -1224,6 +1286,7 @@ def test_hand_merge_runs_one_stage_and_one_repair(tmp_path, monkeypatch):
             lines[0] = "not json"
             lines.append(lines[1])
         (hand_dir / chunk["output"]).write_text("\n".join(lines) + "\n")
+        _write_transcript(hand_dir, "first", n + 1, chunk)
     first = g.cmd_hand_merge(g.argparse.Namespace(hand_dir=str(hand_dir), stage="first"))
     lacking = first["items_lacking_a_valid_row"]
     assert first["malformed_rows"] == 1 and first["repeated_items"] == 1
@@ -1232,9 +1295,10 @@ def test_hand_merge_runs_one_stage_and_one_repair(tmp_path, monkeypatch):
     manifest = json.loads((hand_dir / "hand-manifest.json").read_text())
     repair_ids = [i for c in manifest["repair"] for i in c["items"]]
     assert len(repair_ids) == lacking
-    for chunk in manifest["repair"]:
+    for n, chunk in enumerate(manifest["repair"], start=1):
         (hand_dir / chunk["output"]).write_text("".join(
             json.dumps({"item_id": i, "label": 0}) + "\n" for i in chunk["items"]))  # fmt: skip
+        _write_transcript(hand_dir, "repair", n, chunk)
     repair = g.cmd_hand_merge(g.argparse.Namespace(hand_dir=str(hand_dir), stage="repair"))
     assert repair["final_complete"] and repair["final_rows"] == len(ids)
     final = [json.loads(x) for x in (hand_dir / "hand-labels.jsonl").read_text().splitlines()]

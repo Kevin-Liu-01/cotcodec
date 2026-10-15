@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # am3-nonabstain-generality-v1: receipt one labelling stage of the blind hand check before the
-# join (registration section 8). The receipt (text-free) carries the labeller's model and pinned
-# prompt digest, the instructions' and sample's digests, the plan digest, every chunk's
-# transcript digest, the stage's raw labels digest and, when the stage wrote them, the final
-# labels' digest. It goes to $R/hand-check/, to be committed to the repository before
-# am3g-analyze.sh joins the labels (the commit id is passed to am3g-analyze.sh as
-# RECEIPT_COMMIT). The labels and transcripts stay on the host (they may quote LongMemEval text).
+# join (registration section 8). The receipt (text-free) carries the labeller's model, its launch
+# (cli or subagent) and pinned prompt digest, the instructions' and sample's digests, the plan
+# digest, every chunk's transcript digest, the merge record (with each transcript's audit), the
+# stage's raw labels digest and, when the stage wrote them, the final labels' digest. It goes to
+# $R/hand-check/, to be committed to the repository before am3g-analyze.sh joins the labels (the
+# commit id is passed to am3g-analyze.sh as RECEIPT_COMMIT). The labels and transcripts stay on
+# the host (they may quote LongMemEval text).
 # Reads records only; it runs no repository code. Refuses a second receipt of a stage.
 # Usage: am3g-hand-receipt.sh dev|reg <commit short id> first|repair
 set -Eeuo pipefail
@@ -28,6 +29,8 @@ receipt = {
     "experiment_id": "am3-nonabstain-generality-v1",
     "stage": stage,
     "labeller_model": manifest["labeller_model"],
+    "labeller_launch": ((h / f"labeller-{stage}.txt").read_text().strip()
+                        if (h / f"labeller-{stage}.txt").is_file() else None),
     "labeller_prompt_sha256": manifest["labeller_prompt_sha256"],
     "instructions_sha256": manifest["instructions_sha256"],
     "sample_sha256": manifest["sample_sha256"],

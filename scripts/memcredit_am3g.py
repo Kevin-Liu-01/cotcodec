@@ -2657,13 +2657,62 @@ def _valid_rows(raw_lines: Sequence[str], allowed: set[str]) -> tuple[dict[str, 
     return valid, {"malformed_rows": malformed, "repeated_items": len(repeated)}
 
 
+def audit_transcript(path: Path, allowed_reads: set[str], output: str) -> dict[str, Any]:
+    """The labeller's tool calls in one chunk's transcript: JSON lines (the CLI's stream-json, or
+    a Claude Code subagent's transcript) whose assistant messages hold ``tool_use`` blocks. It
+    passes only if every line parses, every call is a Read of one of the chunk's two input files
+    or a Write of its output file (matched by file name), and the output was written. Text-free:
+    it reports tool names and file names only."""
+
+    if not path.is_file():
+        return {"pass": False, "why": "no transcript", "tool_calls": 0}
+    calls, bad, unreadable, wrote = 0, [], 0, False
+    for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
+        if not line.strip():
+            continue
+        try:
+            entry = json.loads(line)
+        except ValueError:
+            unreadable += 1
+            continue
+        message = entry.get("message") if isinstance(entry, dict) else None
+        content = message.get("content") if isinstance(message, dict) else None
+        if not isinstance(content, list):
+            continue
+        for block in content:
+            if not isinstance(block, dict) or block.get("type") != "tool_use":
+                continue
+            calls += 1
+            name = str(block.get("name"))
+            tool_input = block.get("input") if isinstance(block.get("input"), dict) else {}
+            target = Path(str(tool_input.get("file_path", ""))).name
+            if name == "Read" and target in allowed_reads:
+                continue
+            if name == "Write" and target == output:
+                wrote = True
+                continue
+            bad.append(f"{name} {target}".strip())
+    out: dict[str, Any] = {"pass": not bad and not unreadable and wrote, "tool_calls": calls,
+                           "transcript_sha256": sha256_file(path)}  # fmt: skip
+    if bad:
+        out["other_calls"] = bad
+    if unreadable:
+        out["unreadable_lines"] = unreadable
+    if not wrote:
+        out["why"] = "the output was not written"
+    return out
+
+
 def cmd_hand_merge(args: argparse.Namespace) -> dict[str, Any]:
     """Merge one labelling stage's chunk outputs, whatever they hold (registration section 8).
     first: concatenate the chunk outputs in order (``hand-labels-first-raw.jsonl``), keep the
     rows that are valid, and, if items lack a valid row, write the repair sample and its chunks
     (``hand-repair-*``); otherwise write the final labels. repair: add the repair stage's valid
     rows for exactly those items and write the final labels (``hand-labels.jsonl``, sample order),
-    complete or not: there is no third stage."""
+    complete or not: there is no third stage. Each chunk's transcript
+    (``transcripts/{stage}-NN.jsonl``) is audited first (``audit_transcript``): the rows of a
+    chunk whose transcript is missing or fails the audit are not used, so its items go to the
+    repair stage (or stay unlabelled after it)."""
 
     hand_dir = Path(args.hand_dir)
     manifest = json.loads((hand_dir / "hand-manifest.json").read_text(encoding="utf-8"))
@@ -2674,21 +2723,33 @@ def cmd_hand_merge(args: argparse.Namespace) -> dict[str, Any]:
     if stage not in ("first", "repair") or stage not in manifest:
         raise Am3gError(f"no {stage} stage in the hand manifest")
     raw_lines: list[str] = []
-    missing_chunks = []
-    for chunk in manifest[stage]:
+    audited_lines: list[str] = []
+    missing_chunks, failing, audits = [], [], {}
+    for n, chunk in enumerate(manifest[stage], start=1):
+        audit = audit_transcript(hand_dir / "transcripts" / f"{stage}-{n:02d}.jsonl",
+                                 {"hand-check-instructions.txt", chunk["chunk"]},
+                                 chunk["output"])  # fmt: skip
+        audits[chunk["output"]] = audit
+        if not audit["pass"]:
+            failing.append(chunk["output"])
         path = hand_dir / chunk["output"]
         if not path.is_file():
             missing_chunks.append(chunk["output"])
             continue
-        raw_lines += path.read_text(encoding="utf-8", errors="replace").splitlines()
+        lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
+        raw_lines += lines
+        if audit["pass"]:
+            audited_lines += lines
     raw = hand_dir / f"hand-labels-{stage}-raw.jsonl"
     if raw.exists():
         raise Am3gError(f"{raw} exists: each stage is merged once")
     raw.write_text("\n".join(raw_lines) + ("\n" if raw_lines else ""), encoding="utf-8")
     allowed = {i for c in manifest[stage] for i in c["items"]}
-    valid, problems = _valid_rows(raw_lines, allowed)
+    valid, problems = _valid_rows(audited_lines, allowed)
     out: dict[str, Any] = {"stage": stage, "raw_sha256": sha256_file(raw),
                            "chunks": len(manifest[stage]), "missing_chunk_outputs": missing_chunks,
+                           "chunks_failing_the_transcript_audit": failing,
+                           "transcript_audit": audits,
                            "valid_rows": len(valid), **problems}  # fmt: skip
     if stage == "first":
         lacking = [i for i in manifest["items"] if i not in valid]
