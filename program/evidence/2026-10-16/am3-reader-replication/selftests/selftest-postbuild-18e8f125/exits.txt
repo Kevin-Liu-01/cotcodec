@@ -1,0 +1,3 @@
+image sha256:a763bbbc7578e2a61465ce2c45d1c2c196f81b3fa93f885b5a0cbb8e7ced653b src baked
+am3 selftest exit 0
+am3 plan exit 0

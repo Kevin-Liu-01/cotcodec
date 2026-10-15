@@ -7,9 +7,9 @@ set -Eeuo pipefail
 G="${1:?full commit id}"; SHORT=${G:0:8}
 R=/home/kevin/cotcodec-runs/stage0/am3-reader-replication
 B="$R/bundles/am3-${SHORT}.bundle"
-git bundle verify "$B" >/dev/null
 if [[ -d "$R/checkout/.git" ]]; then
   cd "$R/checkout"; [[ -z "$(git status --porcelain)" ]] || { echo dirty; exit 2; }
+  git bundle verify -q "$B"
   git fetch -q "$B" "+refs/heads/*:refs/remotes/bundle/*"
 else
   git clone -q --no-checkout "$B" "$R/checkout"; cd "$R/checkout"

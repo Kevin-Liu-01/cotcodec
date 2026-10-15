@@ -1,0 +1,32 @@
+{
+  "engine_kwargs": {
+    "dtype": "bfloat16",
+    "enable_prefix_caching": false,
+    "enforce_eager": true,
+    "gpu_memory_utilization": 0.85,
+    "limit_mm_per_prompt": {
+      "image": 0,
+      "video": 0
+    },
+    "logprobs_mode": "raw_logprobs",
+    "max_model_len": 4096,
+    "max_num_batched_tokens": 8192,
+    "max_num_seqs": 256,
+    "model": "/model-cache/cotcodec-models/qwen3.5-9b",
+    "seed": 42,
+    "tokenizer": "/model-cache/cotcodec-models/qwen3.5-9b",
+    "trust_remote_code": false
+  },
+  "error": "RuntimeError('Engine core initialization failed. See root cause above. Failed core proc(s): {}')",
+  "exit": 5,
+  "reason": "engine failed",
+  "step": {
+    "batch_invariant": true,
+    "enforce_eager": true,
+    "id": "rd-qwen35-9b",
+    "kind": "reader",
+    "max_s": 900,
+    "min_start_s": 900,
+    "reader": "qwen3.5-9b"
+  }
+}

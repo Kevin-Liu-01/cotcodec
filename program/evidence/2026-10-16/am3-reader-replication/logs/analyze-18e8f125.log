@@ -1,0 +1,11 @@
+start 2026-10-15T10:01:49Z commit 18e8f1257f29982ff45a87fa185c33fcda48eee8
+extract exit 0
+analyze a exit 0
+analyze b exit 0
+analyze outputs byte-identical
+7988abfb6eb34e742e34a9a26e9489389e98e75ea1b83603fa66dd5e631576a7  results.json
+0fc5635bad037588e521980536e4548eb51a6a3d9573e703b0f92010be72701e  per-table.json.gz
+af026a73a8da278576d90e1f4c9b24d08bcb30512587b65903873083a96405f7  tables.md
+67780c98a7451bece4de0f1ce3c60f0879cba8e8f85b226d84b8c71245f996d9  ~/cotcodec-runs/stage0/am3-reader-replication/private-18e8f125/features.json.gz
+pytest exit 0 (29 passed in 0.59s)
+end 2026-10-15T10:01:52Z

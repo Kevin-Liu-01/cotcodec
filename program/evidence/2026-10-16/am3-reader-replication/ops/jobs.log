@@ -1,0 +1,9 @@
+2026-10-15T09:35:08Z OLMo-2-1124-7B-Instruct fetch job 1460 submitted (CPU lane, no GRES; source b5b0f7a2)
+2026-10-15T09:47:22Z clean checkout of 18e8f1257f29982ff45a87fa185c33fcda48eee8 (tree ddb30538) from bundle 363044a8; git archive sha256 e30fc7038fcdbbd22367e75f335d11b39808ad18dda16b7cf11d540ef1bdcce3
+2026-10-15T09:47:29Z pre-image CPU selftest 1461 submitted (src 18e8f125 mounted into overlay abcd2b56, no GRES)
+2026-10-15T09:48:25Z capsule b7ea345456be7dcaf4605e562160362cf1a553adc33c39f5fcc1ed8e8fddbde2 (git 18e8f125)
+2026-10-15T09:48:26Z vLLM overlay build job 1462 submitted (git 18e8f125, archive b7ea3454, 1 H100, limit 5 min)
+2026-10-15T09:49:49Z vLLM overlay build 1462 JobState=COMPLETED ExitCode=0:0 (RunTime=00:01:08): sha256:a763bbbc7578e2a61465ce2c45d1c2c196f81b3fa93f885b5a0cbb8e7ced653b
+2026-10-15T09:49:49Z post-build CPU selftest 1463 submitted (baked 18e8f125 in a763bbbc, no GRES)
+2026-10-15T09:50:41Z AM3 GPU job submitted: 1466 (git 18e8f125, image a763bbbc, artifact 15567cf1, 1 H100, limit 55 min)
+2026-10-15T10:01:49Z AM3 GPU job 1466 COMPLETED 0:0 (RunTime 00:10:58 on 1 H100 = 0.1828 GPU-h; lane reason completed); steps: rd-qwen3-8b complete (BI eager), rd-olmo2 complete (BI eager), rd-qwen35-9b engine-failed (vLLM refuses batch-invariant mode for GDN_ATTN), rd-qwen35-9b-default complete (default mode, eager), judge32 and judge8 complete; judge items 2743 (2555 reader, 188 validation)

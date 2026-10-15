@@ -1,0 +1,18 @@
+{
+  "job_id": "1460",
+  "lane": "fetch-model-cpu",
+  "batch_sha256": "22685e5e4dc9f88cd9d6ba7aec7189a89500a4f80d2464b8df86e08e76e33c6d",
+  "image_id": "sha256:ba360ea13ea50e77e4900cb258c4dc73156060295abd381899f90f9991cedd10",
+  "source_dir": "~/cotcodec-runs/stage0/am3-reader-replication/src/b5b0f7a2",
+  "source_git_sha": "b5b0f7a2e0976eef5baa48976b77ab8435ed5449",
+  "fetch_script_sha256": "d995b59ece3c809edd70d6c60a78628ae5cb1ccc0ce8350cc455084d3787d29f",
+  "registry_sha256": "f414b2584e2bb5c1df60bf68d7988e3c787a6d2d4db1cebcddd3507bdd3a7e4c",
+  "model_ids": "olmo-2-1124-7b-instruct",
+  "receipt_dir": "cotcodec-receipts-cpu-lane",
+  "gres_requested": "none",
+  "job_tres": "TRES=cpu=8,mem=16G,node=1,billing=8 ",
+  "docker_default_runtime": "runc",
+  "container_dev_nvidia": [],
+  "network": "host (download only)",
+  "finished_at": "2026-10-15T09:36:22Z"
+}

@@ -1,0 +1,64 @@
+{
+ "abstention": {
+  "rd-olmo2": {
+   "first_pattern": {
+    "i_dont_know": 4712,
+    "none": 4103,
+    "not_in_memories": 5
+   },
+   "four_subset_replies": 8820,
+   "of_which_primary_judge_correct": 0,
+   "unflagged_matching_broader_list": 6,
+   "unflagged_normalized_replies_in_5_or_more_questions": 0
+  },
+  "rd-qwen3-8b": {
+   "first_pattern": {
+    "i_dont_know": 4946,
+    "no_information": 5,
+    "none": 3822,
+    "not_in_memories": 47
+   },
+   "four_subset_replies": 8820,
+   "of_which_primary_judge_correct": 0,
+   "unflagged_matching_broader_list": 2,
+   "unflagged_normalized_replies_in_5_or_more_questions": 0
+  },
+  "rd-qwen35-9b-default": {
+   "first_pattern": {
+    "cannot_answer": 4,
+    "i_dont_know": 4961,
+    "no_information": 2,
+    "none": 3815,
+    "not_in_memories": 38
+   },
+   "four_subset_replies": 8820,
+   "of_which_primary_judge_correct": 0,
+   "unflagged_matching_broader_list": 29,
+   "unflagged_normalized_replies_in_5_or_more_questions": 0
+  }
+ },
+ "judge_replay": {
+  "pass_1411_compiled:primary": {
+   "pilot_no_am3_yes": 0,
+   "pilot_yes_am3_no": 1,
+   "same_label": 969,
+   "shared_items": 970,
+   "shared_reader_items": 782
+  },
+  "pass_1411_compiled:secondary": {
+   "pilot_no_am3_yes": 3,
+   "pilot_yes_am3_no": 1,
+   "same_label": 966,
+   "shared_items": 970,
+   "shared_reader_items": 782
+  },
+  "pass_1441_eager:primary": {
+   "pilot_no_am3_yes": 0,
+   "pilot_yes_am3_no": 0,
+   "same_label": 403,
+   "shared_items": 403,
+   "shared_reader_items": 215
+  }
+ },
+ "note": "post hoc; text-free counts"
+}
