@@ -57,15 +57,24 @@ SELFTEST_MODEL = "qwen3-0.6b-base"
 # --------------------------------------------------------------------------- inputs
 
 
-def load_artifact(path: Path, expected_sha256: str | None) -> dict[str, Any]:
+def load_artifact(
+    path: Path, expected_sha256: str | None, config: dict[str, Any] | None = None
+) -> dict[str, Any]:
+    """The hash-bound study artifact, checked against the config's rule: the pilot's configs run
+    the development artifact only; the registration's config runs the held-out artifact only, and
+    only while the registration is frozen in the ledger with this checkout's file."""
+
     raw = path.read_bytes()
     if expected_sha256 is not None and mc.sha256_bytes(raw) != expected_sha256:
         raise ms.StudyError("the study artifact differs from the expected SHA-256")
     artifact = json.loads(raw)
-    if artifact.get("experiment_id") != ms.EXPERIMENT_ID:
+    experiment, split = ms.artifact_rule(config or ms.load_config())
+    if artifact.get("experiment_id") != experiment:
         raise ms.StudyError("the study artifact belongs to another experiment")
-    if artifact.get("split") != "development":
-        raise ms.StudyError("the development pilot runs on the development split only")
+    if artifact.get("split") != split:
+        raise ms.StudyError(f"this config runs the {split} split only")
+    if split == "heldout" and not ms.registration_frozen(ms.LEDGER_PATH, ms.REGISTRATION_PATH):
+        raise ms.StudyError("the held-out split runs only under a frozen registration")
     return artifact
 
 
@@ -208,7 +217,7 @@ def vllm_worker(args: argparse.Namespace, worker: dict[str, Any]) -> int:
     from vllm.inputs import TokensPrompt
 
     config = ms.load_config(Path(args.config))
-    artifact = load_artifact(Path(args.evidence), args.expected_evidence_sha256)
+    artifact = load_artifact(Path(args.evidence), args.expected_evidence_sha256, config)
     out = Path(args.output_dir) / "sessions" / worker["id"]
     out.mkdir(parents=True, exist_ok=True)
     flag = s0.StopFlag()
@@ -261,7 +270,10 @@ def vllm_worker(args: argparse.Namespace, worker: dict[str, Any]) -> int:
         keep = {r["index"] for r in ms.request_table(artifact, config["pools"]["arms"])
                 if r["question_index"] < int(worker["questions"])}  # fmt: skip
         order = [i for i in order if i in keep]
-    plan = [("smoke", order[:SMOKE_REQUESTS], True), ("all", order, False)]
+    replicate = ms.shuffled(order, int(config["job"].get("replicate_seed", 44)))
+    sets = {"smoke": order[:SMOKE_REQUESTS], "all": order, "replicate": replicate}
+    names = worker.get("passes", ["smoke", "all"])
+    plan = [(name, sets[name], name == "smoke") for name in names]
     passes: list[dict[str, Any]] = []
     code = 0
     for name, indices, smoke in plan:
@@ -427,7 +439,7 @@ def attention_worker(args: argparse.Namespace, worker: dict[str, Any]) -> int:
     import numpy as np
 
     config = ms.load_config(Path(args.config))
-    artifact = load_artifact(Path(args.evidence), args.expected_evidence_sha256)
+    artifact = load_artifact(Path(args.evidence), args.expected_evidence_sha256, config)
     out = Path(args.output_dir) / "sessions" / worker["id"]
     out.mkdir(parents=True, exist_ok=True)
     log_path = out / "worker-progress.jsonl"
@@ -613,23 +625,25 @@ def run_phase(
     return records
 
 
-def identity_summary(out: Path, a: str, b: str) -> dict[str, Any]:
+def identity_summary(
+    out: Path, a: str, b: str, pass_a: str = "all", pass_b: str = "all"
+) -> dict[str, Any]:
     try:
-        ref = load_pass(out / "sessions" / a, "all")
-        other = load_pass(out / "sessions" / b, "all")
+        ref = load_pass(out / "sessions" / a, pass_a)
+        other = load_pass(out / "sessions" / b, pass_b)
     except (OSError, ValueError, KeyError) as exc:
         return {"error": repr(exc)}
     result = s0.compare(ref, other, {})
     result.pop("clusters", None)
     result.pop("clusters_all_identical", None)
-    return {"ref": a, "other": b} | result
+    return {"ref": f"{a}:{pass_a}", "other": f"{b}:{pass_b}"} | result
 
 
 def run_main(args: argparse.Namespace) -> int:
     config = ms.load_config(Path(args.config))
     if list(args.seeds) != config["seeds"]:
         raise ms.StudyError("--seeds must equal the config's declared seeds")
-    artifact = load_artifact(Path(args.evidence), args.expected_evidence_sha256)
+    artifact = load_artifact(Path(args.evidence), args.expected_evidence_sha256, config)
     out = Path(args.output_dir)
     out.mkdir(parents=True, exist_ok=True)
     stop_at, source = lane.deadline(args.allocation_minutes)
@@ -715,13 +729,23 @@ def run_main(args: argparse.Namespace) -> int:
             os.killpg(sampler.pid, signal.SIGTERM)
     summary["identity"] = {}
     for kind in ("reader", "judge"):
-        ids = [w["id"] for p in config["job"]["phases"] for w in p["workers"] if w["kind"] == kind]
+        ids = [
+            w["id"]
+            for p in config["job"]["phases"]
+            for w in p["workers"]
+            if w["kind"] == kind and "all" in w.get("passes", ["smoke", "all"])
+        ]
         for i, a in enumerate(ids):
             for b in ids[i + 1 :]:
                 if kind == "judge" and model_spec(config, worker_spec(config, a)) is not \
                         model_spec(config, worker_spec(config, b)):  # fmt: skip
                     continue
                 summary["identity"][f"{a}|{b}"] = identity_summary(out, a, b)
+        for wid in ids:
+            if "replicate" in worker_spec(config, wid).get("passes", []):
+                summary["identity"][f"{wid}|replicate"] = identity_summary(
+                    out, wid, wid, "all", "replicate"
+                )
     summary["finished_at"] = lane.utc_now()
     summary["signal"] = state["signal"]
     lane.write_json(out / "summary.json", summary)
@@ -761,7 +785,7 @@ def selftest_main(args: argparse.Namespace) -> int:
     from transformers import AutoTokenizer
 
     config = ms.load_config(Path(args.config))
-    artifact = load_artifact(Path(args.evidence), args.expected_evidence_sha256)
+    artifact = load_artifact(Path(args.evidence), args.expected_evidence_sha256, config)
     root = Path(args.model_root)
     report: dict[str, Any] = {"plan": build_plan(config, artifact)}
     reader_tok = AutoTokenizer.from_pretrained(str(root / config["reader"]["model_id"]))
@@ -866,7 +890,8 @@ def main() -> int:
     args = parser.parse_args()
     if args.command == "plan":
         config = ms.load_config(Path(args.config))
-        print(json.dumps(build_plan(config, load_artifact(Path(args.evidence), None)), indent=2))
+        artifact = load_artifact(Path(args.evidence), None, config)
+        print(json.dumps(build_plan(config, artifact), indent=2))
         return 0
     if args.command == "selftest":
         return selftest_main(args)

@@ -5,6 +5,7 @@ driver's pure helpers and the lane's name rules."""
 from __future__ import annotations
 
 import ast
+import hashlib
 import importlib.util
 import json
 import math
@@ -549,3 +550,57 @@ def test_aa_report_counts_utility_flips(tmp_path: Path, artifact: dict, config: 
     assert pair["n_common"] == len(requests) and pair["differing_total"] == 2
     assert pair["utility_flips"] == 1 and pair["utility_covered"] == len(requests)
     assert pair["pools_with_a_utility_flip"] == 1
+
+
+# --------------------------------------------------------------------------- the draft registration
+
+
+def test_registration_config_and_judge_prompt_pin() -> None:
+    reg = ms.load_config(ms.REGISTRATION_CONFIG_PATH)
+    assert reg["experiment_id"] == ms.REGISTRATION_ID and reg["claim_level"] == "confirmatory"
+    assert ms.artifact_rule(reg) == (ms.REGISTRATION_ID, "heldout")
+    assert ms.artifact_rule(ms.load_config()) == (ms.EXPERIMENT_ID, "development")
+    main = ms.load_config()
+    for key in ("source", "usable", "split", "retriever", "pools", "placebo", "prompt", "reader",
+                "judge", "internal", "analysis", "seeds"):  # fmt: skip
+        assert reg[key] == main[key], key
+    warm = driver.worker_spec(reg, "reader-warm")
+    assert warm["passes"] == ["smoke"]
+    assert driver.worker_spec(reg, "reader-gpu1")["cache_from"] == "reader-warm"
+    blob = json.dumps(ms.JUDGE_TEMPLATES, sort_keys=True, ensure_ascii=False).encode()
+    assert hashlib.sha256(blob).hexdigest() == (
+        "2e27234d4c7d50a1fd99da3e8d3c97704a1f10cc9d52185924b6d8ece3ef71d4"
+    )
+
+
+def test_passes_option_is_checked(tmp_path: Path) -> None:
+    text = ms.REGISTRATION_CONFIG_PATH.read_text().replace("passes: [smoke]", "passes: [all]")
+    bad = tmp_path / "r.yaml"
+    bad.write_text(text)
+    with pytest.raises(ms.StudyError):
+        ms.load_config(bad)
+
+
+def test_heldout_artifact_needs_the_frozen_registration(
+    tmp_path: Path, artifact: dict, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    reg = ms.load_config(ms.REGISTRATION_CONFIG_PATH)
+    held = tmp_path / "held.json"
+    held.write_text(json.dumps(dict(artifact, experiment_id=ms.REGISTRATION_ID, split="heldout")))
+    with pytest.raises(ms.StudyError):
+        driver.load_artifact(held, None)  # the pilot's config never runs held-out data
+    registration = tmp_path / "reg.md"
+    registration.write_text("frozen text")
+    ledger = tmp_path / "ledger.jsonl"
+    ledger.write_text("")
+    monkeypatch.setattr(ms, "REGISTRATION_PATH", registration)
+    monkeypatch.setattr(ms, "LEDGER_PATH", ledger)
+    with pytest.raises(ms.StudyError):
+        driver.load_artifact(held, None, reg)
+    ledger.write_text(json.dumps({"experiment_id": ms.REGISTRATION_ID,
+                                  "sha256": ms.sha256_file(registration)}) + "\n")  # fmt: skip
+    assert driver.load_artifact(held, None, reg)["split"] == "heldout"
+    dev = tmp_path / "dev.json"
+    dev.write_text(json.dumps(artifact))
+    with pytest.raises(ms.StudyError):
+        driver.load_artifact(dev, None, reg)  # the registration never runs development data

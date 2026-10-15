@@ -68,7 +68,7 @@ def build_artifact(
         )
     return {
         "experiment_id": config["experiment_id"],
-        "claim_level": "exploratory",
+        "claim_level": config["claim_level"],
         "split": name,
         "split_ids_sha256": split[f"{name}_sha256"],
         "source": config["source"],
@@ -118,7 +118,7 @@ def public_summary(artifact: dict[str, Any], artifact_sha256: str) -> dict[str, 
     )
     return {
         "experiment_id": artifact["experiment_id"],
-        "claim_level": "exploratory",
+        "claim_level": artifact["claim_level"],
         "artifact_sha256": artifact_sha256,
         "split": artifact["split"],
         "split_ids_sha256": artifact["split_ids_sha256"],
@@ -157,8 +157,12 @@ def split_main(args: argparse.Namespace) -> int:
 
 
 def artifact_main(args: argparse.Namespace) -> int:
-    config = ms.load_config()
+    config = ms.load_config(Path(args.config))
     split = ms.load_split(Path(args.split_file), config)
+    if args.split != ms.artifact_rule(config)[1]:
+        raise ms.StudyError(
+            f"{config['experiment_id']} runs the {ms.artifact_rule(config)[1]} split"
+        )
     if args.split == "heldout" and not ms.registration_frozen(LEDGER, REGISTRATION):
         raise ms.StudyError(
             f"the held-out split opens only under a frozen {ms.REGISTRATION_ID} registration"
@@ -188,6 +192,7 @@ def main() -> int:
     artifact.add_argument("--split", required=True, choices=ms.SPLITS)
     artifact.add_argument("--artifact", required=True)
     artifact.add_argument("--summary", required=True)
+    artifact.add_argument("--config", default=str(ms.CONFIG_PATH))
     args = parser.parse_args()
     if args.command == "split":
         return split_main(args)

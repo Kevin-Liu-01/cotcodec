@@ -90,10 +90,11 @@ SIGNALS = (
 # --------------------------------------------------------------------------- loading
 
 
-def load_artifact(path: Path) -> dict[str, Any]:
+def load_artifact(path: Path, config: dict[str, Any] | None = None) -> dict[str, Any]:
     artifact = json.loads(path.read_bytes())
-    if artifact.get("experiment_id") != ms.EXPERIMENT_ID:
-        raise ms.StudyError("the study artifact belongs to another experiment")
+    experiment, split = ms.artifact_rule(config or ms.load_config())
+    if artifact.get("experiment_id") != experiment or artifact.get("split") != split:
+        raise ms.StudyError("the study artifact belongs to another experiment or split")
     return artifact
 
 
@@ -1191,8 +1192,11 @@ def aa_pair(
 ) -> dict[str, Any]:
     import memcredit_step0 as s0
 
-    (run_a, worker_a), (run_b, worker_b) = a.split(":", 1), b.split(":", 1)
-    pa, pb = load_pass(runs[run_a], worker_a), load_pass(runs[run_b], worker_b)
+    (run_a, worker_a, name_a), (run_b, worker_b, name_b) = (
+        (x.split(":") + ["all"])[:3] for x in (a, b)
+    )
+    pa = load_pass(runs[run_a], worker_a, name_a)
+    pb = load_pass(runs[run_b], worker_b, name_b)
     if pa is None or pb is None:
         return {"a": a, "b": b, "missing": True}
     common = sorted(set(pa["rows"]) & set(pb["rows"]))
@@ -1275,10 +1279,12 @@ def main() -> int:
     power_p.add_argument("--analysis-dir", required=True)
     power_p.add_argument("--output", required=True)
     power_p.add_argument("--heldout", type=int, default=None)
+    for sp in sub.choices.values():
+        sp.add_argument("--config", default=str(ms.CONFIG_PATH))
     args = parser.parse_args()
-    config = ms.load_config()
+    config = ms.load_config(Path(args.config))
     if args.command == "analyze":
-        artifact = load_artifact(Path(args.evidence))
+        artifact = load_artifact(Path(args.evidence), config)
         hand = None
         if args.hand_labels:
             hand = [
@@ -1297,7 +1303,7 @@ def main() -> int:
         print(json.dumps(result["headline"], indent=2, sort_keys=True))
         return 0
     if args.command == "hand-sample":
-        artifact = load_artifact(Path(args.evidence))
+        artifact = load_artifact(Path(args.evidence), config)
         sample = hand_sample(Path(args.run_dir), config, artifact)
         out = Path(args.output)
         if out.exists():
@@ -1306,7 +1312,7 @@ def main() -> int:
         print(json.dumps({"items": len(sample)}))
         return 0
     if args.command == "aa":
-        artifact = load_artifact(Path(args.evidence))
+        artifact = load_artifact(Path(args.evidence), config)
         runs = dict(item.split("=", 1) for item in args.run)
         pairs = [tuple(p.split(",", 1)) for p in args.pair]
         report = aa_report({k: Path(v) for k, v in runs.items()}, pairs, config, artifact)

@@ -34,9 +34,14 @@ from harness import memcredit as mc
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 CONFIG_PATH = PROJECT_ROOT / "experiments" / "am1" / "memcredit-study-v1.yaml"
 EXPERIMENT_ID = "memcredit-study-v1"
-#: Configs that share this module: the development pilot and its cross-GPU A/A diagnostic.
-CONFIG_IDS = (EXPERIMENT_ID, "memcredit-study-v1-aa")
+#: Configs that share this module: the development pilot, its cross-GPU A/A diagnostic and the
+#: draft registration's confirmatory config (the only one that may read the held-out split).
+CONFIG_IDS = (EXPERIMENT_ID, "memcredit-study-v1-aa", "am1-memory-credit-v1")
 AA_CONFIG_PATH = PROJECT_ROOT / "experiments" / "am1" / "memcredit-study-v1-aa.yaml"
+REGISTRATION_CONFIG_PATH = PROJECT_ROOT / "experiments" / "am1" / "am1-memory-credit-v1.yaml"
+REGISTRATION_PATH = PROJECT_ROOT / "program" / "preregistrations" / "am1-memory-credit-v1.md"
+LEDGER_PATH = PROJECT_ROOT / "program" / "preregistrations" / "ledger.jsonl"
+PASS_NAMES = ("smoke", "all", "replicate")
 REGISTRATION_ID = "am1-memory-credit-v1"
 SPLITS = ("development", "heldout")
 REQUEST_KINDS = ("table", "swap", "reorder")
@@ -53,8 +58,9 @@ def load_config(path: Path = CONFIG_PATH) -> dict[str, Any]:
     config = yaml.safe_load(path.read_text(encoding="utf-8"))
     if not isinstance(config, dict) or config.get("experiment_id") not in CONFIG_IDS:
         raise StudyError(f"not a {EXPERIMENT_ID} config")
-    if config.get("claim_level") != "exploratory":
-        raise StudyError("the development pilot is exploratory only")
+    confirmatory = config["experiment_id"] == REGISTRATION_ID
+    if config.get("claim_level") != ("confirmatory" if confirmatory else "exploratory"):
+        raise StudyError("only the registration's config is confirmatory")
     seeds = config.get("seeds")
     if seeds != [42, 43, 44]:
         raise StudyError("seeds must be [42, 43, 44]")
@@ -69,6 +75,7 @@ def load_config(path: Path = CONFIG_PATH) -> dict[str, Any]:
         ("analysis.bootstrap.seed", config["analysis"]["bootstrap"]["seed"]),
         ("analysis.power.seed", config["analysis"]["power"]["seed"]),
         ("job.shuffle_seed", config["job"]["shuffle_seed"]),
+        ("job.replicate_seed", config["job"].get("replicate_seed", 44)),
     ]
     for name, value in seeded:
         if value not in declared:
@@ -105,6 +112,11 @@ def load_config(path: Path = CONFIG_PATH) -> dict[str, Any]:
                 raise StudyError(f"{worker['id']}: questions must be positive")
             if not isinstance(worker.get("enforce_eager", False), bool):
                 raise StudyError(f"{worker['id']}: enforce_eager must be a boolean")
+            passes = worker.get("passes", ["smoke", "all"])
+            if passes[:1] != ["smoke"] or not set(passes) <= set(PASS_NAMES):
+                raise StudyError(f"{worker['id']}: passes start with smoke and name known passes")
+            if "replicate" in passes and "all" not in passes:
+                raise StudyError(f"{worker['id']}: a replicate needs the all pass")
             worker_ids.append(worker["id"])
             if worker["kind"] not in ("reader", "judge", "attention"):
                 raise StudyError(f"{worker['id']}: unknown worker kind")
@@ -117,6 +129,15 @@ def load_config(path: Path = CONFIG_PATH) -> dict[str, Any]:
     if len(set(worker_ids)) != len(worker_ids):
         raise StudyError("worker ids must be unique")
     return config
+
+
+def artifact_rule(config: dict[str, Any]) -> tuple[str, str]:
+    """(artifact experiment id, split) a config may run on: the registration's config runs the
+    held-out split, every other config the pilot's development artifact."""
+
+    if config["experiment_id"] == REGISTRATION_ID:
+        return REGISTRATION_ID, "heldout"
+    return EXPERIMENT_ID, "development"
 
 
 def pool_config(config: dict[str, Any]) -> dict[str, Any]:
