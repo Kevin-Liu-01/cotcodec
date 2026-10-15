@@ -55,10 +55,9 @@ def test_config_and_pilot_plan() -> None:
             "limit_mm_per_prompt",
         ):
             assert kw[key] == g2b[key], key
-    assert (
-        g3.engine_kwargs(config, "qwen3.5-9b", Path("/m"), "fp32", "math")["max_model_len"]
-        == (g2b["max_model_len"])
-    )
+    # G2b's 33,536 plus room for the longest of the 134 math prompts (857 tokens, selftest 1490).
+    math_len = g3.engine_kwargs(config, "qwen3.5-9b", Path("/m"), "fp32", "math")["max_model_len"]
+    assert math_len == 33792 and math_len - 32768 >= 857 and g2b["max_model_len"] == 33536
     assert (
         g3.engine_kwargs(config, "qwen3.5-4b", Path("/m"), "fp32", "lme")["max_model_len"] == 131072
     )

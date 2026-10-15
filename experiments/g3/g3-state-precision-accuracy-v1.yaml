@@ -43,7 +43,7 @@ arms:
   bf16: bfloat16
 
 # G2b's rollout engine (experiments/g2/g2b-state-dtype-v1.yaml, engine), unchanged except that
-# max_model_len is per task (below).
+# max_model_len is per task (below; math 33,792 against G2b's 33,536).
 engine:
   dtype: bfloat16
   seed: 42
@@ -76,7 +76,9 @@ tasks:
         selection: "level 5 only (134), sorted by unique_id; fields as in experiments/g2/prompts-math500-l5-64.jsonl (a subset of this file)"
     user_suffix: "\nPlease reason step by step, and put your final answer within \\boxed{}."
     enable_thinking: true
-    max_model_len: 33536
+    # G2b's 33,536 left 768 prompt tokens; the longest of these 134 prompts is 857 tokens
+    # (selftest job 1490), so 32,768 + 1,024.
+    max_model_len: 33792
     sampling:
       temperature: 1.0
       top_p: 0.95
