@@ -729,7 +729,8 @@ def test_features_that_do_not_match_the_tables_are_a_named_h_c_void():
 
 def test_the_feature_code_is_the_whole_import_closure():
     """V5 records the SHA-256 of this script and every repository module extract imports (checked
-    in a fresh interpreter, so other tests' imports do not count)."""
+    in a fresh interpreter, so other tests' imports do not count; installed packages are left
+    out, also when the environment lives inside the checkout, as in a host export)."""
 
     import subprocess
 
@@ -739,7 +740,8 @@ def test_the_feature_code_is_the_whole_import_closure():
         "import memcredit_keepset_search, memcredit_analyze, memcredit_study; "
         "print('\\n'.join(sorted(str(pathlib.Path(m.__file__).resolve().relative_to(root)) "
         "for m in list(sys.modules.values()) if getattr(m, '__file__', None) "
-        "and pathlib.Path(m.__file__).resolve().is_relative_to(root))))"
+        "and pathlib.Path(m.__file__).resolve().is_relative_to(root) "
+        "and 'site-packages' not in pathlib.Path(m.__file__).resolve().parts)))"
     )
     out = subprocess.run([sys.executable, "-I", "-c", code, str(ROOT)], capture_output=True,
                          text=True, check=True, cwd=ROOT)  # fmt: skip

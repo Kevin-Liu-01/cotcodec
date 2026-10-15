@@ -675,7 +675,7 @@ mode the script parses this table and refuses to run unless every file matches.
 | File | Role | SHA-256 |
 |---|---|---|
 | `scripts/memcredit_keepset_search.py` | this registration's analysis: gate, extract, analyze, development selftest and power | `a367036085a4cb199d3a5ba46f48931a19fee306d2c22432fd9e590328bdb33d` |
-| `tests/test_memcredit_keepset_search.py` | its tests: exact order-statistic expectation, exact McNemar test and its interval, H-A per table and verdict, H-C's stop rule, the gate and the pins | `de1db66a5988a34cacaf7101e0c51926f855c9245491402816de983491ff4d06` |
+| `tests/test_memcredit_keepset_search.py` | its tests: exact order-statistic expectation, exact McNemar test and its interval, H-A per table and verdict, H-C's stop rule, the gate and the pins | `c2a9571d4eda4e4ffadf70ddd78351848a4ccc5ec6e851a8b860d84e384bd672` |
 | `scripts/memcredit_cost_curve.py` | AM1b's decoding, memoized calls, rules, greedy search and exact direct-search curve | `431f4cb21ccd398e1433e29a5b40c1a697d48b9aecc5fc728956f819e28c9bab` |
 | `scripts/memcredit_label_free.py` | AM1d's abstention list, join, features, BM25 order and stop rule | `721015de434021a72ab3bbbab5e91d0de39a2fc359df7283068f83026dcb9d8f` |
 | `scripts/memcredit_analyze.py` | AM1's join (`join_rows`, `pool_views`) and artifact loader | `5444104d3c760b17f311656f4e0dbd50b2b154c89d806f1e4aa2ab6791fb0f34` |
@@ -779,4 +779,30 @@ export.
 
 ## 19. Review log: the independent checks
 
-No independent check has run yet. Two are required before the freeze (D115).
+Two independent, sequential checks are required before the freeze (D115, D116).
+
+### Round 1
+
+Pre-freeze check 1 ran on `747623cd` and found the file ready to freeze after fixes: one blocking
+item, three major, nine minor and two for information. The orchestrator then demoted H-B to
+descriptive (D116, `55b49dbe`). The fixes are commit `8c2f4ad7` (code, tests, this file) and the
+commit that carries this section and the refreshed development selftest (section 15). Nothing of
+the held-out data was decoded; the selftest used development data only, in a new host directory
+that was deleted afterwards.
+
+| Item | Finding | Disposition |
+|---|---|---|
+| B1 | The gate test asserted that the real ledger had no row, so the registered pytest command would fail after the freeze, and without that assert the next line would decode the held-out tables. | Fixed: the gate is tested against a scratch ledger and a scratch copy of this file, both for refusal and for opening (`gate(split, ledger, registration)`); `load_tables("heldout")` is only called on a scratch file, with `Path.read_bytes` made to fail, so a read before the gate would fail the test. |
+| M1 | Section 8 said a V3 or V5 failure voids only H-C, but `analyze` refused held-out runs without features and raised before H-A on a pool-count or provenance failure. | Fixed: the registered void path `analyze --h-c-void REASON` (sections 8 and 16) records H-C as VOID and computes H-A, H-B and the descriptive outputs from the tables; every H-C input failure in `extract` and `analyze` is a named `VOID (H-C, V3)` or `VOID (H-C, V5)` error (missing or changed pass file, unreadable or truncated features, pools that do not match), tested; the features are written atomically; `distinct_replies` is required on every table and reproduced on all of them. |
+| M2 | H-B was still presented as a decision. | Fixed: H-B is a block of its own (`h_b_descriptive`, `decides: false`) outside the verdicts, its label is a description, the markdown section is "H-B (descriptive, D116; no decision)", the docstring says so; sections 1.3, 6.7, 7.2, 14 and 18 are reworded. |
+| M3 | RULE_BEATS_SEARCH could fire on a fewer-calls comparison, where the rule read 57-83 calls against search's 26. | Fixed: RULE_BEATS_SEARCH comes only from the matched comparisons A1, A2, A4 and A7; a RULE_BETTER on A3, A5 or A6 gives RULE_AT_MORE_CALLS_BETTER, which blocks SEARCH_DOMINATES and licenses nothing at equal calls (section 7.1, `ha_verdict`, the power simulation, tests). |
+| m1 | "25 or more" should be 26. | Fixed in section 1.2, with the two boundary p-values. |
+| m2 | The code pins missed `scripts/memcredit_step0.py`, `harness/g2_pilot.py` and `harness/__init__.py`; `FEATURE_CODE` missed `scripts/memcredit_cost_curve.py`. | Fixed: both now cover this script and all nine repository modules `extract` imports; a test checks the list against a fresh interpreter's imports and that every one is pinned. |
+| m3 | Section 7.1 misstated AM1's alpha. | Fixed: AM1 spent 2.5% per direction; here each verdict's error is at most 5%. |
+| m4 | H-C's power assumed c = 0. | Fixed: power at c = 0, 1 and 2 (section 9; `h_c_power_by_c`), and section 18's prior. |
+| m5 | Missing disclosures: G2's "I don't know." result, the 120 hand-checked held-out replies, the full-precision counts. | Added to sections 1.1, 1.2 and 1.6. |
+| m6 | Section 1.2 should give the published bounds on direct search. | Added: exact bounds under AM1's published constraints, computed by `direct_search_bounds` (equal to check 1's), with the note that the 57-call bound nearly excludes RULE_BETTER on A2. |
+| m7 | Section 16 did not name the export and output directories, and the private-directory guard constrains them. | Fixed: EXPORT_DIR, PRIVATE_DIR and OUTPUT_DIR are named siblings, and the committed logs' `~` is stated. |
+| m8 | Partial or unreadable features and missing pass files gave tracebacks. | Fixed with M1: named V3 errors, tested end to end. |
+| m9 | H-C's reading lacked a scope. | Fixed in section 7.3, matching H-A's. |
+| Info | Permutation Shapley-16 read 68-94 subsets on development; H-A's reading should say it holds in expectation. | Both stated (sections 6.3 and 7.1). |
