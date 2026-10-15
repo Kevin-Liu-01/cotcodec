@@ -1,0 +1,262 @@
+# am3-nonabstain-generality-v1 (D118; CONFIRMATORY once frozen in the ledger): does the
+# non-abstention keep rule hold for other readers on held-out questions, and what does it cost on
+# questions that have no answer? Registration: program/preregistrations/am3-nonabstain-generality-v1.md
+#
+# The rule (AM1d's nonabstain@70, H-C of am1-keepset-search-v1): read a pool's 4-subsets in BM25
+# order and keep the first whose reply does not abstain (AM1d's four patterns, digest 031bee27...);
+# keep BM25 top 4 when every 4-subset abstains.
+#
+# Three populations, each one GPU job (scripts/memcredit_am3g.py run --population P) on one H100
+# in the cotcodec-vllm cu129 overlay built from the freeze commit's source capsule:
+# - heldout (H1): AM1's 347 confirmatory questions, both pool arms (AM1's held-out study
+#   artifact, unchanged);
+# - abstention (H2): LongMemEval-S's 30 abstention questions (ids ending in _abs), retrieved arm
+#   only, pools built as AM1's retrieved arm (scripts/memcredit_am3g.py prepare-abstention);
+# - development: the pre-freeze dry run on the pilot's 63 development questions (exploratory).
+# Per pool every reader answers the 70 4-subsets and the full pool (71 requests) with AM1's
+# prompt, greedy, 64 tokens; then both judges score every distinct (question, reply) with
+# LongMemEval's official prompt (the abstention template for _abs questions).
+schema_version: 1
+experiment_id: am3-nonabstain-generality-v1
+claim_level: confirmatory
+# 42: every engine seed and the bootstrap seed. 44: the abstention decoy draw. 43 is unused; the
+# lane's seed-matrix contract binds three seeds to --seeds.
+seeds: [42, 43, 44]
+
+# The prompt, pool rules, retriever, judges (models, engines, sampling, prompts) and AM1's
+# validation items come unchanged from the pilot's config; the readers come unchanged from AM3's.
+pilot:
+  config: experiments/am1/memcredit-study-v1.yaml
+  config_sha256: "ecdb5c11ff4eaf757ec6712c6f2c75d61c79882bb3d418202b7143abf90793db"
+am3:
+  config: experiments/am3/am3-reader-replication-v1.yaml
+  config_sha256: "525ebf29e80941ef02e646e04c66fdaa40aba67f6bb0dbb9d5926c68befa07c4"
+split_file_sha256: "4fa1b774d4131080855d668ac8f00f5cb07d49cf741f2051d5f8d96577edb3e3"
+
+requests:
+  pool_size: 8
+  budget: 4
+
+reader_sampling: {temperature: 0.0, max_tokens: 64, logprobs: 0}
+# AM3's reader blocks, unchanged (load_config checks equality with AM3's config).
+readers:
+  - id: qwen3-8b
+    role: anchor
+    model_id: qwen3-8b
+    revision: "b968826d9c46dd6066d109eabc6255188de91218"
+    receipt_root: cotcodec-receipts-cpu-lane
+    family: qwen3
+    enable_thinking: false
+    thinking_marker: "<think>\n\n</think>"
+    stop_token: "<|im_end|>"
+    engine:
+      dtype: bfloat16
+      max_model_len: 4096
+      gpu_memory_utilization: 0.85
+      max_num_seqs: 256
+      max_num_batched_tokens: 8192
+      enable_prefix_caching: true
+      logprobs_mode: raw_logprobs
+  - id: olmo-2-1124-7b-instruct
+    role: second-family
+    model_id: olmo-2-1124-7b-instruct
+    revision: "470b1fba1ae01581f270116362ee4aa1b97f4c84"
+    receipt_root: cotcodec-receipts-cpu-lane
+    family: olmo2
+    enable_thinking: false
+    thinking_marker: null
+    stop_token: "<|endoftext|>"
+    engine:
+      dtype: bfloat16
+      max_model_len: 4096
+      gpu_memory_utilization: 0.85
+      max_num_seqs: 256
+      max_num_batched_tokens: 8192
+      enable_prefix_caching: true
+      logprobs_mode: raw_logprobs
+  - id: qwen3.5-9b
+    role: same-family-hybrid
+    model_id: qwen3.5-9b
+    revision: "c202236235762e1c871ad0ccb60c8ee5ba337b9a"
+    receipt_root: cotcodec-receipts
+    family: qwen3.5
+    enable_thinking: false
+    thinking_marker: "<think>\n\n</think>"
+    stop_token: "<|im_end|>"
+    engine:
+      dtype: bfloat16
+      max_model_len: 4096
+      gpu_memory_utilization: 0.85
+      max_num_seqs: 256
+      max_num_batched_tokens: 8192
+      enable_prefix_caching: false
+      logprobs_mode: raw_logprobs
+      limit_mm_per_prompt: {image: 0, video: 0}
+
+# Every model's receipt and snapshot root, as AM3's job 1466 verified them; the driver
+# re-verifies each snapshot against its receipt and refuses any difference from these pins.
+models:
+  qwen3-8b:
+    revision: "b968826d9c46dd6066d109eabc6255188de91218"
+    receipt_root: cotcodec-receipts-cpu-lane
+    receipt_sha256: "b9e3a74d42882abe218e77d6023010543dd98278dedcc9180dd7089d336287fa"
+    artifact_root_sha256: "325ab760530dfa4eb0529cc56f17b5042326d1bcc8fddf902b10fde325ff6281"
+  olmo-2-1124-7b-instruct:
+    revision: "470b1fba1ae01581f270116362ee4aa1b97f4c84"
+    receipt_root: cotcodec-receipts-cpu-lane
+    receipt_sha256: "4120a5c9d0ba777b9e46311ac4008e11ee675fa45fbef851a27b887588f98b4a"
+    artifact_root_sha256: "ec7f69552c8917a97fc28cea3862d07f49148413226f6ebb01465ac69bcc5f4c"
+  qwen3.5-9b:
+    revision: "c202236235762e1c871ad0ccb60c8ee5ba337b9a"
+    receipt_root: cotcodec-receipts
+    receipt_sha256: "0a9e052d561b017c505adf5a1c6fcdc048522660a0db134486b84edbf3de5cb3"
+    artifact_root_sha256: "9845026dbe255e24b105224eebbb5436d315713b9a5c53c434137896b160c5b1"
+  qwen3-32b:
+    revision: "9216db5781bf21249d130ec9da846c4624c16137"
+    receipt_root: cotcodec-receipts
+    receipt_sha256: "06e4a7e981eee4f6c079fd6b02dc58e3a9fd798e0d806820383d873cf9cd1fd1"
+    artifact_root_sha256: "8fcd9106bfb1854a5b160c64a0ff3d3463208ab69854ae8c1cc26ba19dbf5714"
+
+# LongMemEval's official abstention answer-check prompt (scripts/memcredit_am3g.py,
+# ABSTENTION_TEMPLATE; the archived port's text, word for word). Validation items per
+# abstention question: its explanation (expected yes), "I don't know." (expected yes) and a decoy
+# (the reference answer of a development question of the same type, drawn with decoy_seed;
+# expected no). The development dry run adds two calibration items per development question
+# under this template with a generic explanation ("I don't know." and the reference answer).
+abstention_judge:
+  template_sha256: "5c0b365a1e1d06db36377c735432b56e122ca3c428f89faf61d43a0d5a7e050b"
+  idk_response: "I don't know."
+  decoy_seed: 44
+  calibration_explanation: "The information needed to answer this question is not in the conversation history."
+
+populations:
+  development:
+    claim_level: exploratory
+    experiment_id: memcredit-study-v1
+    split: development
+    artifact_sha256: "15567cf14a0c38c1f9edec1f47feceb2a6fccf116338e5957182d03f1d996ebc"
+    questions: 63
+    question_ids_sha256: "183ee4d3406786be721c4c846fa9f72f0fc2ae8c905dcb198eaaff17d78846fc"
+    arms: [retrieved, gold]
+    # The dry run's reference: AM3's job 1466 (development, the same 8,946 requests per reader).
+    reference:
+      name: "job 1466 (AM3): rd-qwen3-8b, rd-olmo2, rd-qwen35-9b-default; judge32, judge8"
+      readers:
+        qwen3-8b: rd-qwen3-8b
+        olmo-2-1124-7b-instruct: rd-olmo2
+        qwen3.5-9b: rd-qwen35-9b-default
+      sha256:
+        sessions/rd-qwen3-8b/all.json: "b6d01aa3bbfd9a53da9d54f92530f161b4d3a65ab9367798eef8599f1946a68f"
+        sessions/rd-qwen3-8b/all.npz: "c77e8efaa2750a17c443279c69763b6a80b0d31a087acacb5329a03e1e4cc1ae"
+        sessions/rd-qwen3-8b/all.texts.jsonl.gz: "f5d7524fd1111eb5946f112cbfeb491d55797b92c19b64f8bf41a7e6857eaf15"
+        sessions/rd-olmo2/all.json: "cb0e4fb06fc7d3ddf8e98e8acb9b5284042f8c810f8ceb2c0698383f077e0e4b"
+        sessions/rd-olmo2/all.npz: "cd54bc3881a162d03bc0541697dcee1ed80712e0cd3dde9f620f472261dce3aa"
+        sessions/rd-olmo2/all.texts.jsonl.gz: "9bc11bd6a96acf2573a704f5f24d90164bb2e2d9014453116c540aa8e8b7e45b"
+        sessions/rd-qwen35-9b-default/all.json: "c88ab0794729a2b8d13a0e7c2c6602b449481a5bcd6aef6f890f5bf1a9ece4d3"
+        sessions/rd-qwen35-9b-default/all.npz: "b25b5116bcd7758e32ef9a22897ad1b39ecc67f43175070cc11d3d961ddd0cde"
+        sessions/rd-qwen35-9b-default/all.texts.jsonl.gz: "c042b3c969a30aa081d9cc1aa28731653c00bdd2691146029a1cab119dc8f070"
+        sessions/judge32/all.json: "47c187b69014d95ee4b516405b0c253a7fbf46117c9985eabce430687c02eff4"
+        sessions/judge32/all.npz: "35b78a672d1c7ea39382bd584fe80a2387e519becdd55d6e984b6041d8502159"
+        sessions/judge32/all.texts.jsonl.gz: "08d71ab7a896b4de33da70e30543d070ea7e75e0d7d9a3671a4900e57d0495d4"
+        sessions/judge8/all.json: "83560abb3aa827dace411192210d735618681035a05ead44df7ec5c1e2e54879"
+        sessions/judge8/all.npz: "d1e6019368e0d670c20e1fd0826166a2b7f68878ae83bdeee6dab70ff2ba828f"
+        sessions/judge8/all.texts.jsonl.gz: "fd14d95efe468acc58e94eea1f9dbd216008a86fcacc5f2fa588dd76fdd002c0"
+        judge-items.json: "5af213f094c5270e3a4b4b3c27d6d83ebaa3ad787265b49487937d05f985eea8"
+  heldout:
+    claim_level: confirmatory
+    experiment_id: am1-memory-credit-v1
+    split: heldout
+    artifact_sha256: "f23bca047dc7246c5a8db12f67a76a2ea36304d8669dc5c62ae6c42821f73eb7"
+    questions: 347
+    question_ids_sha256: "d4f024fbcda5394984a46c421cd938f2b6db6067fef0f21a5c6e72359b27e50a"
+    arms: [retrieved, gold]
+    # AM1's committed held-out tables (R2) and job 1458's eager GPU-0 pass (R1), as pinned by
+    # am1-keepset-search-v1.
+    tables:
+      path: program/evidence/2026-10-16/am1-confirmatory/analysis/tables.json.gz
+      sha256: "841e79452d7af6441492abfce64d85cadf5b51415cc7e0461df76ce228df0729"
+      json_sha256: "2d3574be5d3686d73b73dc2d1b36ed3c9b04b23731078bcb6b5f92b83cc3a9cd"
+    reference:
+      name: "job 1458 (AM1): reader-gpu0 (eager batch-invariant, canonical order), judge32-gpu0, judge8-gpu0"
+      reader: reader-gpu0
+      judge: judge32-gpu0
+      second_judge: judge8-gpu0
+      sha256:
+        sessions/reader-gpu0/all.json: "c8381bcbe4afe33e436ad101cbe313ef1608c40916dbd8a6e3a4c0191322e189"
+        sessions/reader-gpu0/all.npz: "8f985d8a2b40ecbb4fcbed1c2a63323c3d4ce398da83eea5fef8bca137054776"
+        sessions/reader-gpu0/all.texts.jsonl.gz: "b05d5d87f9b9c7445cb053d8e4830e2fcf105f04f7c265551773dd9665fcfd39"
+        sessions/judge32-gpu0/all.json: "5a36bbac383c6a5395c148dc837c75906cf806ff64969cc67ef770b417929300"
+        sessions/judge32-gpu0/all.npz: "229cefd3fdadc060a89f5d16e6c7ab76d8a20f7f444bc88fd7d48740c6f9f7f6"
+        sessions/judge32-gpu0/all.texts.jsonl.gz: "e2166086dfe773a4e52054d2dc6d58372adb7cde8a4e4a060e990a6e66fb53f4"
+        sessions/judge8-gpu0/all.json: "33c280bf120a551fe41c9569cd2c350d31eca50da4b791b64867ec62a370883c"
+        sessions/judge8-gpu0/all.npz: "9fe7bf7d1ac5a35478d8dc064d88f30e6f5f65631d664a74d5f8720f932d1ba7"
+        sessions/judge8-gpu0/all.texts.jsonl.gz: "e31d77ad7f39a56d829b5ccbef033e56b5b99fe90d01725d03d837a82de95cae"
+        judge-items.json: "c3eec6515b4e654bb88cccef65dba1d88e210326bbf238c27c6f8dfa1c3a2999"
+  abstention:
+    claim_level: confirmatory
+    experiment_id: am3-nonabstain-generality-v1
+    split: abstention
+    artifact_sha256: "0000000000000000000000000000000000000000000000000000000000000000"
+    questions: 30
+    question_ids_sha256: "0000000000000000000000000000000000000000000000000000000000000000"
+    arms: [retrieved]
+
+# The steps of every job, in order, on its one H100. A reader step in batch-invariant mode that
+# does not complete is followed by its fallback in vLLM's default mode (only then). Qwen3.5-9B
+# runs in default mode: vLLM 0.31.0 refuses batch-invariant mode for GDN attention (AM3).
+steps:
+  - {id: rd-qwen3-8b, kind: reader, reader: qwen3-8b, batch_invariant: true, enforce_eager: true}
+  - {id: rd-olmo2, kind: reader, reader: olmo-2-1124-7b-instruct, batch_invariant: true, enforce_eager: true}
+  - {id: rd-olmo2-default, kind: reader, reader: olmo-2-1124-7b-instruct, batch_invariant: false, enforce_eager: true, only_if_incomplete: rd-olmo2}
+  - {id: rd-qwen35-9b-default, kind: reader, reader: qwen3.5-9b, batch_invariant: false, enforce_eager: true}
+  - {id: judge32, kind: judge, judge: primary, batch_invariant: true, enforce_eager: true}
+  - {id: judge8, kind: judge, judge: secondary, batch_invariant: true, enforce_eager: true}
+
+# Per job: the Slurm limit and, per step, [min_start_s, max_s]: a step starts only with min_start_s
+# left before the deadline (the limit minus 210 s), and its passes stop at max_s.
+jobs:
+  development:
+    gpus: 1
+    minutes: 25
+    step_budgets:
+      rd-qwen3-8b: [300, 240]
+      rd-olmo2: [300, 240]
+      rd-olmo2-default: [300, 240]
+      rd-qwen35-9b-default: [420, 360]
+      judge32: [240, 180]
+      judge8: [150, 120]
+  heldout:
+    gpus: 1
+    minutes: 90
+    step_budgets:
+      rd-qwen3-8b: [1300, 1200]
+      rd-olmo2: [1300, 1200]
+      rd-olmo2-default: [1300, 1200]
+      rd-qwen35-9b-default: [1900, 1800]
+      judge32: [700, 600]
+      judge8: [400, 300]
+  abstention:
+    gpus: 1
+    minutes: 30
+    step_budgets:
+      rd-qwen3-8b: [400, 300]
+      rd-olmo2: [400, 300]
+      rd-olmo2-default: [400, 300]
+      rd-qwen35-9b-default: [400, 300]
+      judge32: [300, 240]
+      judge8: [200, 150]
+
+# Physical GPU-hours: the image build (5 min on 1 H100) plus the heldout (90 min) and abstention
+# (30 min) jobs' limits, 2.08 GPU-h; with the one rerun the registration allows per job after an
+# infrastructure failure, 4.08 GPU-h. The development dry run: 25 min plus a 5 min build, 0.5.
+budget:
+  build_minutes: 5
+  registered_cap_gpu_hours: 2.08
+  registered_cap_with_reruns_gpu_hours: 4.08
+  dry_run_cap_gpu_hours: 0.5
+
+analysis:
+  bootstrap: {resamples: 10000, seed: 42}
+  alpha: 0.05
+  # LongMemEval-S's own mix: 470 answerable and 30 abstention questions of 500.
+  natural_mix: {answerable: 470, abstention: 30}
