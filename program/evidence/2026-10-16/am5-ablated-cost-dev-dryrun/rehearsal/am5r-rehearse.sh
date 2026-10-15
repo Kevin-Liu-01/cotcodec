@@ -14,7 +14,7 @@
 #        dry run's GPU job id>   (run from the dev checkout at the first commit)
 set -uo pipefail
 G="${1:?full commit id}"; BUNDLE="${2:?bundle}"; SHORT=${G:0:8}
-BUILD_G="${3:?the dry run's build commit}"; BUILD_SHORT=${BUILD_G:0:8}; DEV_JOB="${4:?the dry run's job id}"
+BUILD_G="${3:?the build commit of the dry run}"; BUILD_SHORT=${BUILD_G:0:8}; DEV_JOB="${4:?the GPU job id of the dry run}"
 REAL=$HOME; REAL_R=$REAL/cotcodec-runs/stage0/am5r-dev-dryrun
 BASE=$REAL/cotcodec-runs/stage0/am5r-rehearsal-$SHORT
 rm -rf "$BASE"; mkdir -p "$BASE/bin" "$BASE/home"
