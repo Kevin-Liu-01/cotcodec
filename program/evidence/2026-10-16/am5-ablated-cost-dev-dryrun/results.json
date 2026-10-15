@@ -15,7 +15,7 @@
     ],
     "cost_indicator": "BM25 top 4 correct and the capped rule wrong: the rule switched (top 4 abstained, a 4-subset within K reads answered) and the judge rejects the switched reply",
     "gain_indicator": "on the same question's original pool (am3g's committed records), the capped rule's reply judged correct and BM25 top 4's wrong (AM4's reading)",
-    "hand_instructions_sha256": "1745340a5e05ebb149aaffee4beba23d2c13dc42b33d1872731defd09359a5c5",
+    "hand_instructions_sha256": "1fd34a5d4616c0d5511afdde2b43fc3a927bd7dc70010c0b2b098903910e0d60",
     "outcome": "on an ablated pool a reply is correct when it abstains (AM1d's patterns) or, when it does not, when Qwen3-32B's answer check against the reference says yes",
     "primary_cap": 8,
     "requests_per_pool": 71,
@@ -1193,7 +1193,7 @@
       }
     }
   },
-  "experiment": "am5-ablated-cost-v1",
+  "experiment": "am5-ablated-cost-v2",
   "hand_check": {
     "agreement": {
       "agree": 34,
@@ -1272,7 +1272,7 @@
       "label_0_with_decline_note": 0,
       "rule": "a label 1 whose note starts with \"decline:\" (case-folded): the reply declines to answer; counts only, no text"
     },
-    "instructions_sha256": "1745340a5e05ebb149aaffee4beba23d2c13dc42b33d1872731defd09359a5c5",
+    "instructions_sha256": "1fd34a5d4616c0d5511afdde2b43fc3a927bd7dc70010c0b2b098903910e0d60",
     "items": 34,
     "judge_labels_differ": {
       "by_role": {},
@@ -1337,7 +1337,7 @@
       "scripts/memcredit_am3.py": "25f634edd29a23f2fdee12b0825013d624aa5305d49cf512f74fdf1827ea130f",
       "scripts/memcredit_am3g.py": "4bb0d42c09f9fca6e728a2487966bc13c08715672dce33316db195f6e7573e26",
       "scripts/memcredit_am5.py": "225e42e7d4f2e9a1ccfce1c4a826a04bcdb57511fea248f8009bf97467b6fa0b",
-      "scripts/memcredit_am5r.py": "ccbc9f62a09d94c4af780a6e1ad8e3372c49d83b5ed5b3221cddc313e6183f39",
+      "scripts/memcredit_am5r.py": "ed553346ce3ec60f4af6e01ae0cce9d5ff85921eeb0f29307db0cfa76cd4fc4e",
       "scripts/memcredit_analyze.py": "5444104d3c760b17f311656f4e0dbd50b2b154c89d806f1e4aa2ab6791fb0f34",
       "scripts/memcredit_cost_curve.py": "431f4cb21ccd398e1433e29a5b40c1a697d48b9aecc5fc728956f819e28c9bab",
       "scripts/memcredit_keepset_search.py": "3fbb804328bd310a6c8626f408d0d1b44a4624f06829a0762e3afc6134add584",
@@ -1345,7 +1345,7 @@
       "scripts/memcredit_step0.py": "57f2e4bbbd11bf750ff224852ba5dd19923ecb3decfde74d23a6913a7f9a7227",
       "scripts/memcredit_study.py": "f27ecd21e769655cddc1e9b06ee8f4c7c4ee8494348b4fc73dba7c68fdb66bb3"
     },
-    "features_sha256": "7b3f335ed40a82454641d04d7a0950335952094f36b19eb0db240f388f1d51f9",
+    "features_sha256": "a4b57f9be854b3dbfde560227ab952a54a083b9319519c17c30a27afb06b146a",
     "gain_per_table_sha256": "0fc5635bad037588e521980536e4548eb51a6a3d9573e703b0f92010be72701e",
     "job_id": "1507",
     "question_ids_sha256": "183ee4d3406786be721c4c846fa9f72f0fc2ae8c905dcb198eaaff17d78846fc",

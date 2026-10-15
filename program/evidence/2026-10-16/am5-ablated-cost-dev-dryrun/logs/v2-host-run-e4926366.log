@@ -1,0 +1,65 @@
+== v2 inputs 2026-10-15T23:37:33Z
+total 3944
+dr-xr-xr-x 2 kevin kevin    4096 Oct 15 23:37 .
+drwxrwxr-x 3 kevin kevin    4096 Oct 15 23:37 ..
+-r--r--r-- 1 kevin kevin 2493448 Oct 15 18:10 heldout-ablated-artifact.json
+-r--r--r-- 1 kevin kevin 1532267 Oct 15 18:10 heldout-ablated-summary.json
+68a75dcf1bc37ebe54fde61ec288d9c393adc1d0197b88168d7c153be34c1ce6  heldout-ablated-artifact.json
+c68b1da9e0e456c8bf7e06741df298cfbd622b6e3fd44602a812c137069a8355  heldout-ablated-summary.json
+68a75dcf1bc37ebe54fde61ec288d9c393adc1d0197b88168d7c153be34c1ce6  heldout-ablated-artifact.json
+c68b1da9e0e456c8bf7e06741df298cfbd622b6e3fd44602a812c137069a8355  heldout-ablated-summary.json
+v2 inputs byte-identical to v1's
+== checkout 2026-10-15T23:37:33Z
+~/cotcodec-runs/stage0/am5r-dev-dryrun/bundles/am5r-e4926366.bundle is okay
+2026-10-15T23:37:38Z clean checkout of e4926366b417e8290b993200eee78fffe1544389 (tree 5274b0f4) from bundle 14b42519; git archive sha256 3cb1f95a6786a6dcdc0c63f025f76bd62f4593d3fdc1dd0adc6733d0fc3a8784
+== set aside round 2's features
+== extract 2026-10-15T23:37:38Z
+start 2026-10-15T23:37:38Z commit e4926366b417e8290b993200eee78fffe1544389 population development job 1507
+extract exit 0
+a4b57f9be854b3dbfde560227ab952a54a083b9319519c17c30a27afb06b146a  ~/cotcodec-runs/stage0/am5r-dev-dryrun/private/features-development.json.gz
+end 2026-10-15T23:37:38Z
+2026-10-15T23:37:38Z extract development job 1507 at e4926366: extract exit 0
+== features compared with round 2's
+code_sha256 {'scripts/memcredit_am5r.py'}
+experiment "am5-ablated-cost-v1" -> "am5-ablated-cost-v2"
+== analyze 2026-10-15T23:37:38Z
+start 2026-10-15T23:37:38Z commit e4926366b417e8290b993200eee78fffe1544389 mode dev population development
+hand-label receipt commit 21eb121092bd0f393dd3d335540dc3e3cdf0ceac; labels d21c25b990241e98; plan 2bcd07af44ae049a
+analyze a exit 0
+analyze b exit 0
+analyze outputs byte-identical
+c02b575d0c04bc74e9b8fa837b1fa4bc2a86b23272695b26a47412811a7c4851  results.json
+fe2612ea150102739a12fa234ed90644476290fe45310299ead4939bf2a4f3e9  per-table.json.gz
+139afe83e20f7bb6b9f56462c8d7e80d92310b11b094198cbc1844a1170177d6  tables.md
+a4b57f9be854b3dbfde560227ab952a54a083b9319519c17c30a27afb06b146a  ~/cotcodec-runs/stage0/am5r-dev-dryrun/private/features-development.json.gz
+dryrun-compare exit 0 ({"all_pass":true,"passed":24,"sha256":"0763db64551d7c8955d9a78e558726e20e0d0bf5af743547d82dd908c69e735b","total":24})
+power exit 0
+pytest exit 1 (1 failed, 230 passed in 10.52s)
+end 2026-10-15T23:37:54Z
+2026-10-15T23:37:54Z analyze dev at e4926366: 4 commands exited 0; analyze outputs byte-identical
+== outputs compared with round 2's (31cc6998)
+per-table.json.gz byte-identical
+power.json byte-identical
+1c1
+< # am5-ablated-cost-v1: development dry run (EXPLORATORY; nothing is decided)
+---
+> # am5-ablated-cost-v2: development dry run (EXPLORATORY; nothing is decided)
+['out-e4926366-a', 'results.json']: 5 differences
+  changed /config/hand_instructions_sha256 "1745340a5e05ebb149aaffee4beba23d2c13dc42b33d1872731defd09359a5c5" -> "1fd34a5d4616c0d5511afdde2b43fc3a927bd7dc70010c0b2b098903910e0d60"
+  changed /experiment "am5-ablated-cost-v1" -> "am5-ablated-cost-v2"
+  changed /hand_check/instructions_sha256 "1745340a5e05ebb149aaffee4beba23d2c13dc42b33d1872731defd09359a5c5" -> "1fd34a5d4616c0d5511afdde2b43fc3a927bd7dc70010c0b2b098903910e0d60"
+  changed /inputs/code_sha256/scripts/memcredit_am5r.py "ccbc9f62a09d94c4af780a6e1ad8e3372c49d83b5ed5b3221cddc313e6183f39" -> "ed553346ce3ec60f4af6e01ae0cce9d5ff85921eeb0f29307db0cfa76cd4fc4e"
+  changed /inputs/features_sha256 "7b3f335ed40a82454641d04d7a0950335952094f36b19eb0db240f388f1d51f9" -> "a4b57f9be854b3dbfde560227ab952a54a083b9319519c17c30a27afb06b146a"
+['am5r-dev-dryrun', 'dryrun-compare-e4926366.json']: 1 differences
+  changed /sha256 "1e56bfbafa234cf391ef6de31db7e7307aed159352bf4619b3c08ee508867012" -> "0763db64551d7c8955d9a78e558726e20e0d0bf5af743547d82dd908c69e735b"
+== rehearsal 2026-10-15T23:37:54Z
+rehearsal e4926366: 75 passed, 0 failed
+75
+rehearsal directory deleted
+no rehearsal directory left
+== stage 2026-10-15T23:38:20Z
+texts searched: 3989; staged files containing one: 0
+staged: 98 files, 2.2M
+2026-10-15T23:38:21Z evidence staged for c16437bc (development:1507): 98 files, no text found
+stage exit 0
+== done 2026-10-15T23:38:21Z

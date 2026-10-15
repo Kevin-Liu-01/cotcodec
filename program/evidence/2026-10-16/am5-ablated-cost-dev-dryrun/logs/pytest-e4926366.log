@@ -1,0 +1,105 @@
+........................................................................ [ 31%]
+......................................................................F. [ 62%]
+........................................................................ [ 93%]
+...............                                                          [100%]
+=================================== FAILURES ===================================
+_________ test_gate_opens_with_a_scratch_ledger_row_and_matching_pins __________
+
+population = 'heldout'
+ledger = PosixPath('/tmp/pytest-of-kevin/pytest-397/test_gate_opens_with_a_scratch0/ledger.jsonl')
+registration = PosixPath('/tmp/pytest-of-kevin/pytest-397/test_gate_opens_with_a_scratch0/registration.md')
+root = PosixPath('~/cotcodec-runs/stage0/am5r-dev-dryrun/checkout')
+
+    def gate(
+        population: str,
+        ledger: Path | None = None,
+        registration: Path | None = None,
+        root: Path = PROJECT_ROOT,
+    ) -> dict[str, Any]:
+        """Run before any held-out or abstention input is opened: the ledger must hold a row for this
+        experiment with the registration file's SHA-256, and every code pin of its section 16 must
+        match the working tree. The development population needs neither. Tests pass scratch copies
+        of the ledger and the registration."""
+    
+        if population not in POPULATIONS:
+            raise Am3gError(f"unknown population {population}")
+        if not GATED[population]:
+            return {"population": population, "frozen_required": False}
+        ledger = ledger or root / LEDGER
+        registration = registration or root / REGISTRATION
+        if not ks.registration_frozen(ledger, registration, EXPERIMENT):
+            raise Am3gError(
+                f"the {population} population opens only after the freeze: no ledger row for "
+                f"{EXPERIMENT} with this registration file's SHA-256"
+            )
+        try:
+>           pins = ks.check_code_pins(registration, root)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts/memcredit_am3g.py:266: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+registration = PosixPath('/tmp/pytest-of-kevin/pytest-397/test_gate_opens_with_a_scratch0/registration.md')
+root = PosixPath('~/cotcodec-runs/stage0/am5r-dev-dryrun/checkout')
+
+    def check_code_pins(registration: Path | None = None, root: Path = PROJECT_ROOT) -> dict[str, Any]:
+        pins = code_pins(registration)
+        mismatched = [
+            path for path, digest in sorted(pins.items())
+            if not (root / path).is_file() or sha256_file(root / path) != digest
+        ]  # fmt: skip
+        if mismatched:
+>           raise KeepsetError(f"code differs from the registration's pins: {mismatched}")
+E           memcredit_keepset_search.KeepsetError: code differs from the registration's pins: ['models/registry.yaml']
+
+scripts/memcredit_keepset_search.py:356: KeepsetError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = PosixPath('/tmp/pytest-of-kevin/pytest-397/test_gate_opens_with_a_scratch0')
+
+    def test_gate_opens_with_a_scratch_ledger_row_and_matching_pins(tmp_path):
+        reg, ledger = _scratch(tmp_path, frozen=True)
+>       record = g.gate("heldout", ledger=ledger, registration=reg)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_memcredit_am3g.py:445: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+population = 'heldout'
+ledger = PosixPath('/tmp/pytest-of-kevin/pytest-397/test_gate_opens_with_a_scratch0/ledger.jsonl')
+registration = PosixPath('/tmp/pytest-of-kevin/pytest-397/test_gate_opens_with_a_scratch0/registration.md')
+root = PosixPath('~/cotcodec-runs/stage0/am5r-dev-dryrun/checkout')
+
+    def gate(
+        population: str,
+        ledger: Path | None = None,
+        registration: Path | None = None,
+        root: Path = PROJECT_ROOT,
+    ) -> dict[str, Any]:
+        """Run before any held-out or abstention input is opened: the ledger must hold a row for this
+        experiment with the registration file's SHA-256, and every code pin of its section 16 must
+        match the working tree. The development population needs neither. Tests pass scratch copies
+        of the ledger and the registration."""
+    
+        if population not in POPULATIONS:
+            raise Am3gError(f"unknown population {population}")
+        if not GATED[population]:
+            return {"population": population, "frozen_required": False}
+        ledger = ledger or root / LEDGER
+        registration = registration or root / REGISTRATION
+        if not ks.registration_frozen(ledger, registration, EXPERIMENT):
+            raise Am3gError(
+                f"the {population} population opens only after the freeze: no ledger row for "
+                f"{EXPERIMENT} with this registration file's SHA-256"
+            )
+        try:
+            pins = ks.check_code_pins(registration, root)
+        except ks.KeepsetError as exc:
+>           raise Am3gError(f"{VOID_DIGEST}: {exc}") from exc
+E           memcredit_am3g.Am3gError: VOID (V1, a pinned input differs; nothing read): code differs from the registration's pins: ['models/registry.yaml']
+
+scripts/memcredit_am3g.py:268: Am3gError
+=========================== short test summary info ============================
+FAILED tests/test_memcredit_am3g.py::test_gate_opens_with_a_scratch_ledger_row_and_matching_pins
+1 failed, 230 passed in 10.52s

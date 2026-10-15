@@ -1247,3 +1247,17 @@ scripts use the host root `~/cotcodec-runs/stage0/am5-ablated-cost-v2/`, the sou
 and the rehearsal follow, and a test checks the ids (`test_the_ids_of_v2_and_of_what_v1_built`).
 Section 4's instructions digest and every row of section 16 are re-pinned against the merged
 tree; besides the files above, only `models/registry.yaml` (D122's entry) changed.
+
+The development dry run's CPU parts were rerun at `e4926366` (the dry run's README, section 11;
+no GPU, no model on held-out data). The GPU job's code is unchanged apart from the id constants
+and paths, so no development GPU job was needed. v2's `inputs/` on the host holds v1's artifact
+and summary, byte-identical and read-only. `extract` read job 1507 again: the features differ
+from round 2's only in `experiment` and the script's code digest. `analyze` twice (byte-identical):
+`per-table.json.gz` and `power.json` byte-identical to round 2's, `tables.md` only in its title's
+id, and `results.json` in five id-derived fields only (`experiment`, the instructions digest in
+two places, the script's code digest, the features digest); every reading, count and interval is
+unchanged; `dryrun-compare` 24 of 24. The rehearsal against v2's host root: 75 of 75, in a new
+host directory deleted afterwards. The memcredit tests on the host: every test of this
+registration, AM5 and AM3 passed; the one failure is am3g's own gate test, which fails the same
+way on `main` because `models/registry.yaml`, pinned by am3g's frozen section 16, changed in D122;
+this registration never calls am3g's gate.

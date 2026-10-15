@@ -1,8 +1,10 @@
-# am5-ablated-cost-v1: the development dry run (EXPLORATORY, before the freeze)
+# am5-ablated-cost-v2 (first drafted as v1): the development dry run (EXPLORATORY, before the freeze)
 
 **EXPLORATORY. DEVELOPMENT DATA ONLY. Nothing here is decided.** The registration
-(`program/preregistrations/am5-ablated-cost-v1.md`) is a draft, not frozen. This is the record
-of its pre-freeze dry run, which its section 15 summarises.
+(`program/preregistrations/am5-ablated-cost-v2.md`) is a draft, not frozen. This is the record
+of its pre-freeze dry run, which its section 15 summarises. The design was first drafted and
+frozen as `am5-ablated-cost-v1` (ledger row 26), which was void before running (D123); sections
+1-10 below are that draft's dry run, and section 11 is v2's rerun.
 
 - **What ran.** The whole new pipeline on the development population: AM5's 63 development
   questions with their evidence sessions removed (AM5's artifact `f6d27d4c...`, unchanged). That
@@ -29,6 +31,7 @@ of its pre-freeze dry run, which its section 15 summarises.
 | `21eb1210` | the round-1 hand-label receipt, committed before the join |
 | `163f7b9c` | pre-freeze check 2's fixes (code, scripts, tests, draft); extract and analyze rerun at it (section 10) |
 | `31cc6998` | round 2's staging fix; analyze, the rehearsal and the staging at it (section 10) |
+| `e4926366` | v2 (D123): the same design under a new id; extract, analyze, the rehearsal and the staging at it (section 11) |
 
 Host root `~/cotcodec-runs/stage0/am5r-dev-dryrun/`, mode `dev` of every `ops/am5r/` script, from
 clean checkouts made by `am5r-checkout.sh` from Mac bundles (round 2's two bundles were copied with
@@ -287,18 +290,51 @@ empty or broken `.gz`, and the staging at `31cc6998` has 96 files.
   a worker with no pass, with no empty `.gz` (checked at `31cc6998`).
 - **Staging** at `31cc6998`: 96 files, none containing any of the 3,989 texts searched.
 
+## 11. v2 (D123): the CPU parts rerun at `e4926366`
+
+v1 (ledger row 26) was frozen with a stale pin of `models/registry.yaml` and is void before
+running (D123). v2 (`e4926366`) changes only the id, the paths that carry it and the pins. No GPU
+time and no model on held-out data. The GPU job's code (`run`, `worker` and what they call) is
+unchanged apart from the id constants and paths; job 1507 ran under v1's id, which `extract`
+accepts for the development population only.
+- **v2's inputs.** `~/cotcodec-runs/stage0/am5-ablated-cost-v2/inputs/` holds v1's held-out
+  ablated artifact and summary, copied byte-identical (`68a75dcf...`, `c68b1da9...`) and
+  read-only (`dr-xr-xr-x`, files `-r--r--r--`); they keep the id they were built under (v1's).
+- **Extract** at `e4926366` (round 2's features set aside on the host in `round2-163f7b9c/`):
+  features `a4b57f9b...`, which differ from round 2's only in `experiment` (v1 to v2) and the
+  code digest of `scripts/memcredit_am5r.py`.
+- **Analyze** twice (byte-identical), with round 1's receipt (`21eb1210`) and labels
+  (`d21c25b9...`). Against round 2's outputs (`round2-31cc6998/`): `per-table.json.gz` and
+  `power.json` are byte-identical; `tables.md` differs only in its title's id; `results.json`
+  (`c02b575d...`) differs in exactly five fields, all id-derived: `experiment`, the instructions
+  digest in `config` and in `hand_check` (`1745340a...` to `1fd34a5d...`: the instructions' first
+  line names the id), the code digest of `scripts/memcredit_am5r.py` and the features digest.
+  `dryrun-compare`: 24 of 24, its record differing only in the features digest.
+  (`logs/v2-host-run-e4926366.log` lists every difference.) The dry run's hand labels were made
+  under v1's instructions, which differ from v2's only in that first line.
+- **Tests.** The memcredit tests on the host: 230 passed and 1 failed. The failure is am3g's own
+  gate test (`tests/test_memcredit_am3g.py::test_gate_opens_with_a_scratch_ledger_row_and_matching_pins`):
+  am3g's frozen section 16 pins `models/registry.yaml`, which `main` changed in `2baacac2`
+  (D122). It fails the same way on `main` (`409886b9`). It is not this registration's test, and
+  this registration never calls am3g's gate. `tests/test_memcredit_am5r.py` passes locally,
+  its gate and pin tests included.
+- **The rehearsal** at `e4926366`, in a new host directory deleted afterwards: 75 of 75
+  (`rehearsal/rehearse-e4926366.log`), now against v2's host root.
+- **Staging** at `e4926366`: 98 files, none containing any of the 3,989 texts searched.
+
 ## Files
 
-- `results.json`, `per-table.json.gz`, `tables.md`: the development analysis (text-free), round 2.
-- `dryrun-compare.json`: the comparison with AM5, round 2.
+- `results.json`, `per-table.json.gz`, `tables.md`: the development analysis (text-free), v2.
+- `dryrun-compare.json`: the comparison with AM5, v2.
 - `power.json`: section 9's operating characteristics.
 - `prepare/`: the held-out ablated artifact's text-free summary and the prepare output.
 - `precheck/`: the CPU precheck's comparison on job 1487.
 - `hand-check/`: the round-1 receipt and its text-free records, as committed before the join.
 - `round0-c16437bc/`: the first analysis (`c16437bc`) and its receipt, set aside in round 1.
 - `round1-fc355d10/`: round 1's `results.json`, `dryrun-compare.json` and analysis logs, set
-  aside in round 2 (its `per-table.json.gz`, `tables.md` and `power.json` equal the top-level
-  ones).
+  aside in round 2 (its `per-table.json.gz`, `tables.md` and `power.json` equal round 2's).
+- `round2-31cc6998/`: round 2's `results.json`, `dryrun-compare.json`, `tables.md` and analysis
+  logs, set aside for v2 (its `per-table.json.gz` and `power.json` equal the top-level ones).
 - `jobs/1507-development/`, `builds/`, `selftests/`, `manifests/`, `ops/`, `logs/`: the lane and
   operator records, with every raw output's SHA-256 and the judge items with each response
   replaced by its SHA-256.
