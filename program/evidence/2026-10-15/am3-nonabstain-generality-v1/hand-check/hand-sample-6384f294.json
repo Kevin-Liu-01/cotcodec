@@ -1,0 +1,53 @@
+{
+  "chunk_size": 60,
+  "chunks": 5,
+  "features_sha256": "ed417538177ba16c439a5ecde4d479f7cb97be9c04f7757ac9c7bb1773132ebe",
+  "instructions_sha256": "2c127f82c4ef7aef441a0fab6731152a03bd35706e84de612806f48c160d0943",
+  "items": 278,
+  "labeller_model": "claude-opus-5-5",
+  "labeller_prompt_sha256": "98c35ceac9710033b095f01abe4a5fc98f6ed3a597b461e12a98ac213a7ae096",
+  "plan_sha256": "918468a493f8ae4fe43411fdd20322ffdc7afa75134f908609268e021d4cbfde",
+  "population": "heldout",
+  "readers": {
+    "abstention": {
+      "olmo-2-1124-7b-instruct": {
+        "discordant_questions": 8,
+        "distractor_questions": 8,
+        "distractors_where_it_kept_top4": 7,
+        "distractors_where_the_rule_switched": 1,
+        "switched_shortfall": 7
+      },
+      "qwen3-8b": {
+        "discordant_questions": 5,
+        "distractor_questions": 5,
+        "distractors_where_it_kept_top4": 5,
+        "distractors_where_the_rule_switched": 0,
+        "switched_shortfall": 5
+      },
+      "qwen3.5-9b": {
+        "discordant_questions": 1,
+        "distractor_questions": 1,
+        "distractors_where_it_kept_top4": 0,
+        "distractors_where_the_rule_switched": 1,
+        "switched_shortfall": 0
+      }
+    },
+    "heldout": {
+      "olmo-2-1124-7b-instruct": {
+        "discordant_questions": 35,
+        "distractor_questions": 35,
+        "distractors_where_it_kept_top4": 0,
+        "distractors_where_the_rule_switched": 35,
+        "switched_shortfall": 0
+      },
+      "qwen3.5-9b": {
+        "discordant_questions": 31,
+        "distractor_questions": 31,
+        "distractors_where_it_kept_top4": 0,
+        "distractors_where_the_rule_switched": 31,
+        "switched_shortfall": 0
+      }
+    }
+  },
+  "sample_sha256": "e1639bbfd21b98435caa4c52c29fc6912547492bcda2236e4605684afc9c1a1e"
+}
