@@ -65,7 +65,8 @@ PY
   cp "$R/manifests/$POP-$SHORT".{yaml,dry-run.json,test-only.txt} "$E/manifests/" 2>/dev/null || true
   cp "$R/manifests/$POP-$SHORT".submit.txt "$R/manifests/$POP-$SHORT".rerun.txt "$E/manifests/" 2>/dev/null || true
   cp "$R/extract-$POP-$SHORT".{log,json} "$E/logs/" 2>/dev/null || true
-  gzip -n -c "$R/extract-$POP-$SHORT.stderr" > "$E/logs/extract-$POP-$SHORT.stderr.gz" 2>/dev/null || true
+  if [[ -f $R/extract-$POP-$SHORT.stderr ]]; then
+    gzip -n -c "$R/extract-$POP-$SHORT.stderr" > "$E/logs/extract-$POP-$SHORT.stderr.gz"; fi
 done
 for s in "$R"/selftest-heldout-"$SHORT" "$R"/selftest-development-"$SHORT"; do
   [[ -d $s ]] || continue
@@ -94,7 +95,7 @@ if [[ -d $R/out-$TAG-a ]]; then
   cp "$R"/out-"$TAG"-a/* "$E/"
   cp "$R/analyze-$TAG.log" "$R/pytest-$TAG.log" "$E/logs/" 2>/dev/null || true
   for f in "$R"/analyze-"$TAG"-a.stderr "$R"/dryrun-compare-"$TAG".stderr "$R"/power-"$TAG".stderr; do
-    [[ -f $f ]] && gzip -n -c "$f" > "$E/logs/$(basename "$f").gz"; done
+    if [[ -f $f ]]; then gzip -n -c "$f" > "$E/logs/$(basename "$f").gz"; fi; done
 fi
 cp "$R"/extract-*.log "$R"/extract-*.json "$E/logs/" 2>/dev/null || true
 # The held-out artifact's summary is staged in both modes (it holds the control's pools too), and
@@ -109,6 +110,9 @@ while IFS= read -r -d '' f; do
     gzip -dc "$f" | sed "s#$HOME#~#g" | gzip -n > "$f.tmp" && mv "$f.tmp" "$f"
   fi
 done < <(find "$E" -type f -name '*.gz' -print0)
+# Every staged .gz must be a whole gzip file (no empty one from a missing source).
+bad=$(find "$E" -type f -name '*.gz' \( -empty -o ! -exec gzip -t {} \; \) -print)
+[[ -z "$bad" ]] || { echo "staged .gz files that are empty or not whole: $bad" >&2; exit 1; }
 # No reply text, question, answer or memory text in the staged tree.
 python3 - "$E" "$R/runs" "${ARTS[@]}" <<'PY'
 import gzip, json, pathlib, sys

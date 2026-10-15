@@ -1005,7 +1005,7 @@ parses this table and refuses to run unless every file matches.
 | `ops/am5r/am5r-hand-merge.sh` | operator: audits the transcripts and merges a labelling stage; writes the one repair stage | `6625a9846881f5a1c360bb6d11828f83c478fe06f2ecdbbec3197080e2ac198f` |
 | `ops/am5r/am5r-hand-receipt.sh` | operator: one stage's text-free receipt, committed before the join | `d07c17abc9f13a9ccaa0299210c08f8571183dbf02b56f2a330ecf752009ad99` |
 | `ops/am5r/am5r-analyze.sh` | operator: analyze twice, tests (dev: dryrun-compare and power) | `15683ba56d732cfe9a18736c827aeddef67934d27fc369447929cf59e9942dad` |
-| `ops/am5r/am5r-stage-evidence.sh` | operator: text-free staging and the text search | `93054e829cc0a457afce58d1ebcd46e79b8d8a8e9c1842ff1de0e226f0b4487c` |
+| `ops/am5r/am5r-stage-evidence.sh` | operator: text-free staging and the text search | `e33f306a441362bb10b4cd13e6abbdec0b028c82edf2ccef29820135563656de` |
 
 Commands of the registered run, after the freeze. The names in capitals are values that exist only
 then: FREEZE, the freeze commit's full id, and FREEZE8, its first 8 characters (every script that
