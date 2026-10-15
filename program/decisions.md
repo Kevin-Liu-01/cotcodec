@@ -2680,3 +2680,25 @@ on development data, then one registration on the held-out tables.**
      best label-free search from AM1d against retrieval rank. It must disclose
      that AM1 used those tables for other estimands, and that their headline
      results were known when it was designed.
+
+**D114. G2-RL is closed at an honest exit; it is not admitted, and no repair
+wave runs.**
+- Wave 1 of the gauntlet scored 63 (`program/gauntlet/2026-10-15-g2rl-state-precision-rl.jsonl`,
+  row 1). Only reviewer 1 ran. The open-weight reviewer could not run, because
+  the D110 hosting jobs hold the queue.
+- The triad refuted the candidate 3 of 3:
+  - Novelty. The fp32-state fix is in Ring-linear (arXiv:2510.19338). The
+    split between the token-ratio part and the prefix part is already stated
+    in KV4-RL (arXiv:2610.14448).
+  - Identification. The pilot's PR5 falsifier has no argument before data
+    that it can fire.
+  - Feasibility. No pilot readout can stop or re-size the 640-1,150 GPU-h
+    study, and the P3 jobs overrun their limits at the high step estimate.
+- The query budget was exhausted under the program's counting convention.
+- Why no repair. The full RL comparison costs 25-45 times the program's
+  GPU use to date, for a contribution that would mostly isolate a known fix.
+- What stands for G2. The measured G2b and G2c results (D108, D109) remain
+  the program's GPU-memory finding: an fp16 GDN state gives 1.3-1.4x
+  throughput at about 2x fp32's off-policy gap, and bf16 about 5x. Whether
+  either gap matters for RL training stays open, and the gauntlet record
+  holds the drafted design if that is ever wanted.
