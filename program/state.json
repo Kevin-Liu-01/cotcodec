@@ -468,7 +468,7 @@
     "Gauntleted packages that ended at honest exits and can advance only by your ruling (D24, D70, D76). S2 v3 (65) continues as S2 v4 under your delegation (D80 (iv)); its images are built and its registration is in a repair round before the freeze (D84). C5 Phase 1 (70-97 GPU-h) stays yours; its identification defect stands",
     "Shelved by Kevin (D101), not to be raised unless he asks: the outward items (disclosures, licence requests, host-admin request, publication, the GitHub Support request), key rotation and account items. Drafts are in the private archive."
   ],
-  "gpu_hours_spent_this_program": 28.1931,
+  "gpu_hours_spent_this_program": 28.3228,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -1522,6 +1522,24 @@
       ],
       "outcome": "rerun rule: complete; G-J2 fails (decoy no 26 of 30), so H2 is JUDGE_QUALIFIED; cost b2/30 (c2 0): Qwen3-8B 5, OLMo-2 8 (NONABSTAIN_COSTS after Holm), Qwen3.5-9B 1 (program/evidence/2026-10-15/am3-nonabstain-generality-v1/); registration total 0.6722 of the 2.08 cap",
       "basis": "physical (scontrol RunTime 00:06:13 on 1 H100); Slurm limit 30 min (0.5 GPU-h cap); submitted after job 1480 ended, with no other GPU job of this program queued or running and 6 of 8 H100 free (D110's jobs on GPUs 0-1)"
+    },
+    {
+      "experiment": "AM5 image build (EXPLORATORY, development split only; D120): cotcodec-vllm cu129 overlay from the source capsule of commit 6f681226",
+      "gpu_hours": 0.0183,
+      "jobs": [
+        "1483 vLLM overlay build 6f681226 (1 H100; COMPLETED 0:0, 00:01:06)"
+      ],
+      "outcome": "image sha256:112e45eb from capsule aaa7251d, provenance PASS and the build record checks against the pins; post-build CPU selftest 1484 (no GRES, 00:00:16) passes: 4,473 prompts per reader fit (at most 1,148, 1,077 and 1,164 tokens), judge items at most 302 tokens, vLLM 0.31.0 resolves the three readers (program/evidence/2026-10-16/am5-evidence-ablated/README.md)",
+      "basis": "physical (scontrol RunTime 00:01:06 on 1 H100); Slurm limit 5 min; submitted with no other GPU job of this program queued or running and 6 of 8 H100 free (D110's jobs on GPUs 0-1)"
+    },
+    {
+      "experiment": "AM5 GPU job (EXPLORATORY, development split only; D120): scripts/memcredit_am5.py run; readers Qwen3-8B (eager batch-invariant), OLMo-2-1124-7B-Instruct (eager batch-invariant) and Qwen3.5-9B (eager, default mode) on the 63 development questions' evidence-ablated BM25 pools x 71 requests, then the Qwen3-32B judge (eager batch-invariant) on 460 items",
+      "gpu_hours": 0.1114,
+      "jobs": [
+        "1487 steps rd-qwen3-8b, rd-olmo2, rd-qwen35-9b-default, judge32 (1 H100; COMPLETED 0:0, 00:06:41)"
+      ],
+      "outcome": "every step complete (OLMo-2's fallback not needed); no has_answer turn left in the ablated haystacks or pools; switch rate at K = 8 / 70: Qwen3-8B 1 / 2, OLMo-2 6 / 10, Qwen3.5-9B 3 / 3 of 63; switched or answering-top-4 replies correct by chance: 3 of 18 (judge and blind hand labels agree on 18 of 18) (program/evidence/2026-10-16/am5-evidence-ablated/README.md)",
+      "basis": "physical (scontrol RunTime 00:06:41 on 1 H100); Slurm limit 20 min (0.34 GPU-h cap); AM5 total 0.1297 of the 0.5 cap; submitted with no other GPU job of this program queued or running and 6 of 8 H100 free (D110's jobs on GPUs 0-1)"
     }
   ],
   "results": [

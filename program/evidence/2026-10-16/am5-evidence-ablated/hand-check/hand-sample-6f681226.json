@@ -1,0 +1,13 @@
+{
+  "chunks": 1,
+  "features_sha256": "16bbd3855a67cd789b77acae855c9962225bdb1326cef12fd5340a6d72eb0889",
+  "instructions_sha256": "cf7b3d3c5c683adf62f0165702bb0387c37da3456806d53b8656244096e89c40",
+  "items": 18,
+  "labeller_prompt_sha256": "98c35ceac9710033b095f01abe4a5fc98f6ed3a597b461e12a98ac213a7ae096",
+  "plan_sha256": "171707ec40cb99d772d3f55ac3af1923dffc30fd5cd36ca43e582e50024d4dc0",
+  "sample_sha256": "9665e74989f37b306a0f3e0004ecff739c69026945b0f93f28f0837e31a56540",
+  "uses_by_role": {
+    "switched": 15,
+    "top4-answers": 5
+  }
+}

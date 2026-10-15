@@ -1,0 +1,3 @@
+image sha256:112e45eb523050a42c7b261c1c910e83e9032ba7a54e79da76317a4fb6ced6c2
+am5 selftest exit 0
+am5 plan exit 0

@@ -1,0 +1,10 @@
+start 2026-10-15T16:47:42Z commit 909b571d0dc9b5723a36597d41e17f2f6156445e; hand-label receipt commit 632b822d83891dbc864bf1a75d309fbe688622c9
+analyze a exit 0
+analyze b exit 0
+analyze outputs byte-identical
+a0d5f35812c9165d81134b3cbf68299cdcbb4cb2d068c677987f6a8af2096bdb  results.json
+58bec8389e37e9a9b92c6c1038fbced721731b496fee0512108d197763e11f9c  per-table.json.gz
+45b803d57974ec066ec65dee975df5d17c7ffcf06249a7226a54f27e6f23219c  tables.md
+16bbd3855a67cd789b77acae855c9962225bdb1326cef12fd5340a6d72eb0889  ~/cotcodec-runs/stage0/am5-evidence-ablated/private/features-dev-ablated.json.gz
+pytest exit 0 (254 passed in 7.61s)
+end 2026-10-15T16:47:50Z

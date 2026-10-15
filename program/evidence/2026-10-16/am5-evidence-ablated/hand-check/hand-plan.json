@@ -1,0 +1,268 @@
+{
+ "cap": 70,
+ "instructions_sha256": "cf7b3d3c5c683adf62f0165702bb0387c37da3456806d53b8656244096e89c40",
+ "items": [
+  {
+   "check": "answer",
+   "item_id": "a0000",
+   "question_id": "gpt4_b0863698",
+   "reply_digest": "0ea55f57009726fc0a995e0d437665f758bd88ef8d105afa89a9aef6554aa5af",
+   "uses": [
+    {
+     "mask": 216,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "top4-answers"
+    }
+   ]
+  },
+  {
+   "check": "answer",
+   "item_id": "a0001",
+   "question_id": "gpt4_68e94288",
+   "reply_digest": "5d2e2f8cb86dca71dc7f6aaf91a7e3719063a3366ecaf2b7d8f7ddde5bfa43da",
+   "uses": [
+    {
+     "mask": 150,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "top4-answers"
+    }
+   ]
+  },
+  {
+   "check": "answer",
+   "item_id": "a0002",
+   "question_id": "b6025781",
+   "reply_digest": "835f4e46d6e3decd85cb6b7c1b4d4bf989a0ae6fd0ff57f4c0be7f2a2683fd61",
+   "uses": [
+    {
+     "mask": 212,
+     "position": 3,
+     "reader": "qwen3.5-9b",
+     "role": "switched"
+    }
+   ]
+  },
+  {
+   "check": "answer",
+   "item_id": "a0003",
+   "question_id": "8c18457d",
+   "reply_digest": "47fce96f00bac21f999261b8db8cdc980fb0edc6809d1d48a43e8e084132f56c",
+   "uses": [
+    {
+     "mask": 39,
+     "position": 39,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "switched"
+    }
+   ]
+  },
+  {
+   "check": "answer",
+   "item_id": "a0004",
+   "question_id": "0a34ad58",
+   "reply_digest": "d607dd67492d4980237098142d2872485c25703d78b0c40460c6ad31f019b8e4",
+   "uses": [
+    {
+     "mask": 135,
+     "position": 10,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "switched"
+    }
+   ]
+  },
+  {
+   "check": "answer",
+   "item_id": "a0005",
+   "question_id": "8ebdbe50",
+   "reply_digest": "d3492fb19ecb7ca2fd43455b344037ece78b79274273dddb74f24cc4c27ab65b",
+   "uses": [
+    {
+     "mask": 149,
+     "position": 63,
+     "reader": "qwen3-8b",
+     "role": "switched"
+    },
+    {
+     "mask": 216,
+     "position": 4,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "switched"
+    },
+    {
+     "mask": 106,
+     "position": 8,
+     "reader": "qwen3.5-9b",
+     "role": "switched"
+    }
+   ]
+  },
+  {
+   "check": "answer",
+   "item_id": "a0006",
+   "question_id": "b6025781",
+   "reply_digest": "9e70cdbb13acc67d20d542701bf548aee4bc95c5165a8fce1ec81412fecef1de",
+   "uses": [
+    {
+     "mask": 150,
+     "position": 2,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "switched"
+    }
+   ]
+  },
+  {
+   "check": "answer",
+   "item_id": "a0007",
+   "question_id": "8a137a7f",
+   "reply_digest": "bd14c8772dc710488661f93be5a33a892d92332c39f213e12a1b305e61c94c98",
+   "uses": [
+    {
+     "mask": 114,
+     "position": 38,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "switched"
+    }
+   ]
+  },
+  {
+   "check": "answer",
+   "item_id": "a0008",
+   "question_id": "gpt4_b0863698",
+   "reply_digest": "abd59a1dec3c21f924d31575e309002aba6a1ecdf56f92ef259ec814760059d3",
+   "uses": [
+    {
+     "mask": 216,
+     "reader": "qwen3-8b",
+     "role": "top4-answers"
+    }
+   ]
+  },
+  {
+   "check": "answer",
+   "item_id": "a0009",
+   "question_id": "caf03d32",
+   "reply_digest": "cba051a1dd3a6bb5c381b9761d0b90f4fc92b58e120003b4235554f98d8a3157",
+   "uses": [
+    {
+     "mask": 240,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "top4-answers"
+    }
+   ]
+  },
+  {
+   "check": "answer",
+   "item_id": "a0010",
+   "question_id": "a346bb18",
+   "reply_digest": "1caf02248d1e03156504e2bdfef0a8188e805728937254a40e2af615f8c1c703",
+   "uses": [
+    {
+     "mask": 156,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "top4-answers"
+    }
+   ]
+  },
+  {
+   "check": "answer",
+   "item_id": "a0011",
+   "question_id": "3c1045c8",
+   "reply_digest": "19a597f2257e87189ceb14ebe0f9bf99769afe8b7b663d16fa0aaa20a7004b05",
+   "uses": [
+    {
+     "mask": 116,
+     "position": 22,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "switched"
+    }
+   ]
+  },
+  {
+   "check": "answer",
+   "item_id": "a0012",
+   "question_id": "gpt4_b0863698",
+   "reply_digest": "6c88eabbd478621ef901b455f1211bfffb5b134575540a7eddad4c0b60bd0733",
+   "uses": [
+    {
+     "mask": 153,
+     "position": 3,
+     "reader": "qwen3.5-9b",
+     "role": "switched"
+    }
+   ]
+  },
+  {
+   "check": "answer",
+   "item_id": "a0013",
+   "question_id": "a06e4cfe",
+   "reply_digest": "290a8619b6aedf7fbe04cfbba79841f7dbc4aff436746a4b371f2a99c8733de4",
+   "uses": [
+    {
+     "mask": 228,
+     "position": 3,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "switched"
+    }
+   ]
+  },
+  {
+   "check": "answer",
+   "item_id": "a0014",
+   "question_id": "0bb5a684",
+   "reply_digest": "f6467a7ba27073b4639383e9ecfc90e1a67e50776e8952bdd06d805ea5961a23",
+   "uses": [
+    {
+     "mask": 166,
+     "position": 3,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "switched"
+    }
+   ]
+  },
+  {
+   "check": "answer",
+   "item_id": "a0015",
+   "question_id": "b6025781",
+   "reply_digest": "55bafb5c96208cfb6b3c98f4fe3247a884907406de1b6a9bcfbd9e3fac4748b8",
+   "uses": [
+    {
+     "mask": 149,
+     "position": 5,
+     "reader": "qwen3-8b",
+     "role": "switched"
+    }
+   ]
+  },
+  {
+   "check": "answer",
+   "item_id": "a0016",
+   "question_id": "f523d9fe",
+   "reply_digest": "edab1a222c3427d2d518f4372489a30378a324e0311b1c0db6774037cec017f6",
+   "uses": [
+    {
+     "mask": 27,
+     "position": 2,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "switched"
+    }
+   ]
+  },
+  {
+   "check": "answer",
+   "item_id": "a0017",
+   "question_id": "0bc8ad93",
+   "reply_digest": "41aebc7f7297735a005c74e56eb6d4ef2ff5e68f036173f95520a7c4840bb1b8",
+   "uses": [
+    {
+     "mask": 53,
+     "position": 3,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "switched"
+    }
+   ]
+  }
+ ],
+ "labeller_prompt_sha256": "98c35ceac9710033b095f01abe4a5fc98f6ed3a597b461e12a98ac213a7ae096",
+ "plan_sha256": "171707ec40cb99d772d3f55ac3af1923dffc30fd5cd36ca43e582e50024d4dc0",
+ "seed": 44
+}

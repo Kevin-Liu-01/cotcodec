@@ -1,0 +1,110 @@
+{
+  "architectures": {
+    "Olmo2ForCausalLM": {
+      "in_transformers": true,
+      "reader": "olmo-2-1124-7b-instruct",
+      "supported": true,
+      "transformers_backend": true
+    },
+    "Qwen3ForCausalLM": {
+      "in_transformers": true,
+      "reader": "qwen3-8b",
+      "supported": true,
+      "transformers_backend": false
+    },
+    "Qwen3_5ForConditionalGeneration": {
+      "in_transformers": true,
+      "reader": "qwen3.5-9b",
+      "supported": true,
+      "transformers_backend": false
+    }
+  },
+  "judge": {
+    "answer_templates_sha256": "2e27234d4c7d50a1fd99da3e8d3c97704a1f10cc9d52185924b6d8ece3ef71d4",
+    "fits": true,
+    "items": 251,
+    "len_max": 302,
+    "model_id": "qwen3-32b"
+  },
+  "ok": true,
+  "plan": {
+    "arms": [
+      "retrieved"
+    ],
+    "experiment_id": "am5-evidence-ablated-dev",
+    "gpus": 1,
+    "job_minutes": 20,
+    "pools": 63,
+    "population": "dev-ablated",
+    "questions": 63,
+    "readers": [
+      "qwen3-8b",
+      "olmo-2-1124-7b-instruct",
+      "qwen3.5-9b"
+    ],
+    "requests_per_pool": 71,
+    "requests_per_reader": 4473,
+    "steps": [
+      "rd-qwen3-8b",
+      "rd-olmo2",
+      "rd-olmo2-default",
+      "rd-qwen35-9b-default",
+      "judge32"
+    ]
+  },
+  "readers": {
+    "olmo-2-1124-7b-instruct": {
+      "architectures": [
+        "Olmo2ForCausalLM"
+      ],
+      "fits": true,
+      "len_max": 1077,
+      "len_mean": 383.0952380952381,
+      "len_min": 228,
+      "no_think_tag_when_unmarked": true,
+      "ok": true,
+      "prompt_ids_sha256": "3e258163771d698309e09bc6f71010f8e863c273c3ef4b41922fb86ea3424e11",
+      "requests": 4473,
+      "stop_token_error": null,
+      "stop_token_id": 100257,
+      "thinking_marker_ok": true,
+      "tokens_total": 1713585
+    },
+    "qwen3-8b": {
+      "architectures": [
+        "Qwen3ForCausalLM"
+      ],
+      "fits": true,
+      "len_max": 1148,
+      "len_mean": 416.3317683881064,
+      "len_min": 259,
+      "no_think_tag_when_unmarked": true,
+      "ok": true,
+      "prompt_ids_sha256": "bb9d9c4f929d3e76f5170c88c53b60c44d94c16c07bb7564695d8a775ffee4b0",
+      "requests": 4473,
+      "stop_token_error": null,
+      "stop_token_id": 151645,
+      "thinking_marker_ok": true,
+      "tokens_total": 1862252
+    },
+    "qwen3.5-9b": {
+      "architectures": [
+        "Qwen3_5ForConditionalGeneration"
+      ],
+      "fits": true,
+      "len_max": 1164,
+      "len_mean": 422.7306058573664,
+      "len_min": 263,
+      "no_think_tag_when_unmarked": true,
+      "ok": true,
+      "prompt_ids_sha256": "3e59f8b98d13858bc8a2ae9e64a4d9319bf0c3b305f599c63fe750aa635a1627",
+      "requests": 4473,
+      "stop_token_error": null,
+      "stop_token_id": 248046,
+      "thinking_marker_ok": true,
+      "tokens_total": 1890874
+    }
+  },
+  "transformers_version": "5.17.0",
+  "vllm_version": "0.31.0"
+}

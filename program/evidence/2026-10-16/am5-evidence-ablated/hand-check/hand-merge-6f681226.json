@@ -1,0 +1,18 @@
+{
+  "chunks": [
+    {
+      "chunk": "hand-first-chunk-01.jsonl",
+      "malformed_rows": 0,
+      "output_present": true,
+      "output_sha256": "9da82b416383fb01fcd5b4f9c97f383f13625748e6dd299020fbd0fd96e5658c",
+      "repeated_items": 0,
+      "valid_rows": 18
+    }
+  ],
+  "items": 18,
+  "labelled": 18,
+  "labels_sha256": "9da82b416383fb01fcd5b4f9c97f383f13625748e6dd299020fbd0fd96e5658c",
+  "missing": 0,
+  "ones": 3,
+  "plan_sha256": "171707ec40cb99d772d3f55ac3af1923dffc30fd5cd36ca43e582e50024d4dc0"
+}
