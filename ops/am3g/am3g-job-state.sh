@@ -3,6 +3,7 @@
 # the job has ended, save `scontrol show job` to $R/ops/scontrol-<job>.txt (once) and log it:
 # Slurm accounting is disabled on the node and scontrol forgets a job a few minutes after it
 # ends, so this runs right after each job ends. Exit 0 when ended, 1 while pending or running.
+# Reads Slurm only; it runs no repository code.
 # Usage: am3g-job-state.sh dev|reg <job id>
 set -Eeuo pipefail
 source "$(dirname "$0")/am3g-env.sh" "${1:?mode}"
@@ -18,7 +19,7 @@ case "$state" in
     echo "job $J $state"; exit 1 ;;
 esac
 if [[ ! -f "$R/ops/scontrol-$J.txt" ]]; then
-  grep -E "JobState|RunTime|NumNodes|TRES" <<<"$out" > "$R/ops/scontrol-$J.txt"
+  printf '%s\n' "$out" > "$R/ops/scontrol-$J.txt"   # the full record (no text is in it)
   log_job "job $J ended: $(grep -o 'JobState=[A-Z_]* Reason=[^ ]*' "$R/ops/scontrol-$J.txt") $(grep -o 'RunTime=[^ ]*' "$R/ops/scontrol-$J.txt")"
 fi
 cat "$R/ops/scontrol-$J.txt"

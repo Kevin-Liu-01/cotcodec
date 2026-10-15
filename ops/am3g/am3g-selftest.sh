@@ -6,6 +6,7 @@
 set -Eeuo pipefail
 source "$(dirname "$0")/am3g-env.sh" "${1:?mode}"
 SHORT="${2:?commit short id}"; IMAGE="${3:?image id}"; POP="${4:?population}"
+check_image "$IMAGE"
 check_checkout "$SHORT"
 ART=$(artifact_for "$POP")
 OUT="$R/selftest-${POP}-${SHORT}"
@@ -13,3 +14,4 @@ j=$(sbatch --parsable --output="$R/ops/slurm-selftest-%j.out" \
   --export=ALL,AM3G_OUT="$OUT",AM3G_IMAGE="$IMAGE",AM3G_POP="$POP",AM3G_ARTIFACT="$ART",AM3G_ARTIFACT_SHA256="$(sha256sum "$ART" | cut -d" " -f1)" \
   "$C/ops/am3g/am3g-selftest-cpu.sbatch")
 log_job "post-build CPU selftest $j submitted (population ${POP}, image ${IMAGE:7:8}, git ${SHORT}, no GRES)"
+echo "$j"

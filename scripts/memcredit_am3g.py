@@ -61,6 +61,7 @@ import json
 import math
 import os
 import random
+import re
 import signal
 import subprocess
 import sys
@@ -157,6 +158,9 @@ FEATURE_CODE = (
 )
 SMOKE_REQUESTS = 16
 SMOKE_FAILED_EXIT = 4
+#: A reply that offers alternatives (descriptive only): on the normalized reply.
+HEDGE_PATTERN = r"\b(?:or|either|possibly|perhaps|maybe|might|could be|not sure|unsure)\b"
+HEDGE_RE = re.compile(HEDGE_PATTERN)
 
 
 class Am3gError(ValueError):
@@ -1337,6 +1341,7 @@ def pool_records(
             cell["abstain"], cell["pattern"] = lf.abstention(text)
             normalized = mc.normalize_answer(text.strip())
             cell["digest"] = sha256_text(normalized)
+            cell["hedge"] = bool(HEDGE_RE.search(normalized))
             cell["n_tokens"] = len(row["tokens"])
         pools[key]["masks"][int(r["mask"])] = cell
     return [pools[k] for k in sorted(pools)]
@@ -1872,6 +1877,7 @@ def h2_block(
     seed: int,
     alpha: float = ALPHA,
     judge: str = "primary",
+    strata: dict[str, bool] | None = None,
 ) -> dict[str, Any]:
     """H2 (descriptive, registered estimand): on the abstention questions, b2 (BM25 top 4 judged
     correct, the rule's choice judged wrong) and c2 (the reverse) per reader; the cost rate b2/N
@@ -1894,6 +1900,9 @@ def h2_block(
         b2, c2 = entry["rule_wrong_base_right"], entry["rule_right_base_wrong"]
         top4_right = sum(int(r["u"][judge]["bm25_top4"]) for r in rows)
         rule_right = sum(int(r["u"][judge]["nonabstain_bm25"]) for r in rows)
+        correct_abstentions = sum(
+            1 for r in rows if r["bm25_top4_abstains"] and r["u"][judge]["bm25_top4"] == 1
+        )
         entry.update({
             "b2_top4_right_rule_wrong": b2,
             "c2_rule_right_top4_wrong": c2,
@@ -1907,7 +1916,29 @@ def h2_block(
             "rule_switches_from_top4": sum(r["nonabstain_mask"] != r["bm25_top4_mask"]
                                            for r in rows),
             "bm25_top4_abstains": sum(r["bm25_top4_abstains"] for r in rows),
+            "bm25_top4_correct_abstentions": correct_abstentions,
+            "cost_per_correct_top4_abstention": (b2 / correct_abstentions
+                                                 if correct_abstentions else None),
+            "cost_per_correct_top4_abstention_ci95_exact": (
+                cp_interval(b2, correct_abstentions) if correct_abstentions else None),
         })  # fmt: skip
+        if strata is not None:
+            entry["by_near_miss_memory"] = {}
+            for label, flag in (
+                ("pool_holds_a_has_answer_memory", True),
+                ("pool_holds_none", False),
+            ):
+                sub = [r for r in rows if strata.get(r["question_id"]) is flag]
+                entry["by_near_miss_memory"][label] = {
+                    "questions": len(sub),
+                    "b2": sum(1 for r in sub if r["u"][judge]["bm25_top4"] == 1
+                              and r["u"][judge]["nonabstain_bm25"] == 0),
+                    "c2": sum(1 for r in sub if r["u"][judge]["bm25_top4"] == 0
+                              and r["u"][judge]["nonabstain_bm25"] == 1),
+                    "bm25_top4_correct": sum(int(r["u"][judge]["bm25_top4"]) for r in sub),
+                    "nonabstain_bm25_correct": sum(int(r["u"][judge]["nonabstain_bm25"])
+                                                   for r in sub),
+                }  # fmt: skip
         per[reader_id] = entry
     complete = [r for r in H2_READERS if not per[r].get("incomplete")]
     adjusted = holm({r: per[r]["p_exact_mcnemar"] for r in complete}, alpha) if complete else {}
@@ -2185,13 +2216,19 @@ def analysis_config(resamples: int, seed: int, alpha: float, weights: dict[str, 
 # --------------------------------------------------------------------------- H1's blind hand check
 
 HAND_SEED = 44
-#: What the isolated labeller is told (written next to the sample; registration section 8).
+#: Items per labelling chunk; every chunk is labelled by a fresh agent context.
+HAND_CHUNK = 60
+#: The labeller: an isolated Claude agent (registration section 8).
+HAND_LABELLER_MODEL = "claude-opus-5-5"
+#: What the isolated labeller is told (written beside the sample; registration section 8).
 HAND_INSTRUCTIONS = """Blind hand check, am3-nonabstain-generality-v1 (D9: agent labels).
 
-Each line of the sample is one item: a LongMemEval-S question, its question type, its reference
-answer (for single-session-preference, a rubric) and a reply written by a language model that
-was given some of the user's past messages. Label every item, independently of the others:
+Each line of the sample is one item: a LongMemEval-S question, its question type, a check
+("answer" or "abstention"), a reference text and a reply written by a language model that was
+given some of the user's past messages. Label every item, independently of the others.
 
+check "answer" (the reference text is the reference answer; for single-session-preference, a
+rubric):
 - 1 if the reply is correct: it contains the reference answer, or is equivalent to it, or
   contains all the intermediate steps to reach it. A reply that gives only part of the
   information the answer needs is 0.
@@ -2201,29 +2238,58 @@ was given some of the user's past messages. Label every item, independently of t
 - single-session-preference: 1 if the reply satisfies the rubric, recalling and using the
   user's personal information correctly; it need not cover every point.
 - A reply that declines to answer ("I don't know", "the memories do not say") is 0: every
-  question here has an answer.
+  question with this check has an answer.
 
-Use only the question, the reference answer and the reply. Do not look for, open or infer any
-other file, label or result. Write one JSON object per line, in the sample's order:
+check "abstention" (the question cannot be answered from the user's history; the reference text
+explains why):
+- 1 if the reply correctly identifies the question as unanswerable: it may say that it does not
+  know, that the information is incomplete, or that some other information is given but not the
+  information asked for.
+- 0 if the reply answers the question as if it could be answered.
+
+Use only the question, the check, the reference text and the reply. Do not look for, open or
+infer any other file, label or result. Write one JSON object per line, in the sample's order:
 {"item_id": "...", "label": 1 or 0, "note": "optional, short"}.
 """
+#: The labeller's launch prompt, one per chunk (``hand_labeller_prompt``); its SHA-256 is in the
+#: registration (section 8) and every receipt.
+HAND_LABELLER_PROMPT = """You are a blind labeller for a research hand check.
+You have exactly two input files: {instructions} and {chunk}.
+Read {instructions} first, then {chunk}, which has one JSON object per line.
+Label every line of {chunk} as the instructions say, independently of the other
+lines and using only what each line holds. Then write the labels, one JSON object
+per line in the same order, with exactly the keys item_id, label (the integer 1 or
+0) and note (a short reason, or empty), to the new file {output}. Read no other
+file, do not search for or list other files, run no command and use no other tool.
+When the file is written, reply with the number of lines you wrote and nothing else.
+"""
+
+
+def hand_labeller_prompt(
+    chunk: str, output: str, instructions: str = "hand-check-instructions.txt"
+) -> str:
+    """The pinned prompt for one chunk: file names relative to the chunk's own directory (the
+    registered launch, section 8), or absolute paths to the same three files."""
+
+    return HAND_LABELLER_PROMPT.format(instructions=instructions, chunk=chunk, output=output)
+
+
+def hand_labeller_prompt_sha256() -> str:
+    return sha256_text(HAND_LABELLER_PROMPT)
 
 
 def _norm_masks(pool: dict[str, Any]) -> dict[int, dict[str, Any]]:
     return {int(m): c for m, c in pool["masks"].items()}
 
 
-def hand_plan(features: dict[str, Any], readers: Sequence[str] = H1_READERS) -> dict[str, Any]:
-    """The blind hand check's items, from text-free features alone (so ``analyze`` can recompute
-    them). Per H1 reader, retrieved arm, primary judge: every discordant question (the rule's
-    choice and BM25 top 4 judged differently) gives both replies; as many concordant questions,
-    drawn with ``random.Random(f"44:hand:{reader}")`` (first from those where the rule left BM25
-    top 4, then from the others), give BM25 top 4's reply and the rule's (or, where the rule kept
-    top 4, a seeded other 4-subset's reply that differs). Items are deduplicated by (question,
-    normalized-reply SHA-256) and put in one seeded order across readers
-    (``random.Random("44:hand:order")``); item ids follow that order."""
+def _plan_population(
+    features: dict[str, Any],
+    population: str,
+    readers: Sequence[str],
+    uses: dict[tuple[str, str], list[dict[str, Any]]],
+) -> dict[str, Any]:
+    """One population's part of the plan (see ``hand_plan``); adds to ``uses``."""
 
-    uses: dict[tuple[str, str], list[dict[str, Any]]] = {}
     per_reader: dict[str, Any] = {}
     for reader in readers:
         pools = sorted((p for p in features["readers"][reader]["pools"]
@@ -2240,24 +2306,25 @@ def hand_plan(features: dict[str, Any], readers: Sequence[str] = H1_READERS) -> 
                 switched.append(entry)
             else:
                 kept.append(entry)
-        rng = random.Random(f"{HAND_SEED}:hand:{reader}")
+        rng = random.Random(f"{HAND_SEED}:hand:{reader}" if population != "abstention"
+                            else f"{HAND_SEED}:hand:abstention:{reader}")  # fmt: skip
         need = len(discordant)
-        chosen = rng.sample(switched, min(need, len(switched)))
-        chosen += rng.sample(kept, min(need - len(chosen), len(kept)))
+        from_switched = rng.sample(switched, min(need, len(switched)))
+        from_kept = rng.sample(kept, min(need - len(from_switched), len(kept)))
 
         def add(
             p: dict[str, Any], masks: dict[int, Any], mask: int, role: str, who: str = reader
         ) -> None:
             key = (p["question_id"], masks[mask]["digest"])
             uses.setdefault(key, []).append(
-                {"reader": who, "role": role, "mask": mask,
+                {"population": population, "reader": who, "role": role, "mask": mask,
                  "judge_primary": masks[mask]["u"]["primary"]}
             )  # fmt: skip
 
         for p, masks, top, rule in discordant:
             add(p, masks, rule, "discordant-rule")
             add(p, masks, top, "discordant-top4")
-        for p, masks, top, rule in chosen:
+        for p, masks, top, rule in from_switched + from_kept:
             add(p, masks, top, "distractor")
             second = rule if rule != top else None
             if second is None:
@@ -2268,13 +2335,43 @@ def hand_plan(features: dict[str, Any], readers: Sequence[str] = H1_READERS) -> 
                         break
             if second is not None and masks[second]["digest"] != masks[top]["digest"]:
                 add(p, masks, second, "distractor")
-        per_reader[reader] = {"discordant_questions": len(discordant),
-                              "distractor_questions": len(chosen)}  # fmt: skip
+        per_reader[reader] = {
+            "discordant_questions": need,
+            "distractor_questions": len(from_switched) + len(from_kept),
+            "distractors_where_the_rule_switched": len(from_switched),
+            "distractors_where_it_kept_top4": len(from_kept),
+            "switched_shortfall": max(0, need - len(switched)),
+        }
+    return per_reader
+
+
+def hand_plan(features: dict[str, Any], abstention: dict[str, Any] | None = None) -> dict[str, Any]:
+    """The blind hand check's items, from text-free features alone (so ``analyze`` recomputes
+    them). Held-out (or development) features, per H1 reader, and the abstention features when
+    given, per H2 reader (descriptive), retrieved arm, primary judge: every discordant question
+    (the rule's choice and BM25 top 4 judged differently) gives both replies; as many concordant
+    questions, drawn with ``random.Random(f"44:hand:{reader}")`` (``44:hand:abstention:{reader}``
+    for the abstention questions), first from those where the rule left BM25 top 4 and then from
+    the others, give BM25 top 4's reply and the rule's (or, where the rule kept top 4, a seeded
+    other 4-subset's reply that differs). Items are deduplicated by (question, normalized-reply
+    SHA-256) and put in one seeded order across readers and populations
+    (``random.Random("44:hand:order")``); item ids follow that order; chunks of ``HAND_CHUNK``
+    consecutive items."""
+
+    uses: dict[tuple[str, str], list[dict[str, Any]]] = {}
+    population = "development" if features.get("population") == "development" else "heldout"
+    readers = {population: _plan_population(features, population, H1_READERS, uses)}
+    if abstention is not None:
+        readers["abstention"] = _plan_population(abstention, "abstention", H2_READERS, uses)
     keys = sorted(uses)
     random.Random(f"{HAND_SEED}:hand:order").shuffle(keys)
-    items = [{"item_id": f"h{n:04d}", "question_id": q, "reply_digest": d, "uses": uses[(q, d)]}
+    items = [{"item_id": f"h{n:04d}", "question_id": q, "reply_digest": d,
+              "check": "abstention" if q.endswith("_abs") else "answer", "uses": uses[(q, d)]}
              for n, (q, d) in enumerate(keys)]  # fmt: skip
-    plan = {"seed": HAND_SEED, "readers": per_reader, "items": items}
+    plan = {"seed": HAND_SEED, "chunk_size": HAND_CHUNK, "readers": readers, "items": items,
+            "labeller_model": HAND_LABELLER_MODEL,
+            "labeller_prompt_sha256": hand_labeller_prompt_sha256(),
+            "instructions_sha256": sha256_text(HAND_INSTRUCTIONS)}  # fmt: skip
     plan["plan_sha256"] = sha256_bytes(json.dumps(items, sort_keys=True).encode())
     return plan
 
@@ -2297,26 +2394,56 @@ def read_hand_labels(path: Path, expected_sha256: str | None) -> tuple[list[dict
     return rows, digest
 
 
+def _discordant_counts(
+    hand_of: dict[tuple[str, str, str, str], int], population: str, reader: str
+) -> tuple[int, int, int]:
+    qids = sorted({q for (pop, r, role, q) in hand_of
+                   if pop == population and r == reader and role == "discordant-rule"})  # fmt: skip
+    rule_right = sum(1 for q in qids if hand_of[(population, reader, "discordant-rule", q)] == 1
+                     and hand_of[(population, reader, "discordant-top4", q)] == 0)  # fmt: skip
+    top_right = sum(1 for q in qids if hand_of[(population, reader, "discordant-rule", q)] == 0
+                    and hand_of[(population, reader, "discordant-top4", q)] == 1)  # fmt: skip
+    return len(qids), rule_right, top_right
+
+
+def _agreement(pairs: Sequence[tuple[int, int]]) -> dict[str, Any]:
+    judge = [a for a, _ in pairs]
+    hand = [b for _, b in pairs]
+    return {
+        "items": len(pairs),
+        "agree": sum(1 for a, b in pairs if a == b),
+        "kappa": ms.cohen_kappa(judge, hand) if pairs else None,
+        "judge_yes_hand_yes": sum(1 for a, b in pairs if a and b),
+        "judge_yes_hand_no": sum(1 for a, b in pairs if a and not b),
+        "judge_no_hand_yes": sum(1 for a, b in pairs if not a and b),
+        "judge_no_hand_no": sum(1 for a, b in pairs if not a and not b),
+        "decides": False,
+    }
+
+
 def hand_check(
     features: dict[str, Any],
     plan: dict[str, Any],
     labels: list[dict[str, Any]] | None,
     labels_sha256: str | None,
     alpha: float = ALPHA,
-    readers: Sequence[str] = H1_READERS,
 ) -> dict[str, Any]:
     """Join the blind hand labels to the plan. Status: "joined" when every item has exactly one
     label of 0 or 1 and no other item is labelled; "missing" without labels; "incomplete"
-    otherwise. Per reader, over its discordant questions: b_hand (rule's reply hand-labelled 1,
-    top 4's 0), c_hand (the reverse), the exact McNemar p and Holm across the readers. Hand
-    against judge: agreement and Cohen's kappa over every labelled item (descriptive)."""
+    otherwise. H1 (decides, section 7.1): per H1 reader, over its judge-discordant questions,
+    b_hand (the rule's reply hand-labelled 1, top 4's 0), c_hand (the reverse), the exact McNemar
+    p and Holm across the two readers. H2 (descriptive): per H2 reader on the abstention
+    questions, b2_hand (top 4's reply 1, the rule's 0) and c2_hand, with Holm across the three.
+    Hand against judge: agreement and Cohen's kappa, overall and per population (descriptive)."""
 
     out: dict[str, Any] = {
         "plan_sha256": plan["plan_sha256"],
         "items": len(plan["items"]),
         "readers_plan": plan["readers"],
         "labels_sha256": labels_sha256,
-        "labeller": "an isolated agent, blind (D9: agent labels, not human)",
+        "labeller": f"an isolated agent ({plan['labeller_model']}), blind (D9: agent labels, "
+        "not human)",
+        "labeller_prompt_sha256": plan["labeller_prompt_sha256"],
     }
     if labels is None:
         out["status"] = "missing"
@@ -2335,39 +2462,41 @@ def hand_check(
                    invalid_or_repeated=[b for b in bad if b is not None][:50])  # fmt: skip
         return out
     out["status"] = "joined"
-    hand_of: dict[tuple[str, str, str], int] = {}
-    judge, hand = [], []
+    hand_of: dict[tuple[str, str, str, str], int] = {}
+    pairs: dict[str, list[tuple[int, int]]] = {}
     for item in plan["items"]:
         h = int(by_id[item["item_id"]])
-        judge.append(int(item["uses"][0]["judge_primary"]))
-        hand.append(h)
+        first = item["uses"][0]
+        pairs.setdefault(first["population"], []).append((int(first["judge_primary"]), h))
         for use in item["uses"]:
-            hand_of[(use["reader"], use["role"], item["question_id"])] = h
+            hand_of[(use["population"], use["reader"], use["role"], item["question_id"])] = h
+    h1_population = next(p for p in plan["readers"] if p != "abstention")
     per: dict[str, Any] = {}
-    for reader in readers:
-        qids = sorted({q for (r, role, q) in hand_of if r == reader and role == "discordant-rule"})
-        b = sum(1 for q in qids if hand_of[(reader, "discordant-rule", q)] == 1
-                and hand_of[(reader, "discordant-top4", q)] == 0)  # fmt: skip
-        c = sum(1 for q in qids if hand_of[(reader, "discordant-rule", q)] == 0
-                and hand_of[(reader, "discordant-top4", q)] == 1)  # fmt: skip
-        per[reader] = {"discordant_questions": len(qids), "b_hand": b, "c_hand": c,
+    for reader in H1_READERS:
+        n, b, c = _discordant_counts(hand_of, h1_population, reader)
+        per[reader] = {"discordant_questions": n, "b_hand": b, "c_hand": c,
                        "p_exact_mcnemar": ks.mcnemar_exact(b, c)}  # fmt: skip
-    adjusted = holm({r: per[r]["p_exact_mcnemar"] for r in readers}, alpha)
-    for reader in readers:
+    adjusted = holm({r: per[r]["p_exact_mcnemar"] for r in H1_READERS}, alpha)
+    for reader in H1_READERS:
         e = per[reader]
         e["holm"] = adjusted[reader]
         e["hand_label"] = label_of(adjusted[reader]["reject"], e["b_hand"], e["c_hand"], H1_LABELS)
-    agree = sum(1 for a, b in zip(judge, hand, strict=True) if a == b)
     out["readers"] = per
-    out["agreement"] = {
-        "items": len(hand), "agree": agree,
-        "kappa": ms.cohen_kappa(judge, hand),
-        "judge_yes_hand_yes": sum(1 for a, b in zip(judge, hand, strict=True) if a and b),
-        "judge_yes_hand_no": sum(1 for a, b in zip(judge, hand, strict=True) if a and not b),
-        "judge_no_hand_yes": sum(1 for a, b in zip(judge, hand, strict=True) if not a and b),
-        "judge_no_hand_no": sum(1 for a, b in zip(judge, hand, strict=True) if not a and not b),
-        "decides": False,
-    }  # fmt: skip
+    if "abstention" in plan["readers"]:
+        h2: dict[str, Any] = {}
+        for reader in H2_READERS:
+            n, rule_right, top_right = _discordant_counts(hand_of, "abstention", reader)
+            h2[reader] = {"discordant_questions": n, "b2_hand": top_right, "c2_hand": rule_right,
+                          "p_exact_mcnemar": ks.mcnemar_exact(top_right, rule_right)}  # fmt: skip
+        adjusted2 = holm({r: h2[r]["p_exact_mcnemar"] for r in H2_READERS}, alpha)
+        for reader in H2_READERS:
+            e = h2[reader]
+            e["holm"] = adjusted2[reader]
+            e["description"] = label_of(adjusted2[reader]["reject"], e["b2_hand"], e["c2_hand"],
+                                        H2_LABELS)  # fmt: skip
+        out["h2_descriptive"] = {"decides": False, "readers": h2}
+    out["agreement"] = _agreement([x for v in pairs.values() for x in v])
+    out["agreement_by_population"] = {k: _agreement(v) for k, v in sorted(pairs.items())}
     return out
 
 
@@ -2391,57 +2520,220 @@ def confirm_reading(judge_reading: str, hand: dict[str, Any], reader: str) -> st
     )
 
 
+def _sample_rows(
+    plan: dict[str, Any],
+    sources: dict[str, tuple[dict[str, Any], dict[str, Any], Path, tuple[str, ...]]],
+) -> list[str]:
+    """One JSON line per plan item: id, question id and type, check, question, reference text,
+    reply; nothing else. ``sources``: population -> (features, artifact, run dir, arms)."""
+
+    lines = []
+    cache: dict[tuple[str, str], dict[int, Any]] = {}
+    indexes = {pop: {(r["question_id"], r["arm"], r["mask"]): r["index"]
+                     for r in request_table(art, arms)}
+               for pop, (_, art, _, arms) in sources.items()}  # fmt: skip
+    questions = {pop: {q["question_id"]: q for q in art["questions"]}
+                 for pop, (_, art, _, _) in sources.items()}  # fmt: skip
+    for item in plan["items"]:
+        use = item["uses"][0]
+        pop = use["population"]
+        features, _, run_dir, _ = sources[pop]
+        key = (pop, use["reader"])
+        if key not in cache:
+            step = features["readers"][use["reader"]]["step"]
+            cache[key] = load_pass(run_dir / "sessions" / step)["rows"]
+        text = cache[key][indexes[pop][(item["question_id"], "retrieved", use["mask"])]]["text"]
+        if sha256_text(mc.normalize_answer(text.strip())) != item["reply_digest"]:
+            raise Am3gError(f"{VOID_DIGEST}: a reply differs from the features' digest")
+        q = questions[pop][item["question_id"]]
+        lines.append(json.dumps({"item_id": item["item_id"], "question_id": q["question_id"],
+                                 "question_type": q["question_type"], "check": item["check"],
+                                 "question": q["question"], "reference": str(q["answer"]),
+                                 "reply": text.strip()}, ensure_ascii=False))  # fmt: skip
+    return lines
+
+
+def write_chunks(hand_dir: Path, stage: str, lines: Sequence[str], ids: Sequence[str]) -> list:
+    """Chunk files (``hand-{stage}-chunk-NN.jsonl``) of ``HAND_CHUNK`` consecutive lines, each with
+    its launch prompt (``hand-{stage}-prompt-NN.txt``); returns the chunk manifest."""
+
+    chunks = []
+    for k in range(0, len(lines), HAND_CHUNK):
+        n = k // HAND_CHUNK + 1
+        chunk = f"hand-{stage}-chunk-{n:02d}.jsonl"
+        output = f"hand-labels-{stage}-{n:02d}.jsonl"
+        (hand_dir / chunk).write_text("\n".join(lines[k : k + HAND_CHUNK]) + "\n", "utf-8")
+        (hand_dir / f"hand-{stage}-prompt-{n:02d}.txt").write_text(
+            hand_labeller_prompt(chunk, output), "utf-8"
+        )
+        chunks.append({"chunk": chunk, "output": output, "items": list(ids[k : k + HAND_CHUNK]),
+                       "chunk_sha256": sha256_file(hand_dir / chunk)})  # fmt: skip
+    return chunks
+
+
 def cmd_hand_sample(args: argparse.Namespace) -> dict[str, Any]:
-    """Host only (reads reply texts): the blind hand-check sample of the held-out job (or, for the
-    dry run, the development job): one JSON line per plan item with the question, its type, the
-    reference answer and the reply, and nothing else, in the plan's order; and the labeller's
-    instructions. Prints counts and digests only."""
+    """Host only (reads reply texts): the blind hand-check sample of the held-out job (and the
+    abstention job, mixed in, when its features are given), or of the development job for the dry
+    run: one JSON line per plan item with its id, the question id and type, the check, the
+    question, the reference text and the reply, and nothing else, in the plan's order; the
+    labeller's instructions; the chunks with their launch prompts; and a text-free manifest. All
+    in ``--hand-dir``, a directory of its own (never the private directory that holds the judge
+    labels). Prints counts and digests only."""
 
     population = args.population
     if population not in ("development", "heldout"):
         raise Am3gError("the hand check samples the held-out job (or the development dry run)")
     if population == "development":
-        for path in (args.run_dir, args.evidence, args.features, args.private_dir):
+        for path in (args.run_dir, args.evidence, args.features, args.hand_dir):
             check_dev_path(path)
+        if args.abstention_features:
+            raise Am3gError("the development dry run has no abstention questions")
     gate(population)
-    refuse_inside_repo(args.private_dir)
+    hand_dir = Path(args.hand_dir)
+    refuse_inside_repo(hand_dir)
+    if hand_dir.exists() and any(hand_dir.iterdir()):
+        raise Am3gError(f"refusing a non-empty hand directory {hand_dir}")
+    if Path(args.features).resolve().parent == hand_dir.resolve():
+        raise Am3gError("the hand directory must not hold the features")
     config = load_config(Path(args.config))
-    artifact = load_artifact(config, population, args.evidence)
     features = read_gz_json(Path(args.features))
     check_features(features, config, population)
-    plan = hand_plan(features)
-    private = Path(args.private_dir)
-    sample_path = private / "hand-check-sample.jsonl"
-    if sample_path.exists():
-        raise Am3gError(f"refusing to overwrite {sample_path}")
-    run_dir = Path(args.run_dir)
-    index = {(r["question_id"], r["arm"], r["mask"]): r["index"]
-             for r in request_table(artifact, population_arms(config, population))}  # fmt: skip
-    questions = {q["question_id"]: q for q in artifact["questions"]}
-    rows_of: dict[str, dict[int, Any]] = {}
-    lines = []
-    for item in plan["items"]:
-        use = item["uses"][0]
-        reader = use["reader"]
-        if reader not in rows_of:
-            step = features["readers"][reader]["step"]
-            rows_of[reader] = load_pass(run_dir / "sessions" / step)["rows"]
-        text = rows_of[reader][index[(item["question_id"], "retrieved", use["mask"])]]["text"]
-        if sha256_text(mc.normalize_answer(text.strip())) != item["reply_digest"]:
-            raise Am3gError(f"{VOID_DIGEST}: a reply differs from the features' digest")
-        q = questions[item["question_id"]]
-        lines.append(json.dumps({"item_id": item["item_id"], "question_id": q["question_id"],
-                                 "question_type": q["question_type"], "question": q["question"],
-                                 "reference_answer": str(q["answer"]),
-                                 "reply": text.strip()}, ensure_ascii=False))  # fmt: skip
-    private.mkdir(parents=True, exist_ok=True)
-    sample_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
-    instructions = private / "hand-check-instructions.txt"
+    artifact = load_artifact(config, population, args.evidence)
+    sources = {population: (features, artifact, Path(args.run_dir),
+                            population_arms(config, population))}  # fmt: skip
+    abstention = None
+    if args.abstention_features:
+        gate("abstention")
+        abstention = read_gz_json(Path(args.abstention_features))
+        check_features(abstention, config, "abstention")
+        abs_artifact = load_artifact(config, "abstention", args.abstention_evidence)
+        sources["abstention"] = (abstention, abs_artifact, Path(args.abstention_run_dir),
+                                 ("retrieved",))  # fmt: skip
+    plan = hand_plan(features, abstention)
+    lines = _sample_rows(plan, sources)
+    hand_dir.mkdir(parents=True, exist_ok=True)
+    sample = hand_dir / "hand-check-sample.jsonl"
+    sample.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    instructions = hand_dir / "hand-check-instructions.txt"
     instructions.write_text(HAND_INSTRUCTIONS, encoding="utf-8")
+    chunks = write_chunks(hand_dir, "first", lines, [i["item_id"] for i in plan["items"]])
+    manifest = {"plan_sha256": plan["plan_sha256"], "items": [i["item_id"] for i in plan["items"]],
+                "chunk_size": HAND_CHUNK, "first": chunks,
+                "labeller_model": HAND_LABELLER_MODEL,
+                "labeller_prompt_sha256": hand_labeller_prompt_sha256(),
+                "instructions_sha256": sha256_file(instructions),
+                "sample_sha256": sha256_file(sample)}  # fmt: skip
+    (hand_dir / "hand-manifest.json").write_text(json.dumps(manifest, indent=1, sort_keys=True))
     return {"population": population, "items": len(lines), "readers": plan["readers"],
-            "plan_sha256": plan["plan_sha256"], "sample_sha256": sha256_file(sample_path),
-            "instructions_sha256": sha256_file(instructions),
+            "plan_sha256": plan["plan_sha256"], "sample_sha256": manifest["sample_sha256"],
+            "instructions_sha256": manifest["instructions_sha256"], "chunks": len(chunks),
+            "chunk_size": HAND_CHUNK, "labeller_model": HAND_LABELLER_MODEL,
+            "labeller_prompt_sha256": manifest["labeller_prompt_sha256"],
             "features_sha256": sha256_file(Path(args.features))}  # fmt: skip
+
+
+def _valid_rows(raw_lines: Sequence[str], allowed: set[str]) -> tuple[dict[str, dict], dict]:
+    """Rows that parse, name an allowed item once, and carry a label of 0 or 1."""
+
+    seen: Counter = Counter()
+    parsed: dict[str, dict[str, Any]] = {}
+    malformed = 0
+    for line in raw_lines:
+        if not line.strip():
+            continue
+        try:
+            row = json.loads(line)
+        except ValueError:
+            malformed += 1
+            continue
+        item = row.get("item_id") if isinstance(row, dict) else None
+        if item not in allowed or row.get("label") not in (0, 1):
+            malformed += 1
+            continue
+        seen[item] += 1
+        parsed[item] = {"item_id": item, "label": row["label"], "note": str(row.get("note", ""))}
+    repeated = {i for i, n in seen.items() if n > 1}
+    valid = {i: r for i, r in parsed.items() if i not in repeated}
+    return valid, {"malformed_rows": malformed, "repeated_items": len(repeated)}
+
+
+def cmd_hand_merge(args: argparse.Namespace) -> dict[str, Any]:
+    """Merge one labelling stage's chunk outputs, whatever they hold (registration section 8).
+    first: concatenate the chunk outputs in order (``hand-labels-first-raw.jsonl``), keep the
+    rows that are valid, and, if items lack a valid row, write the repair sample and its chunks
+    (``hand-repair-*``); otherwise write the final labels. repair: add the repair stage's valid
+    rows for exactly those items and write the final labels (``hand-labels.jsonl``, sample order),
+    complete or not: there is no third stage."""
+
+    hand_dir = Path(args.hand_dir)
+    manifest = json.loads((hand_dir / "hand-manifest.json").read_text(encoding="utf-8"))
+    final = hand_dir / "hand-labels.jsonl"
+    if final.exists():
+        raise Am3gError("the final labels exist: no further labelling stage")
+    stage = args.stage
+    if stage not in ("first", "repair") or stage not in manifest:
+        raise Am3gError(f"no {stage} stage in the hand manifest")
+    raw_lines: list[str] = []
+    missing_chunks = []
+    for chunk in manifest[stage]:
+        path = hand_dir / chunk["output"]
+        if not path.is_file():
+            missing_chunks.append(chunk["output"])
+            continue
+        raw_lines += path.read_text(encoding="utf-8", errors="replace").splitlines()
+    raw = hand_dir / f"hand-labels-{stage}-raw.jsonl"
+    if raw.exists():
+        raise Am3gError(f"{raw} exists: each stage is merged once")
+    raw.write_text("\n".join(raw_lines) + ("\n" if raw_lines else ""), encoding="utf-8")
+    allowed = {i for c in manifest[stage] for i in c["items"]}
+    valid, problems = _valid_rows(raw_lines, allowed)
+    out: dict[str, Any] = {"stage": stage, "raw_sha256": sha256_file(raw),
+                           "chunks": len(manifest[stage]), "missing_chunk_outputs": missing_chunks,
+                           "valid_rows": len(valid), **problems}  # fmt: skip
+    if stage == "first":
+        lacking = [i for i in manifest["items"] if i not in valid]
+        (hand_dir / "hand-valid-first.json").write_text(json.dumps(valid, sort_keys=True))
+        out["items_lacking_a_valid_row"] = len(lacking)
+        if lacking:
+            sample_text = (hand_dir / "hand-check-sample.jsonl").read_text("utf-8")
+            sample = {json.loads(x)["item_id"]: x for x in sample_text.splitlines()}
+            lines = [sample[i] for i in lacking]
+            (hand_dir / "hand-repair-sample.jsonl").write_text("\n".join(lines) + "\n", "utf-8")
+            manifest["repair"] = write_chunks(hand_dir, "repair", lines, lacking)
+            (hand_dir / "hand-manifest.json").write_text(json.dumps(manifest, indent=1,
+                                                                    sort_keys=True))  # fmt: skip
+            out["repair_chunks"] = len(manifest["repair"])
+            return out
+        merged = valid
+    else:
+        merged = json.loads((hand_dir / "hand-valid-first.json").read_text(encoding="utf-8"))
+        merged.update(valid)
+    rows = [merged[i] for i in manifest["items"] if i in merged]
+    final.write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows), "utf-8")
+    out.update(final_rows=len(rows), final_complete=len(rows) == len(manifest["items"]),
+               final_sha256=sha256_file(final))  # fmt: skip
+    return out
+
+
+def gains_that_hedge(features: dict[str, Any], readers: Sequence[str]) -> dict[str, Any]:
+    """Descriptive: per reader, retrieved arm, primary judge, the rule's gains over BM25 top 4 (its
+    reply judged right, top 4's wrong) and how many of those replies offer alternatives
+    (``HEDGE_PATTERN``), which can contain the right answer among others."""
+
+    out = {}
+    for reader in readers:
+        gains = hedges = 0
+        for p in features["readers"][reader]["pools"]:
+            if p["arm"] != "retrieved":
+                continue
+            masks = _norm_masks(p)
+            top = lf.bm25_top_mask(p["bm25_rank"])
+            rule = am3.nonabstain_bm25({"bm25_rank": p["bm25_rank"], "masks": masks})["mask"]
+            if masks[rule]["u"]["primary"] == 1 and masks[top]["u"]["primary"] == 0:
+                gains += 1
+                hedges += bool(masks[rule].get("hedge"))
+        out[reader] = {"gains": gains, "gains_whose_reply_hedges": hedges}
+    return {"pattern": HEDGE_PATTERN, "decides": False, "readers": out}
 
 
 def analyze_registered(
@@ -2485,7 +2777,7 @@ def analyze_registered(
         e["scope"] = ("eager batch-invariant replies" if bi else
                       "vLLM default mode and this registration's batch schedule")  # fmt: skip
         e["judge_reading"] = e["reading"]
-    plan = hand_plan(heldout)
+    plan = hand_plan(heldout, abstention)
     hand = hand_check(heldout, plan, hand_labels, hand_labels_sha256, alpha)
     # Precedence: VOID (V3) over JUDGE_DEPENDENT (G-J1) over the hand check.
     if not replay_ok:
@@ -2500,8 +2792,12 @@ def analyze_registered(
         h1["status"] = "read" if hand["status"] == "joined" else f"hand check {hand['status']}"
         for reader_id, e in h1["readers"].items():
             e["reading"] = confirm_reading(e["judge_reading"], hand, reader_id)
+    strata = None
+    if abstention is not None:
+        strata = {p["question_id"]: int(p["gold_mask"]) != 0
+                  for p in abstention["readers"][ANCHOR]["pools"]}  # fmt: skip
     if rec_a is not None:
-        h2 = h2_block(rec_a, resamples, seed, alpha)
+        h2 = h2_block(rec_a, resamples, seed, alpha, strata=strata)
         if not replay_ok:
             h2["status"] = f"{VOID_REPLAY}: H2 is reported as a description of a void run"
         elif not gj2["pass"]:
@@ -2519,10 +2815,12 @@ def analyze_registered(
         "second_judge_h1": descriptive_paired(rec_h, "retrieved", "secondary", resamples, seed,
                                               H1_READERS),
         "by_type_heldout": {r: {j: by_type(rec_h[r], j) for j in JUDGES} for r in H2_READERS},
+        "h1_gains_that_hedge": gains_that_hedge(heldout, H2_READERS),
         "cells_heldout": cells_of(rec_h, ARMS, resamples, seed, alpha),
     }  # fmt: skip
     if rec_a is not None:
-        descriptive["second_judge_h2"] = h2_block(rec_a, resamples, seed, alpha, judge="secondary")
+        descriptive["second_judge_h2"] = h2_block(rec_a, resamples, seed, alpha,
+                                                  judge="secondary", strata=strata)  # fmt: skip
         descriptive["by_type_abstention"] = {
             r: {j: by_type(rec_a[r], j) for j in JUDGES} for r in H2_READERS
         }
@@ -2639,6 +2937,7 @@ def analyze_development(
         mech = results["mechanics"]
         hand = hand_check(features, hand_plan(features), hand_labels, hand_labels_sha256, alpha)
         mech["h1_hand_check"] = hand
+        mech["h1_gains_that_hedge"] = gains_that_hedge(features, H2_READERS)
         mech["h1_readings_after_hand_check"] = {
             r: confirm_reading(e["reading"], hand, r)
             for r, e in mech["h1_block"]["readers"].items()
@@ -2784,6 +3083,16 @@ def _cells_table(cells: dict[str, Any], names: dict[str, str]) -> list[str]:
     return lines
 
 
+def check_hand_plan(hand: dict[str, Any], expected: str | None) -> None:
+    """Labels join by item id, so they must belong to the plan the receipt names."""
+
+    if expected is None or hand["plan_sha256"] != expected:
+        raise Am3gError(
+            "the hand labels' receipted plan differs from the plan these features give "
+            f"({hand['plan_sha256']})"
+        )
+
+
 def cmd_analyze(args: argparse.Namespace) -> dict[str, Any]:
     config = load_config(Path(args.config))
     out = Path(args.output_dir)
@@ -2797,16 +3106,19 @@ def cmd_analyze(args: argparse.Namespace) -> dict[str, Any]:
         labels, digest = (read_hand_labels(Path(args.hand_labels), args.hand_labels_sha256)
                           if args.hand_labels else (None, None))  # fmt: skip
         results, per_table = analyze_development(features, config, labels, digest)
+        if labels is not None:
+            check_hand_plan(results["mechanics"]["h1_hand_check"], args.hand_plan_sha256)
         results["features_sha256"] = {"development": sha256_file(Path(args.development_features))}
     else:
         if not args.heldout_features:
             raise Am3gError("the registered analysis needs --heldout-features")
         if bool(args.abstention_features) == bool(args.abstention_void):
             raise Am3gError("give exactly one of --abstention-features and --abstention-void")
-        if not (args.hand_labels and args.hand_labels_sha256):
+        if not (args.hand_labels and args.hand_labels_sha256 and args.hand_plan_sha256):
             raise Am3gError(
-                "the registered analysis needs --hand-labels and --hand-labels-sha256 (the blind "
-                "hand check's labels and their digest as committed before the join)"
+                "the registered analysis needs --hand-labels, --hand-labels-sha256 and "
+                "--hand-plan-sha256 (the blind hand check's labels, their digest and the plan's, "
+                "as receipted and committed before the join)"
             )
         gate("heldout")
         gate("abstention")
@@ -2818,6 +3130,7 @@ def cmd_analyze(args: argparse.Namespace) -> dict[str, Any]:
         results, per_table = analyze_registered(
             heldout, abstention, config, args.abstention_void, labels, digest
         )
+        check_hand_plan(results["h1_hand_check"], args.hand_plan_sha256)
         results["features_sha256"] = {"heldout": sha256_file(Path(args.heldout_features))}
         if args.abstention_features:
             results["features_sha256"]["abstention"] = sha256_file(Path(args.abstention_features))
@@ -2936,6 +3249,24 @@ def gold_free_proxy(features: dict[str, Any]) -> dict[str, Any]:
     return out
 
 
+def combined_power(n: int, rate: float, confirm: float, alpha: float) -> float:
+    """H1's power with the hand check (section 7.1), with no pair against the rule: the judge
+    counts b ~ Binomial(n, rate) gains and rejects when b >= k (the exact test's threshold at
+    ``alpha`` with c = 0); the hand confirms each judge-counted gain with probability ``confirm``,
+    b_hand ~ Binomial(b, confirm), and must reject too (b_hand >= k)."""
+
+    k = 1
+    while ks.mcnemar_exact(k, 0) > alpha:
+        k += 1
+    total = 0.0
+    for b in range(k, n + 1):
+        w = ks._pmf(b, n, rate)
+        if w < 1e-15:
+            continue
+        total += w * binom_tail_at_least(k, b, confirm)
+    return min(1.0, total)
+
+
 def power_report(am3_results: dict[str, Any], keepset: dict[str, Any], proxy: dict) -> dict:
     """H1's power from AM3's development rates and the anchor's held-out rate; H2's power and
     precision at N = 30 from the development proxy and a grid of cost rates."""
@@ -2961,7 +3292,17 @@ def power_report(am3_results: dict[str, Any], keepset: dict[str, Any], proxy: di
                 "power_alpha_0.025": ks.mcnemar_power(n1, r, s, 0.025, {}),
                 "power_alpha_0.05": ks.mcnemar_power(n1, r, s, 0.05, thresholds),
             }  # fmt: skip
-        h1[reader_id] = {"development_b_c": [b, c], "scenarios": rows}
+        combined = {}
+        for label, r in (("development rate", rate), ("half the development rate", rate / 2),
+                         ("a quarter of it", rate / 4),
+                         ("the anchor's held-out rate (39/347)", 39 / 347)):  # fmt: skip
+            combined[label] = {
+                f"a={a}": {"power_alpha_0.025": combined_power(n1, r, a, 0.025),
+                           "power_alpha_0.05": combined_power(n1, r, a, 0.05)}
+                for a in (1.0, 0.9, 0.8)
+            }  # fmt: skip
+        h1[reader_id] = {"development_b_c": [b, c], "scenarios": rows,
+                         "with_the_hand_check": combined}  # fmt: skip
     n2 = 30
     grid = {}
     for q in (0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.5):
@@ -2983,7 +3324,10 @@ def power_report(am3_results: dict[str, Any], keepset: dict[str, Any], proxy: di
         "h1": {"questions": n1, "readers": h1,
                "note": "power of the exact two-sided McNemar test per reader; Holm across two "
                "readers rejects a reader at least when p <= 0.025 and at most when p <= 0.05, so "
-               "the two columns bound its power"},
+               "the two columns bound its power. with_the_hand_check: the power of the combined "
+               "rule (the judge's test and the hand labels' test both reject), with no pair "
+               "against the rule and each judge-counted gain confirmed by the hand with "
+               "probability a"},
         "h2": {
             "questions": n2,
             "rejection_with_c2_0": "Holm's strictest step (0.05/3) needs b2 >= 7; alpha 0.05 "
@@ -3060,22 +3404,39 @@ def _utc(value: str | None) -> float | None:
         return None
 
 
-def rerun_decision(summary: dict[str, Any] | None, termination: dict[str, str]) -> dict:
+def rerun_decision(
+    summary: dict[str, Any] | None, termination: dict[str, str], is_rerun: bool = False
+) -> dict:
     """The registration's rerun rule (section 8), mechanically, from the driver's summary and the
-    lane's termination record, before extract reads the job:
+    lane's termination record, before extract reads the job. In order:
 
-    - "complete": every essential step completed; extract reads this job.
-    - "rerun" (once per population): an infrastructure failure: the workload never started
-      (``NEVER_STARTED``), no driver summary, a worker that crashed without its done record, an
-      engine that failed to start (OLMo-2's batch-invariant step excepted, whose fallback runs),
-      a failed smoke check, or a signal that came more than ``SIGNAL_AT_LIMIT_S`` before the
-      lane's hard stop (a cancellation or node event).
-    - "no-rerun" (VOID, V2, time budget): a step skipped for lack of time, a pass stopped by its
-      max_s or the deadline, a worker killed as late, the lane's hard stop, or a signal within
-      ``SIGNAL_AT_LIMIT_S`` of the hard stop.
-    - "void" (V1): the model verification failed, or a worker found its engine mode other than
-      the pinned one (worker exit 2)."""
+    1. "rerun" when the workload never started (``NEVER_STARTED``); with no driver summary,
+       "no-rerun" after the lane's hard stop and "rerun" otherwise.
+    2. "void" (V1) when the model verification failed or a worker found its engine mode other
+       than the pinned one (worker exit 2).
+    3. "complete" when every essential step completed (``ESSENTIAL``); extract reads this job.
+    4. For an incomplete job: "no-rerun" (VOID, V2, time budget) after the lane's hard stop;
+       for a signal (a lane reason starting ``signal_`` or a signal the driver recorded),
+       "no-rerun" when the lane finished within ``SIGNAL_AT_LIMIT_S`` of its hard stop (the
+       limit's signal) and "rerun" otherwise (a cancellation or a node event).
+    5. Per essential unit: "no-rerun" for a step skipped for lack of time, a pass stopped by its
+       max_s or the deadline, or a worker killed as late; "rerun" for an engine that failed to
+       start (OLMo-2's batch-invariant step excepted, whose fallback decides), a failed smoke
+       check or a worker that ended without its done record.
 
+    A "rerun" of a job that is itself the registration's rerun becomes "void" (V2): one rerun per
+    population. The signal is dated by the lane's finish time (``finished_at``), the only time the
+    lane records."""
+
+    out = _rerun_decision(summary, termination)
+    if is_rerun and out["decision"] == "rerun":
+        out = out | {"decision": "void", "rule": "V2",
+                     "why": f"the rerun is incomplete too ({out['why']}); one rerun per "
+                     "population"}  # fmt: skip
+    return out | {"is_rerun": is_rerun}
+
+
+def _rerun_decision(summary: dict[str, Any] | None, termination: dict[str, str]) -> dict:
     reason = termination.get("reason", "")
     if reason in NEVER_STARTED:
         return {"decision": "rerun", "why": f"lane: {reason} (the workload never started)"}
@@ -3089,23 +3450,40 @@ def rerun_decision(summary: dict[str, Any] | None, termination: dict[str, str]) 
     steps = summary.get("steps", {})
     statuses = {sid: rec.get("status") for sid, rec in steps.items()}
     out: dict[str, Any] = {"steps": statuses, "lane_reason": reason}
+    for sid, rec in steps.items():
+        if (rec.get("worker_done") or {}).get("exit") == 2:
+            return out | {"decision": "void", "rule": "V1",
+                          "why": f"{sid}: the engine mode differs from the pin"}  # fmt: skip
+    incomplete = [
+        unit
+        for unit, step_ids in ESSENTIAL.items()
+        if not any(steps.get(sid, {}).get("status") == "complete" for sid in step_ids)
+    ]
+    if not incomplete:
+        return out | {"decision": "complete", "why": "every essential step completed",
+                      "second_judge": statuses.get("judge8")}  # fmt: skip
+    out["incomplete"] = incomplete
+    if reason == "hard_stop":
+        return out | {"decision": "no-rerun", "why": "the lane's hard stop (the job's limit)"}
     hard_stop, finished = (
         _utc(termination.get("hard_stop_at")),
         _utc(termination.get("finished_at")),
     )
-    signal_at_limit = (
-        hard_stop is not None and finished is not None and hard_stop - finished <= SIGNAL_AT_LIMIT_S
+    at_limit = (
+        hard_stop is not None
+        and finished is not None
+        and (hard_stop - finished <= SIGNAL_AT_LIMIT_S)
     )
-    for unit, step_ids in ESSENTIAL.items():
-        records = [steps.get(sid, {}) for sid in step_ids]
-        if any(r.get("status") == "complete" for r in records):
-            continue
-        for sid, rec in zip(step_ids, records, strict=True):
+    if reason.startswith("signal_") or summary.get("signal"):
+        if at_limit:
+            return out | {"decision": "no-rerun", "why": "a signal at the limit (lane finish "
+                          f"within {SIGNAL_AT_LIMIT_S} s of its hard stop)"}  # fmt: skip
+        return out | {"decision": "rerun", "why": "a signal before the limit (a cancellation or "
+                      "a node event)"}  # fmt: skip
+    for unit in incomplete:
+        for sid in ESSENTIAL[unit]:
+            rec = steps.get(sid, {})
             status, why = rec.get("status"), str(rec.get("reason", ""))
-            done = rec.get("worker_done") or {}
-            if done.get("exit") == 2:
-                return out | {"decision": "void", "rule": "V1",
-                              "why": f"{sid}: the engine mode differs from the pin"}  # fmt: skip
             if sid == "rd-olmo2" and status in ("engine-failed", "smoke-failed"):
                 continue  # its fallback decides
             if status is None or (status == "skipped" and why.startswith("no reader")):
@@ -3114,17 +3492,10 @@ def rerun_decision(summary: dict[str, Any] | None, termination: dict[str, str]) 
                 return out | {"decision": "no-rerun", "why": f"{sid}: skipped for lack of time"}
             if status == "partial" or rec.get("killed") == "late":
                 return out | {"decision": "no-rerun", "why": f"{sid}: stopped by a time budget"}
-            if status in ("skipped", "failed") and (
-                rec.get("killed") == "signal" or why.startswith("SIG") or summary.get("signal")
-            ):
-                if signal_at_limit or reason == "hard_stop":
-                    return out | {"decision": "no-rerun", "why": f"{sid}: the limit's signal"}
-                return out | {"decision": "rerun", "why": f"{sid}: a signal before the limit"}
             if status in ("engine-failed", "smoke-failed", "failed"):
                 return out | {"decision": "rerun", "why": f"{sid}: {status}"}
-        return out | {"decision": "rerun", "why": f"{unit}: no complete pass ({statuses})"}
-    return out | {"decision": "complete", "why": "every essential step completed",
-                  "second_judge": statuses.get("judge8")}  # fmt: skip
+        return out | {"decision": "rerun", "why": f"{unit}: no complete pass"}
+    return out | {"decision": "rerun", "why": "incomplete"}
 
 
 def cmd_rerun_decision(args: argparse.Namespace) -> dict[str, Any]:
@@ -3136,11 +3507,28 @@ def cmd_rerun_decision(args: argparse.Namespace) -> dict[str, Any]:
             summary = json.loads(summary_path.read_text(encoding="utf-8"))
         except ValueError:
             summary = None
-    decision = rerun_decision(summary, read_env_file(job_dir / "termination.env"))
+    decision = rerun_decision(summary, read_env_file(job_dir / "termination.env"), args.is_rerun)
     return {"population": args.population, "job_dir": job_dir.name} | decision
 
 
 # --------------------------------------------------------------------------- main
+
+
+def check_config_binding(args: argparse.Namespace) -> None:
+    """The held-out and abstention populations run only with the pinned config: its path (whose
+    SHA-256 section 16 pins) and no other."""
+
+    gated = False
+    if args.command in ("run", "worker", "extract", "hand-sample"):
+        gated = GATED.get(args.population, False)
+    elif args.command in ("selftest", "plan"):
+        gated = args.population == "heldout"
+    elif args.command == "analyze":
+        gated = not args.development_features
+    if gated and Path(args.config).resolve() != CONFIG_PATH.resolve():
+        pinned = CONFIG_PATH.relative_to(PROJECT_ROOT)
+        raise Am3gError(f"the {args.command} command runs the held-out and abstention "
+                        f"populations only with the pinned config {pinned}")  # fmt: skip
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -3187,6 +3575,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     analyze_p.add_argument("--development-features", default=None)
     analyze_p.add_argument("--hand-labels", default=None)
     analyze_p.add_argument("--hand-labels-sha256", default=None)
+    analyze_p.add_argument("--hand-plan-sha256", default=None)
     analyze_p.add_argument("--output-dir", required=True)
     compare = sub.add_parser("dryrun-compare", allow_abbrev=False)
     compare.add_argument("--development-features", required=True)
@@ -3205,14 +3594,22 @@ def main(argv: Sequence[str] | None = None) -> int:
     hand.add_argument("--run-dir", required=True)
     hand.add_argument("--evidence", required=True)
     hand.add_argument("--features", required=True)
-    hand.add_argument("--private-dir", required=True)
+    hand.add_argument("--abstention-run-dir", default=None)
+    hand.add_argument("--abstention-evidence", default=None)
+    hand.add_argument("--abstention-features", default=None)
+    hand.add_argument("--hand-dir", required=True)
+    merge = sub.add_parser("hand-merge", allow_abbrev=False)
+    merge.add_argument("--hand-dir", required=True)
+    merge.add_argument("--stage", required=True, choices=("first", "repair"))
     rerun = sub.add_parser("rerun-decision", allow_abbrev=False)
     rerun.add_argument("--population", required=True, choices=POPULATIONS)
     rerun.add_argument("--job-dir", required=True)
+    rerun.add_argument("--is-rerun", action="store_true")
     for sp in sub.choices.values():
         sp.add_argument("--config", default=str(CONFIG_PATH))
     args = parser.parse_args(argv)
     try:
+        check_config_binding(args)
         if args.command == "prepare-abstention":
             print(json.dumps(cmd_prepare_abstention(args), indent=2, sort_keys=True))
             return 0
@@ -3240,6 +3637,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             "power": cmd_power,
             "abstention-facts": cmd_abstention_facts,
             "hand-sample": cmd_hand_sample,
+            "hand-merge": cmd_hand_merge,
             "rerun-decision": cmd_rerun_decision,
         }
         print(json.dumps(commands[args.command](args), indent=2, sort_keys=True))

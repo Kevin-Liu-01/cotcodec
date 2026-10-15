@@ -78,7 +78,8 @@ cp "$R"/ops/jobs.log "$R"/ops/preflight.log "$R"/ops/scontrol-*.txt "$E/ops/" 2>
 cp "$R"/rerun-decision-*.json "$E/ops/" 2>/dev/null || true
 if [[ -d $R/hand-check ]]; then
   mkdir -p "$E/hand-check"; cp "$R"/hand-check/* "$E/hand-check/"
-  cp "$R"/hand-sample-*.json "$E/hand-check/" 2>/dev/null || true
+  cp "$R"/hand-sample-*.json "$R"/hand-merge-*.json "$E/hand-check/" 2>/dev/null || true
+  cp "$R/hand/hand-manifest.json" "$E/hand-check/" 2>/dev/null || true   # ids and digests only
 fi
 cp "$R"/ops/slurm-selftest-*.out "$E/selftests/" 2>/dev/null || true
 cp "$R"/prepare/* "$E/prepare/" 2>/dev/null || true

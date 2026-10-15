@@ -3,23 +3,27 @@
 # run, 1 H100, the image built from commit $2's capsule, the population's study artifact
 # hash-bound), run the submitter's dry run and test-only check, and submit only with "submit",
 # after the population's post-build CPU selftest passed on this image and the preflight finds no
-# GPU job of this program and a free H100. "rerun" submits the registration's one allowed rerun
-# of a job that ended incomplete for an infrastructure reason (registration section 8).
+# GPU job of this program and a free H100. "rerun" submits the registration's one allowed rerun,
+# only when the rerun rule's record for the submitted job says "rerun" (am3g-rerun-decision.sh;
+# registration section 8). A failed dry run or test-only check stops the script; a submission's
+# output is kept as <...>.submit.txt only when the submitter exited 0 with a job id on its last
+# line, so a failure before sbatch does not use up the submission.
 # Usage: am3g-submit.sh dev|reg <commit short id> <image id> <population> [check|submit|rerun]
 set -Eeuo pipefail
 source "$(dirname "$0")/am3g-env.sh" "${1:?mode}"
 SHORT="${2:?commit short id}"; IMAGE="${3:?image id}"; POP="${4:?population}"; ACT="${5:-check}"
 allowed_population "$POP"
+check_image "$IMAGE"
 check_checkout "$SHORT"
 G=$(git rev-parse HEAD)
 ST="$R/selftest-${POP}-${SHORT}/exits.txt"
 grep -qx "image ${IMAGE} population ${POP}" "$ST" && grep -qx "am3g selftest exit 0" "$ST" \
-  && grep -qx "am3g plan exit 0" "$ST" || { echo "no passing post-build selftest of ${POP} for ${IMAGE}"; exit 2; }
+  && grep -qx "am3g plan exit 0" "$ST" || { echo "no passing post-build selftest of ${POP} for ${IMAGE}" >&2; exit 2; }
 ART=$(artifact_for "$POP")
 SRC=$(sha256sum "$R/capsule/source-${SHORT}.tar.gz" | cut -d" " -f1)
 SHA=$(sha256sum "$ART" | cut -d" " -f1); SIZE=$(stat -c %s "$ART")
 PIN=$(uv run --locked --offline python -c "import yaml,sys;print(yaml.safe_load(open('experiments/am3/am3-nonabstain-generality-v1.yaml'))['populations'][sys.argv[1]]['artifact_sha256'])" "$POP")
-[[ "$SHA" == "$PIN" ]] || { echo "the ${POP} artifact is not the pinned one"; exit 2; }
+[[ "$SHA" == "$PIN" ]] || { echo "the ${POP} artifact is not the pinned one" >&2; exit 2; }
 MIN=$(uv run --locked --offline python -c "import yaml,sys;print(yaml.safe_load(open('experiments/am3/am3-nonabstain-generality-v1.yaml'))['jobs'][sys.argv[1]]['minutes'])" "$POP")
 CAP=$(python3 -c "import math,sys;print(f'{math.ceil(int(sys.argv[1])/60*100)/100:.2f}')" "$MIN")
 RECEIPT=$HOME/cotcodec-runs/hf-cache/cotcodec-receipts/qwen3-32b.json
@@ -87,19 +91,33 @@ command:
   - "--expected-evidence-sha256"
   - "${SHA}"
 YAML
-uv run --locked --offline python scripts/submit_docker_research_job.py "$M" --dry-run > "$R/manifests/${POP}-${SHORT}.dry-run.json" && echo "dry run ok"
-uv run --locked --offline python scripts/submit_docker_research_job.py "$M" --test-only > "$R/manifests/${POP}-${SHORT}.test-only.txt" 2>&1 && echo "test-only ok"
-cat "$R/manifests/${POP}-${SHORT}.test-only.txt"
+uv run --locked --offline python scripts/submit_docker_research_job.py "$M" --dry-run \
+  > "$R/manifests/${POP}-${SHORT}.dry-run.json" || { echo "dry run failed" >&2; exit 2; }
+echo "dry run ok" >&2
+uv run --locked --offline python scripts/submit_docker_research_job.py "$M" --test-only \
+  > "$R/manifests/${POP}-${SHORT}.test-only.txt" 2>&1 || { cat "$R/manifests/${POP}-${SHORT}.test-only.txt" >&2; echo "test-only failed" >&2; exit 2; }
+echo "test-only ok" >&2
 case "$ACT" in
   check) exit 0 ;;
   submit) T="$R/manifests/${POP}-${SHORT}.submit.txt"
-          [[ ! -e "$T" ]] || { echo "already submitted once from this commit; a rerun is 'rerun'"; exit 2; } ;;
-  rerun) [[ -e "$R/manifests/${POP}-${SHORT}.submit.txt" ]] || { echo "nothing to rerun"; exit 2; }
+          [[ ! -e "$T" ]] || { echo "already submitted once from this commit; a rerun is 'rerun'" >&2; exit 2; } ;;
+  rerun) S="$R/manifests/${POP}-${SHORT}.submit.txt"
+         [[ -e "$S" ]] || { echo "nothing to rerun" >&2; exit 2; }
+         J0=$(tail -1 "$S")
+         D="$R/rerun-decision-${POP}-${J0}.json"
+         [[ -f "$D" ]] && python3 -c "import json,sys;sys.exit(json.load(open(sys.argv[1]))['decision']!='rerun')" "$D" \
+           || { echo "the rerun rule's record for job ${J0} does not say rerun ($D)" >&2; exit 2; }
          T="$R/manifests/${POP}-${SHORT}.rerun.txt"
-         [[ ! -e "$T" ]] || { echo "the one allowed rerun was used"; exit 2; } ;;
-  *) echo "action is check, submit or rerun"; exit 2 ;;
+         [[ ! -e "$T" ]] || { echo "the one allowed rerun was used" >&2; exit 2; } ;;
+  *) echo "action is check, submit or rerun" >&2; exit 2 ;;
 esac
 bash "$(dirname "$0")/am3g-preflight.sh" "$AM3G_MODE" "${POP} ${ACT} ${SHORT}" 1
-uv run --locked --offline python scripts/submit_docker_research_job.py "$M" > "$T" 2>&1
-J=$(tail -1 "$T")
+rm -f "$T.tmp"
+if ! uv run --locked --offline python scripts/submit_docker_research_job.py "$M" > "$T.tmp" 2>&1; then
+  echo "the submitter failed; nothing was recorded as submitted ($T.tmp kept)" >&2; exit 2
+fi
+J=$(tail -1 "$T.tmp")
+[[ "$J" =~ ^[0-9]+$ ]] || { echo "no job id on the submitter's last line ($T.tmp kept)" >&2; exit 2; }
+mv "$T.tmp" "$T"
 log_job "am3g ${POP} GPU job ${ACT}: $J (git ${SHORT}, image ${IMAGE:7:8}, artifact ${SHA:0:8}, 1 H100, limit ${MIN} min)"
+echo "$J"

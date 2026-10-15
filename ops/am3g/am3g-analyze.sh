@@ -7,10 +7,11 @@
 # the H2 void path replaces the abstention features and writes to out-<short>-void-{a,b} and
 # analyze-<short>-void.log, so the failing attempt's outputs and logs are kept: analyze runs once
 # per input set, and an output directory that exists is never overwritten. The blind hand
-# check's labels ($R/private/hand-labels.jsonl) are joined with the digest receipted by
-# am3g-hand-receipt.sh ($R/hand-check/hand-labels.sha256.txt), which is committed to the
-# repository before this runs; reg mode refuses to run without them, dev mode joins them if
-# present.
+# check's final labels ($R/hand/hand-labels.jsonl) are joined with the digests receipted by
+# am3g-hand-receipt.sh ($R/hand-check/hand-labels.sha256.txt and hand-plan.sha256.txt), which are
+# committed to the repository before this runs; reg mode refuses to run without them and without
+# RECEIPT_COMMIT (that commit's id, logged so a verifier can check its time precedes this log);
+# dev mode joins them if present.
 # Usage: am3g-analyze.sh dev|reg <commit short id>
 set -Eeuo pipefail
 source "$(dirname "$0")/am3g-env.sh" "${1:?mode}"
@@ -26,18 +27,24 @@ elif [[ -n "${ABSTENTION_VOID:-}" ]]; then
 else
   IN=(--heldout-features "$P/features-heldout.json.gz" --abstention-features "$P/features-abstention.json.gz")
 fi
-HL="$P/hand-labels.jsonl"; HS="$R/hand-check/hand-labels.sha256.txt"
-if [[ -f "$HL" && -f "$HS" ]]; then
-  IN+=(--hand-labels "$HL" --hand-labels-sha256 "$(cut -d" " -f1 "$HS")")
+HL="$R/hand/hand-labels.jsonl"; HS="$R/hand-check/hand-labels.sha256.txt"; HP="$R/hand-check/hand-plan.sha256.txt"
+if [[ -f "$HL" && -f "$HS" && -f "$HP" ]]; then
+  IN+=(--hand-labels "$HL" --hand-labels-sha256 "$(cut -d" " -f1 "$HS")"
+       --hand-plan-sha256 "$(cut -d" " -f1 "$HP")")
 elif [[ "$AM3G_MODE" == reg ]]; then
-  echo "no receipted hand labels ($HL, $HS): run am3g-hand-receipt.sh and commit its receipt first" >&2
+  echo "no receipted hand labels ($HL, $HS, $HP): run am3g-hand-receipt.sh and commit its receipt first" >&2
   exit 2
+fi
+if [[ "$AM3G_MODE" == reg ]]; then
+  [[ "${RECEIPT_COMMIT:-}" =~ ^[0-9a-f]{40}$ ]] \
+    || { echo "set RECEIPT_COMMIT to the commit that holds the hand-label receipt" >&2; exit 2; }
 fi
 for x in a b; do
   [[ ! -e "$R/out-${TAG}-$x" ]] || { echo "out-${TAG}-$x exists: analyze runs once per input set" >&2; exit 2; }
 done
 {
   echo "start $(date -u +%FT%TZ) commit $(git rev-parse HEAD) mode ${AM3G_MODE} tag ${TAG}"
+  echo "hand-label receipt commit ${RECEIPT_COMMIT:-none}; labels $(cut -c1-16 "$HS" 2>/dev/null || echo none); plan $(cut -c1-16 "$HP" 2>/dev/null || echo none)"
   for x in a b; do
     uv run --locked --offline python scripts/memcredit_am3g.py analyze "${IN[@]}" \
       --output-dir "$R/out-${TAG}-$x" > "$R/analyze-${TAG}-$x.json" 2> "$R/analyze-${TAG}-$x.stderr"

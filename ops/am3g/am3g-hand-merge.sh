@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# am3-nonabstain-generality-v1: merge one labelling stage of the blind hand check, whatever its
+# chunks hold (scripts/memcredit_am3g.py hand-merge; registration section 8). first: if items lack
+# a valid label, it writes the one repair stage's sample and chunks; otherwise the final labels.
+# repair: the final labels ($R/hand/hand-labels.jsonl), complete or not; there is no third
+# stage. Then receipt the stage with am3g-hand-receipt.sh before anything else.
+# Usage: am3g-hand-merge.sh dev|reg <commit short id> first|repair
+set -Eeuo pipefail
+source "$(dirname "$0")/am3g-env.sh" "${1:?mode}"
+SHORT="${2:?commit short id}"; STAGE="${3:?first or repair}"
+check_checkout "$SHORT"
+chmod u+w "$R/hand/hand-manifest.json"
+uv run --locked --offline python scripts/memcredit_am3g.py hand-merge --hand-dir "$R/hand" \
+  --stage "$STAGE" > "$R/hand-merge-${STAGE}-${SHORT}.json"
+chmod a-w "$R"/hand/*.jsonl "$R"/hand/*.json "$R"/hand/*.txt 2>/dev/null || true
+cat "$R/hand-merge-${STAGE}-${SHORT}.json"
+log_job "hand labels merged, stage ${STAGE}: $(python3 -c "import json,sys;d=json.load(open(sys.argv[1]));print({k:d[k] for k in ('valid_rows','malformed_rows','repeated_items') if k in d}, d.get('items_lacking_a_valid_row', d.get('final_rows')))" "$R/hand-merge-${STAGE}-${SHORT}.json")"

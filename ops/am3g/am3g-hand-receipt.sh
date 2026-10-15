@@ -1,42 +1,54 @@
 #!/usr/bin/env bash
-# am3-nonabstain-generality-v1: receipt the blind hand labels before the join (registration
-# section 8): the labels file's SHA-256 and a text-free receipt go to $R/hand-check/, to be
-# committed to the repository before am3g-analyze.sh joins the labels to the judge. The labels
-# file itself stays on the host (its notes may quote LongMemEval text). Refuses a second receipt.
-# Usage: am3g-hand-receipt.sh dev|reg <commit short id>
+# am3-nonabstain-generality-v1: receipt one labelling stage of the blind hand check before the
+# join (registration section 8). The receipt (text-free) carries the labeller's model and pinned
+# prompt digest, the instructions' and sample's digests, the plan digest, every chunk's
+# transcript digest, the stage's raw labels digest and, when the stage wrote them, the final
+# labels' digest. It goes to $R/hand-check/, to be committed to the repository before
+# am3g-analyze.sh joins the labels (the commit id is passed to am3g-analyze.sh as
+# RECEIPT_COMMIT). The labels and transcripts stay on the host (they may quote LongMemEval text).
+# Reads records only; it runs no repository code. Refuses a second receipt of a stage.
+# Usage: am3g-hand-receipt.sh dev|reg <commit short id> first|repair
 set -Eeuo pipefail
 source "$(dirname "$0")/am3g-env.sh" "${1:?mode}"
-SHORT="${2:?commit short id}"
-L="$R/private/hand-labels.jsonl"; S="$R/private/hand-check-sample.jsonl"
+SHORT="${2:?commit short id}"; STAGE="${3:?first or repair}"
+H="$R/hand"; OUT="$R/hand-check/hand-receipt-${STAGE}.json"
 mkdir -p "$R/hand-check"
-[[ ! -e "$R/hand-check/hand-labels.sha256.txt" ]] || { echo "already receipted" >&2; exit 2; }
-[[ -f "$L" && -f "$S" ]] || { echo "no labels or sample" >&2; exit 2; }
-chmod a-w "$L"
-(cd "$R/private" && sha256sum hand-labels.jsonl) > "$R/hand-check/hand-labels.sha256.txt"
-python3 - "$L" "$S" "$R/hand-check/hand-labels-receipt.json" "$R/hand-sample-${SHORT}.json" <<'PY'
-import hashlib, json, sys
-labels, sample, out, drawn = sys.argv[1:]
-rows = [json.loads(x) for x in open(labels, encoding="utf-8") if x.strip()]
-items = [json.loads(x)["item_id"] for x in open(sample, encoding="utf-8") if x.strip()]
+[[ ! -e "$OUT" ]] || { echo "stage $STAGE already receipted" >&2; exit 2; }
+[[ -f "$H/hand-labels-${STAGE}-raw.jsonl" && -f "$H/transcripts-${STAGE}.sha256" ]] \
+  || { echo "stage $STAGE is not merged, or has no transcript digests" >&2; exit 2; }
+python3 - "$H" "$STAGE" "$OUT" "$R/hand-merge-${STAGE}-${SHORT}.json" <<'PY'
+import hashlib, json, pathlib, sys
+h, stage, out, merged = pathlib.Path(sys.argv[1]), sys.argv[2], sys.argv[3], sys.argv[4]
+digest = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
+manifest = json.loads((h / "hand-manifest.json").read_text())
+transcripts = [line.split() for line in (h / f"transcripts-{stage}.sha256").read_text().splitlines()
+               if line.strip()]
+final = h / "hand-labels.jsonl"
 receipt = {
     "experiment_id": "am3-nonabstain-generality-v1",
-    "file": "hand-labels.jsonl",
-    "sha256": hashlib.sha256(open(labels, "rb").read()).hexdigest(),
-    "rows": len(rows),
-    "fields": sorted({k for r in rows for k in r}),
-    "label_counts": {str(v): sum(1 for r in rows if r.get("label") == v) for v in (0, 1)},
-    "same_item_order_as_sample": [r.get("item_id") for r in rows] == items,
-    "sample": {"file": "hand-check-sample.jsonl",
-               "sha256": hashlib.sha256(open(sample, "rb").read()).hexdigest(),
-               "rows": len(items)},
-    "hand_sample_record": json.load(open(drawn)),
-    "labeller": "an isolated agent, blind to every judge label, rule identity, reader and outcome "
-                "(D9: agent labels, not human)",
+    "stage": stage,
+    "labeller_model": manifest["labeller_model"],
+    "labeller_prompt_sha256": manifest["labeller_prompt_sha256"],
+    "instructions_sha256": manifest["instructions_sha256"],
+    "sample_sha256": manifest["sample_sha256"],
+    "plan_sha256": manifest["plan_sha256"],
+    "chunks": [{"chunk": c["chunk"], "chunk_sha256": c["chunk_sha256"], "output": c["output"],
+                "items": len(c["items"])} for c in manifest[stage]],
+    "transcripts_sha256": {name: d for d, name in transcripts},
+    "raw_labels_sha256": digest(h / f"hand-labels-{stage}-raw.jsonl"),
+    "merge": json.loads(pathlib.Path(merged).read_text()),
+    "final_labels_sha256": digest(final) if final.is_file() else None,
+    "labeller": "an isolated Claude agent per chunk, blind to every judge label, rule identity, "
+                "reader and outcome (D9: agent labels, not human)",
     "joined": False,
-    "receipted_before_join": "this receipt and hand-labels.sha256.txt are committed before "
-                             "am3g-analyze.sh joins the labels",
 }
-json.dump(receipt, open(out, "w"), indent=1, sort_keys=True)
+pathlib.Path(out).write_text(json.dumps(receipt, indent=1, sort_keys=True) + "\n")
+if receipt["final_labels_sha256"]:
+    (pathlib.Path(out).parent / "hand-labels.sha256.txt").write_text(
+        f"{receipt['final_labels_sha256']}  hand-labels.jsonl\n")
+    (pathlib.Path(out).parent / "hand-plan.sha256.txt").write_text(
+        f"{receipt['plan_sha256']}  plan\n")
+print(json.dumps({k: receipt[k] for k in ("stage", "raw_labels_sha256", "final_labels_sha256",
+                                          "plan_sha256", "labeller_prompt_sha256")}, indent=1))
 PY
-cat "$R/hand-check/hand-labels.sha256.txt"
-log_job "hand labels receipted at ${SHORT}: $(cut -c1-16 "$R/hand-check/hand-labels.sha256.txt")"
+log_job "hand labels receipted, stage ${STAGE}: $(python3 -c "import json,sys;d=json.load(open(sys.argv[1]));print('raw',d['raw_labels_sha256'][:16],'final',(d['final_labels_sha256'] or 'none')[:16])" "$OUT")"

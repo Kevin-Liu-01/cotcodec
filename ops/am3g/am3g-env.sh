@@ -54,4 +54,17 @@ check_checkout() {
   [[ "$(git rev-parse --short=8 HEAD)" == "$1" ]] || { echo "checkout is not at $1" >&2; exit 2; }
 }
 
-log_job() { echo "$(date -u +%FT%TZ) $*" | tee -a "$R/ops/jobs.log"; }
+# One line to ops/jobs.log and to stderr, never to stdout, so that a script's stdout carries only
+# its own result (am3g-image.sh prints exactly the image id).
+log_job() { local line; line="$(date -u +%FT%TZ) $*"; echo "$line" >> "$R/ops/jobs.log"; echo "$line" >&2; }
+
+# The only accepted form of an image id.
+check_image() {
+  [[ "${1:-}" =~ ^sha256:[0-9a-f]{64}$ ]] || { echo "not an image id: '${1:-}'" >&2; exit 2; }
+}
+
+# The build root of an attempt: the first, or the one allowed rebuild (-r2).
+build_root() {
+  if [[ -d "$R/overlay-build-vllm-$1-r2" ]]; then echo "$R/overlay-build-vllm-$1-r2"
+  else echo "$R/overlay-build-vllm-$1"; fi
+}
