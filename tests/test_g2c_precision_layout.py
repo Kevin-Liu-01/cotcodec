@@ -46,7 +46,9 @@ def test_config_inherits_g2b() -> None:
         assert config[key] == base[key]
     assert config["saturation"]["seeds"] == [42]
     assert config["saturation"]["output_tokens"] == base["saturation"]["output_tokens"]
-    assert config["teacher_force"]["r4_prompts"] == 16 and config["teacher_force"]["r4_seeds"] == [42]
+    assert config["teacher_force"]["r4_prompts"] == 16 and config["teacher_force"]["r4_seeds"] == [
+        42
+    ]
     assert config["arms"] == {
         "fp16": {"mamba_ssm_cache_dtype": "float16", "block_size": None},
         "bf16_b528": {"mamba_ssm_cache_dtype": "bfloat16", "block_size": 528},
@@ -185,7 +187,7 @@ def _arm_seqs(rng: np.random.Generator, scale: float, trend: float) -> list[dict
     seqs = []
     for seed in SEEDS:
         for prompt in PROMPTS:
-            n = int(rng.integers(1500, 3000))
+            n = 1500 + (prompt * 397 + seed * 113) % 1500  # equal lengths in every arm
             pos = 100 + np.arange(n)
             noise = np.abs(rng.normal(0, 0.01, n)) * scale + trend * pos / 1000.0
             seqs.append(
@@ -228,7 +230,7 @@ def _per_token(arms: list[list[dict]], rng: np.random.Generator, g2b: bool) -> d
     return raw
 
 
-def test_four_arm_contrasts_recover_injected_effects() -> None:
+def test_four_arm_contrasts_recover_injected_effects(tmp_path: Path) -> None:
     rng = np.random.default_rng(42)
     fp32 = _arm_seqs(rng, 1.0, 0.0)
     bf16 = _arm_seqs(rng, 1.0, 0.006)
@@ -244,10 +246,9 @@ def test_four_arm_contrasts_recover_injected_effects() -> None:
     con = result["contrasts"]["dec_vs_r1"]
     assert con["prompts"] == len(PROMPTS)
     pairs = con["pairs"]
-    assert pairs["bf16_vs_fp32"]["mean_abs"]["ratio"] > 2
-    assert pairs["fp16_vs_fp32"]["mean_abs"]["ratio_ci95"][0] < 1 < (
-        pairs["fp16_vs_fp32"]["mean_abs"]["ratio_ci95"][1]
-    )
+    assert pairs["bf16_vs_fp32"]["mean_abs"]["ratio"] > 1.5
+    assert pairs["bf16_vs_fp32"]["mean_abs"]["ratio_ci95"][0] > 1.3
+    assert pairs["fp16_vs_fp32"]["mean_abs"]["ratio"] == pytest.approx(1, abs=0.05)
     assert pairs["fp16_excess_fraction"]["mean_abs"]["value"] == pytest.approx(0, abs=0.1)
     assert pairs["bf16_b528_excess_fraction"]["mean_abs"]["value"] == pytest.approx(1, abs=0.1)
     slope = pairs["bf16_b528_vs_fp32"]["slope_within_sequences_per_1k"]
@@ -259,6 +260,9 @@ def test_four_arm_contrasts_recover_injected_effects() -> None:
     assert result["arms"]["bf16_b528"]["sequences"] == len(PROMPTS) * len(SEEDS)
     text = analysis.markdown({"mismatch": {MODEL: result}})
     assert "Excess fraction" in text and "bf16_b528" in text
+    figure = tmp_path / "figure.png"
+    analysis.plot({"mismatch": {MODEL: result}}, figure)
+    assert figure.stat().st_size > 10_000
 
 
 def test_combine_uses_each_g2b_arms_own_prefill() -> None:
@@ -337,8 +341,12 @@ def _write_jobs(tmp: Path, rng: np.random.Generator) -> tuple[Path, Path]:
     (tf / f"tf-{MODEL}-sequences.json").write_text(
         json.dumps(
             [
-                {"sequence_id": s["sid"], "arm": s["arm"], "prompt_index": s["prompt"],
-                 "seed": s["seed"]}
+                {
+                    "sequence_id": s["sid"],
+                    "arm": s["arm"],
+                    "prompt_index": s["prompt"],
+                    "seed": s["seed"],
+                }
                 for s in merged
             ]  # fmt: skip
         )

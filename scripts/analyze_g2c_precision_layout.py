@@ -248,9 +248,7 @@ def _ci(values: np.ndarray) -> list[float] | None:
     return [float(np.percentile(values, 2.5)), float(np.percentile(values, 97.5))]
 
 
-def arm_contrasts(
-    stats: np.ndarray, data: dict[str, Any], reps: int, seed: int
-) -> dict[str, Any]:
+def arm_contrasts(stats: np.ndarray, data: dict[str, Any], reps: int, seed: int) -> dict[str, Any]:
     """Per arm point values with 95% CIs, and each arm against fp32 and bf16 (ratio, difference,
     excess fraction), bootstrapping the prompts jointly across the four arms."""
 
@@ -394,9 +392,7 @@ def analyze_model(data: dict[str, Any], settings: dict[str, Any]) -> dict[str, A
         stats = sequence_stats(data, a_key, b_key, edges)
         result["contrasts"][f"{a_key}_vs_{b_key}"] = arm_contrasts(stats, data, reps, seed)
     result["position_ratios"] = {
-        "dec_vs_r1": position_ratios(
-            data, "dec", "r1", int(settings["position_bin"]), reps, seed
-        )
+        "dec_vs_r1": position_ratios(data, "dec", "r1", int(settings["position_bin"]), reps, seed)
     }
     return result
 
@@ -429,9 +425,7 @@ def rollout_job(job_dir: Path, config: dict[str, Any]) -> list[dict[str, Any]]:
             "engine": engine,
             "log": ab.parse_log(job_dir / f"worker-{model_id}-{arm}.log"),
             "phases": wsum.get("phases", {}),
-            "gdn_state_mib_per_sequence": gb.gdn_page_bytes(
-                config, gc.arm_state_dtype(config, arm)
-            )
+            "gdn_state_mib_per_sequence": gb.gdn_page_bytes(config, gc.arm_state_dtype(config, arm))
             * gdn_layers
             / 2**20,
         }
@@ -506,9 +500,7 @@ def termination(records: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
             ),
             "completion_len_median": float(np.median(lengths)) if lengths else None,
             "completion_len_mean": float(np.mean(lengths)) if lengths else None,
-            "ended_before": {
-                str(n): sum(r["completion_len"] < n for r in ended) for n in LENGTHS
-            },
+            "ended_before": {str(n): sum(r["completion_len"] < n for r in ended) for n in LENGTHS},
             "boxed_matches_reference": sum(bool(r["boxed_matches_reference"]) for r in vals),
             "boxed_match_share_of_ended": (
                 sum(bool(r["boxed_matches_reference"]) for r in ended) / len(ended)
@@ -633,13 +625,21 @@ def markdown(result: dict[str, Any]) -> str:
                 continue
             m, k = pair["mean_abs"], pair["k3"]
             s, o = pair["slope_within_sequences_per_1k"], pair["share_outside_band"]
+            two = lambda v: fmt(v, 2)  # noqa: E731
             lines.append(
-                f"| {name} | {fmt(m.get('ratio'), 2)} {ci(m.get('ratio_ci95'), lambda v: fmt(v, 2))}"
-                f" | {fmt(k.get('ratio'), 2)} {ci(k.get('ratio_ci95'), lambda v: fmt(v, 2))} | "
-                f"{fmt(o.get('ratio'), 2)} | {sci(s['diff'])} {ci(s.get('diff_ci95'), sci)} |"
+                f"| {name} | {two(m.get('ratio'))} {ci(m.get('ratio_ci95'), two)}"
+                f" | {two(k.get('ratio'))} {ci(k.get('ratio_ci95'), two)} | "
+                f"{two(o.get('ratio'))} | {sci(s['diff'])} {ci(s.get('diff_ci95'), sci)} |"
             )
-        lines += ["", "Excess fraction, (arm - fp32) / (bf16 - fp32): 0 is fp32-like, 1 is bf16-like.", ""]
-        lines += ["| Arm | Mean abs [95% CI] | k3 [95% CI] | Within-seq slope [95% CI] |", "|---|---|---|---|"]
+        lines += [
+            "",
+            "Excess fraction, (arm - fp32) / (bf16 - fp32): 0 is fp32-like, 1 is bf16-like.",
+            "",
+        ]
+        lines += [
+            "| Arm | Mean abs [95% CI] | k3 [95% CI] | Within-seq slope [95% CI] |",
+            "|---|---|---|---|",
+        ]
         for arm in NEW_ARMS:
             ex = con.get("pairs", {}).get(f"{arm}_excess_fraction")
             if not ex:
@@ -660,7 +660,8 @@ def markdown(result: dict[str, Any]) -> str:
             lines.append(f"| {name} | " + " | ".join(cells) + " |")
         lines += ["", "### By position (dec vs r1, mean abs; ratio to fp32 [95% CI])", ""]
         lines += [
-            "| Bin start | fp32 | bf16 | fp16 | bf16_b528 | bf16/fp32 | fp16/fp32 | bf16_b528/fp32 |",
+            "| Bin start | fp32 | bf16 | fp16 | bf16_b528 | bf16/fp32 | fp16/fp32 |"
+            " bf16_b528/fp32 |",
             "|---:|---:|---:|---:|---:|---|---|---|",
         ]
         for row in model["position_ratios"]["dec_vs_r1"]:
@@ -684,7 +685,10 @@ def markdown(result: dict[str, Any]) -> str:
             label = f"[{lo:g}, {'inf' if hi > 1e8 else f'{hi:g}'})"
             lines.append(f"| {label} | " + " | ".join(cells.get(a, "") for a in ARMS) + " |")
         lines += ["", "### Per seed (dec vs r1 mean abs; within-sequence slope)", ""]
-        lines += ["| Arm | " + " | ".join(f"seed {s}" for s in (42, 43, 44)) + " |", "|---|---|---|---|"]
+        lines += [
+            "| Arm | " + " | ".join(f"seed {s}" for s in (42, 43, 44)) + " |",
+            "|---|---|---|---|",
+        ]
         for arm in ARMS:
             cells = []
             for s in (42, 43, 44):
@@ -733,8 +737,8 @@ def markdown(result: dict[str, Any]) -> str:
     if pool:
         lines += ["## Block pool and the seed-42 saturation wave", ""]
         lines += [
-            "| Model | Arm | Block (tokens) | Blocks | GDN page padding | Most 2K / 8K / 32K sequences |"
-            " Wave tok/s | Mean running | Preemptions | Peak KV |",
+            "| Model | Arm | Block (tokens) | Blocks | GDN page padding |"
+            " Most 2K / 8K / 32K sequences | Wave tok/s | Mean running | Preemptions | Peak KV |",
             "|---|---|---:|---:|---:|---|---:|---:|---:|---:|",
         ]
         for model_id, model in pool.items():
@@ -744,18 +748,23 @@ def markdown(result: dict[str, Any]) -> str:
                     continue
                 w = p.get("wave") or {}
                 ms = p.get("max_sequences_by_length") or {}
+                kv = w.get("peak_kv_usage")
+                kv_text = fmt(100 * kv, 0) if kv is not None else "n/a"
                 lines.append(
                     f"| {model_id} | {arm} | {p.get('block_tokens')} | {p.get('num_gpu_blocks')} | "
                     f"{fmt(p.get('mamba_padding_pct'), 2)}% | {ms.get('2048')} / {ms.get('8192')} /"
                     f" {ms.get('32768')} | {fmt(w.get('output_tok_per_s'), 0)} | "
                     f"{fmt(w.get('mean_running'), 0)} | {fmt(w.get('preemptions_delta'), 0)} | "
-                    f"{fmt(100 * w['peak_kv_usage'], 0) if w.get('peak_kv_usage') is not None else 'n/a'}% |"
+                    f"{kv_text}% |"
                 )
         lines.append("")
     check = result.get("g2b_reproduction")
     if check:
         lines += ["## G2b numbers recomputed against G2b's analysis.json", ""]
-        lines += ["| Model | Arm | Quantity | Recomputed | G2b committed |", "|---|---|---|---:|---:|"]
+        lines += [
+            "| Model | Arm | Quantity | Recomputed | G2b committed |",
+            "|---|---|---|---:|---:|",
+        ]
         for row in check["rows"]:
             lines.append(
                 f"| {row['model']} | {row['arm']} | {row['quantity']} | {row['recomputed']:.6g} | "
@@ -835,19 +844,24 @@ def plot(result: dict[str, Any], output: Path) -> None:
         # Entropy bins.
         ax = axes[2, col]
         width = 0.2
-        labels = None
+        los: list[float] = sorted(
+            {
+                e["entropy_lo"]
+                for arm in ARMS
+                for e in (model["subsets"].get(f"{arm}/all", {}).get("dec_vs_r1") or {}).get(
+                    "by_entropy", []
+                )
+            }
+        )
+        his: dict[float, float] = {}
         for k, arm in enumerate(ARMS):
             block = model["subsets"].get(f"{arm}/all", {}).get("dec_vs_r1") or {}
             ent = block.get("by_entropy", [])
             if not ent:
                 continue
-            labels = [
-                f"[{e['entropy_lo']:g}, {'inf' if e['entropy_hi'] > 1e8 else e['entropy_hi']:g})"
-                for e in ent
-            ]
-            xs = np.arange(len(ent)) + (k - 1.5) * width
+            his.update({e["entropy_lo"]: e["entropy_hi"] for e in ent})
             ax.bar(
-                xs,
+                [los.index(e["entropy_lo"]) + (k - 1.5) * width for e in ent],
                 [e["mean_abs"] for e in ent],
                 width * 0.9,
                 color=STYLE[arm]["color"],
@@ -855,8 +869,11 @@ def plot(result: dict[str, Any], output: Path) -> None:
                 edgecolor="white",
                 label=STYLE[arm]["label"],
             )
-        if labels:
-            ax.set_xticks(np.arange(len(labels)), labels)
+        if los:
+            labels = [
+                f"[{lo:g}, " + ("inf" if his[lo] > 1e8 else f"{his[lo]:g}") + ")" for lo in los
+            ]
+            ax.set_xticks(np.arange(len(los)), labels)
         ax.set_yscale("log")
         ax.set_title(f"{model_id}: dec vs r1 by r1 entropy (nats); hatched = 272-token blocks")
         ax.set_ylabel("mean |Δ log p| (log scale)")
@@ -888,7 +905,7 @@ def plot(result: dict[str, Any], output: Path) -> None:
                     lw=1,
                 )
             ax.text(x, v["value"] * 1.03 + 0.0005, f"{v['value']:.4f}", ha="center", fontsize=7)
-    ax.set_xticks([1.5, 6.5], models)
+    ax.set_xticks([1.5 + 5 * i for i in range(len(models))], models)
     ax.set_ylabel("mean |Δ log p|, dec vs r1 (95% CI over prompts)")
     ax.set_title("All rollouts: fp32, bf16 (G2b), fp16, bf16 at 528-token blocks")
     ax.grid(alpha=0.25, axis="y")
@@ -913,7 +930,7 @@ def plot(result: dict[str, Any], output: Path) -> None:
                 x, w["output_tok_per_s"] / 1000 + 0.2, f"{w['output_tok_per_s'] / 1000:.1f}K",
                 ha="center", fontsize=7,
             )  # fmt: skip
-    ax.set_xticks([1.5, 6.5], models)
+    ax.set_xticks([1.5 + 5 * i for i in range(len(models))], models)
     ax.set_ylabel("output tok/s (K), seed-42 wave, 512 x 2,048 tokens")
     ax.set_title("Saturation wave throughput (one wave per arm)")
     ax.grid(alpha=0.25, axis="y")
@@ -923,7 +940,7 @@ def plot(result: dict[str, Any], output: Path) -> None:
              ("dec_vs_pre", "decode vs prefill")]  # fmt: skip
     model_id = models[-1]
     model = result["mismatch"][model_id]
-    for c_i, (name, label) in enumerate(comps):
+    for c_i, (name, _label) in enumerate(comps):
         for k, arm in enumerate(ARMS):
             block = model["subsets"].get(f"{arm}/all", {}).get(name)
             if not block:
@@ -1015,7 +1032,13 @@ def block_pool(
             "wave": wave_row(job.get("phases", {}).get(seed)),
             "phase_r": {
                 k: job.get("phases", {}).get("R", {}).get(k)
-                for k in ("wall_s", "output_tok_per_s", "mean_running", "peak_running", "peak_kv_usage")
+                for k in (
+                    "wall_s",
+                    "output_tok_per_s",
+                    "mean_running",
+                    "peak_running",
+                    "peak_kv_usage",
+                )
             },
         }
     return out

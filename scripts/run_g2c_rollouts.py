@@ -507,9 +507,7 @@ def probe_worker_main(args: argparse.Namespace) -> int:
     g2.write_json(out / "probe.json", record)
     g2.write_json(out / "probe-done.json", {"exit": code, "utc": g2.utc_now()})
     if llm is not None:
-        closer = threading.Thread(
-            target=lambda: llm.llm_engine.engine_core.shutdown(), daemon=True
-        )
+        closer = threading.Thread(target=lambda: llm.llm_engine.engine_core.shutdown(), daemon=True)
         closer.start()
         closer.join(timeout=15)
     sys.stdout.flush()
