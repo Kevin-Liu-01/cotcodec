@@ -976,7 +976,7 @@ def plot(result: dict[str, Any], output: Path) -> None:
             ]
             ax.set_xticks(np.arange(len(los)), labels)
         ax.set_yscale("log")
-        ax.set_title(f"{model_id}: dec vs r1 by r1 entropy (nats); hatched = 272-token blocks")
+        ax.set_title(f"{model_id}: decode vs trainer by r1 entropy (nats)")
         ax.set_ylabel("mean |Δ log p| (log scale)")
         ax.grid(alpha=0.25, axis="y")
     # Summary: mean |d| with CIs per arm and model.
@@ -1005,7 +1005,8 @@ def plot(result: dict[str, Any], output: Path) -> None:
                     capsize=3,
                     lw=1,
                 )
-            ax.text(x, v["value"] * 1.03 + 0.0005, f"{v['value']:.4f}", ha="center", fontsize=7)
+            top = v["ci95"][1] if v["ci95"] else v["value"]
+            ax.text(x, top + 0.0006, f"{v['value']:.4f}", ha="center", fontsize=7)
     ax.set_xticks([1.5 + 5 * i for i in range(len(models))], models)
     ax.set_ylabel("mean |Δ log p|, dec vs r1 (95% CI over prompts)")
     ax.set_title("All rollouts: fp32, bf16 (G2b), fp16, bf16 at 528-token blocks")
@@ -1056,13 +1057,14 @@ def plot(result: dict[str, Any], output: Path) -> None:
             )
     ax.set_xticks([1.5, 6.5, 11.5], [c[1] for c in comps])
     ax.set_ylabel("mean |Δ log p|")
-    ax.set_title(f"{model_id}: which path moved (prefill in each arm's own state and block)")
+    ax.set_title(f"{model_id}: which path moved (prefill: each arm's own engine)")
     ax.grid(alpha=0.25, axis="y")
     fig.suptitle(
         "g2c-precision-layout-v1 (EXPLORATORY): GDN state precision vs block layout in vLLM 0.31.0"
         " (hue = state dtype, solid = 528-token blocks, dashed/hatched = 272-token blocks)",
         fontsize=10,
     )
+    fig.subplots_adjust(top=0.93)
     fig.savefig(output, dpi=110, bbox_inches="tight")
     plt.close(fig)
 

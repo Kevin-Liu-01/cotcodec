@@ -11,7 +11,9 @@ copyjob() {  # <run dir> <dest>
   local src=$1 dst=$2 id; id=$(basename "$src"); mkdir -p "$dst"
   for f in "${lane[@]}"; do [[ -f $src/$f ]] && cp "$src/$f" "$dst/"; done
   [[ -f $src/docker-research.sbatch ]] && sha256sum "$src/docker-research.sbatch" | cut -d" " -f1 > "$dst/docker-research.sbatch.sha256"
-  scontrol show job "$id" > "$dst/scontrol.txt" 2>/dev/null || echo "scontrol record for $id expired before collection (Slurm accounting is off)" > "$dst/scontrol.txt"
+  # The capture taken at completion when it holds a record, else a fresh one, else a note.
+  if grep -q "^JobId=$id " "$R/ops/scontrol-$id.txt" 2>/dev/null; then cp "$R/ops/scontrol-$id.txt" "$dst/scontrol.txt"
+  else scontrol show job "$id" > "$dst/scontrol.txt" 2>/dev/null || echo "scontrol record for $id expired before collection (Slurm accounting is off)" > "$dst/scontrol.txt"; fi
   [[ -f $src/container.log ]] && gzip -c "$src/container.log" > "$dst/container.log.gz"
 }
 for d in $R/runs/*/[0-9]*; do
@@ -51,9 +53,10 @@ for rec in sorted((R / "capsule").glob("source-receipt-*.json")):
 (E / "builds" / "source-capsules.json").write_text(json.dumps(out, indent=2, sort_keys=True) + "\n")
 PY
 for s in $R/ops/slurm-vllm-overlay-*.out $R/ops/slurm-research-overlay-*.out; do [[ -f $s ]] && tail -n 5 "$s" > "$E/builds/$(basename $s).tail.txt"; done
+cp $R/ops/scontrol-build-*.txt $E/builds/ 2>/dev/null || true
 for d in $R/selftest-*; do [[ -d $d ]] || continue; n=$(basename $d); mkdir -p $E/selftests/$n; cp $d/*.json $d/*.txt $E/selftests/$n/ 2>/dev/null || true; done
 cp $R/source-check/* $E/source-check/ 2>/dev/null || true
 cp $R/manifests/* $E/manifests/ 2>/dev/null || true
 cp $R/ops/jobs.log $R/ops/preflight.log $E/ops/ 2>/dev/null || true
-grep -rlE "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" $E --include=*.json --include=*.txt --include=*.env --include=*.jsonl --include=*.yaml | while read f; do echo "IPCHECK $f: $(grep -oE "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" $f | sort -u | tr "\n" " ")"; done
+grep -rlE "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" $E --include=*.json --include=*.txt --include=*.env --include=*.jsonl --include=*.yaml | while read f; do echo "IPCHECK $f: $(grep -oE "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" $f | sort -u | tr "\n" " ")"; done || true
 du -sh $E; find $E -type f | wc -l
