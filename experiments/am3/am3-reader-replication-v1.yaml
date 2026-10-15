@@ -1,0 +1,136 @@
+# AM3 (D117; EXPLORATORY, DEVELOPMENT SPLIT ONLY): does abstention-aware keep selection hold for a
+# second reader and under the second judge?
+#
+# am1-keepset-search-v1 (D117) confirmed H-C on held-out data with the Qwen3-8B reader and the
+# Qwen3-32B judge: keeping the best-BM25-ranked 4-subset whose reply does not abstain (AM1d's
+# rule and its four abstention patterns, digest 031bee27...) beats keeping BM25 top 4. AM3 asks
+# whether that holds (a) for a reader of another model family and (b) under the second judge
+# (Qwen3-8B), which calls "I don't know." correct more often. It runs on the AM1 development
+# pilot's study artifact only (63 questions, two pool arms), never on held-out data.
+#
+# One GPU job (scripts/memcredit_am3.py run, cotcodec-vllm cu129 overlay, vLLM 0.31.0, 1 H100):
+# the steps below run one after another on the job's one GPU. Each reader answers, per pool, the
+# 70 4-subsets and the full pool of 8 (71 requests; BM25 top 4 is one of the 70) with AM1's prompt
+# (its "I don't know" instruction included), greedy, 64 tokens, in its own chat template. Then
+# both judges score every distinct (question, reply) of every reader with LongMemEval's official
+# answer-check prompt, as AM1 did. scripts/memcredit_am3.py extract and analyze (host CPU) join
+# replies to labels and compute the outcomes; reply texts stay on the host.
+#
+# The sanity anchor is Qwen3-8B, AM1's reader, in AM1's eager batch-invariant engine: its labels
+# are compared with the pilot's committed tables at the same masks before any other reader's
+# numbers are read.
+schema_version: 1
+experiment_id: am3-reader-replication-v1
+claim_level: exploratory
+# 42: the engine seed of every reader and judge and the bootstrap seed. 43 and 44 are unused; the
+# lane's seed-matrix contract binds three seeds to --seeds.
+seeds: [42, 43, 44]
+
+# The pilot's config supplies the prompt, the pool arms, the judge models, their prompts, engines
+# and sampling, and the judge's validation items, unchanged. Its SHA-256 is pinned.
+pilot:
+  config: experiments/am1/memcredit-study-v1.yaml
+  config_sha256: "ecdb5c11ff4eaf757ec6712c6f2c75d61c79882bb3d418202b7143abf90793db"
+  study_artifact_sha256: "15567cf14a0c38c1f9edec1f47feceb2a6fccf116338e5957182d03f1d996ebc"
+  tables: program/evidence/2026-10-15/am1-dev-pilot/analysis/tables.json.gz
+  tables_sha256: "839542c65332b908e1c80e9b5e9c09d9c23088e2dec4a54bf2e37dde4f0105d3"
+
+# Per pool: every 4-subset (70 masks, ascending) and the full pool (mask 255).
+requests:
+  pool_size: 8
+  budget: 4
+
+# Readers. Sampling for every reader: greedy, at most 64 new tokens, the sampled token's log-prob.
+reader_sampling: {temperature: 0.0, max_tokens: 64, logprobs: 0}
+readers:
+  # The sanity anchor: AM1's reader in AM1's eager batch-invariant engine (the registration's and
+  # the eager check's mode); its engine block must equal the pilot config's reader engine.
+  - id: qwen3-8b
+    role: anchor
+    model_id: qwen3-8b
+    revision: "b968826d9c46dd6066d109eabc6255188de91218"
+    receipt_root: cotcodec-receipts-cpu-lane
+    family: qwen3
+    enable_thinking: false
+    thinking_marker: "<think>\n\n</think>"
+    stop_token: "<|im_end|>"
+    engine:
+      dtype: bfloat16
+      max_model_len: 4096
+      gpu_memory_utilization: 0.85
+      max_num_seqs: 256
+      max_num_batched_tokens: 8192
+      enable_prefix_caching: true
+      logprobs_mode: raw_logprobs
+  # The second-family reader (Apache-2.0, ungated; models/registry.yaml). vLLM 0.31.0 runs
+  # Olmo2ForCausalLM through its Transformers modeling backend. Its own chat template (no system
+  # message); its context is 4,096 tokens.
+  - id: olmo-2-1124-7b-instruct
+    role: second-family
+    model_id: olmo-2-1124-7b-instruct
+    revision: "470b1fba1ae01581f270116362ee4aa1b97f4c84"
+    receipt_root: cotcodec-receipts-cpu-lane
+    family: olmo2
+    enable_thinking: false
+    thinking_marker: null
+    stop_token: "<|endoftext|>"
+    engine:
+      dtype: bfloat16
+      max_model_len: 4096
+      gpu_memory_utilization: 0.85
+      max_num_seqs: 256
+      max_num_batched_tokens: 8192
+      enable_prefix_caching: true
+      logprobs_mode: raw_logprobs
+  # The fallback reader D117 names, run in addition: Qwen3.5-9B (GDN-attention hybrid), thinking
+  # off, text only, prefix caching off as in G2b's engines for this model.
+  - id: qwen3.5-9b
+    role: same-family-hybrid
+    model_id: qwen3.5-9b
+    revision: "c202236235762e1c871ad0ccb60c8ee5ba337b9a"
+    receipt_root: cotcodec-receipts
+    family: qwen3.5
+    enable_thinking: false
+    thinking_marker: "<think>\n\n</think>"
+    stop_token: "<|im_end|>"
+    engine:
+      dtype: bfloat16
+      max_model_len: 4096
+      gpu_memory_utilization: 0.85
+      max_num_seqs: 256
+      max_num_batched_tokens: 8192
+      enable_prefix_caching: false
+      logprobs_mode: raw_logprobs
+      limit_mm_per_prompt: {image: 0, video: 0}
+
+# The two judges are the pilot config's judge.primary (Qwen3-32B) and judge.secondary (Qwen3-8B),
+# with its prompt, engines and sampling; here in eager batch-invariant mode, as in AM1's
+# registration. Every distinct (question, stripped reply) of every completed reader pass and the
+# pilot's validation items (reference answer, "I don't know.", another question's answer) are
+# judged by both.
+
+# The job: 1 H100; steps run in order on GPU 0. A step starts only with min_start_s left before
+# the deadline; max_s bounds its passes. A reader step in batch-invariant mode that does not
+# complete is followed by its fallback in vLLM's default mode (run only then).
+job:
+  gpus: 1
+  minutes: 55
+  steps:
+    - {id: rd-qwen3-8b, kind: reader, reader: qwen3-8b, batch_invariant: true, enforce_eager: true, min_start_s: 600, max_s: 420}
+    - {id: rd-olmo2, kind: reader, reader: olmo-2-1124-7b-instruct, batch_invariant: true, enforce_eager: true, min_start_s: 600, max_s: 480}
+    - {id: rd-olmo2-default, kind: reader, reader: olmo-2-1124-7b-instruct, batch_invariant: false, enforce_eager: true, only_if_incomplete: rd-olmo2, min_start_s: 600, max_s: 480}
+    - {id: rd-qwen35-9b, kind: reader, reader: qwen3.5-9b, batch_invariant: true, enforce_eager: true, min_start_s: 900, max_s: 900}
+    - {id: rd-qwen35-9b-default, kind: reader, reader: qwen3.5-9b, batch_invariant: false, enforce_eager: true, only_if_incomplete: rd-qwen35-9b, min_start_s: 900, max_s: 900}
+    - {id: judge32, kind: judge, judge: primary, batch_invariant: true, enforce_eager: true, min_start_s: 300, max_s: 420}
+    - {id: judge8, kind: judge, judge: secondary, batch_invariant: true, enforce_eager: true, min_start_s: 150, max_s: 240}
+
+# The analysis (host CPU; scripts/memcredit_am3.py analyze). Per reader x judge x arm, over all 63
+# questions: accuracy of BM25 top 4, nonabstain-BM25 (AM1d's rule, its four patterns unchanged),
+# all 8 and the oracle best 4-subset; nonabstain-BM25 against BM25 top 4 and against all 8 by
+# discordant counts b and c with the exact two-sided McNemar p; the abstention rate; the stop
+# rule's reads. Descriptive labels, fixed here before any reply was generated: HELPS when
+# p <= 0.05 and b > c, HURTS when p <= 0.05 and b < c, NOT_SEPARATED otherwise. Exploratory; no
+# label decides anything.
+analysis:
+  bootstrap: {resamples: 10000, seed: 42}
+  alpha: 0.05
