@@ -1,0 +1,4 @@
+   JobState=COMPLETED Reason=None Dependency=(null)
+   RunTime=00:00:00 TimeLimit=00:05:00 TimeMin=N/A
+   NumNodes=1 NumCPUs=2 NumTasks=1 CPUs/Task=2 ReqB:S:C:T=0:0:*:*
+   TRES=cpu=2,mem=8G,node=1,billing=2

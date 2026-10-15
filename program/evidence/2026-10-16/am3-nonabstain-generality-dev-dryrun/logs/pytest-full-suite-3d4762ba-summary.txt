@@ -1,0 +1,4 @@
+FAILED tests/test_r04_evidence.py::test_analysis_reproduces_from_the_committed_mirror[r04-registered-v1]
+FAILED tests/test_r04_nuisance.py::test_power_run_is_deterministic_and_committed
+2 failed, 3584 passed, 64 skipped, 233 warnings in 397.79s (0:06:37)
+exit 1

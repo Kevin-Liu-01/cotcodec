@@ -1,6 +1,6 @@
 {
   "h1": {
-    "note": "power of the exact two-sided McNemar test per reader; Holm across two readers rejects a reader at least when p <= 0.025 and at most when p <= 0.05, so the two columns bound its power",
+    "note": "power of the exact two-sided McNemar test per reader; Holm across two readers rejects a reader at least when p <= 0.025 and at most when p <= 0.05, so the two columns bound its power. with_the_hand_check: the power of the combined rule (the judge's test and the hand labels' test both reject), with no pair against the rule and each judge-counted gain confirmed by the hand with probability a",
     "questions": 347,
     "readers": {
       "olmo-2-1124-7b-instruct": {
@@ -39,6 +39,64 @@
             "rate": 0.11239193083573487,
             "share_for_rule": 1.0
           }
+        },
+        "with_the_hand_check": {
+          "a quarter of it": {
+            "a=0.8": {
+              "power_alpha_0.025": 0.15587394465322432,
+              "power_alpha_0.05": 0.2805150472024921
+            },
+            "a=0.9": {
+              "power_alpha_0.025": 0.23048326438515812,
+              "power_alpha_0.05": 0.3764624368450546
+            },
+            "a=1.0": {
+              "power_alpha_0.025": 0.3145863777099112,
+              "power_alpha_0.05": 0.4731363970752251
+            }
+          },
+          "development rate": {
+            "a=0.8": {
+              "power_alpha_0.025": 0.9989060669639555,
+              "power_alpha_0.05": 0.9996656999068675
+            },
+            "a=0.9": {
+              "power_alpha_0.025": 0.9997853363738823,
+              "power_alpha_0.05": 0.9999415046886134
+            },
+            "a=1.0": {
+              "power_alpha_0.025": 0.9999611128484032,
+              "power_alpha_0.05": 0.9999904552798389
+            }
+          },
+          "half the development rate": {
+            "a=0.8": {
+              "power_alpha_0.025": 0.7791210898124163,
+              "power_alpha_0.05": 0.8756671676983733
+            },
+            "a=0.9": {
+              "power_alpha_0.025": 0.8680406487966172,
+              "power_alpha_0.05": 0.9323790349176809
+            },
+            "a=1.0": {
+              "power_alpha_0.025": 0.9252962566222834,
+              "power_alpha_0.05": 0.9649472336549741
+            }
+          },
+          "the anchor's held-out rate (39/347)": {
+            "a=0.8": {
+              "power_alpha_0.025": 0.9999999834930888,
+              "power_alpha_0.05": 0.9999999971674016
+            },
+            "a=0.9": {
+              "power_alpha_0.025": 0.9999999995281572,
+              "power_alpha_0.05": 0.9999999999285891
+            },
+            "a=1.0": {
+              "power_alpha_0.025": 0.9999999999880751,
+              "power_alpha_0.05": 0.9999999999983937
+            }
+          }
         }
       },
       "qwen3.5-9b": {
@@ -76,6 +134,64 @@
             "power_alpha_0.05": 0.9999999999983937,
             "rate": 0.11239193083573487,
             "share_for_rule": 1.0
+          }
+        },
+        "with_the_hand_check": {
+          "a quarter of it": {
+            "a=0.8": {
+              "power_alpha_0.025": 0.05042580249349443,
+              "power_alpha_0.05": 0.11671652684193376
+            },
+            "a=0.9": {
+              "power_alpha_0.025": 0.08229544977649836,
+              "power_alpha_0.05": 0.17147447982194436
+            },
+            "a=1.0": {
+              "power_alpha_0.025": 0.12351595152544069,
+              "power_alpha_0.05": 0.23481413538454954
+            }
+          },
+          "development rate": {
+            "a=0.8": {
+              "power_alpha_0.025": 0.9790721838989073,
+              "power_alpha_0.05": 0.9916334226836899
+            },
+            "a=0.9": {
+              "power_alpha_0.025": 0.99268761759412,
+              "power_alpha_0.05": 0.9973756025059841
+            },
+            "a=1.0": {
+              "power_alpha_0.025": 0.9976141832619494,
+              "power_alpha_0.05": 0.99922447323859
+            }
+          },
+          "half the development rate": {
+            "a=0.8": {
+              "power_alpha_0.025": 0.4915613862076346,
+              "power_alpha_0.05": 0.648871868328987
+            },
+            "a=0.9": {
+              "power_alpha_0.025": 0.6151564877476678,
+              "power_alpha_0.05": 0.7544026996106316
+            },
+            "a=1.0": {
+              "power_alpha_0.025": 0.7206667096981241,
+              "power_alpha_0.05": 0.8348393946384118
+            }
+          },
+          "the anchor's held-out rate (39/347)": {
+            "a=0.8": {
+              "power_alpha_0.025": 0.9999999834930888,
+              "power_alpha_0.05": 0.9999999971674016
+            },
+            "a=0.9": {
+              "power_alpha_0.025": 0.9999999995281572,
+              "power_alpha_0.05": 0.9999999999285891
+            },
+            "a=1.0": {
+              "power_alpha_0.025": 0.9999999999880751,
+              "power_alpha_0.05": 0.9999999999983937
+            }
           }
         }
       }

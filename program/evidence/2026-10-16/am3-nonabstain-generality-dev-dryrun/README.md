@@ -9,8 +9,10 @@ development outputs. No held-out or abstention question was given to any model.
 - **Code.** Commit `eae156cf` for the image, the GPU job, extract and the first analysis. The
   analysis and the tests were rerun at `95c3ef5a`, `ea678a99` and `fc9ebb4d` (byte-identical
   outputs, `logs/confirm-*.log`). After pre-freeze check 1, the CPU parts were rerun at
-  `0d030015` and `8624a08b` with the round-1 code (see "Round 1"); the code the GPU job runs did
-  not change, so no GPU job was rerun.
+  `0d030015` and `8624a08b` with the round-1 code (see "Round 1"), and after pre-freeze check 2
+  at `c2eaa62b` and `3d4762ba` (see "Round 2"); the GPU job's steps did not change, so no GPU job
+  was rerun. `results.json`, `per-table.json.gz`, `tables.md`, `power.json` and
+  `dryrun-compare.json` are the outputs at `3d4762ba`.
 - **Host directory.** `~/cotcodec-runs/stage0/am3g-dev-dryrun/` (new). The operator scripts
   (`ops/am3g/`) ran in their `dev` mode.
 - **Inputs.** The pilot's development artifact (`15567cf1...`), AM3's job 1466 passes (the
@@ -136,7 +138,7 @@ runs. So the CPU parts were rerun on job 1471's records, and no GPU job ran.
   8,913 of 8,946 cells agree, AM3's figure (the 33 others are the compiled-against-eager
   difference AM3 explained).
 - **The blind hand check, rehearsed on development data.**
-  - `hand-sample` (`hand-check/hand-sample-0d030015.json`) drew 27 items: for OLMo-2, 4
+  - `hand-sample` (`hand-check/round1/hand-sample-0d030015.json`) drew 27 items: for OLMo-2, 4
     discordant questions (both replies) and 4 distractor questions; for Qwen3.5-9B, 3 and 3.
     The sample (host only) holds the question, its type and id, the reference answer and the
     reply, and nothing else.
@@ -144,7 +146,7 @@ runs. So the CPU parts were rerun on job 1471's records, and no GPU job ran.
     correct, 20 not (14 of them refusals). One temporal item, half a week off, it labelled correct
     as borderline under the off-by-one rule.
   - `am3g-hand-receipt.sh` wrote the labels' SHA-256 (`604896d5...`) and a text-free receipt
-    (`hand-check/`) before `analyze` joined them.
+    (`hand-check/round1/`) before `analyze` joined them.
   - The join: hand and judge agree on 27 of 27 items (kappa 1.00). b_hand and c_hand are 4 and 0
     for OLMo-2 and 3 and 0 for Qwen3.5-9B, equal to the judge's; neither separates on 63
     questions (p = 0.125 and 0.25), so both read NO_DETECTED_DIFFERENCE before and after the hand
@@ -164,6 +166,62 @@ runs. So the CPU parts were rerun on job 1471's records, and no GPU job ran.
 - **Job 1470** is not this registration's: it appears in none of its logs or scripts, and
   scontrol no longer knew it when check 1 asked (Slurm accounting is disabled on the node).
 
+## Round 2: after pre-freeze check 2 (CPU only)
+
+Check 2's fixes changed the operator scripts, the hand check (its protocol, the H2 part, the
+transcript audit), the rerun rule's order, the config binding and `power`; the GPU job's steps
+did not change. Round 2 used no GPU time.
+
+- **`extract`** at `c2eaa62b` read job 1471 again (`logs/extract-development-c2eaa62b.*`):
+  features `5e2e3366...` (now with the per-reply hedge flag); the R2 code on the pilot's tables
+  again 8,913 of 8,946.
+- **The runbook rehearsal** (`rehearsal/`): `am3g-rehearse.sh` runs section 16's host scripts on
+  the host under a fake HOME, with `sbatch`, `scontrol`, `squeue` and `nvidia-smi` stubbed on
+  PATH, against a copy of the development artifact and fake build, selftest and job records. No
+  job was submitted, no GPU was used and no model ran.
+  - At `c2eaa62b` (`rehearse-c2eaa62b.log`, run before the two preflight cases were added): 30
+    of 38 passed. The failures had one cause: `am3g-preflight.sh` printed its report on stdout,
+    so `am3g-build.sh` and `am3g-submit.sh` printed the report before the job id, and a captured
+    id held both (check 2's first finding, in another script). Fixed at `507f4284`: the
+    preflight reports on stderr.
+  - At `507f4284`, `495090ef` and `3d4762ba`: 40 of 40. The cases cover the bootstrap checkout;
+    the image capture (exactly one line; the record checks pass on job 1467's real build record
+    and refuse another base image, another vLLM commit and a malformed id file); build, the one
+    rebuild into `-r2`, the refused second build and third attempt, the image read from the
+    latest attempt; the whole `scontrol` record saved and printed again after scontrol forgets
+    the job; the image-id checks of selftest and submit; submit's failure paths (a failed dry
+    run, a failed test-only check, a GPU job of this program queued with D110's `transcreate-*`
+    ignored, a failed sbatch, an output without a job id), none leaving a submit record, then
+    one submission and a refused second; rerun refused without the rule's record, allowed once
+    with it, the rerun's own "rerun" void and a second rerun refused; and the rule's order on six
+    fake job records.
+- **The blind hand check under the registered protocol** (`hand-check/round2/` at `c2eaa62b`,
+  `hand-check/round2-3d4762ba/` at `3d4762ba`). `hand-sample` wrote the sample, the
+  instructions, one chunk of 27 items and its launch prompt to `R/hand/` (plan `85497ef8...`,
+  sample `9597c6ca...`, the same at every commit).
+  - The registered CLI launch could not authenticate in this environment ("Invalid API key").
+    At `c2eaa62b` the chunk was labelled by a subagent (model claude-opus-5-5) with the pinned
+    prompt (`98c35cea...`), the procedure since registered as the fallback; its transcript holds
+    only the two Reads and the Write.
+  - At `495090ef` the launch script took the CLI's authentication failure, which arrives as an
+    assistant text and an error result, for a started session and pushed a stage without labels.
+    The attempt was set aside on the host (`hand-495090ef/`, with the sample drawn at
+    `507f4284` in `hand-507f4284/`); at `3d4762ba` the script reads the result record.
+  - At `3d4762ba`: the CLI launch stopped on chunk 01 with exit 3 and kept its error (digest
+    `057ce472...` in the receipt); the fallback subagent read the two files and wrote the output,
+    three tool calls; `hand-merge` audited the transcript (pass) and kept 27 valid rows, so no
+    repair stage. The receipt (`hand-receipt-first.json`, launch "subagent") was committed at
+    `ea449d9d` before `analyze` joined it (`logs/analyze-3d4762ba.log` names that commit).
+  - The join: 7 correct and 20 not; hand and judge agree on 27 of 27 (kappa 1.00); b_hand and
+    c_hand 4 and 0 (OLMo-2) and 3 and 0 (Qwen3.5-9B); both read NO_DETECTED_DIFFERENCE before and
+    after the hand check. The labels equal the `c2eaa62b` run's on all 27 items (the notes
+    differ, so the labels' digests differ: `85320c6a...` and `52ebe143...`).
+- **`analyze`** at `c2eaa62b` and `3d4762ba`: twice each, byte-identical; `dryrun-compare` 20 of
+  20 (`per-table.json.gz` byte-identical to AM3's); `power.json` adds the combined rule
+  (`with_the_hand_check`). The two analyses differ only in the labels' digest.
+- `h1_gains_that_hedge` (development, descriptive): of the rule's gains, 0 of 4 (OLMo-2), 0 of 3
+  (Qwen3.5-9B) and 1 of 1 (Qwen3-8B) hedge.
+
 ## Power (`power.json`)
 
 `scripts/memcredit_am3g.py power`, CPU, from AM3's committed `results.json`, `am1-keepset-search-v1`'s
@@ -172,6 +230,10 @@ committed `results.json` and AM3's host-only features. The registration's sectio
 - **H1** (347 questions; bounds between alpha 0.025 and 0.05): at AM3's development rates (4 of
   63 for OLMo-2, 3 of 63 for Qwen3.5-9B, no losses) power is 1.00 and 0.998-0.999; at half those
   rates 0.93-0.96 and 0.72-0.83; at a quarter 0.31-0.47 and 0.12-0.23.
+- **H1 with the hand check** (`with_the_hand_check`): if the hand labels confirm each judge gain
+  with probability a, at half the development rates the power is 0.93-0.96, 0.87-0.93 and
+  0.78-0.88 for OLMo-2 at a = 1, 0.9 and 0.8, and 0.72-0.83, 0.62-0.75 and 0.49-0.65 for
+  Qwen3.5-9B; at the development rates 0.979 or more in every case.
 - **H2** (30 questions): power reaches 0.8 only at a cost rate of about 0.3. The development
   proxy (gold-free 4-subsets as an unanswerable question's subsets) gives switching rates of
   0.048 (Qwen3-8B), 0.175 (OLMo-2) and 0.063 (Qwen3.5-9B), with power 0.0004, 0.26 and 0.002 at
@@ -188,6 +250,9 @@ committed `results.json` and AM3's host-only features. The registration's sectio
   `am1-keepset-search-v1`'s selftest also found failing on `main`. This branch changes no
   existing code. At `8624a08b`, after round 1: the memcredit tests 120 passed; the whole suite
   3,574 passed, 64 skipped and the same 2 failed (`logs/pytest-full-suite-*-summary.txt`).
+- After round 2: the memcredit tests 128 passed at `c2eaa62b` and 130 at `3d4762ba`
+  (`logs/pytest-3d4762ba.log`); the whole suite at `3d4762ba` 3,584 passed, 64 skipped and the
+  same 2 failed.
 
 ## Files
 
@@ -202,8 +267,11 @@ committed `results.json` and AM3's host-only features. The registration's sectio
 - `logs/`: extract, analyze, `dryrun-compare`, `power` and pytest logs; `logs/confirm-*.log`:
   the reruns at the later commits.
 - `adhoc/`: the in-image pin checks (jobs 1472, 1473, 1474; scripts and outputs).
-- `hand-check/`: the development hand check's receipt, the labels' SHA-256 and the sample's
-  counts and digests (the sample and the labels stay on the host).
+- `hand-check/`: the development hand check's receipts, the labels' and plan's SHA-256, the
+  merge records and the sample's counts and digests: `round1/` (at `0d030015`), `round2/` (at
+  `c2eaa62b`), `round2-3d4762ba/` (at `3d4762ba`, with the text-free manifest). The sample,
+  chunks, labels and transcripts stay on the host.
+- `rehearsal/`: the runbook rehearsal's script and its four logs (home paths written as `~`).
 - `ops/`: `jobs.log` and `preflight.log`. The scripts themselves are `ops/am3g/` at the commit.
 - The staging script searched every staged file for each of the 3,717 texts of at least 12
   characters (every distinct reply, and every question, answer, decoy and memory text of the

@@ -1686,7 +1686,7 @@
   },
   "experiment": "am3-nonabstain-generality-v1",
   "features_sha256": {
-    "development": "ce7cf92c10b74e585ebfe0ee42d7f699d9c378d3c1394f5ce79b72737c56c5ba"
+    "development": "5e2e336669e7cbd169bbd73de1c6ad44824d7dba6c3653760bf8d81ed26bb856"
   },
   "mechanics": {
     "by_type": {
@@ -2156,6 +2156,24 @@
         }
       }
     },
+    "h1_gains_that_hedge": {
+      "decides": false,
+      "pattern": "\\b(?:or|either|possibly|perhaps|maybe|might|could be|not sure|unsure)\\b",
+      "readers": {
+        "olmo-2-1124-7b-instruct": {
+          "gains": 4,
+          "gains_whose_reply_hedges": 0
+        },
+        "qwen3-8b": {
+          "gains": 1,
+          "gains_whose_reply_hedges": 1
+        },
+        "qwen3.5-9b": {
+          "gains": 3,
+          "gains_whose_reply_hedges": 0
+        }
+      }
+    },
     "h1_hand_check": {
       "agreement": {
         "agree": 27,
@@ -2167,10 +2185,23 @@
         "judge_yes_hand_yes": 7,
         "kappa": 1.0
       },
+      "agreement_by_population": {
+        "development": {
+          "agree": 27,
+          "decides": false,
+          "items": 27,
+          "judge_no_hand_no": 20,
+          "judge_no_hand_yes": 0,
+          "judge_yes_hand_no": 0,
+          "judge_yes_hand_yes": 7,
+          "kappa": 1.0
+        }
+      },
       "items": 27,
-      "labeller": "an isolated agent, blind (D9: agent labels, not human)",
-      "labels_sha256": "604896d5838ffc447f71803b1a6158c97a0db921d5d0717596f854c9eb8f7bbf",
-      "plan_sha256": "cd7516b983110ce2573835aa06f21dea6776e47f4975a205ec05e3cf2704df98",
+      "labeller": "an isolated agent (claude-opus-5-5), blind (D9: agent labels, not human)",
+      "labeller_prompt_sha256": "98c35ceac9710033b095f01abe4a5fc98f6ed3a597b461e12a98ac213a7ae096",
+      "labels_sha256": "52ebe1437166f1cc2d5a21eedb09f3b4693e8b8d6f6a06f8046b4cdaa7cf549d",
+      "plan_sha256": "85497ef8075304320f2715cbc2c0b3aea4b05ad157b3504ceddd0116e17aa8b8",
       "readers": {
         "olmo-2-1124-7b-instruct": {
           "b_hand": 4,
@@ -2202,13 +2233,21 @@
         }
       },
       "readers_plan": {
-        "olmo-2-1124-7b-instruct": {
-          "discordant_questions": 4,
-          "distractor_questions": 4
-        },
-        "qwen3.5-9b": {
-          "discordant_questions": 3,
-          "distractor_questions": 3
+        "development": {
+          "olmo-2-1124-7b-instruct": {
+            "discordant_questions": 4,
+            "distractor_questions": 4,
+            "distractors_where_it_kept_top4": 0,
+            "distractors_where_the_rule_switched": 4,
+            "switched_shortfall": 0
+          },
+          "qwen3.5-9b": {
+            "discordant_questions": 3,
+            "distractor_questions": 3,
+            "distractors_where_it_kept_top4": 0,
+            "distractors_where_the_rule_switched": 3,
+            "switched_shortfall": 0
+          }
         }
       },
       "status": "joined"
@@ -2239,6 +2278,7 @@
             0.543823156750429
           ],
           "bm25_top4_correct": 26,
+          "bm25_top4_correct_abstentions": 0,
           "c2_rule_right_top4_wrong": 4,
           "ci95_bootstrap": [
             0.015873015873015872,
@@ -2248,6 +2288,8 @@
             -0.012998683887806322,
             0.06349206349206349
           ],
+          "cost_per_correct_top4_abstention": null,
+          "cost_per_correct_top4_abstention_ci95_exact": null,
           "cost_rate": 0.0,
           "cost_rate_ci95_exact": [
             0.0,
@@ -2287,6 +2329,7 @@
             0.6362406400008724
           ],
           "bm25_top4_correct": 32,
+          "bm25_top4_correct_abstentions": 0,
           "c2_rule_right_top4_wrong": 1,
           "ci95_bootstrap": [
             0.0,
@@ -2296,6 +2339,8 @@
             -0.01507936507936508,
             0.015873015873015872
           ],
+          "cost_per_correct_top4_abstention": null,
+          "cost_per_correct_top4_abstention_ci95_exact": null,
           "cost_rate": 0.0,
           "cost_rate_ci95_exact": [
             0.0,
@@ -2335,6 +2380,7 @@
             0.5905744727604418
           ],
           "bm25_top4_correct": 29,
+          "bm25_top4_correct_abstentions": 0,
           "c2_rule_right_top4_wrong": 3,
           "ci95_bootstrap": [
             0.0,
@@ -2344,6 +2390,8 @@
             -0.01977125963606795,
             0.047619047619047616
           ],
+          "cost_per_correct_top4_abstention": null,
+          "cost_per_correct_top4_abstention_ci95_exact": null,
           "cost_rate": 0.0,
           "cost_rate_ci95_exact": [
             0.0,
