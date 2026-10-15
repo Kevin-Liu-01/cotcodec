@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# am5-ablated-cost-v1: submit the post-build CPU selftest (no GRES) of one population on the image
+# am5-ablated-cost-v2: submit the post-build CPU selftest (no GRES) of one population on the image
 # built from commit $2: tokenizers only, no model output (registration section 8), so the held-out
 # population's selftest may run before the freeze. Its result lands in
 # $R/selftest-<population>-<short>/exits.txt, which am5r-submit.sh requires.

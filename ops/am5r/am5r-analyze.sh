@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# am5-ablated-cost-v1: host CPU analysis from the clean checkout at commit $2. analyze runs twice
+# am5-ablated-cost-v2: host CPU analysis from the clean checkout at commit $2. analyze runs twice
 # and the outputs must be byte-identical; then the memcredit tests of am3g, AM5 and this
 # registration. dev mode: the development dry run's analysis (the registered machinery on AM5's
 # pools; it decides nothing), its comparison with AM5's committed outputs (dryrun-compare, with

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# am5-ablated-cost-v1: host CPU extract of one population's GPU job, from the clean checkout at
+# am5-ablated-cost-v2: host CPU extract of one population's GPU job, from the clean checkout at
 # commit $2 in the host's uv environment. It joins every reply to the judge's label, flags
 # abstentions, splits the replay control off, replays it against AM5's job 1487 (V3; the
 # development dry run replays every request), and writes text-free features to the host-only

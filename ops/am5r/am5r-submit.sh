@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# am5-ablated-cost-v1: write one population's GPU-job lane manifest (scripts/memcredit_am5r.py
+# am5-ablated-cost-v2: write one population's GPU-job lane manifest (scripts/memcredit_am5r.py
 # run, 1 H100, the image built from commit $2's capsule, the population's study artifact
 # hash-bound), run the submitter's dry run and test-only check, and submit only with "submit",
 # after the population's post-build CPU selftest passed on this image and the preflight finds no
@@ -30,9 +30,9 @@ grep -qx "image ${IMAGE} population ${POP}" "$ST" && grep -qx "am5r selftest exi
 ART=$(artifact_for "$POP")
 SRC=$(sha256sum "$R/capsule/source-${SHORT}.tar.gz" | cut -d" " -f1)
 SHA=$(sha256sum "$ART" | cut -d" " -f1); SIZE=$(stat -c %s "$ART")
-PIN=$(uv run --locked --offline python -c "import yaml,sys;print(yaml.safe_load(open('experiments/am5/am5-ablated-cost-v1.yaml'))['populations'][sys.argv[1]]['artifact_sha256'])" "$POP")
+PIN=$(uv run --locked --offline python -c "import yaml,sys;print(yaml.safe_load(open('experiments/am5/am5-ablated-cost-v2.yaml'))['populations'][sys.argv[1]]['artifact_sha256'])" "$POP")
 [[ "$SHA" == "$PIN" ]] || { echo "the ${POP} artifact is not the pinned one" >&2; exit 2; }
-MIN=$(uv run --locked --offline python -c "import yaml,sys;print(yaml.safe_load(open('experiments/am5/am5-ablated-cost-v1.yaml'))['jobs'][sys.argv[1]]['minutes'])" "$POP")
+MIN=$(uv run --locked --offline python -c "import yaml,sys;print(yaml.safe_load(open('experiments/am5/am5-ablated-cost-v2.yaml'))['jobs'][sys.argv[1]]['minutes'])" "$POP")
 CAP=$(python3 -c "import math,sys;print(f'{math.ceil(int(sys.argv[1])/60*100)/100:.2f}')" "$MIN")
 RECEIPT=$HOME/cotcodec-runs/hf-cache/cotcodec-receipts/qwen3-32b.json
 RSHA=$(sha256sum "$RECEIPT" | cut -d" " -f1)
@@ -41,7 +41,7 @@ REV=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['revision']
 mkdir -p "$R/runs/${POP}" "$R/manifests"
 M="$R/manifests/${POP}-${SHORT}.yaml"
 cat > "$M" <<YAML
-# am5-ablated-cost-v1 (${AM5R_MODE}; population ${POP}): scripts/memcredit_am5r.py run in the
+# am5-ablated-cost-v2 (${AM5R_MODE}; population ${POP}): scripts/memcredit_am5r.py run in the
 # cotcodec-vllm cu129 overlay built from commit ${SHORT}'s capsule. Steps on 1 H100, in order:
 # readers Qwen3-8B (eager batch-invariant; the replay control's gated reader), OLMo-2-1124-7B-Instruct
 # (eager batch-invariant, default-mode fallback only if it does not complete) and Qwen3.5-9B (eager,

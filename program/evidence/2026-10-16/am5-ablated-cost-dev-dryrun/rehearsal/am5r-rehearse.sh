@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# am5-ablated-cost-v1, development dry run: a rehearsal of section 16's operator scripts on the host
+# am5-ablated-cost-v2, development dry run: a rehearsal of section 16's operator scripts on the host
 # under a fake HOME, with sbatch, scontrol, squeue and nvidia-smi stubbed on PATH, and, for the
 # Mac's labelling script, ssh and scp (to the fake HOME) and the claude CLI (its authentication
 # failure). am3g's rehearsal (its 56 cases), adapted to this registration's scripts, plus this
@@ -202,7 +202,7 @@ bash $O/am5r-submit.sh dev "$SHORT" "$IMG" heldout check > "$BASE/submit-held.ou
 check "dev mode refuses to run the held-out population on a GPU (no sbatch call)" "[[ $rc -eq 2 && \$(wc -l < $FAKE/stub.log) -eq $n0 ]] && grep -q 'does not run population heldout' $BASE/submit-held.out"
 bash $O/am5r-extract.sh dev "$SHORT" heldout 9100 > "$BASE/extract-held.out" 2>&1; rc=$?
 check "dev mode refuses to extract the held-out population" "[[ $rc -eq 2 ]] && grep -q 'does not run population heldout' $BASE/extract-held.out"
-HA=$FAKE/cotcodec-runs/stage0/am5-ablated-cost-v1/inputs
+HA=$FAKE/cotcodec-runs/stage0/am5-ablated-cost-v2/inputs
 mkdir -p "$HA"
 bash $O/am5r-prepare-heldout.sh reg "$SHORT" > "$BASE/prepare-reg.out" 2>&1; rc=$?
 check "prepare-heldout refuses reg mode (the artifact is built before the freeze)" "[[ $rc -eq 2 ]] && grep -q 'before the freeze' $BASE/prepare-reg.out"
@@ -214,7 +214,7 @@ check "the held-out selftest (tokenizers only) submits in dev mode, before the f
 rm -f "$HA/heldout-ablated-artifact.json"
 # Round 2 (minor 1): in reg mode, the held-out submit runs the checkout's freeze gate first; before
 # the freeze it refuses, writing no manifest and calling no submitter.
-RR=$FAKE/cotcodec-runs/stage0/am5-ablated-cost-v1
+RR=$FAKE/cotcodec-runs/stage0/am5-ablated-cost-v2
 mkdir -p "$RR/bundles"; cp "$BUNDLE" "$RR/bundles/am5r-$SHORT.bundle"
 bash $O/am5r-checkout.sh reg "$G" > "$BASE/checkout-reg.out" 2>&1
 n0=$(wc -l < "$FAKE/stub.log")

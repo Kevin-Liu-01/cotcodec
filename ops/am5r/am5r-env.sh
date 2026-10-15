@@ -1,18 +1,19 @@
 #!/usr/bin/env bash
-# am5-ablated-cost-v1: shared host paths for the operator scripts. Sourced, not run.
+# am5-ablated-cost-v2: shared host paths for the operator scripts. Sourced, not run.
 # Usage: source am5r-env.sh dev|reg
 #   dev: the pre-freeze development dry run, ~/cotcodec-runs/stage0/am5r-dev-dryrun
-#   reg: the registered run (after the freeze), ~/cotcodec-runs/stage0/am5-ablated-cost-v1
+#   reg: the registered run (after the freeze), ~/cotcodec-runs/stage0/am5-ablated-cost-v2
 # The held-out ablated artifact is built once, before the freeze, under the registration root
-# (inputs/); both modes read it from there. Host paths are written with $HOME.
+# (inputs/); both modes read it from there. v2's inputs/ holds v1's artifact and summary, copied
+# byte-identical and read-only (D123). Host paths are written with $HOME.
 case "${1:-}" in
   dev) R=$HOME/cotcodec-runs/stage0/am5r-dev-dryrun ;;
-  reg) R=$HOME/cotcodec-runs/stage0/am5-ablated-cost-v1 ;;
+  reg) R=$HOME/cotcodec-runs/stage0/am5-ablated-cost-v2 ;;
   *) echo "mode is dev or reg" >&2; return 2 2>/dev/null || exit 2 ;;
 esac
 AM5R_MODE=$1
 C=$R/checkout
-REG_ROOT=$HOME/cotcodec-runs/stage0/am5-ablated-cost-v1
+REG_ROOT=$HOME/cotcodec-runs/stage0/am5-ablated-cost-v2
 AM5_ROOT=$HOME/cotcodec-runs/stage0/am5-evidence-ablated
 DATASET=$HOME/cotcodec-runs/inputs/longmemeval/98d7416c24c778c2fee6e6f3006e7a073259d48f/longmemeval_s_cleaned.json
 # AM1's held-out study artifact (the question order and the pool-builder check; prepare only).
@@ -48,7 +49,7 @@ summary_for() {
 source_id_for() {
   case "$1" in
     development) echo memcredit-study-dev-ablated-pools ;;
-    heldout) echo am5-ablated-cost-v1-heldout-ablated-pools ;;
+    heldout) echo am5-ablated-cost-v2-heldout-ablated-pools ;;
   esac
 }
 

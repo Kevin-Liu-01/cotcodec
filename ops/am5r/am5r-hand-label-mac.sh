@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# am5-ablated-cost-v1: the registered labelling of one stage (first or repair) of the
+# am5-ablated-cost-v2: the registered labelling of one stage (first or repair) of the
 # blind hand check (registration section 8), run by the operator on the Mac, in the repository at
 # the registration's commit.
 #   prepare: claims the stage on the host, atomically and once (mkdir R/hand/claim-<stage>, with a
@@ -39,7 +39,7 @@ ACT="${5:-cli}"; LAUNCH="${6:-}"; SUBAGENTS="${7:-}"
 HOST=fal-h100-01
 case "$MODE" in
   dev) R='cotcodec-runs/stage0/am5r-dev-dryrun' ;;
-  reg) R='cotcodec-runs/stage0/am5-ablated-cost-v1' ;;
+  reg) R='cotcodec-runs/stage0/am5-ablated-cost-v2' ;;
   *) echo "mode is dev or reg" >&2; exit 2 ;;
 esac
 [[ "$STAGE" == first || "$STAGE" == repair ]] || { echo "stage is first or repair" >&2; exit 2; }

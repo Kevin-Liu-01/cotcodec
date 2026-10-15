@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# am5-ablated-cost-v1: the registration's rerun rule (section 8), applied mechanically to
+# am5-ablated-cost-v2: the registration's rerun rule (section 8), applied mechanically to
 # one ended GPU job before extract reads it (scripts/memcredit_am5r.py rerun-decision on the
 # driver's summary.json and the lane's termination.env). Prints and logs "complete", "rerun",
 # "no-rerun" or "void". On "rerun" the operator submits `am5r-submit.sh ... rerun` once; extract

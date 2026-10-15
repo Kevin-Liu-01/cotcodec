@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# am5-ablated-cost-v1: stage the text-free evidence on the host: lane records, the
+# am5-ablated-cost-v2: stage the text-free evidence on the host: lane records, the
 # driver's summary and environment, worker records and per-pass metadata, SHA-256 of the raw
 # outputs that stay on the host, a text-free copy of the judge items, the build, selftest,
 # manifest and prepare records, and the analysis outputs and logs. Then check that no reply

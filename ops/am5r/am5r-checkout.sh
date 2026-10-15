@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# am5-ablated-cost-v1: a clean clone of commit $2 on the host from a git bundle copied
+# am5-ablated-cost-v2: a clean clone of commit $2 on the host from a git bundle copied
 # from the operator's Mac ($R/bundles/am5r-<short>.bundle), detached at that commit; prints the
 # SHA-256 of `git archive --format=tar <commit>` so it can be compared with the Mac's. The first
 # checkout runs from the bootstrap copies am5r-mac-bundle.sh placed in $R/bootstrap; they must

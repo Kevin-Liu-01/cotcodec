@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# am5-ablated-cost-v1: log the queue, Slurm's GPU allocation and the GPU state. Exit 3
+# am5-ablated-cost-v2: log the queue, Slurm's GPU allocation and the GPU state. Exit 3
 # when a GPU job of this program is queued or running (every GPU job not named transcreate-*;
 # those are D110's other project, which holds its own GPUs and is never touched). Exit 4 when
 # fewer than the needed H100s are free in Slurm. Slurm allocates the GPUs. Everything it prints

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# am5-ablated-cost-v1: print one Slurm job's state once (it never waits; poll it at most every
+# am5-ablated-cost-v2: print one Slurm job's state once (it never waits; poll it at most every
 # 120 s while the job runs). When the job has ended, save `scontrol show job` to
 # $R/ops/scontrol-<job>.txt (once) and log it: Slurm accounting is disabled on the node and
 # scontrol forgets a job 300 s after it ends (MinJobAge), so this runs right after each job ends.

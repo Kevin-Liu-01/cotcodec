@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# am5-ablated-cost-v1: submit the cotcodec-vllm cu129 overlay build (vLLM 0.31.0) from
+# am5-ablated-cost-v2: submit the cotcodec-vllm cu129 overlay build (vLLM 0.31.0) from
 # the retained source capsule of commit $2 (the program's offline build, one Slurm-owned H100 for
 # a few minutes, 5-minute limit; the pinned scripts/build_vllm_overlay_on_h100.sh, as AM1, AM3,
 # am3g and AM5 built their images). In reg mode the commit is the freeze commit.

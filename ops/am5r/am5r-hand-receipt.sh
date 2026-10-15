@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# am5-ablated-cost-v1: receipt one labelling stage of the blind hand check before the
+# am5-ablated-cost-v2: receipt one labelling stage of the blind hand check before the
 # join (registration section 8). It refuses a stage without a launch record, a subagent launch
 # without the CLI's recorded failure, and a transcript whose digest on the Mac differs from the
 # merge audit's. The receipt (text-free) carries the labeller's model, its launch (cli or
@@ -44,7 +44,7 @@ for n, chunk in enumerate(manifest[stage], start=1):
         sys.exit(f"{name}: the Mac's transcript digest differs from the merge audit's")
 final = h / "hand-labels.jsonl"
 receipt = {
-    "experiment_id": "am5-ablated-cost-v1",
+    "experiment_id": "am5-ablated-cost-v2",
     "stage": stage,
     "labeller_model": manifest["labeller_model"],
     "labeller_launch": launch["launch"],

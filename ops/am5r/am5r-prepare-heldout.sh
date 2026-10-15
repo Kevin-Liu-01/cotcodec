@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# am5-ablated-cost-v1: build the held-out ablated artifact (host CPU, no model) once, before the
+# am5-ablated-cost-v2: build the held-out ablated artifact (host CPU, no model) once, before the
 # freeze, so that its digest can be pinned in the config and the registration: AM1's 347 held-out
 # questions, in AM1's held-out artifact's order, each with its evidence sessions removed and the
 # BM25 top-8 user-turn pool built from the rest; then AM5's 63 development ablated pools,

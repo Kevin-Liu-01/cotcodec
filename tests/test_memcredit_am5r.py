@@ -1,4 +1,4 @@
-"""Tests for am5-ablated-cost-v1 (scripts/memcredit_am5r.py): the config on top of am3g's and its
+"""Tests for am5-ablated-cost-v2 (scripts/memcredit_am5r.py): the config on top of am3g's and its
 pins, the gate and the config binding, the pins inside the image, the step budgets, the held-out
 artifact with its replay control, the validation and judge items, the gain side against AM4's
 committed figures, the cost indicator, the paired test with Holm and the break-even share, the
@@ -38,6 +38,41 @@ from harness import memcredit_study as ms  # noqa: E402
 AM5_EVIDENCE = ROOT / "program/evidence/2026-10-16/am5-evidence-ablated"
 
 # --------------------------------------------------------------------------- config and pins
+
+
+def test_the_ids_of_v2_and_of_what_v1_built():
+    """v2 (D123) is v1's design under a new id: the config, the registration and every new record
+    carry v2's; the held-out artifact keeps the id it was built under (v1's, pinned by SHA-256), and
+    only the development dry run's job may carry v1's."""
+
+    assert r.EXPERIMENT == "am5-ablated-cost-v2" and r.V1_EXPERIMENT == "am5-ablated-cost-v1"
+    assert r.load_config()["experiment_id"] == r.EXPERIMENT
+    assert (
+        r.REGISTRATION.name == f"{r.EXPERIMENT}.md" and r.CONFIG_PATH.name == f"{r.EXPERIMENT}.yaml"
+    )
+    assert r.HELDOUT_ARTIFACT_ID == r.V1_EXPERIMENT
+    assert (
+        r.HAND_INSTRUCTIONS.splitlines()[0]
+        == f"Blind hand check, {r.EXPERIMENT} (D9: agent labels)."
+    )
+    for pop, eid in (("development", r.EXPERIMENT), ("development", r.V1_EXPERIMENT),
+                     ("heldout", r.EXPERIMENT)):  # fmt: skip
+        r.check_run_summary({"population": pop, "experiment_id": eid}, pop)
+    for summary, pop in (({"population": "heldout", "experiment_id": r.V1_EXPERIMENT}, "heldout"),
+                         ({"population": "development", "experiment_id": "x"}, "development"),
+                         ({"population": "heldout", "experiment_id": r.EXPERIMENT}, "development"),
+                         ([1], "heldout")):  # fmt: skip
+        with pytest.raises(r.Am5rError, match="not this population's run"):
+            r.check_run_summary(summary, pop)
+    config = r.load_config()
+    spec = config["populations"]["heldout"]
+    with pytest.raises(r.Am5rError, match="not the heldout population's artifact"):
+        r.check_artifact(
+            config,
+            "heldout",
+            {"experiment_id": r.EXPERIMENT, "split": "heldout-ablated", "questions": []},
+        )
+    assert spec["artifact_sha256"].startswith("68a75dcf")
 
 
 def test_config_loads_with_am3gs_readers_steps_and_models():
@@ -344,7 +379,7 @@ def test_the_feature_code_is_the_whole_import_closure_and_pinned():
     assert sorted(r.FEATURE_CODE) == out.stdout.split()
     pins = ks.code_pins(ROOT / r.REGISTRATION)
     assert all(path in pins for path in r.FEATURE_CODE)
-    assert "experiments/am5/am5-ablated-cost-v1.yaml" in pins
+    assert "experiments/am5/am5-ablated-cost-v2.yaml" in pins
 
 
 def test_every_code_pin_is_in_the_image():
@@ -391,6 +426,7 @@ def test_heldout_commands_refuse_another_config(tmp_path, capsys):
 @pytest.mark.parametrize(
     "path",
     [
+        "/x/am5-ablated-cost-v2/inputs/heldout-ablated-artifact.json",
         "/x/am5-ablated-cost-v1/inputs/heldout-ablated-artifact.json",
         "/x/am1-memory-credit-v1/study-artifact.json",
         "/x/am3-nonabstain-generality-v1/per-table.json.gz",
@@ -482,7 +518,7 @@ def _toy_artifact(population: str, n: int, m: int = 3) -> dict:
                 "questions": main}  # fmt: skip
     control = [_toy_question(f"c{i}", i + 1) for i in range(m)]
     return {
-        "experiment_id": r.EXPERIMENT,
+        "experiment_id": r.HELDOUT_ARTIFACT_ID,
         "split": "heldout-ablated",
         "parts": {"main": [0, n], "control": [n, n + m]},
         "questions": main + control,

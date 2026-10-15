@@ -1,7 +1,8 @@
-# am5-ablated-cost-v1 (D121; CONFIRMATORY once frozen in the ledger): is the non-abstention keep
-# rule's cost on questions whose evidence is absent below its gain on the same questions with their
-# evidence? Registration: program/preregistrations/am5-ablated-cost-v1.md. Script:
-# scripts/memcredit_am5r.py.
+# am5-ablated-cost-v2 (D121, D123; CONFIRMATORY once frozen in the ledger): is the non-abstention
+# keep rule's cost on questions whose evidence is absent below its gain on the same questions with
+# their evidence? Registration: program/preregistrations/am5-ablated-cost-v2.md. Script:
+# scripts/memcredit_am5r.py. The same design as am5-ablated-cost-v1 (ledger row 26, void before
+# running, D123) under a new id; the held-out ablated artifact below is v1's, unchanged.
 #
 # The rule (AM1d's nonabstain@70 with AM4's read cap K): read a pool's 4-subsets in BM25 order and
 # keep the first whose reply does not abstain (AM1d's four patterns, digest 031bee27...) within K
@@ -18,7 +19,7 @@
 # prompt, greedy, 64 tokens; then the Qwen3-32B judge scores every distinct (question, reply) with
 # LongMemEval's non-abstention answer-check prompt against the reference answer.
 schema_version: 1
-experiment_id: am5-ablated-cost-v1
+experiment_id: am5-ablated-cost-v2
 claim_level: confirmatory
 # 42: every engine seed and the bootstrap seed. 44: the blind hand check's draws. 43 is unused; the
 # lane's seed-matrix contract binds three seeds to --seeds.

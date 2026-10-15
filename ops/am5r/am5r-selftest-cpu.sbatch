@@ -7,7 +7,7 @@
 #SBATCH --mem=48G
 #SBATCH --time=00:20:00
 #SBATCH --no-requeue
-# am5-ablated-cost-v1: CPU-only (no GRES) check of scripts/memcredit_am5r.py baked in a
+# am5-ablated-cost-v2: CPU-only (no GRES) check of scripts/memcredit_am5r.py baked in a
 # cotcodec-vllm cu129 overlay (vLLM 0.31.0). Renders every request of one population with each
 # reader's tokenizer and chat template (Qwen3-8B, OLMo-2-1124-7B-Instruct, Qwen3.5-9B) and the
 # judge items with the Qwen3-32B judge's (LongMemEval's answer-check prompt); checks lengths, the

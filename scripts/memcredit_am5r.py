@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""am5-ablated-cost-v1 (D121): is the non-abstention keep rule's cost on questions whose evidence
-is absent below its gain on the same questions with their evidence?
+"""am5-ablated-cost-v2 (D121, D123): is the non-abstention keep rule's cost on questions whose
+evidence is absent below its gain on the same questions with their evidence?
 
 The rule (AM1d's ``nonabstain@70``, H-C of ``am1-keepset-search-v1``, confirmed for three readers
 by ``am3-nonabstain-generality-v1``) reads a pool's 70 4-subsets in BM25 order and keeps the first
@@ -91,9 +91,18 @@ from harness import g2_pilot as lane  # noqa: E402
 from harness import memcredit as mc  # noqa: E402
 from harness import memcredit_study as ms  # noqa: E402
 
-EXPERIMENT = "am5-ablated-cost-v1"
-CONFIG_PATH = PROJECT_ROOT / "experiments" / "am5" / "am5-ablated-cost-v1.yaml"
-REGISTRATION = Path("program/preregistrations/am5-ablated-cost-v1.md")
+EXPERIMENT = "am5-ablated-cost-v2"
+CONFIG_PATH = PROJECT_ROOT / "experiments" / "am5" / "am5-ablated-cost-v2.yaml"
+REGISTRATION = Path("program/preregistrations/am5-ablated-cost-v2.md")
+#: The same design's first id, frozen with a stale pin and void before running (ledger row 26,
+#: D123). The held-out ablated artifact and its summary were built under it before that freeze and
+#: are read unchanged (pinned by SHA-256), so they carry it; the development dry run's GPU job
+#: (1507) ran under it.
+V1_EXPERIMENT = "am5-ablated-cost-v1"
+HELDOUT_ARTIFACT_ID = V1_EXPERIMENT
+#: The experiment ids a population's GPU run directory may carry: the held-out job runs under this
+#: id only; the development dry run's job ran under v1's.
+RUN_EXPERIMENT_IDS = {"development": (EXPERIMENT, V1_EXPERIMENT), "heldout": (EXPERIMENT,)}
 LEDGER = Path("program/preregistrations/ledger.jsonl")
 POPULATIONS = ("development", "heldout")
 #: Which populations open only after the freeze. A code property, so no config edit can lift it.
@@ -128,6 +137,7 @@ FORBIDDEN_DEV_PARTS = (
     "am1-keepset-search-v1",
     "am3-nonabstain-generality-v1",
     "am5-ablated-cost-v1",
+    "am5-ablated-cost-v2",
     "heldout-ablated",
 )
 VOID_DIGEST = g.VOID_DIGEST
@@ -143,7 +153,7 @@ PREFERENCE = "single-session-preference"
 #: The blind labeller's instructions (registration section 8). Every item is a reply that does not
 #: abstain by AM1d's patterns, on a pool that may lack the evidence: it is correct when it gives
 #: the reference answer or declines to answer, and wrong when it gives another answer.
-HAND_INSTRUCTIONS = """Blind hand check, am5-ablated-cost-v1 (D9: agent labels).
+HAND_INSTRUCTIONS = """Blind hand check, am5-ablated-cost-v2 (D9: agent labels).
 
 Each line of the sample is one item: a LongMemEval-S question, its question type, the check
 "answer-or-decline", the question's reference answer (for single-session-preference, a rubric)
@@ -415,7 +425,7 @@ def load_artifact(
 def check_artifact(config: dict[str, Any], population: str, artifact: dict[str, Any]) -> None:
     spec = population_spec(config, population)
     wanted = ("am5-evidence-ablated-dev", "dev-ablated") if population == "development" else (
-        EXPERIMENT, "heldout-ablated")  # fmt: skip
+        HELDOUT_ARTIFACT_ID, "heldout-ablated")  # fmt: skip
     if (artifact.get("experiment_id"), artifact.get("split")) != wanted:
         raise Am5rError(f"{VOID_DIGEST}: not the {population} population's artifact")
     parts = parts_of(config, population)
@@ -482,7 +492,7 @@ def build_heldout_artifact(
         facts.append(fact)
     n, m = len(questions), len(control["questions"])
     artifact = {
-        "experiment_id": EXPERIMENT,
+        "experiment_id": HELDOUT_ARTIFACT_ID,
         "claim_level": "confirmatory",
         "split": "heldout-ablated",
         "source": pilot["source"],
@@ -1115,6 +1125,18 @@ def replay_checks(
             "pass": bool(anchor.get("r1") and anchor.get("r2"))}  # fmt: skip
 
 
+def check_run_summary(summary: Any, population: str) -> None:
+    """The driver's summary must name this population and an id its runs may carry
+    (``RUN_EXPERIMENT_IDS``): the held-out job this id only."""
+
+    if (
+        not isinstance(summary, dict)
+        or summary.get("population") != population
+        or (summary.get("experiment_id") not in RUN_EXPERIMENT_IDS[population])
+    ):
+        raise Am5rError(f"{VOID_DIGEST}: the run directory is not this population's run")
+
+
 def job_id_of(run_dir: Path) -> str:
     """The job id of a run directory, ``R/runs/POP/JOB/am5r``: its parent's name."""
 
@@ -1173,11 +1195,7 @@ def cmd_extract(args: argparse.Namespace) -> dict[str, Any]:
         raise Am5rError(f"{VOID_DIGEST}: the artifact summary is not the pinned artifact's")
     run_dir = Path(args.run_dir)
     summary = g.read_run_json(run_dir / "summary.json", "the driver's summary")
-    if not isinstance(summary, dict) or (
-        summary.get("population"),
-        summary.get("experiment_id"),
-    ) != (population, EXPERIMENT):
-        raise Am5rError(f"{VOID_DIGEST}: the run directory is not this population's run")
+    check_run_summary(summary, population)
     items = g.read_run_json(
         run_dir / "judge-items.json", "the judge items (no judge step ran: judge32 was skipped)"
     )
@@ -2322,8 +2340,8 @@ def _reading_rows(block: dict[str, Any]) -> list[str]:
 
 def render_markdown(results: dict[str, Any]) -> str:
     dev = results["population"] == "development"
-    title = ("am5-ablated-cost-v1: development dry run (EXPLORATORY; nothing is decided)" if dev
-             else "am5-ablated-cost-v1: tables")  # fmt: skip
+    title = (f"{EXPERIMENT}: development dry run (EXPLORATORY; nothing is decided)" if dev
+             else f"{EXPERIMENT}: tables")  # fmt: skip
     lines = [f"# {title}", "",
              "Generated by `scripts/memcredit_am5r.py analyze`. Cost: on the question's ablated "
              "pool the capped rule switched and Qwen3-32B rejects the switched reply. Gain: on the "

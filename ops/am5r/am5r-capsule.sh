@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# am5-ablated-cost-v1: the retained discovery source capsule (a git archive) of the
+# am5-ablated-cost-v2: the retained discovery source capsule (a git archive) of the
 # checkout's HEAD, from which the image is built.
 # Usage: am5r-capsule.sh dev|reg <commit short id>
 set -Eeuo pipefail

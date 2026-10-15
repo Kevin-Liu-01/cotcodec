@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# am5-ablated-cost-v1: after the image build job has ended (am5r-job-state.sh), print the
+# am5-ablated-cost-v2: after the image build job has ended (am5r-job-state.sh), print the
 # image id it built, and nothing else on stdout (one line, sha256:<64 hex>), after checking the
 # latest submitted attempt's record (the rebuild's, overlay-build-vllm-<short>-r2, once submitted)
 # against the pins: provenance PASS for this commit and capsule; a receipt that names the image,

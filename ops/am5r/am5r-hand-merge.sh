@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# am5-ablated-cost-v1: merge one labelling stage of the blind hand check, whatever its
+# am5-ablated-cost-v2: merge one labelling stage of the blind hand check, whatever its
 # chunks hold (scripts/memcredit_am5r.py hand-merge; registration section 8), after auditing each
 # chunk's transcript (a chunk without one, or with any call other than the Reads of its two inputs
 # and the Write of its output, has its rows dropped). first: if items lack a valid label, it

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# am5-ablated-cost-v1: on the operator's Mac, in the repository: bundle the branch that
+# am5-ablated-cost-v2: on the operator's Mac, in the repository: bundle the branch that
 # holds commit $2, copy the bundle and the two bootstrap scripts (am5r-env.sh and
 # am5r-checkout.sh, taken from that commit with `git show`) to the host, and print their SHA-256
 # for comparison with section 16's pins. am5r-checkout.sh then refuses to proceed unless the
@@ -10,7 +10,7 @@ MODE="${1:?mode}"; G="${2:?full commit id}"; BR="${3:-$(git rev-parse --abbrev-r
 SHORT=${G:0:8}; HOST=fal-h100-01
 case "$MODE" in
   dev) R='cotcodec-runs/stage0/am5r-dev-dryrun' ;;
-  reg) R='cotcodec-runs/stage0/am5-ablated-cost-v1' ;;
+  reg) R='cotcodec-runs/stage0/am5-ablated-cost-v2' ;;
   *) echo "mode is dev or reg" >&2; exit 2 ;;
 esac
 git merge-base --is-ancestor "$G" "$BR" || { echo "$G is not on $BR" >&2; exit 2; }

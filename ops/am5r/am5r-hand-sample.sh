@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# am5-ablated-cost-v1: draw the blind hand-check sample (registration section 8) from the job the
+# am5-ablated-cost-v2: draw the blind hand-check sample (registration section 8) from the job the
 # rerun rule kept: per reader, every switched reply the judge calls correct (K = 70), every
 # switched reply at K = 8 the judge calls wrong, a seeded half of those it calls wrong beyond
 # K = 8, every BM25 top-4 reply that does not abstain, and as many seeded distractors, in one
