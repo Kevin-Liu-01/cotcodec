@@ -6,10 +6,11 @@ draft; D118). It ran the registration's whole pipeline, with its code and operat
 the AM1 pilot's 63 development questions, and checked that it reproduces AM3's committed
 development outputs. No held-out or abstention question was given to any model.
 
-- **Code.** Commit `eae156cf` for the image, the GPU job, extract and the first analysis.
-  `scripts/memcredit_am3g.py` is unchanged from there to the draft's head; the analysis and the
-  tests were rerun at the later commits `95c3ef5a`, `ea678a99` and `fc9ebb4d`, and the outputs
-  were byte-identical each time (`logs/confirm-*.log`).
+- **Code.** Commit `eae156cf` for the image, the GPU job, extract and the first analysis. The
+  analysis and the tests were rerun at `95c3ef5a`, `ea678a99` and `fc9ebb4d` (byte-identical
+  outputs, `logs/confirm-*.log`). After pre-freeze check 1, the CPU parts were rerun at
+  `0d030015` and `8624a08b` with the round-1 code (see "Round 1"); the code the GPU job runs did
+  not change, so no GPU job was rerun.
 - **Host directory.** `~/cotcodec-runs/stage0/am3g-dev-dryrun/` (new). The operator scripts
   (`ops/am3g/`) ran in their `dev` mode.
 - **Inputs.** The pilot's development artifact (`15567cf1...`), AM3's job 1466 passes (the
@@ -93,8 +94,14 @@ answerable questions, so this is a calibration of the judge on the template, not
   186,699 bytes, read-only on the host under `~/cotcodec-runs/stage0/am3-nonabstain-generality-v1/inputs/`.
 - Pools: the BM25 top 8 user turns, as AM1's retrieved arm. The builder reproduces the
   development artifact's retrieved pools, 63 of 63.
-- Twins (same id prefix): 22 in AM1's held-out confirmatory set, 4 development questions, 3
-  Step 0 demo questions, 1 without a twin. No haystack session id is shared with a twin.
+- Twins (same id prefix), as recounted by `abstention-facts` (`prepare/abstention-facts-0d030015.json`):
+  22 in AM1's held-out confirmatory set, 5 development questions (`09ba9854` is also a Step 0
+  demo question), 2 Step 0 demo questions in the split's held-out part outside AM1's 347, 1
+  without a twin. The first summary (`prepare/abstention-summary-ffa8675c.json`) counted 4
+  development and 3 Step 0 twins: its membership test checked the Step 0 exclusion before the
+  split (check 1, m1). No haystack session id is shared with a twin, but memory texts are: 27 of
+  the 30 pools hold a memory whose text (by SHA-256) is one of the twin's user turns; 89 of the
+  240 pool memories are, and 70 are in the twin's own retrieved pool.
 - The full-pool prompt is at most 4,363 characters. The CPU selftest (job 1469) rendered every
   request: at most 1,027 (Qwen3-8B), 972 (OLMo-2) and 1,040 (Qwen3.5-9B) tokens; judge items at
   most 272.
@@ -114,6 +121,48 @@ checked only ad hoc (`adhoc/`, CPU jobs with no GRES, no network):
   A new test checks that no pin sits under a `.dockerignore` entry.
 - **Job 1473** mounted the fixed draft's table into the dry-run image: all 39 pins are present,
   and only the two files changed after `eae156cf` differ (the tests and the staging script).
+
+## Round 1: after pre-freeze check 1 (CPU only)
+
+The registration's round-1 fixes changed the host-side code (extract, analyze, the hand check,
+the rerun rule, the twin facts) and the registered jobs' step budgets, not the code the GPU job
+runs. So the CPU parts were rerun on job 1471's records, and no GPU job ran.
+
+- **`abstention-facts`** (`prepare/abstention-facts-0d030015.*`): it rebuilt the abstention
+  artifact in memory and found it byte-identical to the pinned file (`f1c241ba...`), then wrote
+  the corrected twin facts and the memory-text overlap above.
+- **The R2 code on a real tables file.** `extract` now also compares the anchor's labels with the
+  pilot's committed development tables through `load_pinned_tables` and `labels_vs_tables`:
+  8,913 of 8,946 cells agree, AM3's figure (the 33 others are the compiled-against-eager
+  difference AM3 explained).
+- **The blind hand check, rehearsed on development data.**
+  - `hand-sample` (`hand-check/hand-sample-0d030015.json`) drew 27 items: for OLMo-2, 4
+    discordant questions (both replies) and 4 distractor questions; for Qwen3.5-9B, 3 and 3.
+    The sample (host only) holds the question, its type and id, the reference answer and the
+    reply, and nothing else.
+  - An isolated agent read only the sample and the instructions and labelled every item: 7
+    correct, 20 not (14 of them refusals). One temporal item, half a week off, it labelled correct
+    as borderline under the off-by-one rule.
+  - `am3g-hand-receipt.sh` wrote the labels' SHA-256 (`604896d5...`) and a text-free receipt
+    (`hand-check/`) before `analyze` joined them.
+  - The join: hand and judge agree on 27 of 27 items (kappa 1.00). b_hand and c_hand are 4 and 0
+    for OLMo-2 and 3 and 0 for Qwen3.5-9B, equal to the judge's; neither separates on 63
+    questions (p = 0.125 and 0.25), so both read NO_DETECTED_DIFFERENCE before and after the hand
+    check (`results.json`, `mechanics.h1_hand_check`).
+- **`analyze`** at `8624a08b`: twice, byte-identical; `dryrun-compare` 20 of 20 again
+  (`per-table.json.gz` still byte-identical to AM3's); `power.json` unchanged; tests passed
+  (`logs/analyze-8624a08b.log`, `logs/pytest-8624a08b.log`).
+- **The pins inside the image, again** (job 1474, `adhoc/pins-in-image-1474.out`): the revised
+  draft's table (50 pins) mounted into the dry-run image, built from `eae156cf`. The only files
+  absent are the six operator scripts added after `eae156cf` (`am3g-mac-bundle.sh`,
+  `am3g-job-state.sh`, `am3g-image.sh`, `am3g-rerun-decision.sh`, `am3g-hand-sample.sh`,
+  `am3g-hand-receipt.sh`), and the only ones that differ are the seven changed after it. The
+  newly pinned lane scripts (`verify_compute_provenance.py`, `check_compute_env.sh`,
+  `exec_research_workload.py`), the Dockerfile and `uv.lock` are present and equal. An image
+  built from the freeze commit holds every pin, since no pin sits under a `.dockerignore`
+  entry (a test checks that).
+- **Job 1470** is not this registration's: it appears in none of its logs or scripts, and
+  scontrol no longer knew it when check 1 asked (Slurm accounting is disabled on the node).
 
 ## Power (`power.json`)
 
@@ -137,7 +186,8 @@ committed `results.json` and AM3's host-only features. The registration's sectio
 - The whole suite on the host at `eae156cf`: 3,535 passed, 64 skipped, and 2 failed in another
   experiment's tests (`test_r04_evidence.py`, `test_r04_nuisance.py`), the two that
   `am1-keepset-search-v1`'s selftest also found failing on `main`. This branch changes no
-  existing code.
+  existing code. At `8624a08b`, after round 1: the memcredit tests 120 passed; the whole suite
+  3,574 passed, 64 skipped and the same 2 failed (`logs/pytest-full-suite-*-summary.txt`).
 
 ## Files
 
@@ -151,7 +201,9 @@ committed `results.json` and AM3's host-only features. The registration's sectio
 - `prepare/`: the abstention population's text-free summary and the prepare command's output.
 - `logs/`: extract, analyze, `dryrun-compare`, `power` and pytest logs; `logs/confirm-*.log`:
   the reruns at the later commits.
-- `adhoc/`: the two in-image pin checks (scripts and outputs).
+- `adhoc/`: the in-image pin checks (jobs 1472, 1473, 1474; scripts and outputs).
+- `hand-check/`: the development hand check's receipt, the labels' SHA-256 and the sample's
+  counts and digests (the sample and the labels stay on the host).
 - `ops/`: `jobs.log` and `preflight.log`. The scripts themselves are `ops/am3g/` at the commit.
 - The staging script searched every staged file for each of the 3,717 texts of at least 12
   characters (every distinct reply, and every question, answer, decoy and memory text of the

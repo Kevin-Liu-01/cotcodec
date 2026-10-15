@@ -1,0 +1,18 @@
+{
+  "artifact_sha256": "f1c241baeaeddcd5690daa22337612843b049059c354fe25fe348947e346a0f5",
+  "questions": 30,
+  "summary_sha256": "bc80ae12a44ec01aa555b6f906c0ee093a815755f1970057a803a3c89f348056",
+  "twin_membership": {
+    "absent": 1,
+    "development": 5,
+    "heldout-confirmatory": 22,
+    "heldout-step0-demo-excluded": 2
+  },
+  "twin_text_overlap": {
+    "memories": 240,
+    "memories_in_twin_retrieved_pool": 70,
+    "memories_in_twin_user_turns": 89,
+    "pools_with_a_memory_in_twin_user_turns": 27
+  },
+  "twins_that_are_step0_demo": 3
+}

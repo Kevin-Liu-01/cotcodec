@@ -115,7 +115,8 @@ both with the Qwen3-8B reader, which is this registration's anchor.
   shows the schedule is reproducible, not that the replies are invariant to it: its held-out
   replies carry no batch-invariance guarantee, and its readings say so.
 - **OLMo-2** runs in batch-invariant mode through vLLM's Transformers backend. AM3 did not replay
-  it; the dry run did, 8,946 of 8,946 bit for bit against job 1466 (section 15).
+  it; the dry run did, 8,946 of 8,946 identical in tokens and log-prob bits against job 1466
+  (section 15).
 - **The anchor** is AM1's reader in AM1's eager batch-invariant engine. Its replies must equal
   job 1458's token for token (section 8, V3: tokens and finish reasons are gated, log-prob bits
   reported), which AM1's G1 and AM3's anchor check (2,272 of 2,272 against the pilot's eager
@@ -150,8 +151,9 @@ reader families and engines, and the rule's cost where abstaining is the right a
 
 ## 3. What it decides and what it does not
 
-It decides H1's reading per reader (NONABSTAIN_HELPS, NONABSTAIN_HURTS or NO_DETECTED_DIFFERENCE;
-VOID or JUDGE_DEPENDENT under section 8). H2 is a registered description: its estimand, intervals
+It decides H1's reading per reader (NONABSTAIN_HELPS, NONABSTAIN_HURTS or NO_DETECTED_DIFFERENCE,
+a directional reading standing only when the blind hand check of the discordant cells confirms
+it; VOID, JUDGE_DEPENDENT or PENDING_HAND_CHECK under sections 7.1 and 8). H2 is a registered description: its estimand, intervals
 and labels are fixed here and reported regardless of outcome, but it decides nothing (section
 7.2). The gold arm, the second judge, the question types, the stop rule's reads, the
 natural-mix net effect and every comparison with all 8 are descriptive.
@@ -686,6 +688,9 @@ Before the freeze the whole pipeline ran on the development split only, from com
   a test now checks that no pin sits under a `.dockerignore` entry, and the second check, with
   this draft's table mounted into the dry-run image, found all 39 pins present, differing only
   in the two files changed after `eae156cf` (`tests/test_memcredit_am3g.py` and the staging script).
+  After round 1 (job 1474), with 50 pins, the only files absent from that image are the six
+  operator scripts added since, and the newly pinned lane scripts, Dockerfile and `uv.lock` are
+  present and equal.
 - **Total 0.1898 GPU-h** of the 0.5 allowed (`program/state.json`, `gpu_hours_ledger`).
 
 **It reproduced AM3 exactly** (`dryrun-compare.json`, 20 of 20 checks):
@@ -721,7 +726,9 @@ which the development job does not use.
   and 0 (Qwen3.5-9B), as the judge's; on 63 questions neither separates, so both read
   NO_DETECTED_DIFFERENCE.
 - `analyze` twice (byte-identical), `dryrun-compare` (20 of 20 again; `per-table.json.gz` still
-  byte-identical to AM3's), `power` (unchanged) and the tests (120 passed).
+  byte-identical to AM3's), `power` (unchanged) and the memcredit tests (120 passed), at
+  `0d030015` and again at `8624a08b`. The whole suite on the host at `8624a08b`: 3,574 passed, 64
+  skipped and the same two `test_r04_*` failures.
 - Job 1470 is not this registration's: it appears in none of its logs or scripts (its jobs are
   1467-1469 and 1471-1473), it was submitted between 11:09:27 and 11:10:05 UTC, and scontrol no
   longer knew it when check 1 asked (Slurm accounting is disabled). The preflight before job 1471

@@ -1,0 +1,12 @@
+start 2026-10-15T12:23:51Z commit 8624a08b5d5364a2c7f89b0e9440f6daf3eb0681 mode dev tag 8624a08b
+analyze a exit 0
+analyze b exit 0
+analyze outputs byte-identical
+a68996b21e6e166515c741eb305b133d3f61340f6b4d1bb4a8241dc057fd5e31  results.json
+0fc5635bad037588e521980536e4548eb51a6a3d9573e703b0f92010be72701e  per-table.json.gz
+4a24e239e77ae69b8e1a722f96a662f40f450c114bdba32f3ad237e999a439cc  tables.md
+ce7cf92c10b74e585ebfe0ee42d7f699d9c378d3c1394f5ce79b72737c56c5ba  ~/cotcodec-runs/stage0/am3g-dev-dryrun/private/features-development.json.gz
+dryrun-compare exit 0 ({"all_pass":true,"passed":20,"sha256":"0020c709ed74630c552732470ab6688e7faee9f230410c42dc4f229f01cd1093","total":20})
+power exit 0
+pytest exit 0 (120 passed in 3.85s)
+end 2026-10-15T12:23:58Z

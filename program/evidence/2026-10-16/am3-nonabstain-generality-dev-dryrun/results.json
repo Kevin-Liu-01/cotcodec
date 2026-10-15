@@ -1662,6 +1662,11 @@
         "sessions/rd-qwen35-9b-default/all.npz": "b25b5116bcd7758e32ef9a22897ad1b39ecc67f43175070cc11d3d961ddd0cde",
         "sessions/rd-qwen35-9b-default/all.texts.jsonl.gz": "c042b3c969a30aa081d9cc1aa28731653c00bdd2691146029a1cab119dc8f070"
       }
+    },
+    "anchor_vs_pilot_tables": {
+      "cells": 8946,
+      "cells_same_label": 8913,
+      "pools": 126
     }
   },
   "config": {
@@ -1681,7 +1686,7 @@
   },
   "experiment": "am3-nonabstain-generality-v1",
   "features_sha256": {
-    "development": "1989e8d78c043fd43708d79d74bc4fee31fe0c752bf03683c7e1b309b5eb210f"
+    "development": "ce7cf92c10b74e585ebfe0ee42d7f699d9c378d3c1394f5ce79b72737c56c5ba"
   },
   "mechanics": {
     "by_type": {
@@ -2150,6 +2155,67 @@
           "unadjusted_label": "NO_DETECTED_DIFFERENCE"
         }
       }
+    },
+    "h1_hand_check": {
+      "agreement": {
+        "agree": 27,
+        "decides": false,
+        "items": 27,
+        "judge_no_hand_no": 20,
+        "judge_no_hand_yes": 0,
+        "judge_yes_hand_no": 0,
+        "judge_yes_hand_yes": 7,
+        "kappa": 1.0
+      },
+      "items": 27,
+      "labeller": "an isolated agent, blind (D9: agent labels, not human)",
+      "labels_sha256": "604896d5838ffc447f71803b1a6158c97a0db921d5d0717596f854c9eb8f7bbf",
+      "plan_sha256": "cd7516b983110ce2573835aa06f21dea6776e47f4975a205ec05e3cf2704df98",
+      "readers": {
+        "olmo-2-1124-7b-instruct": {
+          "b_hand": 4,
+          "c_hand": 0,
+          "discordant_questions": 4,
+          "hand_label": "NO_DETECTED_DIFFERENCE",
+          "holm": {
+            "p": 0.125,
+            "p_holm": 0.25,
+            "rank": 1,
+            "reject": false,
+            "step_threshold": 0.025
+          },
+          "p_exact_mcnemar": 0.125
+        },
+        "qwen3.5-9b": {
+          "b_hand": 3,
+          "c_hand": 0,
+          "discordant_questions": 3,
+          "hand_label": "NO_DETECTED_DIFFERENCE",
+          "holm": {
+            "p": 0.25,
+            "p_holm": 0.25,
+            "rank": 2,
+            "reject": false,
+            "step_threshold": 0.05
+          },
+          "p_exact_mcnemar": 0.25
+        }
+      },
+      "readers_plan": {
+        "olmo-2-1124-7b-instruct": {
+          "discordant_questions": 4,
+          "distractor_questions": 4
+        },
+        "qwen3.5-9b": {
+          "discordant_questions": 3,
+          "distractor_questions": 3
+        }
+      },
+      "status": "joined"
+    },
+    "h1_readings_after_hand_check": {
+      "olmo-2-1124-7b-instruct": "NO_DETECTED_DIFFERENCE",
+      "qwen3.5-9b": "NO_DETECTED_DIFFERENCE"
     },
     "h2_block_on_development_retrieved": {
       "alpha": 0.05,

@@ -10,3 +10,11 @@
 2026-10-15T11:20:48Z am3g development GPU job 1471 COMPLETED 0:0 (RunTime 00:10:18 on 1 H100 = 0.1717 GPU-h); steps rd-qwen3-8b, rd-olmo2 (batch-invariant), rd-qwen35-9b-default, judge32, judge8 complete; rd-olmo2-default not needed; judge items 2869 (2555 reader, 314 validation and calibration)
 2026-10-15T11:24:26Z clean checkout of 95c3ef5a3cb78539af03e29a2b766bb3f7df5ee2 (tree 9bb934f2) from bundle f8d072a5; git archive sha256 06712f2a463366bf5af966d189f3448e7002e2b3e8a2ec11c37442bc4e2bf3d1
 2026-10-15T11:29:14Z clean checkout of ea678a99162685ed29e7d444d79b93659ae9f097 (tree 36a42d97) from bundle 8f18f31a; git archive sha256 70c50e1448436582de209df2f6db5934892c1ed791a34f8001eb22c4aba732f4
+2026-10-15T11:32:40Z clean checkout of fc9ebb4db4bf45879cd84fd35ac44bd2d52cc727 (tree c68c1a1d) from bundle 0fdc8bd7; git archive sha256 922f64fb680395599c7c78073ca08c9c530df48544c79445880ad9a551a768e9
+2026-10-15T12:18:58Z clean checkout of 0d0300155d5659d249e916935c1b83bd20704e7a (tree 27dcd546) from bundle 65baf23e; git archive sha256 02aead4e7620e8ffb3812088f8dbfe8430f13cb279621387ca03b7f83c790da0
+2026-10-15T12:19:11Z extract development job 1471 at 0d030015: extract exit 0
+2026-10-15T12:19:11Z hand-check sample at 0d030015: 27 items, sample 1655d6b08d73eb60 plan cd7516b983110ce2
+2026-10-15T12:20:44Z hand labels receipted at 0d030015: 604896d5838ffc44
+2026-10-15T12:20:51Z analyze dev at 0d030015: 5 commands exited 0; analyze outputs byte-identical
+2026-10-15T12:23:41Z clean checkout of 8624a08b5d5364a2c7f89b0e9440f6daf3eb0681 (tree d812c15f) from bundle 5612da3c; git archive sha256 5ea714740aa4e31bf24b7d2b47eefa3a3066bb7d65d66a3ee47475cc959e9e7b
+2026-10-15T12:23:58Z analyze dev at 8624a08b: 5 commands exited 0; analyze outputs byte-identical
