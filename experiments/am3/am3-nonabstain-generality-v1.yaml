@@ -196,9 +196,11 @@ populations:
     claim_level: confirmatory
     experiment_id: am3-nonabstain-generality-v1
     split: abstention
-    artifact_sha256: "0000000000000000000000000000000000000000000000000000000000000000"
+    # Built once before the freeze on the host CPU (scripts/memcredit_am3g.py prepare-abstention,
+    # commit ffa8675c); 186,699 bytes; host only. Its text-free summary is in the dry-run evidence.
+    artifact_sha256: "f1c241baeaeddcd5690daa22337612843b049059c354fe25fe348947e346a0f5"
     questions: 30
-    question_ids_sha256: "0000000000000000000000000000000000000000000000000000000000000000"
+    question_ids_sha256: "e08d46ccab4604e4e0bd61ff1d140f0e0648b43070c70d63bc968d3ac1aa0513"
     arms: [retrieved]
 
 # The steps of every job, in order, on its one H100. A reader step in batch-invariant mode that
