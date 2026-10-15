@@ -39,8 +39,8 @@ population:
   dev_artifact_sha256: "15567cf14a0c38c1f9edec1f47feceb2a6fccf116338e5957182d03f1d996ebc"
   arms: [retrieved]
   # Built once on the host CPU by `memcredit_am5.py prepare` (host only; pool texts); pinned here
-  # before the image is built.
-  artifact_sha256: "PENDING"
+  # before the image is built (prepare at 658d2c6e: 375,482 bytes; summary c9df7dbd...).
+  artifact_sha256: "f6d27d4cf2f3cf62789466cdfe80bab2cdc007c449411e1ad9b53aab76558b23"
 
 # The am3g steps AM5 runs, by id and unchanged: the three readers (OLMo-2's default-mode fallback
 # only if its batch-invariant step does not complete) and the primary judge. judge8 is not run.
