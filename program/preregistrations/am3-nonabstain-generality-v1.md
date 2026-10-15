@@ -56,13 +56,26 @@ both with the Qwen3-8B reader, which is this registration's anchor.
   `legacy/harness/memory_trials/public_sources.py`); the repository holds their ids only and no
   model output. A search of the repository for the 30 ids finds nothing else.
 - **Their non-abstention twins were used.** 29 of the 30 share an id prefix with a non-abstention
-  question of LongMemEval-S (LongMemEval made each abstention question from one): 22 twins are in
-  AM1's held-out confirmatory set (so AM1, `am1-keepset-search-v1` and this registration's H1 ran
-  them), 4 are development questions (the pilot, AM1d and AM3 ran them), 3 are Step 0 demo
-  questions (Step 0 ran all 256 subsets), and 1 has no twin. No haystack session id is shared
-  between an abstention question and its twin; whether turn texts overlap was not examined. H1's
-  and H2's populations are therefore related through 22 twins, which the natural-mix interval
-  (section 6.4) does not model.
+  question of LongMemEval-S (LongMemEval made each abstention question from one): 22 twins are
+  among AM1's 347 held-out confirmatory questions (AM1, `am1-keepset-search-v1` and this
+  registration's H1 run them); 5 are development questions (the pilot, AM1d and AM3 ran them, and
+  one, `09ba9854`, was also a Step 0 demo question); 2 are Step 0 demo questions in the split's
+  held-out part that AM1 excluded from its 347 (`6aeb4375`, `gpt4_70e84552`; Step 0 ran all 256
+  subsets of both); 1 has no twin. (Check 1 found that the first draft counted 4 development and
+  3 Step 0 twins, because `twin_membership` tested the Step 0 exclusion before the split; the
+  order is fixed and `abstention-facts` recounted.) No haystack session id is shared between an
+  abstention question and its twin, but turn texts are. By SHA-256 of AM1's memory text
+  (`abstention-facts`, text-free): 27 of the 30 abstention pools hold at least one memory whose
+  text is one of the twin's user turns; 89 of the 240 pool memories are among the twin's user
+  turns, and 70 are in the twin's own retrieved pool. H1's and H2's populations are therefore
+  related through 22 twins that share memories; section 6.4 reports the natural-mix interval with
+  the twins resampled separately and together.
+- **The old program's audits.** Its CPU audits aligned third-party released outputs to all 500
+  LongMemEval-S tasks, the 30 abstention questions included: SodaMem's released artifacts
+  (`legacy/wiki/log.md`, 2026-08-17: every released row aligned to all 500 tasks, "including 30
+  abstentions", and a stored self-judge score recomputed) and MemPalace's retrieval runs over all
+  500 tasks (2026-08-14). None of those outputs came from this registration's readers, prompt or
+  pools, and this program holds no reader output of its own for the abstention questions.
 - **What the drafter opened.** The drafter counted the `_abs` ids, types and turn counts in the
   host's dataset file, printing ids and counts only, and built their pools on the host CPU with
   `scripts/memcredit_am3g.py prepare-abstention`, which writes the pool texts to a host-only
@@ -104,8 +117,9 @@ both with the Qwen3-8B reader, which is this registration's anchor.
 - **OLMo-2** runs in batch-invariant mode through vLLM's Transformers backend. AM3 did not replay
   it; the dry run did, 8,946 of 8,946 bit for bit against job 1466 (section 15).
 - **The anchor** is AM1's reader in AM1's eager batch-invariant engine. Its replies must equal
-  job 1458's bit for bit (section 8, V3), which AM1's G1 and AM3's anchor check (2,272 of 2,272
-  against the pilot's eager pass) support.
+  job 1458's token for token (section 8, V3: tokens and finish reasons are gated, log-prob bits
+  reported), which AM1's G1 and AM3's anchor check (2,272 of 2,272 against the pilot's eager
+  pass) support.
 - **The second judge's known error.** Qwen3-8B called the reply "I don't know." correct on 49 of
   347 held-out validation items (AM1) and 11 of 63 development items (AM3), and AM3's
   second-judge losses were mostly that error. On answerable questions its readings are
@@ -258,12 +272,22 @@ held-out answer enters the artifact.
 - **The net effect at LongMemEval-S's mix**, per reader and judge: the rule's correct answers
   minus BM25 top 4's over the 347 + 30 questions run (a count); the rate at LongMemEval-S's own
   mix of 470 answerable and 30 abstention questions, 0.94 x (b - c)/347 + 0.06 x (c2 - b2)/30; and
-  the break-even unanswerable share g/(g + l), with g = (b - c)/347 and l = (b2 - c2)/30 (1 when
-  the rule never loses on either population, 0 when it never gains, undefined when it gains only
-  on unanswerable questions). Intervals: percentile, from 10,000 bootstrap resamples that draw
-  each population's questions separately (numpy `default_rng(42)`). They treat the populations
-  as independent and the 347 as representative of LongMemEval-S's answerable questions; neither
-  holds exactly (section 1.2; the 347 exclude assistant-turn and development questions).
+  the break-even unanswerable share, with g = (b - c)/347 the net gain per answerable question and
+  l = (b2 - c2)/30 the net loss per unanswerable one:
+  - l <= 0 <= g (the rule never loses net on either population, g = l = 0 included): 1;
+  - g <= 0 <= l: 0;
+  - g > 0 and l > 0: g/(g + l), the unanswerable share above which BM25 top 4 is ahead;
+  - g < 0 and l < 0: reported as undefined; there is a crossing at g/(g + l), above which the rule
+    wins (it loses on answerable questions and gains on unanswerable ones).
+  Intervals: percentile, from 10,000 bootstrap resamples (numpy `default_rng(42)`): the sorted
+  resampled values at indices floor(0.025 (n - 1)) and ceil(0.975 (n - 1)). The break-even
+  interval uses only the resamples where the share is defined, and the number where it is not is
+  reported. Two resampling schemes, both descriptive: each population's questions resampled
+  separately (`natural_mix`), and the 22 abstention questions whose twin is among the 347
+  resampled together with their twin as one unit, the other questions within their population
+  (`natural_mix_linked_twins`; the twins share memories, section 1.2). Both treat the 347 as
+  representative of LongMemEval-S's answerable questions, which they are not exactly (they
+  exclude assistant-turn and development questions).
 
 ### 6.5 Intervals
 
@@ -287,26 +311,58 @@ Holm-adjusted p (the running maximum of (3 - i) p_(i)) is compared with 0.05
 (`memcredit_am3g.holm`). With c = 0 the first step needs b >= 7 (p = 0.0156; b = 6 gives 0.031)
 and the second b >= 6.
 
-**Readings**, per reader, from its Holm decision:
+**Judge-based readings**, per reader, from its Holm decision:
 - **NONABSTAIN_HELPS** if rejected and b > c;
 - **NONABSTAIN_HURTS** if rejected and b < c;
 - **NO_DETECTED_DIFFERENCE** otherwise.
 
+**Confirmation by the blind hand check** (section 8). H1's b and c are Qwen3-32B labels of OLMo-2's
+and Qwen3.5-9B's replies, which nothing else validates: G-J1 replays AM1's validation items and
+cannot catch an error the judge makes on these readers' replies. So every discordant cell of each
+reader (both replies of every question where the rule's choice and BM25 top 4 are judged
+differently) is hand-labelled blind, and the readings are fixed now as follows:
+- per reader, b_hand and c_hand are counted over its judge-discordant questions from the hand
+  labels of the two replies (b_hand: the rule's reply labelled 1 and top 4's 0; c_hand the
+  reverse); the same exact McNemar test, with Holm across the two readers at 0.05, gives the
+  hand-based label (`memcredit_am3g.hand_check`);
+- a judge-based NONABSTAIN_HELPS stands as **NONABSTAIN_HELPS** only if the hand-based label is
+  also NONABSTAIN_HELPS; a judge-based NONABSTAIN_HURTS stands only if the hand-based label is
+  NONABSTAIN_HURTS; otherwise the reading is **JUDGE_DEPENDENT** (`confirm_reading`);
+- a judge-based NO_DETECTED_DIFFERENCE stays **NO_DETECTED_DIFFERENCE** whatever the hand
+  labels say (the hand check confirms; it never creates a reading), and the hand-based label is
+  reported beside it;
+- too few cells: the hand test can reject only if enough discordant questions keep their
+  direction under the hand labels (with c_hand = 0, 7 at Holm's first step and 6 at its second).
+  A reader whose judge-based reading is directional but whose hand-labelled cells are too few,
+  or split, to reject reads JUDGE_DEPENDENT; a reader with no discordant question has nothing to
+  label and reads NO_DETECTED_DIFFERENCE;
+- labels that do not cover the sample exactly (an item unlabelled, labelled twice, outside the
+  sample or not 0 or 1) make every directional reading JUDGE_DEPENDENT; without labels a
+  directional reading is PENDING_HAND_CHECK and no decision follows (the registered `analyze`
+  refuses to run without the receipted labels, section 16).
+
+**Precedence.** VOID (V3) over JUDGE_DEPENDENT from G-J1 over the hand check: a void run reads
+VOID whatever else holds, and a G-J1 failure reads JUDGE_DEPENDENT before the hand check is
+consulted (`analyze_registered`).
+
 NONABSTAIN_HELPS licenses, for that reader: "keeping the best-BM25-ranked 4-subset whose reply
-does not abstain is more accurate than BM25 top 4" (AM1's prompt, the Qwen3-32B judge,
-LongMemEval-S held-out answerable questions, BM25 user-turn pools, 4 of 8; for Qwen3.5-9B, in
-vLLM's default mode and this batch schedule). NONABSTAIN_HURTS licenses the reverse in the same
-scope. NO_DETECTED_DIFFERENCE licenses nothing. Both readers reading NONABSTAIN_HELPS, with the
-anchor's replayed 39 against 0, would say the rule's gain on answerable questions holds across
-the three readers tried.
+does not abstain is more accurate than BM25 top 4" (AM1's prompt, the Qwen3-32B judge confirmed
+by blind agent labels of the discordant cells, LongMemEval-S held-out answerable questions, BM25
+user-turn pools, 4 of 8). For Qwen3.5-9B, and for OLMo-2 if its pass comes from the default-mode
+fallback, the scope adds "in vLLM's default mode and this registration's batch schedule"
+(`h1.readers.*.scope`, `engine_mode`). NONABSTAIN_HURTS licenses the reverse in the same scope.
+NO_DETECTED_DIFFERENCE and JUDGE_DEPENDENT license nothing. Both readers reading
+NONABSTAIN_HELPS, with the anchor's replayed 39 against 0, would say the rule's gain on answerable
+questions holds across the three readers tried.
 
 **Why this family and this test.** D118 names the two readers and Holm. The exact McNemar test is
 `am1-keepset-search-v1`'s H-C test, so the anchor's reading and the new readers' are the same
-statistic. Holm controls the family-wise error at 0.05 and is uniformly more powerful than
-Bonferroni for two hypotheses. Under the primary judge c is expected near 0 (an abstaining
-top-4 reply is almost never judged correct: 6 of 13,598 held-out abstaining 4-subset replies for
-Qwen3-8B; 0-8 of about 2,200-2,600 per reader and arm on development), so the test is in effect
-one-directional, as H-C's was.
+statistic. Holm controls the family-wise error at 0.05 and is at least as powerful as
+Bonferroni. Under the primary judge c is expected near 0 (an abstaining top-4 reply is almost
+never judged correct: 6 of 13,598 held-out abstaining 4-subset replies for Qwen3-8B; 0-8 of
+about 2,200-2,600 per reader and arm on development), so the test is in effect
+one-directional, as H-C's was. Requiring the hand-based test to agree costs power only where the
+judge's discordant labels are wrong, which is the case it is there to catch.
 
 ### 7.2 H2 (descriptive, registered estimand): the rule's cost on the abstention questions
 
@@ -345,56 +401,106 @@ made from "either of" H1's readers beyond what each reading licenses.
 
 `scripts/memcredit_am3g.py` evaluates every check below. Each failure is a named error whose text
 begins with its rule (`VOID (V1, ...)`, `VOID (V2, ...)`, `VOID (V3, ...)`); none surfaces as a
-traceback.
+traceback: the host commands catch a missing or unreadable input that no named check caught and
+report it as `VOID (V2, incomplete): an input is missing or unreadable`, with its cause (the GPU
+job's driver and workers record their own failures in `summary.json`).
 
-- **Freeze gate.** `run` and `worker` (the GPU job), `extract` and the registered `analyze`
-  refuse the held-out and abstention populations, and `selftest` and `plan` refuse the held-out
-  population, unless the ledger holds a row for `am3-nonabstain-generality-v1` whose SHA-256
-  equals this file's and every code pin of section 16 matches the working tree (parsed from this
-  file; in the GPU job, the image's copy of the freeze commit). The gate runs before any input of
-  those populations is opened. `prepare-abstention`, and `selftest` and `plan` of the abstention
-  population, run before the freeze: they produce no model output. The tests check refusal and
-  opening against a scratch ledger and a scratch copy of this file.
+- **Freeze gate.** `run` and `worker` (the GPU job), `extract`, `hand-sample` and the registered
+  `analyze` refuse the held-out and abstention populations, and `selftest` and `plan` refuse the
+  held-out population, unless the ledger holds a row for `am3-nonabstain-generality-v1` whose
+  SHA-256 equals this file's and every code pin of section 16 matches the working tree (parsed
+  from this file; in the GPU job, the image's copy of the freeze commit, which holds every pinned
+  file). The gate runs before any input of those populations is opened. `prepare-abstention`,
+  `abstention-facts`, and `selftest` and `plan` of the abstention population, run before the
+  freeze: they produce no model output. The tests check refusal and opening against a scratch
+  ledger and a scratch copy of this file.
 - **VOID, nothing read (V1): a pinned input differs.** A study artifact, its question ids or
   count; a model's revision, receipt SHA-256 or snapshot root (checked by the driver after the
   lane's own verification, before any step runs); job 1458's ten pinned files; AM1's committed
-  tables; the abstention patterns; either judge template; any code pin; or the features'
+  tables (both digests, and every pool present); the abstention patterns; either judge template;
+  any code pin; a worker that finds its engine mode other than the pinned one; or the features'
   recorded provenance (population, artifact and id digests, pattern and template digests, and the
   digests of the twelve repository modules the extraction imports, `FEATURE_CODE`). An input is
   fixed, never the code; a code change is a new registration id.
-- **VOID (V2): incomplete.** A job is incomplete when a reader of H1 or H2 has no complete pass
-  (a step skipped, failed, smoke-failed or partial, and for OLMo-2 its fallback too), the
-  primary judge's pass is incomplete, or any pool lacks a reply or a primary label. An
-  incomplete job caused by infrastructure (a crash, a node or lane failure, an engine that fails
-  to start) is rerun once, as a new job of this registration with the same commit, image, inputs
-  and seeds (`am3g-submit.sh ... rerun`); the incomplete job's records are kept and reported.
-  A job stopped by a time budget (a step's `max_s` or the job's deadline) is not rerun: the
-  budgets are part of the design. If the held-out job remains incomplete (after its rerun, or
-  after a time budget), H1 and H2 are VOID (there is no complete anchor check). If only the
-  abstention job remains incomplete, H2 is VOID with the named error and
-  `analyze` runs once with `--abstention-void REASON` (section 16); H1 stands. A missing
-  second-judge label affects only the second judge's descriptions: a reader and arm with any
-  missing second-judge label is reported as incomplete under that judge.
+- **VOID (V2): incomplete, and the rerun rule.** A job is complete when each reader has a complete
+  pass (OLMo-2 from either of its steps) and the primary judge's pass is complete; otherwise it is
+  incomplete. Right after each GPU job ends, before extract reads it, `rerun-decision`
+  (`am3g-rerun-decision.sh`) applies this mapping to the driver's `summary.json` and the lane's
+  `termination.env`:
+  - **complete**: every essential step completed (an incomplete second judge only drops that
+    judge's descriptions); extract reads this job;
+  - **rerun**, once per population: the workload never started (lane reasons
+    `gpu_prolog_unavailable`, `foreign_gpu_process`, `hard_stop_before_start`); no driver summary
+    (other than after a hard stop); a worker that ended without its done record (a crash); an
+    engine that failed to start (OLMo-2's batch-invariant step excepted, whose declared fallback
+    runs); a failed smoke check; or a signal that came more than 300 s before the lane's hard
+    stop (a cancellation or a node event);
+  - **no-rerun**, VOID (V2, time budget): a step skipped for lack of time, a pass stopped by its
+    `max_s` or the deadline, a worker killed as late, the lane's hard stop, or a signal within
+    300 s of the hard stop. The budgets are part of the design;
+  - **void** (V1): the model verification failed, or a worker found its engine mode other than
+    the pinned one.
+  A rerun is a new job of this registration with the same commit, image, inputs and seeds
+  (`am3g-submit.sh ... rerun`), submitted as soon as the decision is made; a held-out rerun runs
+  before the abstention job is submitted. Extract then reads the rerun's job, whose own decision
+  is final: "rerun" again is VOID (V2). The incomplete job's records are kept and reported. If
+  the held-out job ends incomplete for good, H1 and H2 are VOID (there is no complete anchor
+  check). If only the abstention job does, H2 is VOID with its named reason and `analyze` runs
+  once with `--abstention-void REASON` (section 16); H1 stands. A failed image build is rebuilt
+  once from the same capsule; a second failure stops the run before any GPU job, and nothing is
+  read. A missing second-judge label affects only the second judge's descriptions: a reader and
+  arm with any missing second-judge label is reported as incomplete under that judge.
+- **Named V2 errors in extract.** A run directory without `judge-items.json` (no judge step ran,
+  because judge32 was skipped) is `VOID (V2, incomplete): the judge items (no judge step ran:
+  judge32 was skipped) ...`; a missing or unreadable `summary.json` or reader pass is likewise a
+  named V2 error.
 - **VOID (V3): the anchor replay fails.** On the held-out job, extract compares the anchor's
   replies with job 1458's `reader-gpu0` at every requested cell (R1: identical tokens and finish
-  reasons at all 49,274 cells; log-prob bits are reported, not gated), and its primary-judge
-  labels with AM1's committed tables (R2: equal at all 49,274 cells). If either fails, the
-  pipeline is not the one AM1 validated: H1's readings are VOID and H2 is reported as a
+  reasons, token for token, at all 49,274 cells; log-prob bits are reported, not gated), and its
+  primary-judge labels with AM1's committed tables (R2: equal at all 49,274 cells). If either
+  fails, the pipeline is not the one AM1 validated: H1's readings are VOID and H2 is reported as a
   description of a void run, with the differences at the token and label levels. A replay
   failure is not an infrastructure failure, and the registration is not rerun under this id.
   Why the anchor runs on all 347 questions: its pass costs about 0.12 GPU-h, under a quarter of
   the held-out job, and it checks the whole pipeline (the artifact, the prompt rendering, the
-  engine, the image and the primary judge) against AM1 bit for bit before any new reader's number
-  is read, and reproduces H-C's counts (39 and 0) exactly. Without it a pipeline error would be
-  indistinguishable from a reader effect. Its counts are not part of H1's family.
-- **G-J1, the answerable judge (AM1's G2 rule).** On the held-out validation items the primary
-  judge says yes to at least 95% of reference answers (single-session-preference questions left
-  out) and no to at least 95% of "I don't know.". If it fails, H1's readings are JUDGE_DEPENDENT
-  and no decision follows. (AM1's run of the same items gave 322 of 322 and 347 of 347.)
+  engine, the image and the primary judge) against AM1 token for token before any new reader's
+  number is read, and reproduces H-C's counts (39 and 0) exactly. Without it a pipeline error
+  would be indistinguishable from a reader effect. Its counts are not part of H1's family.
+- **G-J1, a replay of AM1's validation items.** On the held-out validation items the primary judge
+  says yes to at least 95% of reference answers (single-session-preference questions left out)
+  and no to at least 95% of "I don't know." (AM1's G2 rule). The items and the batch-invariant
+  judge are AM1's, so this checks that the judge replays; it cannot catch an error the judge
+  makes on OLMo-2's or Qwen3.5-9B's replies, which is what the blind hand check is for. If G-J1
+  fails, H1's readings are JUDGE_DEPENDENT and no decision follows. (AM1's run of the same items
+  gave 322 of 322 and 347 of 347.)
+- **The blind hand check of H1's discordant cells** (D9: agent labels, disclosed as such, not
+  human labels).
+  - *What is labelled.* `hand-sample` draws, from the held-out features (`hand_plan`, text-free
+    and deterministic, so `analyze` recomputes it): for each H1 reader, both replies (the rule's
+    choice and BM25 top 4's) of every question whose two replies the primary judge labels
+    differently on the retrieved arm; and as distractors, as many concordant questions of that
+    reader, drawn with `random.Random(f"44:hand:{reader}")`, first from those where the rule left
+    BM25 top 4 (they look like discordant pairs) and then from the others, each giving BM25 top
+    4's reply and the rule's (or, where the rule kept top 4, a seeded other 4-subset's reply that
+    differs). Items are deduplicated by (question, SHA-256 of the normalized reply) and put in one
+    order across both readers (`random.Random("44:hand:order")`).
+  - *Blindness.* The sample file holds, per item, only its id, the question id and type, the
+    question, the reference answer and the reply: no reader, judge label, role, mask or rule
+    identity, and discordant and distractor items look alike. The labeller is an isolated agent
+    that reads only that file and the instructions `hand-sample` writes beside it
+    (`HAND_INSTRUCTIONS`: LongMemEval's answer-check criteria per question type, and "a reply
+    that declines to answer is 0"), and writes one label (1 or 0) per item.
+  - *Receipt before the join.* `am3g-hand-receipt.sh` writes the labels' SHA-256 and a text-free
+    receipt, which are committed to the repository before `analyze` joins them; `analyze`
+    refuses labels with another digest, and the hand check is "incomplete" unless they label
+    exactly the recomputed plan's items, each once, with 0 or 1.
+  - *Decision.* Section 7.1. Hand-against-judge agreement over every labelled item (counts and
+    Cohen's kappa) is reported as a description.
 - **G-J2, the abstention judge.** On the abstention validation items the primary judge says yes
   to "I don't know." on at least 95% of questions (29 of 30) and no to the decoy on at least 95%.
   If it fails, H2 is reported as JUDGE_QUALIFIED: its cost rests on a judge that failed its own
-  validation. The explanation item's yes rate is reported.
+  validation. The explanation item's yes rate is reported. VOID (V3) takes precedence over
+  JUDGE_QUALIFIED.
 - **Kill.** None beyond the void rules. A void is reported with its check and counts.
 
 ## 9. Operating characteristics
@@ -468,13 +574,43 @@ rule, the tests and the exact intervals involve no random draw.
   - expected about 0.66 physical GPU-h in all.
 - **Caps.** Slurm limits: build 5 minutes, held-out job 90 minutes (1.5 GPU-h), abstention job
   30 minutes (0.5 GPU-h): **2.08 GPU-h**; with the one rerun per job that section 8 allows, 4.08
-  GPU-h. Well under D24's 8 GPU-h line. Each step starts only with its `min_start_s` left before
-  the job's deadline (the limit minus the lane's 210 s), and its passes stop at its `max_s` (the
-  config's `jobs`); on the normal path the steps' `max_s` sum to 5,100 s of the held-out job's
-  5,190 s and to 1,290 s of the abstention job's 1,590 s.
-- **Order.** Build; the post-build CPU selftests of both populations (no GRES); the held-out job;
-  then the abstention job, submitted after the held-out job ends whatever its outcome; then
-  extract, analyze and the tests on the host CPU. Each GPU job is submitted only when no other GPU
+  GPU-h. Well under D24's 8 GPU-h line.
+- **Step budgets** (`jobs` in the config: per step [`min_start_s`, `max_s`]). A step starts only
+  with `min_start_s` left before the job's deadline (the limit minus the lane's 210 s), and its
+  passes stop at `max_s`. They are sized with an overhead model measured in job 1471
+  (`budget.overhead_model`): per job 100 s (the lane's prolog, 46 s, and the driver's model
+  verification, 36 s); per step, outside its pass, the prompt rendering before the engine
+  (11-12 s for a development reader, 7 s for a judge, scaled with the requests, plus, for judge32,
+  the driver building the judge items from three passes), the engine start (28-41 s), the smoke
+  pass (1-6 s) and the hand-off (3-4 s). With margin: held-out readers 135 s, judge32 155 s,
+  judge8 90 s, a batch-invariant step whose engine refuses to start 125 s; abstention readers
+  70 s, judge32 80 s, judge8 65 s, a refused engine 70 s.
+  - Held-out: readers [1150, 1000] (the expected passes are about 390-400 s), Qwen3.5-9B
+    [1650, 1500] (about 670 s), judge32 [700, 500] (about 110 s), judge8 [350, 250] (about 25 s).
+    With every reader at its cap, judge32 starts with 1,185 s left (it needs 700) and judge8 with
+    530 s (it needs 350), and the job ends by 5,000 s of its 5,190; on the fallback path (OLMo-2's
+    batch-invariant engine refuses to start and the default-mode step runs) 1,060 s and 405 s,
+    ending by 5,125 s. (Check 1 found the first draft's budgets could starve judge32 on the
+    fallback path; these replace them.)
+  - Abstention: readers [280, 200], Qwen3.5-9B [330, 250], judge32 [240, 150], judge8 [170, 100]
+    (every pass is expected under 30 s); worst case ends by 1,355 s of 1,590, and 1,425 s on the
+    fallback path.
+  - Every step's `min_start_s` covers its own overhead plus its `max_s`, and a test simulates both
+    paths for both registered jobs (`test_judges_start_and_fit_in_the_worst_case`).
+  - **The residual path.** If OLMo-2's batch-invariant pass is itself stopped by its `max_s`
+    (2.5 times its expected length) and its default-mode fallback then runs too, the held-out job
+    cannot reach judge32: `judge-items.json` is never written, extract stops with its named V2
+    error, and the rule of section 8 makes it a time-budget void with no rerun. A test records
+    this path (`test_the_residual_path_is_the_one_section_11_discloses`). In every path judge8
+    starts only if judge32 completed with time left; if judge8 is skipped, only the second
+    judge's descriptions are lost.
+  - The development job ran (job 1471) under its own, smaller budgets, which the overhead model
+    does not cover in its worst case; it took 10:18 of its 25 minutes.
+- **Order.** Build (rebuilt once if it fails); the post-build CPU selftests of both populations
+  (no GRES); the held-out job, its rerun decision and its one rerun if the rule says so; then the
+  abstention job, submitted after the held-out job's final attempt ends whatever its outcome, and
+  its rerun decision; then, on the host CPU, extract, the blind hand-check sample, the labelling,
+  the receipt (committed), analyze and the tests. Each GPU job is submitted only when no other GPU
   job of this program is queued or running (`am3g-preflight.sh`). Under D110 another project's
   jobs (`transcreate-*`) hold GPUs 0-1; they are never touched, and Slurm allocates this
   program's GPU.
@@ -491,7 +627,10 @@ masks, outcomes, reads; no text) and `tables.md` from `analyze`, the text-free l
 records, and a judge-item list with each response replaced by its SHA-256. The staging script
 searches every staged file for every reply of 12 or more characters and every question,
 explanation, decoy and memory text of the two artifacts, and exits with an error on a hit; a
-staged tree with a hit is not committed.
+staged tree with a hit is not committed. The blind hand check's sample (questions, reference
+answers, replies) and its labels file (whose notes may quote them) stay on the host in the
+private directory, read-only; the repository gets the labels' SHA-256 and a text-free receipt,
+committed before the join, and the counts and digests `hand-sample` prints.
 
 ## 13. Exclusions and infrastructure failures
 
@@ -508,8 +647,12 @@ followed by its declared default-mode fallback.
   Holm-adjusted p and the reading (or VOID or JUDGE_DEPENDENT with the named check);
 - H2 per reader: b2, c2, the cost rate with its exact interval, both accuracies with theirs, the
   net loss, the exact p, the Holm-adjusted p and the description label, and G-J2;
+- H1's blind hand check: the plan's counts and digest, the labels' digest, b_hand, c_hand, the
+  exact p, the Holm-adjusted p and the hand-based label per reader, the reading before and after
+  it, and hand-against-judge agreement with kappa;
 - the anchor's replay (R1, R2, with log-prob bits and the judges' item-level replay) and its
   held-out counts on both arms;
+- every rerun decision with its reason;
 - every descriptive output of section 6.4, including the natural-mix net effect and the
   break-even share per reader and judge;
 - every validity check of section 8 with its counts; GPU-h; every deviation; the disclosures of
@@ -562,6 +705,28 @@ pass (86 at `fc9ebb4d`; the analysis rerun there gave byte-identical outputs). T
 another experiment's tests (`test_r04_evidence.py`, `test_r04_nuisance.py`), the same two that
 `am1-keepset-search-v1`'s selftest found failing on `main`; this branch changes no existing code.
 
+**Round 1 corrections, rerun on the CPU** (from commit `0d030015`). No GPU job was needed: none
+of the code the GPU job runs changed (`run`, `worker`, the request and judge-item tables, the
+prompts and the config loading are as at `eae156cf`); the registered jobs' step budgets changed,
+which the development job does not use.
+- `abstention-facts` rebuilt the abstention artifact byte for byte (`f1c241ba...`) and recounted
+  the twins with their text overlap (section 1.2).
+- `extract` read job 1471 again. The R2 code (`load_pinned_tables`, `labels_vs_tables`) read the
+  pilot's committed tables: the anchor's labels equal them on 8,913 of 8,946 cells, AM3's figure
+  (the rest is the compiled-against-eager difference).
+- The blind hand check was rehearsed on development data. `hand-sample` drew 27 items (OLMo-2: 4
+  discordant and 4 distractor questions; Qwen3.5-9B: 3 and 3). An isolated agent labelled them
+  blind (7 correct, 20 not), the receipt was written before the join, and `analyze` joined them.
+  Hand and judge agree on 27 of 27 (kappa 1.00); b_hand and c_hand are 4 and 0 (OLMo-2) and 3
+  and 0 (Qwen3.5-9B), as the judge's; on 63 questions neither separates, so both read
+  NO_DETECTED_DIFFERENCE.
+- `analyze` twice (byte-identical), `dryrun-compare` (20 of 20 again; `per-table.json.gz` still
+  byte-identical to AM3's), `power` (unchanged) and the tests (120 passed).
+- Job 1470 is not this registration's: it appears in none of its logs or scripts (its jobs are
+  1467-1469 and 1471-1473), it was submitted between 11:09:27 and 11:10:05 UTC, and scontrol no
+  longer knew it when check 1 asked (Slurm accounting is disabled). The preflight before job 1471
+  found no GPU job of this program queued or running.
+
 Development also set: the readers and engines (AM3), the 71 requests per pool, H2's status as a
 description (section 7.2), the abstention-judge validation items, and the step budgets (from the
 timings above, which match AM3's job 1466).
@@ -611,7 +776,7 @@ parses this table and refuses to run unless every file matches.
 | `ops/am3g/am3g-submit.sh` | operator: lane manifest, dry run, submit, rerun | `d166590236aa9abe6f4a917ceccb62271c725874e533e25ff8b8088173c22fdd` |
 | `ops/am3g/am3g-extract.sh` | operator: extract | `ef96744ab8f7b254bdbb95dc18d5b1ee776ff111dc23c8de73f60afcd5fe05ea` |
 | `ops/am3g/am3g-analyze.sh` | operator: analyze twice, tests | `383a443ce6216a7ddd3e015a5fb540c7f80fa0149c746cc830ef5550d2daa71f` |
-| `ops/am3g/am3g-stage-evidence.sh` | operator: text-free staging and the text search | `ecb03e2eed7e25a5710bee7a84dc5c9d1e5d76b82619a64f2a72c92e6357d0e8` |
+| `ops/am3g/am3g-stage-evidence.sh` | operator: text-free staging and the text search | `b22d944d9498791719c6599ba4be56ac84f8a90ad93f3914a43aed6dfe9c4512` |
 | `ops/am3g/am3g-mac-bundle.sh` | operator, on the Mac: the bundle and the bootstrap copies | `15524e2fc8f467328505314e0a4d8e3c5edf4c09d481d72d2cbfc52b99199721` |
 | `ops/am3g/am3g-job-state.sh` | operator: a job's state, and its scontrol record when it ends | `1c8c0ab44cadac44ce2ba97175407f9398588a907cc2f745ba1e5bc26ddd11d4` |
 | `ops/am3g/am3g-image.sh` | operator: the built image id, after its provenance and receipt checks | `3b47a709ef27b72d966535737b00a08421c3039de50cfe5c7c2a4d52a49b665b` |
@@ -624,36 +789,67 @@ parses this table and refuses to run unless every file matches.
 | `infra/research/Dockerfile.vllm-overlay` | the overlay image's Dockerfile | `437ff4f6d95d564a5065cc4383e79b34f166417358edcee34b82e5d05574852e` |
 | `uv.lock` | the Python environment of every host step | `4721104d055ec9d7488f82831c24b7e080124f27e9b850abd51c91024629b60f` |
 
-Commands of the registered run, on the host, after the freeze. The names in capitals are values
-that exist only then: FREEZE, the freeze commit (full id; its first 8 characters where the
-scripts take a short id); IMAGE, the image id the build prints; JOB_H and JOB_A, the two GPU jobs'
-Slurm ids. The root is `~/cotcodec-runs/stage0/am3-nonabstain-generality-v1/` (the scripts' `reg`
-mode); the checkout is a clean clone at FREEZE from a git bundle, and every script refuses a dirty
-checkout or another commit. Each script logs to the root and appends to `ops/jobs.log`.
+Commands of the registered run, after the freeze. The names in capitals are values that exist
+only then: FREEZE, the freeze commit's full id, and FREEZE8, its first 8 characters (every script
+that takes a "commit short id" takes FREEZE8); IMAGE, the image id; JB, JS1, JS2, JOB_H and JOB_A,
+the Slurm ids of the build, the two CPU selftests and the two GPU jobs (each script prints the id
+it submits); ABSTENTION_VOID, section 8's reason when the H2 void path applies. The host root R
+is `~/cotcodec-runs/stage0/am3-nonabstain-generality-v1/` (the scripts' `reg` mode). Every host
+script refuses a dirty checkout or another commit, logs to R, and appends a line to
+`R/ops/jobs.log`. No command waits: `am3g-job-state.sh` prints a job's state once and is polled
+(exit 1 while the job is pending or running), and right after a job ends it saves `scontrol show
+job` to `R/ops/scontrol-J.txt`, because Slurm accounting is disabled on the node and scontrol
+forgets ended jobs.
 
 ```bash
-bash ops/am3g/am3g-checkout.sh reg FREEZE
-bash ops/am3g/am3g-capsule.sh reg FREEZE
-bash ops/am3g/am3g-build.sh reg FREEZE                 # 1 H100, 5-minute limit; prints IMAGE
-bash ops/am3g/am3g-selftest.sh reg FREEZE IMAGE heldout      # CPU, no GRES
-bash ops/am3g/am3g-selftest.sh reg FREEZE IMAGE abstention   # CPU, no GRES
-bash ops/am3g/am3g-submit.sh reg FREEZE IMAGE heldout submit      # JOB_H, 90-minute limit
-# after JOB_H ends, whatever its outcome:
-bash ops/am3g/am3g-submit.sh reg FREEZE IMAGE abstention submit   # JOB_A, 30-minute limit
-bash ops/am3g/am3g-extract.sh reg FREEZE heldout JOB_H
-bash ops/am3g/am3g-extract.sh reg FREEZE abstention JOB_A
-bash ops/am3g/am3g-analyze.sh reg FREEZE                # analyze twice (byte-identical), tests
-bash ops/am3g/am3g-stage-evidence.sh reg FREEZE heldout:JOB_H abstention:JOB_A
+# On the operator's Mac, in the repository (the branch that holds FREEZE):
+bash ops/am3g/am3g-mac-bundle.sh reg FREEZE       # bundle -> R/bundles; bootstrap copies of
+                                                  # am3g-env.sh and am3g-checkout.sh -> R/bootstrap;
+                                                  # prints their SHA-256: they must equal section 16
+# On the host:
+bash ~/cotcodec-runs/stage0/am3-nonabstain-generality-v1/bootstrap/am3g-checkout.sh reg FREEZE
+cd ~/cotcodec-runs/stage0/am3-nonabstain-generality-v1/checkout   # every later command runs here;
+                                                  # am3g-checkout.sh refused unless the bootstrap
+                                                  # copies equal FREEZE's own
+bash ops/am3g/am3g-capsule.sh reg FREEZE8
+bash ops/am3g/am3g-build.sh reg FREEZE8                         # submits JB (1 H100, 5 minutes)
+bash ops/am3g/am3g-job-state.sh reg JB                          # poll until it exits 0
+IMAGE=$(bash ops/am3g/am3g-image.sh reg FREEZE8)                # provenance PASS and receipt checked;
+                                                                # a failed build is rebuilt once
+bash ops/am3g/am3g-selftest.sh reg FREEZE8 "$IMAGE" heldout     # submits JS1 (CPU, no GRES)
+bash ops/am3g/am3g-selftest.sh reg FREEZE8 "$IMAGE" abstention  # submits JS2 (CPU, no GRES)
+bash ops/am3g/am3g-job-state.sh reg JS1; bash ops/am3g/am3g-job-state.sh reg JS2   # poll both
+cat R/selftest-heldout-FREEZE8/exits.txt R/selftest-abstention-FREEZE8/exits.txt  # all exit 0
+bash ops/am3g/am3g-submit.sh reg FREEZE8 "$IMAGE" heldout submit     # JOB_H (90 minutes)
+bash ops/am3g/am3g-job-state.sh reg JOB_H                            # poll until it exits 0
+bash ops/am3g/am3g-rerun-decision.sh reg FREEZE8 heldout JOB_H       # complete | rerun | no-rerun | void
+#   on "rerun": am3g-submit.sh reg FREEZE8 "$IMAGE" heldout rerun, poll, record its scontrol,
+#   and run am3g-rerun-decision.sh on the rerun's id, which then replaces JOB_H below
+bash ops/am3g/am3g-submit.sh reg FREEZE8 "$IMAGE" abstention submit  # JOB_A (30 minutes), after
+                                                                     # JOB_H's final attempt ended
+bash ops/am3g/am3g-job-state.sh reg JOB_A
+bash ops/am3g/am3g-rerun-decision.sh reg FREEZE8 abstention JOB_A    # the same rule
+bash ops/am3g/am3g-extract.sh reg FREEZE8 heldout JOB_H
+bash ops/am3g/am3g-extract.sh reg FREEZE8 abstention JOB_A
+bash ops/am3g/am3g-hand-sample.sh reg FREEZE8 JOB_H         # the blind sample, host only, read-only
+#   the isolated labeller reads only R/private/hand-check-sample.jsonl and
+#   R/private/hand-check-instructions.txt and writes R/private/hand-labels.jsonl
+bash ops/am3g/am3g-hand-receipt.sh reg FREEZE8              # labels' SHA-256 and receipt -> R/hand-check
+#   commit R/hand-check/ to the repository (the receipt before the join), then:
+bash ops/am3g/am3g-analyze.sh reg FREEZE8                   # analyze twice (byte-identical), tests
+bash ops/am3g/am3g-stage-evidence.sh reg FREEZE8 heldout:JOB_H abstention:JOB_A
 ```
 
 `am3g-analyze.sh` runs `scripts/memcredit_am3g.py analyze --heldout-features
 private/features-heldout.json.gz --abstention-features private/features-abstention.json.gz
---output-dir out-FREEZE-a` (and `-b`) in the checkout's `uv` environment (`uv run --locked
---offline`). Under section 8's H2 void path, the operator sets ABSTENTION_VOID to the failing
-command's error line (the line that begins `error: `, without that prefix, the home directory
-written as `~`) and the script passes it as `--abstention-void`. A rerun of an incomplete job
-(section 8) is `am3g-submit.sh reg FREEZE IMAGE POPULATION rerun`, once per job. `analyze` runs
-once; a fresh verifier reruns it from a new clone at FREEZE and the outputs must be
+--hand-labels private/hand-labels.jsonl --hand-labels-sha256 S --output-dir out-FREEZE8-a` (and
+`-b`) in the checkout's `uv` environment (`uv run --locked --offline`), S being the receipted
+digest; it refuses to run without the receipted labels. Under section 8's H2 void path, the
+operator sets ABSTENTION_VOID to the failing command's error line (the line that begins `error: `,
+without that prefix, the home directory written as `~`), and the script passes it as
+`--abstention-void` and writes to `out-FREEZE8-void-{a,b}` and `analyze-FREEZE8-void.log`, keeping
+the failing attempt's records: `analyze` runs once per input set and never overwrites an output
+directory. A fresh verifier reruns `analyze` from a new clone at FREEZE, and the outputs must be
 byte-identical.
 ## 17. Freeze checklist
 
@@ -666,7 +862,8 @@ Before the freeze, by the orchestrator:
    gauntlet score (section 1.5).
 3. If any code of section 16 changed after the development dry run, rerun the affected parts of
    it (at least `extract`, `analyze` and `dryrun-compare` on the dry run's run directory, and the
-   tests on the host) and update its record.
+   tests on the host) and update its record. A change to the GPU job's code (`run`, `worker` and
+   what they call) needs a new development GPU job within the 0.5 GPU-h dry-run cap.
 4. Re-pin section 16 in a fill commit; run the tests locally and on the host.
 5. Confirm on the host, at the fill commit, that the inputs of section 4 have their digests (the
    two study artifacts, job 1458's ten files, the dataset file) and that `git diff 957a3c0a --
@@ -682,8 +879,9 @@ Before the freeze, by the orchestrator:
    (the freeze commit). A test freezes this file into a scratch ledger, so the command's text
    checks pass.
 
-After the freeze: run section 16's commands once, commit the text-free outputs, and have a fresh
-verifier rerun `analyze` from a new clone.
+After the freeze: run section 16's commands once (the hand-label receipt is committed before
+`analyze`), commit the text-free outputs, and have a fresh verifier rerun `analyze` from a new
+clone.
 
 ## 18. Priors (for the record; not tested)
 
@@ -699,10 +897,40 @@ verifier rerun `analyze` from a new clone.
   the response identifies the question as unanswerable, which a bare "I don't know." does, and
   the development calibration gave 63 of 63 (section 15).
 - **Natural mix:** at LongMemEval-S's 6% unanswerable questions, a reader whose held-out gain
-  resembles the anchor's (0.112 per answerable question, 0.105 at the mix) stays ahead whatever
-  its cost on the 30 (at most 0.06 at the mix), so the break-even unanswerable share is the more
-  informative figure.
+  resembles the anchor's (0.112 per answerable question, 0.94 x 0.1124 = 0.106 at the mix) stays
+  ahead whatever its cost on the 30 (at most 0.06 at the mix), so the break-even unanswerable
+  share is the more informative figure.
 
 ## 19. Review log: the independent checks
 
-Two independent, sequential checks are required before the freeze (D118). None has run yet.
+Two independent, sequential checks are required before the freeze (D118).
+
+### Round 1
+
+Pre-freeze check 1 ran on `3f989999` and found the file ready to freeze after fixes: no blocking
+item, three major, thirteen minor and five for information. It confirmed the blindness of the
+draft, every pin, the dataset and artifact digests, the GPU-hour ledger, the docker flags, the
+in-image gate fix, the power figures and the text search (against 4,953 texts). The fixes are
+commit `0d030015` (code, tests, operator scripts, config) and the commit that carries this
+section; the CPU parts of the development dry run were rerun (section 15). No model ran on a
+held-out or abstention question.
+
+| Item | Finding | Disposition |
+|---|---|---|
+| M1 | The held-out step budgets left out the per-job and per-step overheads; with the readers near their caps judge32 started with about 715 s against 700 and was skipped on OLMo-2's fallback path, leaving no `judge-items.json` and a FileNotFoundError in extract. | Fixed: an overhead model measured in job 1471 (`budget.overhead_model`); held-out budgets readers [1150, 1000], Qwen3.5-9B [1650, 1500], judge32 [700, 500], judge8 [350, 250]; abstention budgets re-sized too; `min_start_s` covers each step's overhead plus `max_s`; tests simulate the normal and fallback paths for both jobs and record the residual path (a time-capped OLMo-2 pass followed by its fallback), which section 11 discloses; a missing `judge-items.json` is a named V2 error (sections 8 and 11). |
+| M2 | Section 16's commands could not run end to end. | Fixed: `am3g-mac-bundle.sh` (bundle and bootstrap copies, with their SHA-256), a bootstrap check in `am3g-checkout.sh` (the copies must equal the commit's), `am3g-job-state.sh` (polls once and saves `scontrol` when a job ends), `am3g-image.sh` (IMAGE from the build record after provenance and receipt checks), the selftest wait, FREEZE and FREEZE8 used consistently (section 16). |
+| M3 | G-J1 replays AM1's items and cannot fail; nothing validated the judge on the new readers' replies. | Fixed: a registered blind hand check of every H1 discordant cell with as many seeded concordant distractors, by an isolated agent (D9, disclosed as agent labels), the labels' digest committed before the join, and the decision rule of section 7.1 (a directional reading stands only if the hand-label test, with Holm, rejects in the same direction; otherwise JUDGE_DEPENDENT; NO_DETECTED_DIFFERENCE stays; too few or missing labels defined); hand-against-judge agreement and kappa reported; `hand-sample`, `hand_check`, `confirm_reading`, `am3g-hand-sample.sh`, `am3g-hand-receipt.sh`, tests; rehearsed on development data (section 15). G-J1 is renamed a replay of AM1's validation items. |
+| m1 | Twin counts: 5 development twins (`09ba9854` is also a Step 0 demo), and 2 Step 0 demos outside the 347; the membership order was wrong. | Fixed in `twin_membership` (split first) and recounted by `abstention-facts`; section 1.2 and the dry-run record corrected. |
+| m2 | The old program's audits aligned third-party outputs to all 500 tasks, the abstentions included. | Disclosed in section 1.2. |
+| m3 | The rerun rule was not mechanical. | Fixed: `rerun-decision` maps the driver's step statuses and the lane's termination reasons to complete, rerun, no-rerun or void, before extract; a held-out rerun runs before the abstention job; extract takes the rerun's id (sections 8 and 16; tests). |
+| m4 | A second analyze with ABSTENTION_VOID overwrote the failing run's outputs and logs. | Fixed: the void path writes to `out-FREEZE8-void-*` and its own log; analyze runs once per input set and refuses an existing output directory. |
+| m5 | The break-even definitions were incomplete. | Section 6.4 states the defined-only interval and the count of undefined resamples, the percentile indices, gain = loss = 0 giving 1, and the crossing hidden by "undefined". |
+| m6 | Twins: turn-text overlap unchecked; no interval that resamples the linked pairs together. | `abstention-facts` counts memory-text overlap by SHA-256 (27 of 30 pools share a memory with the twin's user turns); `natural_mix_linked_twins` resamples the 22 linked pairs as units (section 6.4). |
+| m7 | `load_heldout_tables` and `labels_vs_tables` never read a real tables file. | `load_pinned_tables` checks both digests and the entries' keys (tested on scratch files); the dry run reads the pilot's committed tables with the R2 code and reproduces AM3's 8,913 of 8,946; a test opens the development tables and hashes the held-out ones. |
+| m8 | A missing judge-items file and a missing table raised tracebacks. | Named V2 and V1 errors; the host commands report any other missing or unreadable input as a named V2 error (section 8; tests). |
+| m9 | "Bit for bit" overstated R1. | "Token for token" in sections 1.4 and 8; log-prob bits are reported, not gated. |
+| m10 | VOID's precedence was not stated. | Section 7.1 and section 8: VOID over JUDGE_DEPENDENT (G-J1) over the hand check, and over JUDGE_QUALIFIED. |
+| m11 | OLMo-2's scope if its pass comes from the fallback. | Section 7.1; `h1.readers.*.scope` and `engine_mode` record it. |
+| m12 | The abstention inputs directory was writable. | `chmod a-w` on the host (the file was already read-only). |
+| m13 | The archived port's digest was not asserted. | A test asserts `77aed59a...` where `legacy/` exists (skipped in the image). |
+| Info | Job 1470; 0.94 x 0.1124; Holm's power; `ops/jobs.log`; pin the lane's container-side scripts and `uv.lock`. | Section 15 says what is known of job 1470 (not this registration's); section 18 corrected to 0.106; section 7.1 says "at least as powerful"; extract, analyze, staging and the new scripts append to `ops/jobs.log`; the lane's container-side scripts, the Dockerfile and `uv.lock` are pinned in section 16. |

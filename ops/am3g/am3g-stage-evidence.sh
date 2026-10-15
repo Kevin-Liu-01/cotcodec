@@ -6,12 +6,15 @@
 # text, question, explanation or decoy answer reached the staged tree (every distinct reply of
 # at least 12 characters, and every study-artifact question and answer text, is searched for in
 # every staged file).
-# The commit is the one whose analysis outputs ($R/out-<short>-a) are staged; the checkout may be
+# The commit is the one whose build, selftests, manifests and extract logs are staged; the
+# analysis outputs staged are $R/out-<ANALYSIS_TAG>-a (default: the same commit; set ANALYSIS_TAG
+# to stage a later rerun's, or the "<short>-void" outputs of the H2 void path). The checkout may be
 # at a later commit of the same branch.
 # Usage: am3g-stage-evidence.sh dev|reg <commit short id> <population>:<job id> [...]
 set -Eeuo pipefail
 source "$(dirname "$0")/am3g-env.sh" "${1:?mode}"
 SHORT="${2:?commit short id}"; shift 2
+TAG="${ANALYSIS_TAG:-$SHORT}"
 E=$R/evidence-stage
 rm -rf "$E"; mkdir -p "$E"/{jobs,builds,manifests,ops,selftests,logs,prepare}
 ARTS=()
@@ -79,12 +82,13 @@ if [[ -d $R/hand-check ]]; then
 fi
 cp "$R"/ops/slurm-selftest-*.out "$E/selftests/" 2>/dev/null || true
 cp "$R"/prepare/* "$E/prepare/" 2>/dev/null || true
-if [[ -d $R/out-$SHORT-a ]]; then
-  cp "$R"/out-"$SHORT"-a/* "$E/"
-  cp "$R/analyze-$SHORT.log" "$R/pytest-$SHORT.log" "$E/logs/" 2>/dev/null || true
-  for f in "$R"/analyze-"$SHORT"-a.stderr "$R"/dryrun-compare-"$SHORT".stderr "$R"/power-"$SHORT".stderr; do
+if [[ -d $R/out-$TAG-a ]]; then
+  cp "$R"/out-"$TAG"-a/* "$E/"
+  cp "$R/analyze-$TAG.log" "$R/pytest-$TAG.log" "$E/logs/" 2>/dev/null || true
+  for f in "$R"/analyze-"$TAG"-a.stderr "$R"/dryrun-compare-"$TAG".stderr "$R"/power-"$TAG".stderr; do
     [[ -f $f ]] && gzip -n -c "$f" > "$E/logs/$(basename "$f").gz"; done
 fi
+cp "$R"/extract-*.log "$R"/extract-*.json "$E/logs/" 2>/dev/null || true
 # The abstention artifact's summary is staged in both modes, so its texts are searched too.
 [[ -r $ABS_ART ]] && ARTS+=("$ABS_ART")
 # $HOME is written as ~ in records and logs.
