@@ -824,3 +824,107 @@ def test_outputs_are_gz_without_mtime(tmp_path):
     raw = path.read_bytes()
     assert raw[4:8] == b"\x00\x00\x00\x00"
     assert json.loads(gzip.decompress(raw)) == {"a": [1, 2], "b": 1}
+
+
+def _anchor_fixture(
+    tmp_path: Path, monkeypatch, flip_token: bool = False, flip_table: bool = False
+):
+    """A toy held-out population with a job-1458-like reference (AM1's 265-request pools: 256
+    subsets, 8 swaps, 1 reorder), its judge passes and committed-style tables."""
+
+    from test_memcredit_am3 import _write_pass
+
+    config = g.load_config()
+    pilot = g.load_pilot_config(config)
+    artifact = _toy_artifact(3)
+    new_requests = g.request_table(artifact, g.ARMS)
+    texts = {r["index"]: _reply("a", r["question_index"], r["arm"], r["mask"], False)
+             for r in new_requests}  # fmt: skip
+    anchor_rows = {i: {"tokens": (len(t) % 7, 151645), "bits": b"\x00\x00\x80\xbf",
+                       "finish": "stop", "text": t} for i, t in texts.items()}  # fmt: skip
+    ref_requests = ms.request_table(artifact, list(g.ARMS))
+    ref_rows, ref_texts = {}, {}
+    for r in ref_requests:
+        mask = r.get("mask", 0) if r["kind"] == "table" else 0
+        text = _reply("a", r["question_index"], r["arm"], mask, False)
+        if r["kind"] != "table":
+            text = "Placebo reply."
+        tokens = [len(text) % 7, 151645]
+        if flip_token and r["kind"] == "table" and r["question_index"] == 1 and mask == 255:
+            tokens = [99, 151645]
+        ref_rows[r["index"]] = (tokens, [-0.5, -0.01], "stop", text)
+        ref_texts[r["index"]] = text
+    ref = tmp_path / "ref"
+    _write_pass(ref / "sessions" / "reader-gpu0", ref_rows)
+    validation = ms.validation_items(artifact, pilot["judge"]["validation"])
+    ref_items = ms.judge_item_table(artifact, ref_texts, ref_requests, validation)
+    (ref / "judge-items.json").write_text(json.dumps(ref_items))
+
+    def label(item):
+        q = artifact["questions"][item["question_index"]]
+        return "yes" if q["answer"] in item["response"].lower() else "no"
+
+    for step in ("judge32-gpu0", "judge8-gpu0"):
+        _write_pass(ref / "sessions" / step,
+                    {i["index"]: ([7], [-0.01], "stop", label(i)) for i in ref_items})  # fmt: skip
+    items = g.judge_items(artifact, pilot, config, "heldout", {"rd-qwen3-8b": texts})
+    labels = {j: {i["index"]: int(label(i) == "yes") for i in items} for j in g.JUDGES}
+    item_of = am3.item_index(items)
+    pools = g.pool_records(artifact, g.ARMS, anchor_rows, item_of, labels)
+    tables = []
+    for q, question in enumerate(artifact["questions"]):
+        for arm in g.ARMS:
+            values = [1.0 if f"blue {q}" in _reply("a", q, arm, m, False).lower() else 0.0
+                      for m in range(256)]  # fmt: skip
+            if flip_table and (q, arm) == (2, "gold"):
+                values[sorted(lf.FOUR_SETS)[3]] = 1.0 - values[sorted(lf.FOUR_SETS)[3]]
+            tables.append({"question_id": question["question_id"], "arm": arm,
+                           "values_hex": g.cc.encode_values(values)})  # fmt: skip
+    pinned = {
+        p: g.sha256_file(ref / p) for p in config["populations"]["heldout"]["reference"]["sha256"]
+    }
+    _relax_pins(monkeypatch, {"heldout": {"reference": dict(
+        config["populations"]["heldout"]["reference"], sha256=pinned)}})  # fmt: skip
+    monkeypatch.setattr(g, "load_heldout_tables", lambda config: tables)
+    return config, artifact, anchor_rows, pools, labels, item_of, items, ref
+
+
+def test_anchor_checks_pass_on_an_exact_replay(tmp_path, monkeypatch):
+    config, artifact, rows, pools, labels, item_of, items, ref = _anchor_fixture(
+        tmp_path, monkeypatch
+    )
+    out = g.anchor_checks_heldout(config, artifact, rows, pools, labels, item_of, items, ref)
+    cells = 3 * 2 * 71
+    assert out["pass"] is True
+    assert out["r1_replies"]["identical_tokens"] == out["r1_replies"]["cells"] == cells
+    assert out["r1_replies"]["identical_bits"] == 0  # bits are reported, not gated
+    assert out["r2_labels_vs_tables"]["cells_same_label"] == cells
+    replay = out["judge_item_replay"]["primary"]
+    assert replay["compared"] > 0 and replay["same"] == replay["compared"]
+
+
+@pytest.mark.parametrize("flip", ["token", "table"])
+def test_anchor_checks_fail_on_one_difference(tmp_path, monkeypatch, flip):
+    config, artifact, rows, pools, labels, item_of, items, ref = _anchor_fixture(
+        tmp_path, monkeypatch, flip_token=flip == "token", flip_table=flip == "table"
+    )
+    out = g.anchor_checks_heldout(config, artifact, rows, pools, labels, item_of, items, ref)
+    assert out["pass"] is False
+    if flip == "token":
+        assert out["r1_replies"]["pass"] is False
+        assert out["r1_replies"]["token_differences"] == [
+            {"question_id": "q1", "arm": "retrieved", "mask": 255},
+            {"question_id": "q1", "arm": "gold", "mask": 255},
+        ]
+    else:
+        assert out["r1_replies"]["pass"] is True and out["r2_labels_vs_tables"]["pass"] is False
+        assert len(out["r2_labels_vs_tables"]["differing_cells"]) == 1
+
+
+def test_anchor_checks_refuse_a_changed_reference_file(tmp_path, monkeypatch):
+    config, artifact, rows, pools, labels, item_of, items, ref = _anchor_fixture(
+        tmp_path, monkeypatch
+    )
+    (ref / "judge-items.json").write_text("[]")
+    with pytest.raises(g.Am3gError, match="V1"):
+        g.anchor_checks_heldout(config, artifact, rows, pools, labels, item_of, items, ref)

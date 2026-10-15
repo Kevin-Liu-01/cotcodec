@@ -569,7 +569,7 @@ parses this table and refuses to run unless every file matches.
 | File | Role | SHA-256 |
 |---|---|---|
 | `scripts/memcredit_am3g.py` | this registration: gate, abstention pools, driver and workers, extract, analyze, dry-run comparison, power | `614bafd5e1b624a4b5ada48c9c734c9880f8842b014be058efc9e12235f9d62a` |
-| `tests/test_memcredit_am3g.py` | its tests: config and pins, the gate, the abstention template against the archived port, pools, requests, judge items, Holm and H1's readings, H2's estimand, the natural mix, end to end on toy runs | `6bcf5e562561b6824736cf43e6e5d467c630002703e08e691ee9debdf603b482` |
+| `tests/test_memcredit_am3g.py` | its tests: config and pins, the gate, the pins inside the image, the abstention template against the archived port, pools, requests, judge items, the anchor replay checks R1 and R2, Holm and H1's readings, H2's estimand, the natural mix, end to end on toy runs | `dd9d76863e4840f7710379a28e46df5e10f7017a049460f453e33d6978a60677` |
 | `experiments/am3/am3-nonabstain-generality-v1.yaml` | this registration's config | `d38efce48ee64e63c0845af0baf75c6ab1e846fb199c50379be6a286b228257a` |
 | `scripts/memcredit_am3.py` | AM3's engine helpers, rule, per-pool record and cell summary (imported) | `25f634edd29a23f2fdee12b0825013d624aa5305d49cf512f74fdf1827ea130f` |
 | `tests/test_memcredit_am3.py` | AM3's tests (also supply a pass writer to these tests) | `1ab5196ca553f8cc92deda0a728ec98987853ec81d3f75041561661659d848b3` |
