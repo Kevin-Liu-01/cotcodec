@@ -2554,3 +2554,38 @@ sessions, the node hosts inference only, on 1-2 GPUs, through 2026-10-20.
   - No credentials are created or entered by agents, and no licences are
     accepted on Kevin's behalf.
 - This program's GPU jobs keep the remaining GPUs, and Slurm allocates them.
+
+**D111. AM1 development pilot (exploratory): memories interact, and
+leave-one-out credit picks the wrong memories. Ruling on the gauntlet for
+AM1's confirmatory run.**
+- Pilot. Exploratory, 1.49 physical GPU-h, on the 63-question development
+  split of LongMemEval-S only (`stage0/am1-study`,
+  `program/evidence/2026-10-15/am1-dev-pilot/`). It built 126 exact 256-subset
+  tables with the batch-invariant Qwen3-8B reader. The judge was Qwen3-32B
+  with LongMemEval's official prompt: 117 of 120 agreed with a blind hand
+  check by an agent, not a human (κ 0.95).
+- Findings (exploratory):
+  - Of 89 non-constant tables, 53 are non-monotone, and a non-gold memory
+    matters in 58.
+  - Interactions of order ≥ 2 carry 37% of the variance: an excess of +0.12
+    [0.05, 0.20] over a gold-count AND/OR baseline.
+  - Keep-set regret at B = 4 against the exact optimum: leave-one-out 0.21
+    (suboptimal in 53% of tables), exact Shapley 0.08, exact Banzhaf 0.03,
+    SNIPW-64 0.07, raw attention 0.26. LOO minus exact Shapley is +0.135
+    [0.05, 0.23].
+  - 71% of gold deletion labels survive a matched placebo swap, against 17% of
+    non-gold labels. A content-free reorder flips correctness in 13% of pools.
+  - Cross-fitted attention heads predict necessity at AUROC 0.935.
+  - Compiled-mode replay differed across GPUs (an inductor autotune choice),
+    while eager mode replays bit-exactly. The confirmatory run uses eager mode.
+- Registration. `am1-memory-credit-v1` is drafted, and a fresh pre-freeze audit
+  found five blocking items, all fixed (`20f85d66`). A second fresh check is
+  running before the freeze.
+- Gauntlet ruling. The confirmatory run is about 3.1 physical GPU-h, under 8,
+  and comes from the D103/D104 question sweep, which had verified priors and
+  three independent judges. It also has a development pilot and two
+  independent pre-freeze checks. It is admitted without a further gauntlet
+  wave. It therefore carries no gauntlet score. Blind discrimination and the
+  two provider-distinct reviews did not run, and that is disclosed in its
+  results.
+- G2's hand check uses agent labels unless Kevin chooses to label (D9).
