@@ -1,0 +1,86 @@
+{
+  "judged_replies": 9190,
+  "judged_replies_with_conflicting_labels": 0,
+  "pairs": [
+    {
+      "a": "run:reader-gpu0",
+      "b": "run:reader-gpu1",
+      "ci95_bits": [
+        0.9999806009609287,
+        1.0
+      ],
+      "ci95_tokens": [
+        0.9999806009609287,
+        1.0
+      ],
+      "differing_total": 0,
+      "gpu_a": {
+        "CUDA_VISIBLE_DEVICES": "0",
+        "name": "NVIDIA H100 80GB HBM3",
+        "pci_bus_id": 99,
+        "uuid": "a485003c-eb56-c00a-5efc-ba2fb61d12d5"
+      },
+      "gpu_b": {
+        "CUDA_VISIBLE_DEVICES": "1",
+        "name": "NVIDIA H100 80GB HBM3",
+        "pci_bus_id": 100,
+        "uuid": "0524ae85-a4b2-36bd-5769-d31e83c463e2"
+      },
+      "identical_tokens": 190156,
+      "identical_tokens_and_logprob_bits": 190156,
+      "n_common": 190156,
+      "pools": 694,
+      "pools_with_a_utility_flip": 0,
+      "rate_bits": 1.0,
+      "rate_tokens": 1.0,
+      "text_differs_total": 0,
+      "utility_covered": 190156,
+      "utility_flip_ci95": [
+        0.0,
+        1.939903907128841e-05
+      ],
+      "utility_flip_rate": 0.0,
+      "utility_flips": 0
+    },
+    {
+      "a": "run:judge32-gpu0",
+      "b": "run:judge32-gpu1",
+      "ci95_bits": [
+        0.9996394707292631,
+        1.0
+      ],
+      "ci95_tokens": [
+        0.9996394707292631,
+        1.0
+      ],
+      "differing_total": 0,
+      "gpu_a": {
+        "CUDA_VISIBLE_DEVICES": "0",
+        "name": "NVIDIA H100 80GB HBM3",
+        "pci_bus_id": 99,
+        "uuid": "a485003c-eb56-c00a-5efc-ba2fb61d12d5"
+      },
+      "gpu_b": {
+        "CUDA_VISIBLE_DEVICES": "1",
+        "name": "NVIDIA H100 80GB HBM3",
+        "pci_bus_id": 100,
+        "uuid": "0524ae85-a4b2-36bd-5769-d31e83c463e2"
+      },
+      "identical_tokens": 10230,
+      "identical_tokens_and_logprob_bits": 10230,
+      "n_common": 10230,
+      "pools": 38,
+      "pools_with_a_utility_flip": 0,
+      "rate_bits": 1.0,
+      "rate_tokens": 1.0,
+      "text_differs_total": 0,
+      "utility_covered": 0,
+      "utility_flip_ci95": null,
+      "utility_flip_rate": null,
+      "utility_flips": 0
+    }
+  ],
+  "runs": {
+    "run": "/home/kevin/cotcodec-runs/stage0/am1-memory-credit-v1/runs/main/1458/am1"
+  }
+}

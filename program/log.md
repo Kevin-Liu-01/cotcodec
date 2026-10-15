@@ -5904,3 +5904,31 @@ they say so.)
   provider-distinct reviews did not run.
 - Evidence: `program/evidence/2026-10-16/am1-confirmatory/README.md` (ops scripts, logs,
   manifests, build and selftest records, lane and worker records, text-free judge items).
+
+## 2026-10-15 — `am1-memory-credit-v1` (CONFIRMATORY, frozen, ledger row 23): hand labels receipted, registered analysis run; every gate passes; leave-one-out and the other four primary rules MISSPECIFIED (branch `ops/am1`, not merged)
+
+- Blind G2 labels by an isolated agent (Kevin did not label; D9/D111): 120 rows, SHA-256
+  `70a5f2ec...`, kept on the host (the rows carry free-text notes). The digest was committed
+  before the join (`9e641945`, 04:22:22Z).
+- The registered `analyze` (with `--hand-labels-sha256` and `--expected-evidence-sha256`) and
+  `aa` ran once (04:24:06-04:24:39Z, host CPU) from a fresh `git archive` export of `9ad36b10`
+  (`8806cd7b...`, 19 pins checked). Both exited 0.
+- Gates: void no (0 incomplete tables); G1 PASS (190,156 of 190,156 reader requests and 10,230
+  of 10,230 judge items identical in tokens and log-prob bits); K2 no (12.4%); K3 no; K4 251
+  tables; G2 PASS (322/322, 347/347, hand-check kappa 0.867 [0.767, 0.950] on exactly the
+  seeded sample). H2 read; program decision follows.
+- H2, retrieved, B = 4, 99%: leave-one-out 0.277 [0.223, 0.333], permutation Shapley-16 0.138
+  [0.096, 0.187], SNIPW-64 0.094 [0.058, 0.133], retrieval rank 0.343 [0.271, 0.418], raw
+  attention 0.311 [0.235, 0.382]: all MISSPECIFIED. Leave-one-out minus exact Shapley +0.233
+  [0.194, 0.273] (LOO_LOSES_MORE_THAN_EXACT_SHAPLEY); exact Shapley 0.044 [0.020, 0.072].
+  Program reading: per-memory deletion credit is misspecified for keep/evict decisions on this
+  benchmark (this reader, this judge, BM25 user-turn pools, 4 of 8). The second judge gives the
+  same five verdicts.
+- Secondary: E1 +0.156 [0.119, 0.194] retrieved, +0.094 [0.058, 0.129] gold; AM2 non-gold ABOVE
+  THE SWAP FLOOR (+0.0099 [0.0026, 0.0170], driven by the gold arm; not evidence of content
+  effects); AM6 cross-fitted heads 0.890 vs best cheap baseline 0.830 (neither AM6 reading
+  holds); reorders change 17.1% of answers.
+- Disclosures: no gauntlet score (D111); agent hand labels (7 of 8 disagreements on preference
+  items); not independently verified; no GPU used by the analysis (GPU-h unchanged, 1.5444 of
+  the 3.1 cap).
+- Evidence: `program/evidence/2026-10-16/am1-confirmatory/RESULTS.md` and `analysis/`.

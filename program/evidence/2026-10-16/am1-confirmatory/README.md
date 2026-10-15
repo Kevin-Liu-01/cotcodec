@@ -9,6 +9,12 @@ sample. **No analysis ran and no outcome was read.** `analyze` and `aa` (section
 run; the hand-check sample has not been labelled; G2 is PENDING. The operator who ran this did
 not draft the registration.
 
+**Later (analyst, after this record):** the sample was labelled blind by an isolated agent, the
+labels' SHA-256 was committed (`hand-check/hand-labels.sha256.txt`, commit `9e641945`), and the
+registered `analyze` and `aa` ran once from an export of `9ad36b10`. The results, gates and
+verdicts are in `RESULTS.md`; the outputs are in `analysis/`. The text below is the operations
+record as it stood before that.
+
 **Status: the registered GPU job ran once and completed; the blind hand-check sample is drawn,
 unlabelled.** Job 1458 (2 H100, Slurm limit 90 minutes) COMPLETED 0:0 in 00:45:49, with every
 phase and every worker complete, both reader passes finished (190,156 of 190,156 requests each)

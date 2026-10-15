@@ -1,0 +1,70 @@
+{
+  "judge_cross_gpu": {
+    "ci95_bits": [
+      0.9996394707292631,
+      1.0
+    ],
+    "ci95_tokens": [
+      0.9996394707292631,
+      1.0
+    ],
+    "differing_examples": [],
+    "differing_total": 0,
+    "gpu_other": {
+      "CUDA_VISIBLE_DEVICES": "1",
+      "name": "NVIDIA H100 80GB HBM3",
+      "pci_bus_id": 100,
+      "uuid": "0524ae85-a4b2-36bd-5769-d31e83c463e2"
+    },
+    "gpu_ref": {
+      "CUDA_VISIBLE_DEVICES": "0",
+      "name": "NVIDIA H100 80GB HBM3",
+      "pci_bus_id": 99,
+      "uuid": "a485003c-eb56-c00a-5efc-ba2fb61d12d5"
+    },
+    "identical_tokens": 10230,
+    "identical_tokens_and_logprob_bits": 10230,
+    "n_common": 10230,
+    "other": "judge32-gpu1",
+    "rate_bits": 1.0,
+    "rate_tokens": 1.0,
+    "ref": "judge32-gpu0",
+    "requests_other": 10230,
+    "requests_ref": 10230,
+    "text_differs_total": 0
+  },
+  "reader_cross_gpu": {
+    "ci95_bits": [
+      0.9999806009609287,
+      1.0
+    ],
+    "ci95_tokens": [
+      0.9999806009609287,
+      1.0
+    ],
+    "differing_examples": [],
+    "differing_total": 0,
+    "gpu_other": {
+      "CUDA_VISIBLE_DEVICES": "1",
+      "name": "NVIDIA H100 80GB HBM3",
+      "pci_bus_id": 100,
+      "uuid": "0524ae85-a4b2-36bd-5769-d31e83c463e2"
+    },
+    "gpu_ref": {
+      "CUDA_VISIBLE_DEVICES": "0",
+      "name": "NVIDIA H100 80GB HBM3",
+      "pci_bus_id": 99,
+      "uuid": "a485003c-eb56-c00a-5efc-ba2fb61d12d5"
+    },
+    "identical_tokens": 190156,
+    "identical_tokens_and_logprob_bits": 190156,
+    "n_common": 190156,
+    "other": "reader-gpu1",
+    "rate_bits": 1.0,
+    "rate_tokens": 1.0,
+    "ref": "reader-gpu0",
+    "requests_other": 190156,
+    "requests_ref": 190156,
+    "text_differs_total": 0
+  }
+}

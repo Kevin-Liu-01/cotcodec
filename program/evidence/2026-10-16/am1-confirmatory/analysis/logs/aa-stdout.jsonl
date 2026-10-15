@@ -1,0 +1,2 @@
+{"a": "run:reader-gpu0", "b": "run:reader-gpu1", "n_common": 190156, "identical_tokens": 190156, "identical_tokens_and_logprob_bits": 190156, "utility_covered": 190156, "utility_flips": 0}
+{"a": "run:judge32-gpu0", "b": "run:judge32-gpu1", "n_common": 10230, "identical_tokens": 10230, "identical_tokens_and_logprob_bits": 10230, "utility_covered": 0, "utility_flips": 0}

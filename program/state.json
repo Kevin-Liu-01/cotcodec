@@ -489,7 +489,8 @@
     "q2-evaluator-mutation-v1-k2",
     "r04-checker-nuisance-invariance-v1",
     "q2-stage1-successor-e-v1",
-    "q2-zinv-reserve-validation-v1"
+    "q2-zinv-reserve-validation-v1",
+    "am1-memory-credit-v1"
   ],
   "infrastructure": {
     "serving_probe": "v1 and v2 done (1.15 GPU-h): cu129 vLLM works on R570; Q1 sampling within cap; Q2 ladder needs rescoping",
@@ -1520,6 +1521,13 @@
       "label": "COMPLETE, VERIFIED (not externally anchored; the fresh verifier ran after RESULTS, deviation 1): DR2 Near-equivalent, DR5 NO-GO; S1b stays closed",
       "outcome": "113 tasks, 4 sessions x 1 episode per size: delta (H-GA minus H-OSW-fixed) 0.00 pp, 90% t [-2.44, 2.44] (p 1.000); X sign flip p 0.093 (label permutation 0.047, sensitivity); D_b 10.7% [8.0, 13.5]; pi_small 0.055, one-sided [0.010, 0.119] vs 0.12 (DR2) and M 0.13 (DR5); 4B 27.2%/26.3% (DR1 no); 0.0027-0.0030 GPU-h per episode (DR4 no); 0 infrastructure losses in 1,808 episodes; checker correction 0 flips; GLMM full fit did not converge; S1a's 32 base tasks (secondary): Inconclusive/NO-GO as a description",
       "evidence": "program/evidence/2026-10-12/q2-stage1-successor-e-run/RESULTS.md"
+    },
+    {
+      "registration": "am1-memory-credit-v1",
+      "date": "2026-10-15",
+      "label": "COMPLETE, CONFIRMATORY (not independently verified; no gauntlet score, D111; agent hand labels, D9): every gate passes; H2 MISSPECIFIED for all five primary rules; program reading holds",
+      "outcome": "347 held-out LongMemEval-S questions x 2 arms, Qwen3-8B reader, Qwen3-32B judge, job 1458: void no; G1 PASS (190,156 of 190,156 reader requests and 10,230 of 10,230 judge items bit-identical across GPUs and orders); K2 no (12.4%); K3 no; K4 251 non-constant retrieved tables; G2 PASS (322/322, 347/347, hand-check kappa 0.867 [0.767, 0.950]); B = 4 retrieved regret, 99%: leave-one-out 0.277 [0.223, 0.333], permutation Shapley-16 0.138 [0.096, 0.187], SNIPW-64 0.094 [0.058, 0.133], retrieval rank 0.343 [0.271, 0.418], raw attention 0.311 [0.235, 0.382], all MISSPECIFIED; LOO minus exact Shapley +0.233 [0.194, 0.273] (LOO loses more); exact Shapley 0.044 [0.020, 0.072]; program reading: per-memory deletion credit is misspecified for keep/evict decisions on this benchmark (this reader, this judge, BM25 user-turn pools, 4 of 8); second judge same verdicts; E1 +0.156 retrieved, +0.094 gold; AM2 non-gold ABOVE THE SWAP FLOOR +0.0099 [0.0026, 0.0170] (gold arm drives it); AM6 cross-fitted heads 0.890 vs best cheap 0.830 (neither reading holds)",
+      "evidence": "program/evidence/2026-10-16/am1-confirmatory/RESULTS.md"
     }
   ]
 }
