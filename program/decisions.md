@@ -2757,3 +2757,41 @@ CPU-only registration on the held-out tables, `am1-keepset-search-v1`.**
   calls, oracle utility) and H-C (non-abstention BM25 search against BM25
   top 4, label-free).
 - Pre-freeze checks: two, independent and sequential.
+
+**D117. `am1-keepset-search-v1` result: H-A INCONCLUSIVE; H-C NONABSTAIN_HELPS.
+Next memory step: test whether H-C holds across readers and judges.**
+- Run. Ledger row 24 (freeze `72d50162`), CPU-only on AM1's held-out tables
+  and passes. A fresh verifier reproduced it byte for byte and recomputed
+  every headline number independently
+  (`program/evidence/2026-10-16/am1-keepset-search/RESULTS.md`).
+- H-A (oracle utility, retrieved arm, B = 4, 251 tables): INCONCLUSIVE.
+  - Direct search beats leave-one-out at equal calls (-0.151).
+  - It beats SNIPW-64 and MSR-Banzhaf-64 at equal calls (-0.078, -0.076),
+    and at 26 calls against their 57-64 (-0.049, -0.042).
+  - It beats permutation Shapley-16 at 26 calls against its 83 (-0.096).
+  - Greedy backward elimination at 26 calls is not separated: -0.032, with
+    upper bound +0.0014.
+- H-C (label-free): NONABSTAIN_HELPS. Keeping the best-BM25-ranked 4-subset
+  whose reply does not abstain gives 0.571 against 0.458 for BM25 top 4:
+  +0.112 [0.081, 0.147], 39 questions gained and 0 lost, with a median of 1
+  read.
+- Descriptive:
+  - BM25 top 4 is 0.066 behind all 8, as D116 expected.
+  - Nonabstain-BM25 is 0.046 ahead of all 8, but that was not registered as
+    a test.
+- The memory line so far:
+  - Per-memory deletion credit picks the wrong memories to keep (AM1).
+  - With an oracle, search over keep sets beats sampled credit rules at equal
+    calls (H-A, six of seven).
+  - Without labels, the reader's abstention is a usable signal. Its
+    confidence is not (AM1d).
+- Next: AM3, exploratory, development split only. Does abstention-aware keep
+  selection hold for a second reader and under the second judge?
+  - The second reader should be a different family with an open licence
+    that needs no acceptance, if one is available on the host or downloadable
+    without credentials. Otherwise use Qwen3.5-9B.
+  - Only the 70 4-subsets, BM25 top 4 and all 8 are needed per pool, not 256
+    subsets.
+  - Budget: 2 GPU-h or less.
+  - A held-out registration follows only if the development result
+    replicates.
