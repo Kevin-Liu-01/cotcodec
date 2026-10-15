@@ -1,0 +1,17 @@
+2026-10-15T16:34:40Z clean checkout of 658d2c6ea77f55bf23037c78d72432d3fa504c7c (tree 150a71ca) from bundle 32008087
+2026-10-15T16:34:48Z prepare at 658d2c6e: artifact f6d27d4cf2f3cf62, summary c9df7dbdafe94f9b
+2026-10-15T16:35:37Z clean checkout of 6f6812269714bfb45fe0deae4801fab42e243946 (tree 81150783) from bundle d554e030
+2026-10-15T16:35:52Z capsule aaa7251d9d7e2003f9ffecb3110fc5e03fb7270ab43f22f416c72bbae286a174 (git 6f681226)
+2026-10-15T16:36:02Z vLLM overlay build job 1483 submitted (git 6f681226, archive aaa7251d, 1 H100, limit 5 min)
+2026-10-15T16:37:11Z job 1483 ended: JobState=COMPLETED Reason=None RunTime=00:01:06
+2026-10-15T16:37:12Z image sha256:112e45eb523050a42c7b261c1c910e83e9032ba7a54e79da76317a4fb6ced6c2 for 6f681226: provenance and receipt checked against the pins
+2026-10-15T16:37:16Z post-build CPU selftest 1484 submitted (image 112e45eb, git 6f681226, no GRES)
+2026-10-15T16:37:42Z job 1484 ended: JobState=COMPLETED Reason=None RunTime=00:00:16
+2026-10-15T16:37:52Z am5 dev-ablated GPU job submit: 1487 (git 6f681226, image 112e45eb, artifact f6d27d4c, 1 H100, limit 20 min)
+2026-10-15T16:44:52Z job 1487 ended: JobState=COMPLETED Reason=None RunTime=00:06:41
+2026-10-15T16:44:59Z extract job 1487 at 6f681226: extract exit 0
+2026-10-15T16:45:04Z hand-sample at 6f681226: 18 items, plan 171707ec40cb99d7
+2026-10-15T16:45:51Z hand-merge and receipt at 6f681226: labels 9da82b416383fb01
+2026-10-15T16:46:18Z analyze at 6f681226: 3 commands exited 0; analyze outputs byte-identical
+2026-10-15T16:47:42Z clean checkout of 909b571d0dc9b5723a36597d41e17f2f6156445e (tree b867eb8e) from bundle 34b2faa6
+2026-10-15T16:47:50Z analyze at 909b571d: 3 commands exited 0; analyze outputs byte-identical

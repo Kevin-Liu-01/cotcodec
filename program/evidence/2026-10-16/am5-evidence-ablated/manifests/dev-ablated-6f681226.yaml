@@ -1,0 +1,55 @@
+# AM5 (exploratory; development split, evidence sessions removed): scripts/memcredit_am5.py run in
+# the cotcodec-vllm cu129 overlay built from commit 6f681226's capsule. Steps on 1 H100, in order:
+# readers Qwen3-8B (eager batch-invariant), OLMo-2-1124-7B-Instruct (eager batch-invariant,
+# default-mode fallback only if it does not complete) and Qwen3.5-9B (eager, default mode), 71
+# requests per pool; then the Qwen3-32B judge (eager, batch-invariant). Slurm limit 20 min =
+# 0.34 GPU-h cap. The lane's model is the judge, Qwen3-32B; the driver re-verifies every other
+# model against its receipt and the config's pins.
+runtime: docker-single-node-discovery-v1
+name: am5-dev-ablated
+image_id: sha256:112e45eb523050a42c7b261c1c910e83e9032ba7a54e79da76317a4fb6ced6c2
+git_sha: "6f6812269714bfb45fe0deae4801fab42e243946"
+source_sha256: "aaa7251d9d7e2003f9ffecb3110fc5e03fb7270ab43f22f416c72bbae286a174"
+run_root: ~/cotcodec-runs/stage0/am5-evidence-ablated/runs/dev-ablated
+container_profile: vllm
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 16
+  memory_gb: 128
+  minutes: 20
+budget:
+  max_gpu_hours: 0.34
+randomness_contract: assignment-seed-matrix
+seeds: [42, 43, 44]
+seed_binding:
+  flag: "--seeds"
+model:
+  cache_host_path: ~/cotcodec-runs/hf-cache
+  model_id: qwen3-32b
+  revision: "9216db5781bf21249d130ec9da846c4624c16137"
+  receipt_sha256: "06e4a7e981eee4f6c079fd6b02dc58e3a9fd798e0d806820383d873cf9cd1fd1"
+  artifact_root_sha256: "8fcd9106bfb1854a5b160c64a0ff3d3463208ab69854ae8c1cc26ba19dbf5714"
+study_artifact:
+  source_id: memcredit-study-dev-ablated-pools
+  revision: "6f6812269714bfb45fe0deae4801fab42e243946"
+  license: MIT
+  host_path: ~/cotcodec-runs/stage0/am5-evidence-ablated/inputs/ablated-artifact.json
+  sha256: "f6d27d4cf2f3cf62789466cdfe80bab2cdc007c449411e1ad9b53aab76558b23"
+  size_bytes: 375482
+command:
+  - python
+  - scripts/memcredit_am5.py
+  - run
+  - "--seeds"
+  - "42"
+  - "43"
+  - "44"
+  - "--output-dir"
+  - /outputs/am5
+  - "--allocation-minutes"
+  - "20"
+  - "--evidence"
+  - /inputs/study-artifact.json
+  - "--expected-evidence-sha256"
+  - "f6d27d4cf2f3cf62789466cdfe80bab2cdc007c449411e1ad9b53aab76558b23"
