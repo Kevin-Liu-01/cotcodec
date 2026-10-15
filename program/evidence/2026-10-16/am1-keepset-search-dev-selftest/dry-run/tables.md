@@ -27,13 +27,9 @@ Status: DEVELOPMENT DRY RUN: development tables only; not a result of the regist
    "A5",
    "A7"
   ],
-  "rule_better": [],
+  "rule_better_at_equal_calls": [],
+  "rule_better_at_more_calls": [],
   "verdict": "INCONCLUSIVE"
- },
- "H-B": {
-  "arm": "retrieved",
-  "gold_arm_descriptive": "NO_DETECTED_DIFFERENCE",
-  "reading": "NO_DETECTED_DIFFERENCE"
  },
  "H-C": {
   "arm": "retrieved",
@@ -111,9 +107,9 @@ Verdict: **INCONCLUSIVE**
 | 64 | 0.004 | [0.000, 0.009] |
 | 70 | 0.000 | [0.000, 0.000] |
 
-## H-B: BM25 top 4 minus all 8
+## H-B (descriptive, D116; no decision): BM25 top 4 minus all 8
 
-| Arm | Questions | Rule acc. | Base acc. | b | c | Difference | 95% exact cond. | 95% bootstrap | p (exact McNemar) | Reading |
+| Arm | Questions | Rule acc. | Base acc. | b | c | Difference | 95% exact cond. | 95% bootstrap | p (exact McNemar) | Description (not a decision) |
 |---|---:|---:|---:|---:|---:|---:|---|---|---:|---|
 | retrieved | 63 | 0.508 | 0.444 | 4 | 0 | +0.063 | [-0.013, +0.063] | [+0.016, +0.127] | 0.125 | NO_DETECTED_DIFFERENCE |
 | gold | 63 | 0.571 | 0.587 | 2 | 3 | -0.016 | [-0.071, +0.056] | [-0.079, +0.048] | 1 | NO_DETECTED_DIFFERENCE |

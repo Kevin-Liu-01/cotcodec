@@ -1,8 +1,8 @@
 #!/bin/bash
 # am1-keepset-search-v1 development selftest (development data only), host CPU.
 set -euo pipefail
-C=f41b59cd
-B=~/cotcodec-runs/stage0/am1ks-dev-selftest
+C=f97697b5
+B=~/cotcodec-runs/stage0/am1ks-dev-selftest-f97697b5
 R=~/cotcodec-runs/stage0/am1-study/runs
 P=$B/private-$C
 cd $B/export-$C
@@ -20,8 +20,8 @@ uv run --offline python scripts/memcredit_keepset_search.py selftest \
   --output $B/selftest-$C.json > $B/selftest-$C.log 2>&1 || true
 uv run --offline python scripts/memcredit_keepset_search.py power \
   --analysis-dir $B/out-$C-a --output $B/power-$C.json > $B/power-$C.log 2>&1
-uv run --offline --extra dev pytest -q tests/test_memcredit_keepset_search.py \
-  tests/test_memcredit_cost_curve.py tests/test_memcredit_label_free.py \
+uv run --offline --extra dev pytest -q tests/ \
+  \
   > $B/pytest-$C.log 2>&1 || true
 (cd $B && sha256sum out-$C-a/* out-$C-b/* $P/* selftest-$C.json power-$C.json) > $B/sha256-$C.txt
 echo done > $B/done-$C

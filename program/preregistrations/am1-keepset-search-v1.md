@@ -647,11 +647,14 @@ completes is byte-identical.
 
 ## 15. What development fixed in this design: the development selftest
 
-Before the freeze, the code ran on development data only, at commit `f41b59cd`, in a new host
-directory (`program/evidence/2026-10-16/am1-keepset-search-dev-selftest/README.md`). It reproduced
-AM1b's and AM1d's committed numbers wherever this code overlaps them, by exact equality: 19 of 19
-checks pass (`selftest.json`). It also ran the full analysis on the development tables and
-replies as a dry run; two runs were byte-identical, and 106 tests passed on the host. In short:
+Before the freeze, the code ran on development data only, at commit `f97697b5` (after check 1's
+fixes), in a new host directory deleted afterwards
+(`program/evidence/2026-10-16/am1-keepset-search-dev-selftest/README.md`). It reproduced AM1b's
+and AM1d's committed numbers wherever this code overlaps them, by exact equality: 19 of 19 checks
+pass (`selftest.json`). It also ran the full analysis on the development tables and replies as a
+dry run; two runs were byte-identical. The whole test suite on the host: 3,450 passed, 66
+skipped, and 2 failed in another experiment's tests (`test_r04_*`), which fail identically on
+`main` there. In short:
 
 - AM1b, per table and in aggregate, at B = 4 on both arms (89 tables): direct search's exact
   curve, leave-one-out, greedy backward, the random set and retrieval rank, and SNIPW-64,
@@ -785,10 +788,11 @@ Two independent, sequential checks are required before the freeze (D115, D116).
 
 Pre-freeze check 1 ran on `747623cd` and found the file ready to freeze after fixes: one blocking
 item, three major, nine minor and two for information. The orchestrator then demoted H-B to
-descriptive (D116, `55b49dbe`). The fixes are commit `8c2f4ad7` (code, tests, this file) and the
-commit that carries this section and the refreshed development selftest (section 15). Nothing of
-the held-out data was decoded; the selftest used development data only, in a new host directory
-that was deleted afterwards.
+descriptive (D116, `55b49dbe`). The fixes are commits `8c2f4ad7` (code, tests, this file) and
+`f97697b5` (this section, and one new test made to ignore the packages of a virtual environment
+inside a host export), and the commit that carries the refreshed development selftest (section
+15). Nothing of the held-out data was decoded; the selftest used development data only, in new
+host directories that were deleted afterwards.
 
 | Item | Finding | Disposition |
 |---|---|---|

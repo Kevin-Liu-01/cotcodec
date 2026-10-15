@@ -9,38 +9,46 @@ registration, and no decision rule applies to these numbers.
 - **No held-out data was opened.** `--split development` refuses any path that contains
   `am1-confirmatory` or `am1-memory-credit-v1` (symlinks resolved), and `--split heldout` refuses to
   open any held-out input until the registration is frozen; the tests check both refusals. The run
-  script names only development inputs (`ops/run-f41b59cd.sh`).
-- **Code.** Commit `f41b59cd` on `stage0/am1-keepset-search`, exported with `git archive` into a
-  new host directory, `~/cotcodec-runs/stage0/am1ks-dev-selftest/export-f41b59cd`, and run in that
-  export's `uv` environment (CPython 3.14.6, numpy 2.5.2) on the host CPU, outside Slurm, with no
-  GPU. The registration's section 16 pins these files at this commit.
-- **Reply text stayed on the host.** `extract` wrote AM1d's per-request features (numbers, flags,
-  reply-class ids and digests; no text) to `~/cotcodec-runs/stage0/am1ks-dev-selftest/private-f41b59cd/`.
-  This directory holds only numbers, question ids, question types, masks and digests. Home
-  directories in the logs are shortened to `~`.
+  script names only development inputs (`ops/run-f97697b5.sh`).
+- **Code.** Commit `f97697b5` on `stage0/am1-keepset-search`, after the fixes of pre-freeze check
+  1 (registration section 19), exported with `git archive` into a new host directory,
+  `~/cotcodec-runs/stage0/am1ks-dev-selftest-f97697b5/export-f97697b5`, and run in that export's
+  `uv` environment (CPython 3.14.6, numpy 2.5.2) on the host CPU, outside Slurm, with no GPU. The
+  registration's section 16 pins these files at this commit.
+- **Reply text stayed on the host, and the host directory is gone.** `extract` wrote AM1d's
+  per-request features (numbers, flags, reply-class ids and digests; no text) to the run
+  directory's `private-f97697b5/`. After the outputs below were copied, the run directory was
+  deleted, as were the directories of the earlier runs (`5a80e38e`, `f41b59cd`, `8c2f4ad7`). This
+  directory holds only numbers, question ids, question types, masks and digests. Home directories
+  in the logs are shortened to `~`.
 
 ## What ran
 
-`ops/run-f41b59cd.sh`, once, in this order:
+`ops/run-f97697b5.sh`, once, in this order:
 
 1. `extract --split development` on job 1411 (`reader-gpu0`, `judge32-gpu0`) and the pilot's study
    artifact. It checked the artifact and every pinned pass file, reran AM1's join
    (`memcredit_analyze.join_rows`, unchanged), reproduced `values_hex` on 126 of 126 tables and
    `distinct_replies` on 126 of 126, found AM1d's join and AM1's in agreement on 34,524 of 34,524
-   requests, and wrote the features (`ops/extract-f41b59cd.log`; SHA-256 `93b4732c...`).
+   requests, and wrote the features (`ops/extract-f97697b5.log`; SHA-256 `ba1dd648...`).
 2. `analyze --split development` twice (`out-a`, `out-b`), with the registered settings: 200 seeds
    from 42, 10,000 bootstrap resamples with seed 42. The two runs' `results.json`,
-   `per-table.json.gz` and `tables.md` are byte-identical (`ops/sha256-f41b59cd.txt`). The copy here
+   `per-table.json.gz` and `tables.md` are byte-identical (`ops/sha256-f97697b5.txt`). The copy here
    is `dry-run/`.
 3. `selftest` on the dry run, with this extract's features and AM1d's `features-1411.json.gz`
    (pinned SHA-256 `cb678e3b...`): 19 of 19 checks pass (`selftest.json`).
 4. `power` on the dry run (`power.json`; registration section 9).
-5. `pytest` on `tests/test_memcredit_keepset_search.py`, `tests/test_memcredit_cost_curve.py` and
-   `tests/test_memcredit_label_free.py`: 106 passed (`ops/pytest-f41b59cd.log`).
+5. `pytest` on the whole `tests/` directory: 3,450 passed, 66 skipped, 2 failed
+   (`ops/pytest-f97697b5.log`). The two failures are `tests/test_r04_evidence.py` and
+   `tests/test_r04_nuisance.py`, which compare another experiment's committed floats and differ in
+   the last digits on this host. They fail identically on `main` (`d888f6b6`) on the host, checked
+   in a separate new directory, since deleted; this branch does not touch them. All 50 tests of
+   this registration and AM1b's and AM1d's tests pass.
 
-An earlier run at `5a80e38e` (the first draft commit) also passed 19 of 19; `f41b59cd` added the
-published-count block to `power` and clearer check labels, and its `per-table.json.gz` is
-byte-identical to `5a80e38e`'s.
+Earlier runs at `5a80e38e`, `f41b59cd` and `8c2f4ad7` also passed 19 of 19. Every run's
+`per-table.json.gz` is byte-identical (`62f4a78b...`): the fixes of pre-freeze check 1 changed the
+verdict labels, the H-B block (now descriptive, D116), the H-C void path and the published-count
+block of `power`, not any per-table number.
 
 ## The selftest: AM1b's and AM1d's committed numbers, reproduced
 
@@ -77,7 +85,8 @@ the descriptive tables; the tests cover each of these on toy tables.
 
 The full registered analysis on the development data (`dry-run/tables.md`). The verdict rules are
 applied as code, and they are not readings of anything: 38 retrieved tables, against the 251 the
-registration is sized for.
+registration is sized for. The H-A verdict on these tables is INCONCLUSIVE (A3, A5 and A7 not
+separated; no rule better at any calls).
 
 **H-A, retrieved arm, 38 non-constant tables, 200 seeds.** Difference = direct search's regret
 minus the rule's; bounds one-sided at 1 - 0.05/7.
@@ -97,7 +106,7 @@ Shapley-16 0.093, greedy backward 0.079 (AM1b at 20 seeds: 0.214, 0.050, 0.043, 
 A3's upper bound (-0.004) clears 0 but not the Monte Carlo margin (3 x 0.0020), which is the
 margin doing its job on 38 tables; on 251 tables the standard errors shrink by about 2.6.
 
-**H-B and H-C, all 63 questions** (exact McNemar, discordant pairs b and c):
+**H-B (descriptive, D116) and H-C, all 63 questions** (exact McNemar, discordant pairs b and c):
 
 | Arm | Comparison | b | c | Difference | 95% exact conditional | p |
 |---|---|---:|---:|---:|---|---:|
@@ -116,30 +125,33 @@ registration reads the test.
 ## Operating characteristics (`power.json`)
 
 H-A, from the 38 development tables resampled to 251: P(SEARCH_DOMINATES) 0.999 at the development
-effects, 0.909 at half, 0.372 at a quarter; greedy backward (A7) is the weakest comparison. H-B
-and H-C: exact power grids by discordance rate and share, and what AM1's published counts imply
-(`conditional_on_am1_published_counts`: BM25 top 4 at least 17 questions behind all 8 on the
-held-out retrieved arm; the exact test then rejects with at most 67 discordant pairs; H-C's power
-by conversion rate of the 86 tables BM25 top 4 gets wrong). The registration's section 9 quotes
-these.
+effects, 0.909 at half, 0.372 at a quarter; RULE_BEATS_SEARCH 0.006 at a quarter (A7, a matched
+comparison), RULE_AT_MORE_CALLS_BETTER never; greedy backward (A7) is the weakest comparison.
+H-B and H-C: exact power grids by discordance rate and share, and what AM1's published counts
+imply (`conditional_on_am1_published_counts`): BM25 top 4 at least 17 questions behind all 8 on
+the held-out retrieved arm, where the exact test rejects with at most 67 discordant pairs; H-C's
+power by conversion rate of the 86 tables BM25 top 4 gets wrong, at c = 0, 1 and 2; and exact
+bounds on direct search's held-out mean regret ([0.022, 0.448] at 9 calls, [0, 0.323] at 26,
+[0, 0.095] at 57, [0, 0.044] at 64). The registration's sections 1.2 and 9 quote these.
 
 ## Reproduce
 
-On the host, from a `git archive` export of `f41b59cd`, in a new directory:
+On the host, from a `git archive` export of `f97697b5`, in a new directory:
 
 ```bash
-B=~/cotcodec-runs/stage0/am1ks-dev-selftest; R=~/cotcodec-runs/stage0/am1-study/runs; P=$B/private-f41b59cd
+B=~/cotcodec-runs/stage0/am1ks-dev-selftest-f97697b5; R=~/cotcodec-runs/stage0/am1-study/runs
+P=$B/private-f97697b5
 uv run --offline python scripts/memcredit_keepset_search.py extract --split development \
   --run-dir $R/main/1411/am1 --evidence $R/main/1411/study-artifact.json --private-dir $P
 uv run --offline python scripts/memcredit_keepset_search.py analyze --split development \
-  --features $P/features-development-1411.json.gz --output-dir $B/out-f41b59cd-a
+  --features $P/features-development-1411.json.gz --output-dir $B/out-f97697b5-a
 uv run --offline python scripts/memcredit_keepset_search.py selftest \
-  --analysis-dir $B/out-f41b59cd-a --features $P/features-development-1411.json.gz \
+  --analysis-dir $B/out-f97697b5-a --features $P/features-development-1411.json.gz \
   --am1d-features ~/cotcodec-runs/stage0/am1d-label-free/private-5a31db61/features-1411.json.gz \
-  --output $B/selftest-f41b59cd.json
+  --output $B/selftest-f97697b5.json
 uv run --offline python scripts/memcredit_keepset_search.py power \
-  --analysis-dir $B/out-f41b59cd-a --output $B/power-f41b59cd.json
-uv run --offline --extra dev pytest -q tests/test_memcredit_keepset_search.py
+  --analysis-dir $B/out-f97697b5-a --output $B/power-f97697b5.json
+uv run --offline --extra dev pytest -q tests/
 ```
 
 The H-A, H-B and descriptive parts need only the committed development tables, so they also run
@@ -158,4 +170,4 @@ both run on the host.
 - `dry-run/`: `results.json`, `per-table.json.gz` and `tables.md` of `analyze --split development`.
 - `power.json`: the operating characteristics.
 - `ops/`: the run script, the logs of `extract`, `analyze`, `selftest`, `power` and `pytest`, and
-  the SHA-256 of every output (`sha256-f41b59cd.txt`).
+  the SHA-256 of every output (`sha256-f97697b5.txt`).

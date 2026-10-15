@@ -2239,14 +2239,18 @@
  "experiment": "am1-keepset-search-v1",
  "features": {
   "code_sha256": {
+   "harness/__init__.py": "17dac2704be26050e324aa36aba6d2c855abbd592e4d72f750b9b6e9c4399fec",
+   "harness/g2_pilot.py": "8c685425522377de9fbab92fac02aea321bb2b3bd69d82d2118c4ecea49f6599",
    "harness/memcredit.py": "ad0964d0caab382b5541b64d56a30105bc306d2286f6e62137b1eff9121dd607",
    "harness/memcredit_study.py": "14a97d826ba619e23ea9686e2d2d57149d9f0119df3f80240843178953cf301b",
    "scripts/memcredit_analyze.py": "5444104d3c760b17f311656f4e0dbd50b2b154c89d806f1e4aa2ab6791fb0f34",
-   "scripts/memcredit_keepset_search.py": "1f4c37c110d9d1b4a21eb01812f4036dd7fc6c9185735f798c94ac1e39dcfc75",
+   "scripts/memcredit_cost_curve.py": "431f4cb21ccd398e1433e29a5b40c1a697d48b9aecc5fc728956f819e28c9bab",
+   "scripts/memcredit_keepset_search.py": "a367036085a4cb199d3a5ba46f48931a19fee306d2c22432fd9e590328bdb33d",
    "scripts/memcredit_label_free.py": "721015de434021a72ab3bbbab5e91d0de39a2fc359df7283068f83026dcb9d8f",
+   "scripts/memcredit_step0.py": "57f2e4bbbd11bf750ff224852ba5dd19923ecb3decfde74d23a6913a7f9a7227",
    "scripts/memcredit_study.py": "f27ecd21e769655cddc1e9b06ee8f4c7c4ee8494348b4fc73dba7c68fdb66bb3"
   },
-  "features_sha256": "93b4732ce74e92e7e22c4132a451067f2fbb25251662f531db14dfb1c026028a",
+  "features_sha256": "ba1dd648731bcfb7b0a8fbfe914542afb7c170a016f52832948e027ee409f850",
   "pass": {
    "end_of_turn_id": 151645,
    "job": "1411",
@@ -2584,7 +2588,8 @@
      "A5",
      "A7"
     ],
-    "rule_better": [],
+    "rule_better_at_equal_calls": [],
+    "rule_better_at_more_calls": [],
     "verdict": "INCONCLUSIVE"
    }
   },
@@ -2890,12 +2895,15 @@
      "A5",
      "A7"
     ],
-    "rule_better": [],
+    "rule_better_at_equal_calls": [],
+    "rule_better_at_more_calls": [],
     "verdict": "INCONCLUSIVE"
    }
   }
  },
- "h_b": {
+ "h_b_descriptive": {
+  "basis": "D116: AM1's published figures fixed H-B's sign before the run (registration section 1.2); the exact test and intervals are a description only",
+  "decides": false,
   "gold": {
    "alpha": 0.05,
    "base_accuracy": 0.5873015873015873,
@@ -2907,11 +2915,11 @@
     -0.07099286499582268,
     0.056090031804020155
    ],
+   "description": "NO_DETECTED_DIFFERENCE",
    "difference": -0.015873015873015872,
    "discordant": 5,
    "p_exact_mcnemar": 1.0,
    "questions": 63,
-   "reading": "NO_DETECTED_DIFFERENCE",
    "rule_accuracy": 0.5714285714285714,
    "rule_right_base_wrong": 2,
    "rule_wrong_base_right": 3
@@ -2927,11 +2935,11 @@
     -0.012998683887806322,
     0.06349206349206349
    ],
+   "description": "NO_DETECTED_DIFFERENCE",
    "difference": 0.06349206349206349,
    "discordant": 4,
    "p_exact_mcnemar": 0.125,
    "questions": 63,
-   "reading": "NO_DETECTED_DIFFERENCE",
    "rule_accuracy": 0.5079365079365079,
    "rule_right_base_wrong": 4,
    "rule_wrong_base_right": 0
@@ -2962,11 +2970,11 @@
      -0.06479664346246403,
      0.10533754561593583
     ],
+    "description": "NO_DETECTED_DIFFERENCE",
     "difference": 0.031746031746031744,
     "discordant": 8,
     "p_exact_mcnemar": 0.7265625,
     "questions": 63,
-    "reading": "NO_DETECTED_DIFFERENCE",
     "rule_accuracy": 0.6190476190476191,
     "rule_right_base_wrong": 5,
     "rule_wrong_base_right": 3
@@ -3044,11 +3052,11 @@
      -0.003464087318251049,
      0.07936507936507936
     ],
+    "description": "NO_DETECTED_DIFFERENCE",
     "difference": 0.07936507936507936,
     "discordant": 5,
     "p_exact_mcnemar": 0.0625,
     "questions": 63,
-    "reading": "NO_DETECTED_DIFFERENCE",
     "rule_accuracy": 0.5238095238095238,
     "rule_right_base_wrong": 5,
     "rule_wrong_base_right": 0
@@ -3095,18 +3103,23 @@
    "rule_accuracy": 0.5238095238095238,
    "rule_right_base_wrong": 1,
    "rule_wrong_base_right": 0
-  }
+  },
+  "status": "READ"
  },
  "inputs": {
   "code_sha256": {
+   "harness/__init__.py": "17dac2704be26050e324aa36aba6d2c855abbd592e4d72f750b9b6e9c4399fec",
+   "harness/g2_pilot.py": "8c685425522377de9fbab92fac02aea321bb2b3bd69d82d2118c4ecea49f6599",
    "harness/memcredit.py": "ad0964d0caab382b5541b64d56a30105bc306d2286f6e62137b1eff9121dd607",
    "harness/memcredit_study.py": "14a97d826ba619e23ea9686e2d2d57149d9f0119df3f80240843178953cf301b",
    "scripts/memcredit_analyze.py": "5444104d3c760b17f311656f4e0dbd50b2b154c89d806f1e4aa2ab6791fb0f34",
-   "scripts/memcredit_keepset_search.py": "1f4c37c110d9d1b4a21eb01812f4036dd7fc6c9185735f798c94ac1e39dcfc75",
+   "scripts/memcredit_cost_curve.py": "431f4cb21ccd398e1433e29a5b40c1a697d48b9aecc5fc728956f819e28c9bab",
+   "scripts/memcredit_keepset_search.py": "a367036085a4cb199d3a5ba46f48931a19fee306d2c22432fd9e590328bdb33d",
    "scripts/memcredit_label_free.py": "721015de434021a72ab3bbbab5e91d0de39a2fc359df7283068f83026dcb9d8f",
+   "scripts/memcredit_step0.py": "57f2e4bbbd11bf750ff224852ba5dd19923ecb3decfde74d23a6913a7f9a7227",
    "scripts/memcredit_study.py": "f27ecd21e769655cddc1e9b06ee8f4c7c4ee8494348b4fc73dba7c68fdb66bb3"
   },
-  "features_sha256": "93b4732ce74e92e7e22c4132a451067f2fbb25251662f531db14dfb1c026028a",
+  "features_sha256": "ba1dd648731bcfb7b0a8fbfe914542afb7c170a016f52832948e027ee409f850",
   "tables": {
    "json_sha256": null,
    "path": "program/evidence/2026-10-15/am1-dev-pilot/analysis/tables.json.gz",
@@ -3193,13 +3206,9 @@
     "A5",
     "A7"
    ],
-   "rule_better": [],
+   "rule_better_at_equal_calls": [],
+   "rule_better_at_more_calls": [],
    "verdict": "INCONCLUSIVE"
-  },
-  "H-B": {
-   "arm": "retrieved",
-   "gold_arm_descriptive": "NO_DETECTED_DIFFERENCE",
-   "reading": "NO_DETECTED_DIFFERENCE"
   },
   "H-C": {
    "arm": "retrieved",

@@ -20,13 +20,9 @@
    "A5",
    "A7"
   ],
-  "rule_better": [],
+  "rule_better_at_equal_calls": [],
+  "rule_better_at_more_calls": [],
   "verdict": "INCONCLUSIVE"
- },
- "H-B": {
-  "arm": "retrieved",
-  "gold_arm_descriptive": "NO_DETECTED_DIFFERENCE",
-  "reading": "NO_DETECTED_DIFFERENCE"
  },
  "H-C": {
   "arm": "retrieved",
