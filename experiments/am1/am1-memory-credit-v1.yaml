@@ -13,9 +13,9 @@ experiment_id: am1-memory-credit-v1
 claim_level: confirmatory
 
 # Declared before the run. 42: the split, the gold arm's distractors, engine seeds, permutation
-# Shapley and SNIPW draws (with 43 and 44), the hand-check sample's first stratum draw; 43: the
-# shuffled pass orders, the reorder placebo, the cross-fitting folds; 44: the hand-check sample
-# and the cross-question negatives of the judge validation.
+# Shapley and SNIPW draws (with 43 and 44), the bootstrap (with the hand check's kappa interval);
+# 43: the shuffled pass orders, the reorder placebo, the cross-fitting folds, the power
+# simulation; 44: the hand-check sample and the cross-question negatives of the judge validation.
 seeds: [42, 43, 44]
 
 source:
@@ -156,9 +156,10 @@ judge:
   validation:
     idk_response: "I don't know."
     derangement_seed: 44
-  # The hand check: a seeded sample of judged real replies, stratified by the primary judge's
-  # label and question type, read and labelled from the question, the reference answer and the
-  # reply alone (blind to the judges' labels).
+  # The hand check: a seeded sample (seed 44) of judged real replies, stratified by the primary
+  # judge's label only (half judged yes, half judged no, all of a side if it has fewer; not by
+  # question type), read and labelled from the question, the reference answer and the reply alone
+  # (blind to the judges' labels). G2 counts a labels file only if it labels exactly this sample.
   hand_check:
     size: 120
     seed: 44

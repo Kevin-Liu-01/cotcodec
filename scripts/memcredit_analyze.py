@@ -4,18 +4,24 @@ am1-memory-credit-v1, the A/A report and the power simulation.
 
 Subcommands:
 
-* ``analyze --run-dir D --evidence A --output-dir O [--hand-labels H --hand-labels-sha256 S]
-  [--private-dir P]``: reads the job's passes (reader, judges, attention), joins every request to
-  its judged label and writes text-free JSON: the A/A identities, the judge's validation and
+* ``analyze --run-dir D --evidence A [--expected-evidence-sha256 S] --output-dir O
+  [--hand-labels H --hand-labels-sha256 S] [--private-dir P]``: reads the job's passes (reader,
+  judges, attention), joins every request to its judged label and writes text-free JSON: the A/A
+  identities, the judge's validation and
   agreement, every table's set-function summary and structure class, every estimator's credits
   and keep-set regret against the exact optimum, H1 and H2 aggregates with question-clustered
   bootstrap intervals, AM2's placebo analysis, AM6's internal-signal analysis, H2 under the second
   judge, the kill criteria, and the registration's gates and verdicts (``headline.json``,
   ``verdicts``: the void rule, G1, G2, K2-K4, H2 per primary rule, the program reading, AM2 and
   AM6). Under the registration's config the hand labels must come with the SHA-256 committed
-  before the join. ``--private-dir`` (host only) receives the joined rows with reply texts.
-* ``hand-sample --run-dir D --evidence A --output F``: the seeded, blind hand-check sample of
-  judged reader items (host only: it holds LongMemEval text and replies).
+  before the join, and they count toward G2 only if they label exactly the seeded sample.
+  ``--private-dir`` (host only) receives the joined rows with reply texts.
+* ``hand-sample --run-dir D --evidence A [--expected-evidence-sha256 S] --output F``: the seeded,
+  blind hand-check sample of judged reader items (host only: it holds LongMemEval text and
+  replies).
+* ``aa --run N=D ... --pair N:W,N:W ... --evidence A [--expected-evidence-sha256 S] --output F``:
+  the A/A report. ``analyze``, ``hand-sample`` and ``aa`` check the artifact's SHA-256 as the
+  driver does; the registration's config requires it.
 * ``power --analysis-dir O --output F [--heldout N]``: simulates the registration's decision
   rules at the held-out size by resampling the development questions.
 """
@@ -112,9 +118,22 @@ AM6_FLOOR = 0.65
 # --------------------------------------------------------------------------- loading
 
 
-def load_artifact(path: Path, config: dict[str, Any] | None = None) -> dict[str, Any]:
+def load_artifact(
+    path: Path, config: dict[str, Any] | None = None, expected_sha256: str | None = None
+) -> dict[str, Any]:
+    """The study artifact, checked as the driver checks it: its SHA-256 against the receipted
+    digest (required under the registration's config), its experiment, split and questions."""
+
     config = config or ms.load_config()
-    artifact = json.loads(path.read_bytes())
+    raw = path.read_bytes()
+    if expected_sha256 is None and config["claim_level"] == "confirmatory":
+        raise ms.StudyError(
+            "the registration's analysis needs --expected-evidence-sha256, the artifact's digest "
+            "as receipted for the GPU job"
+        )
+    if expected_sha256 is not None and mc.sha256_bytes(raw) != expected_sha256:
+        raise ms.StudyError("the study artifact differs from the expected SHA-256")
+    artifact = json.loads(raw)
     experiment, split = ms.artifact_rule(config)
     if artifact.get("experiment_id") != experiment or artifact.get("split") != split:
         raise ms.StudyError("the study artifact belongs to another experiment or split")
@@ -181,12 +200,15 @@ def identity(run_dir: Path, a: str, b: str) -> dict[str, Any]:
 def join_rows(
     run_dir: Path, config: dict[str, Any], artifact: dict[str, Any]
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[int, Any], dict[int, Any]]:
-    """Every reader request with its reply and labels; the judge items with their labels."""
+    """Every reader request with its reply and labels; the judge items with their labels.
 
-    reader = load_pass(run_dir, READER)
-    if reader is None:
-        raise ms.StudyError("the GPU-0 reader pass is missing")
-    items = json.loads((run_dir / "judge-items.json").read_text(encoding="utf-8"))
+    A missing GPU-0 reader pass or judge-items file (a phase that never ran) leaves the replies or
+    labels empty, so every table is incomplete and G1 is INCOMPLETE; the record is still
+    written."""
+
+    reader = load_pass(run_dir, READER) or {"rows": {}}
+    items_path = run_dir / "judge-items.json"
+    items = json.loads(items_path.read_text(encoding="utf-8")) if items_path.is_file() else []
     primary = labels_from_pass(load_pass(run_dir, JUDGE))
     secondary = labels_from_pass(load_pass(run_dir, JUDGE2))
     key_to_item = {
@@ -606,11 +628,14 @@ def placebo_summary(tables: list[dict[str, Any]], config: dict[str, Any]) -> dic
             per[cls] = {
                 "deletion_flip_rate": dele,
                 "swap_flip_rate": sw,
+                # Descriptive only: the swap flip rate at the slots where deletion does not flip.
+                # Conditioning on a null deletion pushes it down whenever swaps and deletions
+                # flip together, so it is not the floor (registration, section 19, round 2).
                 "swap_flip_rate_where_deletion_null": ci_mean(swap_when_null, config),
-                # AM2's registered reading: the deletion flip rate minus the swap-only flip rate
-                # (the rate at which a matched irrelevant swap flips the answer where deleting
-                # the memory does not), question-clustered, 95%.
-                "deletion_minus_swap_only": cluster_difference(deletion, swap_when_null, config),
+                # AM2's registered reading: the deletion flip rate minus the flip rate of every
+                # matched swap at the same slots (an irrelevant edit at that slot),
+                # question-clustered, 95%.
+                "deletion_minus_swap": cluster_difference(deletion, swap, config),
                 "deletion_label_survival": ci_mean(survive, config),
                 "swap_to_deletion_ratio": ratio,
             }
@@ -657,7 +682,25 @@ def internal_summary(
     return out
 
 
-def replay_gate(identity_rows: dict[str, Any], expected: dict[str, int]) -> dict[str, Any]:
+def reader_time_capped(run_dir: Path) -> list[str]:
+    """The reader passes that their time budget stopped (the worker's ``max_s`` cap or the job's
+    deadline; ``info.stopped_by`` of the saved pass)."""
+
+    capped = []
+    for worker in (READER, READER_AA):
+        path = run_dir / "sessions" / worker / "all.json"
+        if path.is_file():
+            info = json.loads(path.read_text(encoding="utf-8")).get("info") or {}
+            if info.get("stopped_by") == "time budget":
+                capped.append(worker)
+    return capped
+
+
+def replay_gate(
+    identity_rows: dict[str, Any],
+    expected: dict[str, int],
+    time_capped: Sequence[str] = (),
+) -> dict[str, Any]:
     """G1 (the dossier's kill criterion 1): the GPU-1 replicates are complete and identical.
 
     For the reader (GPU-0 canonical against GPU-1 shuffled) and the primary judge (the same), the
@@ -665,7 +708,8 @@ def replay_gate(identity_rows: dict[str, Any], expected: dict[str, int]) -> dict
     equal to every expected request (the whole request table; every judge item) and no request
     whose tokens differ. FAIL: some finished request's tokens differ (kill criterion 1 fires; H2
     is not read). INCOMPLETE: no difference, but a pass is missing or left a request unfinished;
-    an infrastructure failure (the run is rerun), never a pass."""
+    an infrastructure failure (the run is rerun), never a pass. If a reader pass hit its time
+    cap (``time_capped``), an INCOMPLETE run is not rerun under this id (section 8)."""
 
     parts: dict[str, Any] = {}
     for key, name in (("reader_cross_gpu", "reader"), ("judge_cross_gpu", "judge")):
@@ -686,25 +730,31 @@ def replay_gate(identity_rows: dict[str, Any], expected: dict[str, int]) -> dict
         status = "PASS"
     else:
         status = "INCOMPLETE"
-    return {"status": status, **parts}
+    capped = list(time_capped)
+    return {"status": status, **parts, "reader_time_capped": capped,
+            "rerun_allowed": status == "INCOMPLETE" and not capped}  # fmt: skip
 
 
 def judge_gate(judge: dict[str, Any]) -> dict[str, Any]:
     """G2: the primary judge says yes to >= 95% of reference answers of non-preference questions
     and no to >= 95% of "I don't know.", and the blind hand check (the labels file whose SHA-256
-    was committed before the join) gives Cohen's kappa >= 0.80. PENDING while the hand check is
+    was committed before the join) labels exactly the seeded sample (``hand-sample``'s items, no
+    more, no fewer, none twice) and gives Cohen's kappa >= 0.80. PENDING while the hand check is
     not joined and the validation passes."""
 
     validation = judge.get("validation", {})
     reference = validation.get("validation:reference", {}).get("primary", {})
     reference = reference.get("excluding_preference", {})
     idk = validation.get("validation:idk", {}).get("primary", {})
-    hand = (judge.get("hand_check") or {}).get("primary")
+    check = judge.get("hand_check") or {}
+    hand = check.get("primary")
     reference_ok = (reference.get("accuracy") or 0.0) >= G2_VALIDATION_MIN
     idk_ok = (idk.get("accuracy") or 0.0) >= G2_VALIDATION_MIN
+    joined = bool(check)
+    sample_ok = None if not joined else check.get("matches_seeded_sample") is True
     kappa = None if hand is None else hand.get("kappa")
-    kappa_ok = None if hand is None else (kappa is not None and kappa >= G2_KAPPA_MIN)
-    if not (reference_ok and idk_ok) or kappa_ok is False:
+    kappa_ok = None if not joined else (kappa is not None and kappa >= G2_KAPPA_MIN)
+    if not (reference_ok and idk_ok) or kappa_ok is False or sample_ok is False:
         status = "FAIL"
     elif kappa_ok is None:
         status = "PENDING"
@@ -718,8 +768,9 @@ def judge_gate(judge: dict[str, Any]) -> dict[str, Any]:
         "idk_n": idk.get("n"),
         "hand_check_kappa": kappa,
         "hand_check_kappa_ci95": None if hand is None else hand.get("kappa_ci95"),
-        "hand_check_n": (judge.get("hand_check") or {}).get("n"),
-        "hand_labels_sha256": (judge.get("hand_check") or {}).get("labels_sha256"),
+        "hand_check_n": check.get("n"),
+        "hand_check_matches_seeded_sample": sample_ok,
+        "hand_labels_sha256": check.get("labels_sha256"),
     }
 
 
@@ -827,6 +878,44 @@ def kill_criteria(
     }
 
 
+def am2_reading(placebo: dict[str, Any], kill: dict[str, Any]) -> dict[str, Any]:
+    """AM2 (section 7): non-gold deletion labels are ABOVE THE SWAP FLOOR if the 95% lower bound
+    of the deletion flip rate minus the flip rate of all matched swaps at the same slots exceeds
+    0. The swap flip rate where deletion does not flip is reported, not judged."""
+
+    both = placebo.get("both", {})
+    nongold = both.get("nongold", {})
+    diff = nongold.get("deletion_minus_swap") or {}
+    lo = (diff.get("ci") or [None])[0]
+    return {
+        "nongold": None if lo is None else (
+            "ABOVE_SWAP_FLOOR" if lo > 0 else "NOT_ABOVE_SWAP_FLOOR"),
+        "nongold_deletion_flip_rate": (nongold.get("deletion_flip_rate") or {}).get("mean"),
+        "nongold_swap_flip_rate": (nongold.get("swap_flip_rate") or {}).get("mean"),
+        "nongold_deletion_minus_swap": diff.get("mean"),
+        "nongold_deletion_minus_swap_ci95": diff.get("ci"),
+        "nongold_swap_flip_rate_where_deletion_null_descriptive": (
+            nongold.get("swap_flip_rate_where_deletion_null") or {}).get("mean"),
+        "nongold_label_survival": nongold.get("deletion_label_survival"),
+        "gold_label_survival": both.get("gold", {}).get("deletion_label_survival"),
+        "dossier_k2_flip_rates_below_1pct": kill["am2_k2_flip_rates_below_1pct"],
+    }  # fmt: skip
+
+
+def am6_reading(kill: dict[str, Any]) -> dict[str, Any]:
+    """AM6 (section 7, the dossier's rules): INTERNAL SIGNALS ADD NOTHING if the best cheap
+    baseline is within 0.03 AUROC of the best attention signal; NONE PREDICTS NECESSITY if every
+    signal is below 0.65."""
+
+    am6_k = kill["am6"]
+    return {
+        "internal_signals_add_nothing": am6_k["k1_cheap_within_0.03"],
+        "none_predicts_necessity": am6_k["k2_all_below_0.65"],
+        "best_internal_auroc": am6_k["best_internal_auroc"],
+        "best_cheap_auroc": am6_k["best_cheap_auroc"],
+    }
+
+
 def verdicts(
     tables: list[dict[str, Any]],
     g1: dict[str, Any],
@@ -855,7 +944,10 @@ def verdicts(
     blockers = []
     if is_void:
         blockers.append("VOID: more than 2% of an arm's tables are incomplete (rerun)")
-    if g1["status"] == "INCOMPLETE":
+    if g1["status"] == "INCOMPLETE" and g1.get("reader_time_capped"):
+        blockers.append("G1 INCOMPLETE: a reader pass hit its time cap (no rerun under this id; "
+                        "a further run needs a new registration id)")  # fmt: skip
+    elif g1["status"] == "INCOMPLETE":
         blockers.append("G1 INCOMPLETE: a replicate did not finish every request (rerun)")
     if g1["status"] == "FAIL":
         blockers.append("G1 FAIL: replay differs; kill criterion 1 fires (descriptive only)")
@@ -898,25 +990,8 @@ def verdicts(
         against_shapley = "LOO_LOSES_LESS_THAN_EXACT_SHAPLEY"
     else:
         against_shapley = "NOT_SEPARATED_FROM_EXACT_SHAPLEY"
-    nongold = placebo.get("both", {}).get("nongold", {})
-    diff = nongold.get("deletion_minus_swap_only") or {}
-    lo = (diff.get("ci") or [None])[0]
-    am2 = {
-        "nongold": None if lo is None else (
-            "ABOVE_SWAP_FLOOR" if lo > 0 else "NOT_ABOVE_SWAP_FLOOR"),
-        "nongold_deletion_minus_swap_only": diff.get("mean"),
-        "nongold_deletion_minus_swap_only_ci95": diff.get("ci"),
-        "gold_label_survival": (placebo.get("both", {}).get("gold", {})
-                                .get("deletion_label_survival")),
-        "dossier_k2_flip_rates_below_1pct": kill["am2_k2_flip_rates_below_1pct"],
-    }  # fmt: skip
-    am6_k = kill["am6"]
-    am6 = {
-        "internal_signals_add_nothing": am6_k["k1_cheap_within_0.03"],
-        "none_predicts_necessity": am6_k["k2_all_below_0.65"],
-        "best_internal_auroc": am6_k["best_internal_auroc"],
-        "best_cheap_auroc": am6_k["best_cheap_auroc"],
-    }
+    am2 = am2_reading(placebo, kill)
+    am6 = am6_reading(kill)
     second = None
     if h2_second_judge is not None:
         second = {name: h2_verdict(h2_second_judge.get("retrieved", {}).get(b, {}).get(name))
@@ -990,6 +1065,7 @@ def judge_summary(
     artifact: dict[str, Any],
     config: dict[str, Any] | None = None,
     hand_sha256: str | None = None,
+    sample_indices: Sequence[int] | None = None,
 ) -> dict[str, Any]:
     spec = (config or ms.load_config())["analysis"]["bootstrap"]
     resamples, seed = int(spec["resamples"]), int(spec["seed"])
@@ -1066,14 +1142,25 @@ def judge_summary(
         "primary_vs_secondary_n": sum(r["u_secondary"] is not None for r in cells),
         "primary_vs_containment_agree": sum(r["u"] == r["u_contains"] for r in cells),
     }
-    if hand:
+    if hand is not None:
         joined = [h for h in hand if h["item_index"] in primary]
         labels = [int(h["label"]) for h in joined]
-        result: dict[str, Any] = {"n": len(joined), "labels_sha256": hand_sha256,
-                                  "rows_in_file": len(hand)}  # fmt: skip
+        labelled = sorted(int(h["item_index"]) for h in hand)
+        expected = sorted(int(i) for i in (sample_indices or []))
+        result: dict[str, Any] = {
+            "n": len(joined),
+            "labels_sha256": hand_sha256,
+            "rows_in_file": len(hand),
+            # G2 counts the seeded sample only: the file labels exactly hand-sample's items.
+            "seeded_sample_items": len(expected),
+            "matches_seeded_sample": bool(expected) and labelled == expected,
+            "labelled_not_in_sample": len(set(labelled) - set(expected)),
+            "sample_not_labelled": len(set(expected) - set(labelled)),
+            "labelled_twice": len(labelled) - len(set(labelled)),
+        }
         for name, source in (("primary", primary), ("secondary", secondary)):
             pred = [source[h["item_index"]]["label"] for h in joined if h["item_index"] in source]
-            if len(pred) != len(labels):
+            if not labels or len(pred) != len(labels):
                 continue
             agree = sum(x == y for x, y in zip(pred, labels, strict=True))
             result[name] = {
@@ -1171,9 +1258,13 @@ def analyze(
     h2 = h2_summary(tables, config)
     placebo = placebo_summary(tables, config)
     internal = internal_summary(tables, config, attention_meta)
-    judge = judge_summary(rows, items, primary, secondary, hand, artifact, config, hand_sha256)
+    sample_indices = None
+    if hand is not None and items:
+        sample_indices = [s["item_index"] for s in hand_sample(run_dir, config, artifact)]
+    judge = judge_summary(rows, items, primary, secondary, hand, artifact, config, hand_sha256,
+                          sample_indices)  # fmt: skip
     expected = {"reader": len(rows), "judge": len(items)}
-    g1 = replay_gate(identity_rows, expected)
+    g1 = replay_gate(identity_rows, expected, reader_time_capped(run_dir))
     kill = kill_criteria(tables, g1, h2, placebo, internal, config)
     h2_second = h2_second_judge(rows, artifact, config, raw_attention)
     decided = verdicts(tables, g1, judge, h2, placebo, kill, config, h2_second)
@@ -1206,6 +1297,13 @@ def analyze(
             "\n".join(q["question_id"] for q in artifact["questions"])
         ),
         "verdicts": decided,
+        "inputs_present": {
+            "judge-items.json": (run_dir / "judge-items.json").is_file(),
+            **{
+                w: (run_dir / "sessions" / w / "all.json").is_file()
+                for w in (READER, READER_AA, JUDGE, JUDGE_AA, JUDGE2)
+            },
+        },
         "identity": {
             k: {
                 x: v.get(x)
@@ -1355,14 +1453,15 @@ def render_markdown(
         "",
         "## AM2 placebo arms (both arms pooled)",
         "",
-        "| Class | Deletion flip | Swap flip | Swap flip where deletion null "
-        "| Deletion-label survival |",
-        "|---|---|---|---|---|",
+        "| Class | Deletion flip | Swap flip | Deletion minus swap | Swap flip where deletion "
+        "null (descriptive) | Deletion-label survival |",
+        "|---|---|---|---|---|---|",
     ]
     for cls in ("gold", "nongold"):
         p = placebo.get("both", {}).get(cls, {})
         lines.append(
             f"| {cls} | {_ci(p.get('deletion_flip_rate'))} | {_ci(p.get('swap_flip_rate'))}"
+            f" | {_ci(p.get('deletion_minus_swap'), 4)}"
             f" | {_ci(p.get('swap_flip_rate_where_deletion_null'))} "
             f"| {_ci(p.get('deletion_label_survival'))} |"
         )
@@ -1680,6 +1779,13 @@ def main() -> int:
     aa_p.add_argument("--pair", action="append", required=True, help="run:worker,run:worker")
     aa_p.add_argument("--evidence", required=True)
     aa_p.add_argument("--output", required=True)
+    for sp in (analyze_p, sample_p, aa_p):
+        sp.add_argument(
+            "--expected-evidence-sha256",
+            default=None,
+            help="the study artifact's SHA-256 as receipted for the GPU job (required by the "
+            "registration's config; checked as the driver checks it)",
+        )
     power_p = sub.add_parser("power", allow_abbrev=False)
     power_p.add_argument("--analysis-dir", required=True)
     power_p.add_argument("--output", required=True)
@@ -1689,7 +1795,7 @@ def main() -> int:
     args = parser.parse_args()
     config = ms.load_config(Path(args.config))
     if args.command == "analyze":
-        artifact = load_artifact(Path(args.evidence), config)
+        artifact = load_artifact(Path(args.evidence), config, args.expected_evidence_sha256)
         hand, hand_sha256 = None, None
         if args.hand_labels:
             hand, hand_sha256 = read_hand_labels(
@@ -1707,7 +1813,7 @@ def main() -> int:
         print(json.dumps(result["headline"], indent=2, sort_keys=True))
         return 0
     if args.command == "hand-sample":
-        artifact = load_artifact(Path(args.evidence), config)
+        artifact = load_artifact(Path(args.evidence), config, args.expected_evidence_sha256)
         sample = hand_sample(Path(args.run_dir), config, artifact)
         out = Path(args.output)
         if out.exists():
@@ -1716,7 +1822,7 @@ def main() -> int:
         print(json.dumps({"items": len(sample)}))
         return 0
     if args.command == "aa":
-        artifact = load_artifact(Path(args.evidence), config)
+        artifact = load_artifact(Path(args.evidence), config, args.expected_evidence_sha256)
         runs = dict(item.split("=", 1) for item in args.run)
         pairs = [tuple(p.split(",", 1)) for p in args.pair]
         report = aa_report({k: Path(v) for k, v in runs.items()}, pairs, config, artifact)

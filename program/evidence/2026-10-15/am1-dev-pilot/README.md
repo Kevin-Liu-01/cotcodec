@@ -74,10 +74,11 @@ and judge, on two H100s of this node.
    swapping its text for a length- and rank-matched irrelevant turn in 39.8%; 70.8% [56.0%,
    83.9%] of the gold deletion labels survive the placebo control (both swaps reproduce the label
    and neither reorder of the pool flips the outcome). Non-gold deletion labels are rare (4.6% of
-   non-gold memories) and mostly do not survive (16.7% [3.0%, 34.1%]); they are 2.4 points [0.2,
-   4.7] above the swap-only floor (how often a matched swap flips the answer where deletion does
-   not, 2.1%; `analysis/recheck-de721578/placebo.json`). A content-free reorder of the full pool
-   flips judged correctness in 13.1% [7.9%, 18.7%] of pools.
+   non-gold memories) and mostly do not survive (16.7% [3.0%, 34.1%]); deletion flips the answer
+   as often as a matched swap of the same slots does (4.5%): the difference is 0.06 points [-1.3,
+   1.3], not above the swap floor (`analysis/recheck-am2-floor/am2-floor.json`; corrected after
+   the registration's second independent check, see below). A content-free reorder of the full
+   pool flips judged correctness in 13.1% [7.9%, 18.7%] of pools.
 7. **AM6's attention signal.** At predicting which memories are necessary in the full pool
    (leave-one-out > 0, pools answered correctly), raw attention mass from the reply tokens has
    AUROC 0.868 [0.819, 0.917] against retrieval rank 0.852, question overlap 0.830 and the
@@ -347,10 +348,14 @@ most 0.1 in both classes, fewer than 2% of labels changed) does not hold: per-me
 labels on non-gold memories are mostly not reproduced by a matched swap. That rule cannot hold by
 construction unless non-gold labels are nearly absent (a label survives only when both swaps
 reproduce it, so the swap-to-deletion ratio is at least the survival share), and the registration
-replaces it with the deletion flip rate against the swap-only floor (its section 7). On these
-pools the non-gold deletion flip rate exceeds the swap-only rate by 0.024 [0.002, 0.047] over both
-arms (retrieved 0.021 [-0.010, 0.056], gold 0.029 [0.002, 0.061];
-`analysis/recheck-de721578/placebo.json`).
+replaces it with the deletion flip rate against the flip rate of every matched swap at the same
+slots (its section 7). On these pools the non-gold deletion flip rate exceeds that swap flip rate
+by 0.0006 [-0.013, 0.013] over both arms (retrieved -0.017 [-0.040, 0.001], gold 0.020 [-0.004,
+0.048]; `analysis/recheck-am2-floor/am2-floor.json`): not above the swap floor. The registration's
+first revision compared deletion with the swap flip rate where deletion does not flip (the third
+column, 0.021) and found 0.024 [0.002, 0.047] (`analysis/recheck-de721578/placebo.json`); leaving
+out the slots where deletion and swaps flip together pushes that rate down, so that comparison
+was ABOVE by its design, and the second independent check replaced it.
 
 ### AM6: internal signals against exact labels (`analysis/internal.json`)
 
@@ -403,8 +408,8 @@ It says, for these 63 development questions, this reader, this judge and this no
    subsets and hurt on others. The dossier's O5 premise that pure AND/OR structures would make H2
    unable to fire does not describe this reader's tables.
 3. Under this reader, deletion labels on non-gold memories are rare and mostly not reproduced by
-   a matched swap of the memory's text, though they occur somewhat more often than a matched swap's
-   own flips; a content-free reorder of the pool changes about one answer in eight.
+   a matched swap of the memory's text, and they occur about as often as a matched swap's own
+   flips at the same slots; a content-free reorder of the pool changes about one answer in eight.
 4. The Qwen3-32B judge with the official prompt agrees with a blind check on 117 of 120 replies.
 5. Compiled batch-invariant replay is exact for the same compiled kernels (Step 0's setting, and
    a copied compile cache across GPUs), not across independent compiles, because inductor's
@@ -472,6 +477,15 @@ It does not say:
     counts per H2 row (`h2.json`), and H2 on the second judge's tables (`h2-second-judge.json`: on
     40 retrieved tables, leave-one-out 0.215 [0.122, 0.315], permutation Shapley-16 0.113, SNIPW-64
     0.058, retrieval rank 0.200, raw attention 0.300, exact Shapley 0.050, random 0.530).
+- **Correction after the registration's second independent check** (development data only, no
+  job): the AM2 floor. The first revision's floor, the swap flip rate where deletion does not flip,
+  is pushed down by leaving out the slots where both flip, so its verdict was ABOVE by design.
+  `analysis/recheck-am2-floor/am2-floor.json` recomputes AM2 from the committed
+  `analysis/tables.json.gz` under the pilot's config with the corrected `placebo_summary` (CPU, a
+  few seconds; `tests/test_memcredit_study.py::test_am2_on_the_pilot_tables` reproduces it): the
+  non-gold deletion flip rate minus the flip rate of every matched swap at the same slots is
+  0.0006 [-0.013, 0.013] over both arms, NOT ABOVE THE SWAP FLOOR. Takeaway 3 and the AM2
+  paragraphs above are corrected; the other AM2 numbers are unchanged.
 
 ## Files
 
@@ -495,7 +509,8 @@ It does not say:
   `aa-1435.json` and `aa-1441.json`; the hand labels (`hand-labels.jsonl`, used, and
   `hand-labels-transcription-error.jsonl`; no text) and the hand-check sample's SHA-256;
   `power.json` regenerated at `de721578`, and `recheck-de721578/`, the re-analysis at that commit
-  with the registration's gates and verdicts (above).
+  with the registration's gates and verdicts (above); `recheck-am2-floor/am2-floor.json`, AM2
+  recomputed from `tables.json.gz` with the floor of the registration's second revision (above).
 - `ops/`: the scripts and sbatch files run on the host, `jobs.log` and `preflight.log`.
 
 Raw outputs stay on the host under `~/cotcodec-runs/stage0/am1-study/` (`runs/main/1411/`,

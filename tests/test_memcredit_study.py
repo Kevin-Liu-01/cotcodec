@@ -406,7 +406,7 @@ analysis = _load("memcredit_analyze")
 step0 = _load("memcredit_step0")
 
 
-def _save(run: Path, worker: str, texts: list[str]) -> None:
+def _save(run: Path, worker: str, texts: list[str], stopped_by: str | None = None) -> None:
     out = run / "sessions" / worker
     out.mkdir(parents=True, exist_ok=True)
     indices = list(range(len(texts)))
@@ -422,7 +422,8 @@ def _save(run: Path, worker: str, texts: list[str]) -> None:
         st["num_cached_tokens"] = 0
         state[ours] = st
     record = {"session": worker, "name": "all", "requests": len(texts), "status": "complete",
-              "info": {"wall_s": 1.0, "finished": len(texts), "unmatched": 0}}  # fmt: skip
+              "info": {"wall_s": 1.0, "finished": len(texts), "unmatched": 0,
+                       "stopped_by": stopped_by}}  # fmt: skip
     step0.save_pass(out, "all", indices, ids, state, [10] * len(texts), record)
     (out / "session.json").write_text(json.dumps({"gpu": {"uuid": worker}}))
 
@@ -498,7 +499,8 @@ def test_analysis_on_a_synthetic_run(tmp_path: Path, artifact: dict, config: dic
     assert v["headline"]["rule"] == "loo" and v["headline"]["arm"] == "retrieved"
     assert set(v["h2_second_judge"]) == set(analysis.PRIMARY_FAMILY)
     placebo = json.loads((out / "placebo.json").read_text())
-    assert "deletion_minus_swap_only" in placebo["both"]["gold"]
+    assert "deletion_minus_swap" in placebo["both"]["gold"]
+    assert "deletion_minus_swap_only" not in placebo["both"]["gold"]
     assert v["am2"]["nongold"] in (None, "ABOVE_SWAP_FLOOR", "NOT_ABOVE_SWAP_FLOOR")
     # With hand labels that agree with the judge, G2 passes and the decision follows the gates.
     hand = [{"item_index": s["item_index"], "label": int("blue" in s["reply"])} for s in sample]
@@ -506,12 +508,35 @@ def test_analysis_on_a_synthetic_run(tmp_path: Path, artifact: dict, config: dic
     v2 = again["headline"]["verdicts"]
     assert v2["g2_judge"]["status"] == "PASS" and v2["g2_judge"]["hand_check_kappa"] == 1.0
     assert v2["g2_judge"]["hand_labels_sha256"] == "d" * 64
+    assert v2["g2_judge"]["hand_check_matches_seeded_sample"] is True
     assert v2["program_decision"] == v2["h2_read"]
+    # G2 counts the seeded sample only: a labels file with an item outside it, one left out, or
+    # one labelled twice fails G2 even when every label agrees with the judge.
+    in_sample = {s["item_index"] for s in sample}
+    outside = next(i["index"] for i in items if i["index"] not in in_sample)
+    for wrong in (
+        hand[:-1] + [{"item_index": outside, "label": int("blue" in items[outside]["response"])}],
+        hand[:-1],
+        hand + hand[:1],
+    ):
+        off = analysis.analyze(tmp_path, config, artifact, tmp_path / "a5", wrong, None, "e" * 64)
+        g2 = off["headline"]["verdicts"]["g2_judge"]
+        assert g2["status"] == "FAIL" and g2["hand_check_matches_seeded_sample"] is False
+        assert not off["headline"]["verdicts"]["program_decision"]
     # A replicate that leaves a request unfinished is an infrastructure failure, not a pass.
     _save(tmp_path, analysis.READER_AA, replies[:-1])
     cut = analysis.analyze(tmp_path, config, artifact, tmp_path / "a3")["headline"]["verdicts"]
     assert cut["g1_replay"]["status"] == "INCOMPLETE" and not cut["h2_read"]
     assert cut["headline"]["verdict"] is None and cut["k2_fires"] is False
+    assert cut["g1_replay"]["rerun_allowed"] is True
+    assert cut["h2_blockers"] == ["G1 INCOMPLETE: a replicate did not finish every request (rerun)"]
+    # A reader pass cut by its time cap: INCOMPLETE, and no rerun under this id (section 8).
+    _save(tmp_path, analysis.READER_AA, replies[:-1], stopped_by="time budget")
+    capped = analysis.analyze(tmp_path, config, artifact, tmp_path / "a6")["headline"]["verdicts"]
+    assert capped["g1_replay"]["status"] == "INCOMPLETE" and not capped["h2_read"]
+    assert capped["g1_replay"]["reader_time_capped"] == [analysis.READER_AA]
+    assert capped["g1_replay"]["rerun_allowed"] is False
+    assert any("time cap" in b and "no rerun" in b for b in capped["h2_blockers"])
     # A differing reply fails G1 (kill criterion 1).
     _save(tmp_path, analysis.READER_AA, replies[:-1] + ["Something else."])
     bad = analysis.analyze(tmp_path, config, artifact, tmp_path / "a4")["headline"]["verdicts"]
@@ -548,13 +573,14 @@ def test_replay_gate_and_h2_verdict_rules() -> None:
 
 
 def test_judge_gate_rules() -> None:
-    def judge(ref: float, idk: float, kappa: float | None) -> dict:
+    def judge(ref: float, idk: float, kappa: float | None, sample: bool = True) -> dict:
         out = {"validation": {
             "validation:reference": {"primary": {"excluding_preference": {"accuracy": ref,
                                                                           "n": 100}}},
             "validation:idk": {"primary": {"accuracy": idk, "n": 100}}}}  # fmt: skip
         if kappa is not None:
             out["hand_check"] = {"n": 120, "labels_sha256": "a" * 64,
+                                 "matches_seeded_sample": sample,
                                  "primary": {"kappa": kappa, "kappa_ci95": [0.7, 0.9]}}  # fmt: skip
         return out
 
@@ -563,6 +589,9 @@ def test_judge_gate_rules() -> None:
     assert analysis.judge_gate(judge(0.94, 0.99, 0.85))["status"] == "FAIL"
     assert analysis.judge_gate(judge(0.96, 0.94, None))["status"] == "FAIL"
     assert analysis.judge_gate(judge(0.96, 0.99, 0.79))["status"] == "FAIL"
+    assert analysis.judge_gate(judge(0.96, 0.99, 0.80))["status"] == "PASS"
+    # labels that are not exactly the seeded sample never pass, whatever their kappa
+    assert analysis.judge_gate(judge(0.96, 0.99, 0.99, sample=False))["status"] == "FAIL"
 
 
 def test_hand_labels_need_their_committed_digest(tmp_path: Path) -> None:
@@ -602,6 +631,215 @@ def test_cluster_difference() -> None:
     assert out["mean"] == pytest.approx(3 / 5 - 1 / 5)
     assert out["ci"][0] <= out["mean"] <= out["ci"][1]
     assert analysis.cluster_difference({}, b, config)["mean"] is None
+
+
+def _placebo_tables(flips: list[tuple[float, list[float]]], questions: int = 60) -> list[dict]:
+    """One pool per question with two non-gold slots: slot 0 takes the (deletion, swaps) pattern
+    of ``flips`` in turn over the questions, slot 1 never flips."""
+
+    tables = []
+    for q in range(questions):
+        loo, swaps = flips[q % len(flips)]
+        tables.append({
+            "question_id": f"q{q:03d}", "arm": "retrieved" if q % 2 else "gold",
+            "complete": True, "summary": {"gold_mask": 0, "k": 2},
+            "placebo": {"loo": [loo, 0.0], "swap_effect": [swaps, [0.0, 0.0]],
+                        "survives": [None, None], "reorder_flips": [False, False]},
+        })  # fmt: skip
+    return tables
+
+
+def test_am2_floor_is_every_matched_swap_at_the_same_slots() -> None:
+    config = dict(ms.load_config(ms.REGISTRATION_CONFIG_PATH))
+    config["analysis"] = dict(config["analysis"], bootstrap={"resamples": 400, "seed": 42})
+    kill = {"am2_k2_flip_rates_below_1pct": False}
+
+    def reading(flips: list[tuple[float, list[float]]]) -> tuple[dict, dict]:
+        placebo = analysis.placebo_summary(_placebo_tables(flips), config)
+        return placebo["both"]["nongold"], analysis.am2_reading(placebo, kill)
+
+    # Deletion and both swaps flip together: no deletion effect beyond a matched swap's. The swap
+    # rate where deletion does not flip is 0 here, so a floor conditioned on a null deletion
+    # would call this ABOVE; the registered floor (every swap at those slots) does not.
+    ng, am2 = reading([(1.0, [1.0, 1.0]), (0.0, [0.0, 0.0]), (0.0, [0.0, 0.0])])
+    assert ng["swap_flip_rate_where_deletion_null"]["mean"] == 0.0
+    assert ng["deletion_flip_rate"]["mean"] == pytest.approx(1 / 6)
+    assert ng["swap_flip_rate"]["mean"] == pytest.approx(1 / 6)
+    assert am2["nongold_deletion_minus_swap"] == pytest.approx(0.0)
+    assert am2["nongold"] == "NOT_ABOVE_SWAP_FLOOR"
+    # Deletion flips where matched swaps do not: ABOVE.
+    ng, am2 = reading([(1.0, [0.0, 0.0]), (0.0, [0.0, 0.0])])
+    assert am2["nongold_deletion_minus_swap"] == pytest.approx(0.25)
+    assert am2["nongold_deletion_minus_swap_ci95"][0] > 0
+    assert am2["nongold"] == "ABOVE_SWAP_FLOOR"
+    # The direction: swaps flipping more often than deletion is never ABOVE.
+    ng, am2 = reading([(0.0, [1.0, 1.0]), (0.0, [0.0, 0.0])])
+    assert am2["nongold_deletion_minus_swap"] == pytest.approx(-0.25)
+    assert am2["nongold"] == "NOT_ABOVE_SWAP_FLOOR"
+    # Gold slots stay out of the non-gold reading.
+    tables = _placebo_tables([(1.0, [0.0, 0.0])])
+    for t in tables:
+        t["summary"]["gold_mask"] = 0b01
+    placebo = analysis.placebo_summary(tables, config)
+    assert placebo["both"]["nongold"]["deletion_flip_rate"]["mean"] == 0.0
+    assert analysis.am2_reading(placebo, kill)["nongold"] == "NOT_ABOVE_SWAP_FLOOR"
+
+
+def test_am2_on_the_pilot_tables() -> None:
+    """The pilot's committed tables under the pilot's config reproduce the committed AM2 recheck:
+    non-gold deletion minus swap 0.0006 [-0.013, 0.013], NOT ABOVE THE SWAP FLOOR."""
+
+    import gzip
+
+    base = ROOT / "program" / "evidence" / "2026-10-15" / "am1-dev-pilot" / "analysis"
+    tables = json.loads(gzip.decompress((base / "tables.json.gz").read_bytes()))
+    committed = json.loads((base / "recheck-am2-floor" / "am2-floor.json").read_text())
+    placebo = analysis.placebo_summary(tables, ms.load_config())
+    assert json.loads(mc.canonical_json(placebo)) == committed["placebo"]
+    am2 = analysis.am2_reading(placebo, {"am2_k2_flip_rates_below_1pct": False})
+    assert json.loads(mc.canonical_json(am2)) == committed["am2"]
+    assert am2["nongold"] == "NOT_ABOVE_SWAP_FLOOR"
+    assert am2["nongold_deletion_minus_swap"] == pytest.approx(0.0006, abs=5e-5)
+    lo, hi = am2["nongold_deletion_minus_swap_ci95"]
+    assert lo == pytest.approx(-0.013, abs=5e-4) and hi == pytest.approx(0.013, abs=5e-4)
+
+
+def _gate_tables(nonconstant: int, constant: int, share2: float = 0.5) -> list[dict]:
+    """Per question a retrieved and a gold table; ``constant`` questions constant in both."""
+
+    tables = []
+    for q in range(nonconstant + constant):
+        for arm in ("retrieved", "gold"):
+            tables.append({"question_id": f"q{q:03d}", "arm": arm, "complete": True,
+                           "summary": {"constant": q >= nonconstant,
+                                       "fourier_share_order_2_plus": share2}})  # fmt: skip
+    return tables
+
+
+def _gate_inputs(loo_subopt: float = 0.4, shap_subopt: float = 0.1,
+                 aucs: dict | None = None) -> tuple[dict, dict, dict]:  # fmt: skip
+    h2 = {"both": {"4": {"loo": {"suboptimal_rate": {"mean": loo_subopt}},
+                         "shapley_exact": {"suboptimal_rate": {"mean": shap_subopt}}}}}  # fmt: skip
+    placebo = {"both": {"nongold": {"deletion_flip_rate": {"mean": 0.05},
+                                    "swap_flip_rate": {"mean": 0.05}}}}  # fmt: skip
+    aucs = aucs or {"attention_raw": 0.8, "retrieval_rank": 0.7}
+    internal = {"both": {n: {"necessity_auroc": {"value": v}} for n, v in aucs.items()}}
+    return h2, placebo, internal
+
+
+def _decide(tables: list[dict], **kw) -> dict:
+    config = ms.load_config(ms.REGISTRATION_CONFIG_PATH)
+    h2, placebo, internal = _gate_inputs(**kw)
+    g1 = {"status": "PASS"}
+    kill = analysis.kill_criteria(tables, g1, h2, placebo, internal, config)
+    return analysis.verdicts(tables, g1, {}, h2, placebo, kill, config)
+
+
+def test_void_rule_and_kill_criteria_k2_to_k4() -> None:
+    # K4: fewer than 150 non-constant retrieved tables is underpowered, a qualifier only.
+    v = _decide(_gate_tables(150, 0))
+    assert not v["k4_underpowered"] and v["h2_read"] and not v["void"]["fires"]
+    v = _decide(_gate_tables(149, 0))
+    assert v["k4_underpowered"] and v["h2_read"]
+    assert any(q.startswith("K4") for q in v["h2_qualifiers"]) and not v["h2_blockers"]
+    # K2: more than 60% of questions constant in both arms stops H2 (60% exactly does not).
+    v = _decide(_gate_tables(160, 240))
+    assert v["k2_fires"] is False and v["h2_read"]
+    v = _decide(_gate_tables(159, 241))
+    assert v["k2_fires"] is True and not v["h2_read"] and v["headline"]["verdict"] is None
+    assert any(b.startswith("K2") for b in v["h2_blockers"])
+    # K3: >= 90% of non-constant tables with order-1 share >= 0.9 and both leave-one-out and
+    # exact Shapley optimal in >= 95% of tables ends the study; any part missing keeps H2.
+    order1 = _gate_tables(200, 0, share2=0.05)
+    v = _decide(order1, loo_subopt=0.04, shap_subopt=0.04)
+    assert v["k3_fires"] is True and not v["h2_read"]
+    assert any(b.startswith("K3") for b in v["h2_blockers"])
+    assert _decide(order1, loo_subopt=0.06, shap_subopt=0.04)["k3_fires"] is False
+    assert _decide(order1, loo_subopt=0.04, shap_subopt=0.06)["k3_fires"] is False
+    assert _decide(_gate_tables(200, 0, share2=0.2), loo_subopt=0.0,
+                   shap_subopt=0.0)["k3_fires"] is False  # fmt: skip
+    # The void rule: more than 2% of an arm's tables incomplete voids the run (2% does not).
+    tables = _gate_tables(200, 0)
+    for t in [t for t in tables if t["arm"] == "retrieved"][:4]:
+        t["complete"] = False
+    v = _decide(tables)
+    assert v["void"]["by_arm"]["retrieved"]["share"] == pytest.approx(0.02)
+    assert not v["void"]["fires"] and v["h2_read"]
+    next(t for t in tables if t["arm"] == "retrieved" and t["complete"])["complete"] = False
+    v = _decide(tables)
+    assert v["void"]["fires"] and not v["h2_read"]
+    assert any(b.startswith("VOID") for b in v["h2_blockers"])
+    # G2 is not PASS here (no validation, no hand check), so no program decision follows.
+    assert v["g2_judge"]["status"] == "FAIL" and not v["program_decision"]
+
+
+def test_am6_readings() -> None:
+    tables = _gate_tables(200, 0)
+
+    def am6(aucs: dict) -> dict:
+        return _decide(tables, aucs=aucs)["am6"]
+
+    close = am6({"attention_raw": 0.80, "attention_xfit": 0.70, "retrieval_rank": 0.78,
+                 "length": 0.6})  # fmt: skip
+    assert close["internal_signals_add_nothing"] is True
+    assert close["none_predicts_necessity"] is False
+    assert close["best_internal_auroc"] == 0.80 and close["best_cheap_auroc"] == 0.78
+    ahead = am6({"attention_raw": 0.70, "attention_xfit": 0.90, "reply_overlap": 0.85})
+    assert ahead["internal_signals_add_nothing"] is False
+    cheap_ahead = am6({"attention_raw": 0.70, "lexical_question": 0.90})
+    assert cheap_ahead["internal_signals_add_nothing"] is True
+    weak = am6({"attention_raw": 0.64, "attention_xfit": 0.60, "retrieval_rank": 0.55})
+    assert weak["none_predicts_necessity"] is True
+    assert am6({"attention_raw": 0.64, "retrieval_rank": 0.65})["none_predicts_necessity"] is False
+
+
+def test_analysis_without_judge_items_records_g1_incomplete(
+    tmp_path: Path, artifact: dict, config: dict
+) -> None:
+    """A run whose judge phase never ran (no judge-items.json, no judge passes) is analysed into
+    a record with G1 INCOMPLETE and every table incomplete, not a crash."""
+
+    requests = ms.request_table(artifact, config["pools"]["arms"])
+    replies = ["Your car is blue." if r["index"] % 2 else "I don't know." for r in requests]
+    _save(tmp_path, analysis.READER, replies)
+    _save(tmp_path, analysis.READER_AA, replies)
+    config = dict(
+        config, analysis=dict(config["analysis"], bootstrap={"resamples": 50, "seed": 42})
+    )
+    out = tmp_path / "analysis"
+    result = analysis.analyze(tmp_path, config, artifact, out)
+    headline = json.loads((out / "headline.json").read_text())
+    v = headline["verdicts"]
+    assert v["g1_replay"]["status"] == "INCOMPLETE" and v["g1_replay"]["rerun_allowed"]
+    assert v["g1_replay"]["judge"]["missing"] is True
+    assert headline["inputs_present"]["judge-items.json"] is False
+    assert headline["inputs_present"][analysis.READER] is True
+    assert v["void"]["fires"] and not v["h2_read"] and not v["program_decision"]
+    assert result["headline"]["census"]["retrieved"]["tables"] == 0
+    tables = json.loads((out / "tables.json").read_text())
+    assert tables and not any(t["complete"] for t in tables)
+    # hand labels given with no judge items: G2 cannot pass
+    hand = [{"item_index": 0, "label": 1}]
+    v = analysis.analyze(tmp_path, config, artifact, tmp_path / "b", hand, None, "f" * 64)
+    assert v["headline"]["verdicts"]["g2_judge"]["status"] == "FAIL"
+
+
+def test_analysis_checks_the_artifact_digest(tmp_path: Path, artifact: dict) -> None:
+    path = tmp_path / "artifact.json"
+    path.write_bytes(mc.canonical_json(artifact))
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    pilot = ms.load_config()
+    assert analysis.load_artifact(path, pilot, digest)["split"] == "development"
+    assert analysis.load_artifact(path, pilot)["split"] == "development"  # the pilot's: optional
+    with pytest.raises(ms.StudyError, match="expected SHA-256"):
+        analysis.load_artifact(path, pilot, "0" * 64)
+    reg = ms.load_config(ms.REGISTRATION_CONFIG_PATH)
+    with pytest.raises(ms.StudyError, match="expected-evidence-sha256"):
+        analysis.load_artifact(path, reg)  # the registration's analysis needs the digest
+    with pytest.raises(ms.StudyError, match="expected SHA-256"):
+        analysis.load_artifact(path, reg, "0" * 64)
+    with pytest.raises(ms.StudyError):
+        analysis.load_artifact(path, reg, digest)  # right digest, but a development artifact
 
 
 # --------------------------------------------------------------------------- A/A diagnostic config

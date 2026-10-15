@@ -4,7 +4,7 @@
 `program/preregistrations/ledger.jsonl`.** Drafted on 2026-10-15 by the single owner of AM1 on
 branch `stage0/am1-study`, after AM1 Step 0 (D107) and the development-set pilot
 (`program/evidence/2026-10-15/am1-dev-pilot/README.md`; exploratory, 63 development questions),
-and revised after the first independent check (section 19).
+and revised after the first and the second independent checks (section 19).
 
 **What development has seen of the held-out split.** AM1 Step 0 ran full 256-subset tables, with
 this reader, prompt and pool rules, on eight demo questions drawn before the split, and six of
@@ -12,7 +12,15 @@ them are held-out ids. Those eight are excluded from every estimand, gate and ki
 (section 4); the confirmatory set is the 347 held-out questions that remain. No reader, judge or
 attention output exists for any of the 347. Step 0's CPU census recorded counts and the BM25 ranks
 of gold turns for every LongMemEval-S question, and the split file lists the held-out ids; apart
-from these, development produced no output about the held-out questions.
+from these, development produced no output about the held-out questions. Outside this study, 19
+of the 347 ids (`001be529`, `1a1907b4`, `1cea1afa`, `2133c1b5`, `2318644b`, `45dc21b6`,
+`54026fce`, `58bf7951`, `60bf93ed`, `66f24dbb`, `69fee5aa`, `88432d0a`, `95228167`, `b320f3f8`,
+`e3038f8c`, `gpt4_7f6b06db`, `gpt4_9a159967`, `gpt4_cd90e484`, `gpt4_e414231e`) are listed in
+two files of the old program: `legacy/experiments/memory/stage1-longmemeval-screen.yaml` and
+`legacy/harness/memory_trials/public_sources.py`. They are the task manifest of a 32-task
+LongMemEval-S panel, a transport-and-safety smoke of an earlier memory system. The repository
+holds their ids only and no model output for them, and none of this study's reader, prompt or
+pools ran on them, so they stay in the confirmatory set (found by the second independent check).
 
 Origin: the D103 question sweep's memory lead, AM1, with AM2's placebo arms and AM6's internal
 signals folded in (D104; `program/evidence/2026-10-14/question-sweep-memory-gpu/dossier.md`,
@@ -171,10 +179,12 @@ scores tie (`harness.memcredit.keep_set_regret_range`, `mean`). For rules with r
   label, the swap effect, cross-fitted attention, question overlap, overlap with the full-pool
   reply, length, a random keep set); and E2 on the tables the second judge labels.
 - **E4 (AM2)**: per memory class (gold, non-gold), over all pools: the deletion flip rate
-  (u(full) differs from u(full minus i)), the swap flip rate, the swap-only flip rate (swap flips
-  where deletion does not flip), the deletion flip rate minus the swap-only flip rate (both kinds
-  of unit resampled together by question; `cluster_difference` in
-  `scripts/memcredit_analyze.py`), and the share of nonzero deletion labels that survive (both
+  (u(full) differs from u(full minus i), one unit per slot), the swap flip rate (u(full) differs
+  from u with slot i's text swapped, one unit per matched swap, two per slot, at the same slots),
+  the deletion flip rate minus the swap flip rate (both kinds of unit resampled together by
+  question; `cluster_difference(deletion, swap)` in `scripts/memcredit_analyze.py`,
+  `deletion_minus_swap`), the swap flip rate at the slots where deletion does not flip
+  (descriptive only; section 7), and the share of nonzero deletion labels that survive (both
   swaps reproduce the label and neither reorder changes u(full)); and the reorder flip rate per
   pool.
 - **E5 (AM6)**: the AUROC of each signal at predicting necessity (leave-one-out > 0) over the
@@ -230,20 +240,24 @@ secondary readings.
 **Secondary readings (no program decision).**
 
 - AM2 (E4). For non-gold memories, the deletion labels are ABOVE THE SWAP FLOOR if the 95% lower
-  bound of the deletion flip rate minus the swap-only flip rate exceeds 0, and NOT ABOVE THE SWAP
-  FLOOR otherwise. The swap-only flip rate is how often a length- and rank-matched irrelevant
-  swap flips judged correctness where deleting the memory does not: the flip rate of an
-  irrelevant edit at that slot. Deletion is a larger edit than a matched swap (it also shortens
-  the prompt and moves the later memories), so ABOVE does not by itself show content effects. For
-  gold memories the swap removes the content as deletion does, so their survival share (nonzero
-  deletion labels that both swaps reproduce, in pools that no reorder flips) is reported with its
-  interval and not judged; the non-gold survival share is reported the same way. The dossier's
-  ROBUST rule (a swap-to-deletion flip ratio of at most 0.1 for non-gold memories and fewer than
-  2% of nonzero labels failing the placebo control) is not applied: a label survives only when
-  both swaps reproduce it, so the ratio is at least the non-gold survival share, and the two
-  conditions hold together only when non-gold deletion labels are nearly absent. Its verdict
-  would be fixed by the design (section 19, B5). The dossier's AM2 kill criterion 2 (non-gold
-  deletion and swap flip rates both below 1%) is reported.
+  bound of the deletion flip rate minus the swap flip rate exceeds 0, and NOT ABOVE THE SWAP
+  FLOOR otherwise (`verdicts.am2`). Both rates are taken over the same non-gold slots of every
+  pool, the swap rate over both matched swaps of each slot: the floor is how often a length- and
+  rank-matched irrelevant edit at that slot flips judged correctness, whether or not deleting the
+  memory does. Deletion is a larger edit than a matched swap (it also shortens the prompt and
+  moves the later memories), so ABOVE does not by itself show content effects. The swap flip rate
+  at the slots where deletion does not flip is reported as a descriptive number only: it leaves
+  out the slots where deletion and swaps flip together, which pushes it down, and a floor built on
+  it would call ABOVE whenever deletion flips at all (the round-1 rule; section 19, round 2, B5).
+  For gold memories the swap removes the content as deletion does, so their survival share
+  (nonzero deletion labels that both swaps reproduce, in pools that no reorder flips) is reported
+  with its interval and not judged; the non-gold survival share is reported the same way. The
+  dossier's ROBUST rule (a swap-to-deletion flip ratio of at most 0.1 for non-gold memories and
+  fewer than 2% of nonzero labels failing the placebo control) is not applied: a label survives
+  only when both swaps reproduce it, so the ratio is at least the non-gold survival share, and the
+  two conditions hold together only when non-gold deletion labels are nearly absent. Its verdict
+  would be fixed by the design (section 19, round 1, B5). The dossier's AM2 kill criterion 2
+  (non-gold deletion and swap flip rates both below 1%) is reported.
 - AM6 (E5), the dossier's rules: INTERNAL SIGNALS ADD NOTHING if the best cheap baseline (retrieval
   rank, question overlap, overlap with the reply, length) is within 0.03 AUROC of the best
   attention signal; NONE PREDICTS NECESSITY if every signal is below 0.65.
@@ -264,9 +278,19 @@ tables. The report quotes them.
   - FAIL, any finished request whose tokens differ: the repair did not hold, the dossier's kill
     criterion 1 fires, H2 is not read, and the run is reported as descriptive with the
     differences at the token, log-prob-bit and judged-utility levels;
-  - INCOMPLETE, no difference but a pass missing or a request unfinished (a time cap, a crash):
-    an infrastructure failure. The run is rerun as a new job of this registration with the same
-    seeds, and the incomplete run's records are kept. An incomplete replicate is never a pass.
+  - INCOMPLETE, no difference but a pass missing or a request unfinished (a crash, a skipped
+    phase, a time cap): an infrastructure failure. The run is rerun as a new job of this
+    registration with the same seeds, and the incomplete run's records are kept, except after a
+    reader time cap (next paragraph). An incomplete replicate is never a pass. A run whose judge
+    phase never ran (no judge items) is still analysed into a record, with G1 INCOMPLETE and
+    every table incomplete.
+
+  Contingency, the reader cap: if either reader pass is stopped by its time budget (the worker's
+  3,600 s `max_s`, or the job's deadline; `stopped_by` "time budget" in the pass record), the
+  run is INCOMPLETE (FAIL if a finished request already differs) and is not rerun under this id.
+  The cap is part of the design (section 11), so a rerun would face it again; a further run needs
+  a new registration id with its own cap. `replay_gate` records it (`reader_time_capped`,
+  `rerun_allowed`), and the H2 blocker says so.
 
   The gate is all or nothing over about 200,000 comparisons. The eager evidence is four
   comparisons of 8,768 requests each with no difference, which bounds the per-request difference
@@ -274,12 +298,15 @@ tables. The report quotes them.
   G1 here and leave H2 unread. That risk is accepted: it is the dossier's kill criterion 1.
 - **G2, judge**: on the validation items the primary judge says yes to at least 95% of reference
   answers of non-preference questions and no to at least 95% of "I don't know."; and a fresh
-  blind hand check of 120 judged reader items of the confirmatory set (60 judged yes, 60 no, seed
-  44; `scripts/memcredit_analyze.py hand-sample`), labelled from question, reference answer and
-  reply alone before any join, gives Cohen's kappa >= 0.80 with the primary judge (the point
-  estimate; its 95% interval from 4,000 resamples of the items, seed 42, is reported). The labels
-  file's SHA-256 is committed to the repository before the join, and `analyze` refuses labels
-  with another digest (`--hand-labels-sha256`); only that file counts toward G2. A correction
+  blind hand check of 120 judged reader items of the confirmatory set (stratified by the primary
+  judge's label only: 60 judged yes, 60 no, seed 44; `scripts/memcredit_analyze.py hand-sample`),
+  labelled from question, reference answer and reply alone before any join, gives Cohen's kappa
+  >= 0.80 with the primary judge (the point estimate; its 95% interval from 4,000 resamples of
+  the items, seed 42, is reported). The labels file's SHA-256 is committed to the repository
+  before the join, and `analyze` refuses labels with another digest (`--hand-labels-sha256`);
+  only that file counts toward G2. The file must label exactly the seeded sample: `analyze`
+  redraws `hand-sample`'s items and G2 FAILs if any is missing, any other item is labelled, or
+  any item is labelled twice (`matches_seeded_sample`). A correction
   found after the join (as with the pilot's transcription error) is reported separately with its
   effect and does not change G2. A human labeller is preferred (D9); if the agent labels, the
   report says so. If G2 fails, H2's verdicts are reported as judge-dependent and no program
@@ -355,9 +382,15 @@ validation derangement and the hand-check sample. Permutation Shapley and SNIPW 
 - Caps: the job's Slurm limit is 90 minutes on 2 GPUs (3.0 GPU-h); with the build, 3.1 physical
   GPU-h in all (the config's `budget`). Under D24's 8 GPU-h line. A phase starts only with its
   `min_start_s` left before the deadline; a skipped phase or an unfinished pass is an
-  infrastructure failure (sections 8 and 13).
-- The job is submitted only when no other study's GPU job that could share the node's GPUs at
-  the same time is queued or running, and the preflight log records the queue.
+  infrastructure failure (sections 8 and 13). If a reader pass hits the 3,600 s cap, the run is
+  INCOMPLETE and is not rerun under this id (section 8, the contingency).
+- The job is submitted only when no other GPU job of this program that could share the node's
+  GPUs at the same time is queued or running, and the preflight log records the queue.
+- Under D110, another of Kevin's projects runs inference on 1-2 of the node's GPUs through
+  2026-10-20, as long Slurm jobs. Those jobs do not block submission: they hold other GPUs, and
+  Slurm allocates this job's GPUs. The job needs 2 free H100s. The other project's jobs may slow
+  the host's CPU (tokenization in the workers, the CPU analysis); the timings above were measured
+  without them.
 - CPU: the analysis, the A/A report and the hand-check sample on the host CPU (minutes; the
   analysis of the pilot's 126 tables took 6 s at the round-1 code).
 
@@ -379,8 +412,8 @@ SHA-256 equals its ledger row's, and then builds only the 347 questions of the c
   with the same seeds; the void run's records are kept). G1 already needs both reader passes and
   both primary-judge passes to finish every request, so any unfinished reader or primary-judge
   request makes the run an infrastructure failure (G1 INCOMPLETE, rerun) before the 2% rule
-  applies. A second-judge request that does not finish only drops its table from the second
-  judge's reading.
+  applies; after a reader time cap there is no rerun under this id (section 8). A second-judge
+  request that does not finish only drops its table from the second judge's reading.
 - A smoke-check failure (16 requests at the start of every pass) stops the job before data.
 - A pool whose attention forward fails is counted. It has no attention credit, so it drops out of
   E5 and out of attention's rows of E2 and E3: raw attention's R_r is its mean regret over the
@@ -397,7 +430,8 @@ intervals for every rule, arm and budget; the suboptimal shares; the paired diff
 exact Shapley; E2 on the second judge's tables; E4 and E5 with their readings; the judge
 validation, agreement with the second judge and with containment, and the hand check (with any
 post-join correction separately); the A/A identities at the token, log-prob-bit and
-judged-utility levels; GPU-h; every deviation.
+judged-utility levels; GPU-h; every deviation; and D111's disclosure: the run carries no gauntlet
+score, and blind discrimination and the two provider-distinct reviews did not run.
 
 ## 15. What the development pilot fixed in this design
 
@@ -431,12 +465,14 @@ From `program/evidence/2026-10-15/am1-dev-pilot/README.md` (exploratory):
 Before the freeze, by the orchestrator:
 
 1. An independent check of this file and the code of section 17 (a fresh reviewer that did not
-   draft them), and the corrections it requires. Round 1 and its dispositions are in section 19;
-   whether a fresh reviewer re-checks those corrections is the orchestrator's call.
-2. The gauntlet question, still open: D103 sends the top candidates through the research
-   gauntlet. The run is under 8 GPU-h (cap 3.1) and comes out of the D103 sweep (judged and
-   verified there) and a pilot; whether `.claude/rules/research-gauntlet-loop.md` applies to it is
-   the program's ruling, and it must be made before the freeze.
+   draft them), and the corrections it requires. Rounds 1 and 2 and their dispositions are in
+   section 19; whether a fresh reviewer re-checks the round-2 corrections is the orchestrator's
+   call.
+2. The gauntlet question: resolved by D111. The confirmatory run is about 3.1 physical GPU-h,
+   under 8, and comes from the D103/D104 question sweep, which had verified priors and three
+   independent judges; it also has a development pilot and two independent pre-freeze checks. It
+   is admitted without a further gauntlet wave and carries no gauntlet score. Blind
+   discrimination and the two provider-distinct reviews did not run, and its results say so.
 3. Re-pin section 17 in a fill commit, and run the tests on the host checkout.
 4. The ledger row by `uv run python scripts/preregister.py freeze am1-memory-credit-v1
    program/preregistrations/am1-memory-credit-v1.md`, in a commit that adds only that row (the
@@ -450,11 +486,11 @@ pass the CPU selftest on that image with the held-out artifact mounted (it rende
 checks every memory span and runs the attention code on CPU). A failure there is fixed by a new
 registration id, not by an edit.
 
-## 17. Code of record (at the round-1 revision; re-pinned at the freeze)
+## 17. Code of record (at the round-2 revision; re-pinned at the freeze)
 
-At the commit that revises this file after the first independent check: the code is `de721578`'s
-(section 19) and this file's own text. The fill commit re-pins every row; a row that changes is
-reviewed before the freeze.
+The pins are the files at the commit that revises this file after the second independent check;
+that commit carries the round-2 code corrections and this text together (section 19, round 2).
+The fill commit re-pins every row; a row that changes is reviewed before the freeze.
 
 | File | Role | SHA-256 |
 |---|---|---|
@@ -464,11 +500,11 @@ reviewed before the freeze.
 | `scripts/memcredit_step0.py` | the request loop, pass files and identity comparison the driver imports | `57f2e4bbbd11bf750ff224852ba5dd19923ecb3decfde74d23a6913a7f9a7227` |
 | `scripts/memcredit_study.py` | the GPU job: phases, workers (reader, judge, attention), A/A summaries | `f27ecd21e769655cddc1e9b06ee8f4c7c4ee8494348b4fc73dba7c68fdb66bb3` |
 | `scripts/memcredit_study_prepare.py` | the split and the per-split artifact (refuses held-out data unless frozen; builds only the confirmatory set) | `3d7826ac7a48d0154212edb44aa67472be8d3c45d4780957a79914262f99b1d1` |
-| `scripts/memcredit_analyze.py` | the analysis with the gates and verdicts, hand-check sample, A/A report and power simulation | `e6c0f5f2d854c82ec2b1f505714388fb2610e080edbe7b8efa0fd8153652fcbe` |
+| `scripts/memcredit_analyze.py` | the analysis with the gates and verdicts, hand-check sample, A/A report and power simulation | `5444104d3c760b17f311656f4e0dbd50b2b154c89d806f1e4aa2ab6791fb0f34` |
 | `scripts/fetch_open_model.py` | the reader's snapshot verification | `d995b59ece3c809edd70d6c60a78628ae5cb1ccc0ce8350cc455084d3787d29f` |
-| `experiments/am1/am1-memory-credit-v1.yaml` | this registration's config | `c2f9fd74e8a90db65f69a61ab85c72b7ca650a77cd9ecc3f8979c26900e195c3` |
+| `experiments/am1/am1-memory-credit-v1.yaml` | this registration's config | `8466d6d42ace1477bb9b2377de8ed67027502ff11b179a369eed352fda212069` |
 | `experiments/am1/memcredit-split-v1.json` | the split | `4fa1b774d4131080855d668ac8f00f5cb07d49cf741f2051d5f8d96577edb3e3` |
-| `tests/test_memcredit_study.py` | 44 tests: config and seeds, split, the confirmatory set and its exclusion, placebo matching, requests, the judge prompt against the archived port and its digest, estimators and structure classes, statistics, driver helpers, the held-out gate, the analysis with its gates and verdicts, A/A report and power on a synthetic run, the gate rules, the hand labels' digest, power thinning, the lane's admission of the commands, the freeze on a scratch ledger | `d4b36e1f8e7c9032687b86a74983095992b5c50fa443a3a65b4d34874969e34f` |
+| `tests/test_memcredit_study.py` | 50 tests: config and seeds, split, the confirmatory set and its exclusion, placebo matching, requests, the judge prompt against the archived port and its digest, estimators and structure classes, statistics, driver helpers, the held-out gate, the analysis with its gates and verdicts, A/A report and power on a synthetic run, the gate rules (G1 with the reader time cap, G2 with the seeded sample, H2), the void rule and K2-K4, AM2's floor and direction (deletion and swaps flipping together is NOT ABOVE) and its value on the pilot's tables, AM6's readings, a run without judge items, the artifact's digest in the analysis, the hand labels' digest, power thinning, the lane's admission of the commands, the freeze on a scratch ledger | `04e129fd3e549e300cc2d90c8aa00dd8229de134d86c0c7dd1b7c6e2d2b3e823` |
 | `tests/test_memcredit.py` | Step 0's 30 tests | `7d31909428c3301df905ebed13da91fb018f7b476d2f0214635477bf6c210f0f` |
 | `scripts/submit_docker_research_job.py` | the lane's submitter | `660271655aa22ebd387a023e25d21e6a809c22699ec6314d9d535be74e17a994` |
 | `infra/slurm/host-single-node/docker-research.sbatch` | the lane | `2a10c9c72c22ab6dd5135061ff1b9b50977a468687180353d8cd7273acbaf1ec` |
@@ -493,35 +529,44 @@ python scripts/memcredit_study.py run --config experiments/am1/am1-memory-credit
   --evidence /inputs/study-artifact.json --expected-evidence-sha256 ARTIFACT_SHA256
 uv run --locked --offline python scripts/memcredit_analyze.py hand-sample \
   --config experiments/am1/am1-memory-credit-v1.yaml --run-dir RUN_DIR/am1 \
-  --evidence HOST_DIR/study-artifact.json --output HOST_DIR/hand-check-sample.jsonl
+  --evidence HOST_DIR/study-artifact.json --expected-evidence-sha256 ARTIFACT_SHA256 \
+  --output HOST_DIR/hand-check-sample.jsonl
 # (the sample is labelled blind; the labels file's SHA-256 is committed; then:)
 uv run --locked --offline python scripts/memcredit_analyze.py analyze \
   --config experiments/am1/am1-memory-credit-v1.yaml --run-dir RUN_DIR/am1 \
-  --evidence HOST_DIR/study-artifact.json --output-dir ANALYSIS_DIR \
-  --hand-labels HAND_LABELS --hand-labels-sha256 HAND_LABELS_SHA256
+  --evidence HOST_DIR/study-artifact.json --expected-evidence-sha256 ARTIFACT_SHA256 \
+  --output-dir ANALYSIS_DIR --hand-labels HAND_LABELS --hand-labels-sha256 HAND_LABELS_SHA256
 uv run --locked --offline python scripts/memcredit_analyze.py aa \
   --config experiments/am1/am1-memory-credit-v1.yaml --run run=RUN_DIR/am1 \
   --pair run:reader-gpu0,run:reader-gpu1 --pair run:judge32-gpu0,run:judge32-gpu1 \
-  --evidence HOST_DIR/study-artifact.json --output ANALYSIS_DIR/aa.json
+  --evidence HOST_DIR/study-artifact.json --expected-evidence-sha256 ARTIFACT_SHA256 \
+  --output ANALYSIS_DIR/aa.json
 ```
 
 The hand-check sample is drawn and labelled before `analyze --hand-labels` joins it to the
-judges, and `analyze` refuses labels whose SHA-256 differs from the committed one.
+judges; `analyze` refuses labels whose SHA-256 differs from the committed one, and G2 counts them
+only if they label exactly the seeded sample. Under this config `analyze`, `hand-sample` and `aa`
+refuse to run without the artifact's receipted SHA-256, and refuse an artifact with another
+digest, as the driver does.
 
 ## 18. Priors (from the pilot; for the record, not tested)
 
 The pilot expects leave-one-out MISSPECIFIED (R about 0.2) and losing more than exact Shapley
 (paired difference 0.135, 95% [0.051, 0.227]), raw attention and retrieval rank MISSPECIFIED,
 permutation Shapley-16 likely MISSPECIFIED, SNIPW-64 INCONCLUSIVE; H1's excess near +0.1;
-AM2's non-gold deletion labels narrowly ABOVE THE SWAP FLOOR (pilot, both arms: deletion flip
-rate 0.046 against a swap-only flip rate of 0.021, difference 0.024, 95% [0.002, 0.047]; retrieved
-arm alone 0.021 [-0.010, 0.056]), with low non-gold survival (0.17) and gold survival about 0.7,
-and a reorder flipping about one answer in eight; AM6 with cross-fitted heads ahead of the best
+AM2's non-gold deletion labels NOT ABOVE THE SWAP FLOOR (pilot, both arms: deletion flip rate
+0.046 against a swap flip rate of 0.045 at the same slots, difference 0.0006, 95% [-0.013,
+0.013]; retrieved arm alone -0.017 [-0.040, 0.001], gold arm 0.020 [-0.004, 0.048];
+`program/evidence/2026-10-15/am1-dev-pilot/analysis/recheck-am2-floor/am2-floor.json`), with low
+non-gold survival (0.17) and gold survival about 0.7, and a reorder flipping about one answer in
+eight; AM6 with cross-fitted heads ahead of the best
 cheap baseline by about 0.05 AUROC and raw attention behind it. On the pilot's tables the second
 judge gives the same H2 verdicts as the primary one
 (`program/evidence/2026-10-15/am1-dev-pilot/analysis/recheck-de721578/`).
 
-## 19. Review log: the first independent check (round 1)
+## 19. Review log: the independent checks
+
+### Round 1
 
 The check ran on `f535136a` (the draft commit) and found the file not ready to freeze: five
 blocking items and ten others. It verified, and this revision keeps: the 17 SHA-256 pins of
@@ -539,7 +584,7 @@ was opened.
 | B2 | Development already touched the held-out split: six of Step 0's eight demo questions are held-out ids, with full exact tables, the same reader, prompt and pools, and every reply public; the file said the split "has not been opened". | Fixed: all eight demo ids are excluded before any run; the confirmatory set is 347 ids with a pinned list and digest (sections 3 and 4), enforced in code (config `confirmatory_set`; `split_question_ids`, `check_artifact_questions`; prepare, driver and analysis; tests). The status paragraph and section 4 disclose what development saw. Unit counts updated (190,156 requests, 209 and 281 tables). |
 | B3 | Not runnable within its caps: at 353 questions the shuffled pass loses most prefix-cache hits and would exceed `max_s` 2,400 s; a cut pass would pass G1 silently on the completed subset. | Fixed: reader `max_s` 3,600 s, job 90 minutes, reader `min_start_s` 4,620 s, budget 3.1 physical GPU-h (config and section 11, with the check's cache simulation). G1 needs both replicates to finish every request and judge item (`replay_gate`: PASS, FAIL, INCOMPLETE), and an incomplete replicate is an infrastructure failure (sections 8 and 13). |
 | B4 | The code did not implement the decision rules: no H2 verdicts, no G1 judge gate, no G2, K4, void rule or AM2 rule, and a hardcoded "exploratory" claim level. | Fixed: `verdicts` in `scripts/memcredit_analyze.py` writes the void rule, G1, G2, K2-K4, H2 per rule from the 99% interval, the program reading with the paired difference, AM2, AM6 and the second judge's H2 into `headline.json`; tests on the synthetic run (G1 PASS, INCOMPLETE, FAIL; G2 PENDING and PASS) and unit tests of the rules. Both summaries take `claim_level` from the config. Run on the pilot's raw passes as a check (section 15). |
-| B5 | The AM2 rule was fixed by its design: survival requires both swaps to reproduce a label, so the swap-to-deletion ratio is at least the survival share, and ROBUST could hold only with nearly no non-gold labels. | Fixed (text and code): one consistent rule on non-gold labels, the deletion flip rate against the swap-only floor, with gold and non-gold survival reported (section 7); the dossier's ROBUST rule is not applied, and why is stated. Prior updated from the pilot's tables (section 18). |
+| B5 | The AM2 rule was fixed by its design: survival requires both swaps to reproduce a label, so the swap-to-deletion ratio is at least the survival share, and ROBUST could hold only with nearly no non-gold labels. | Fixed in round 1 (text and code): one rule on non-gold labels, the deletion flip rate against the swap-only floor, with gold and non-gold survival reported; the dossier's ROBUST rule is not applied, and why is stated. Round 2 found that floor fixed by its design too (round 2, B5): replaced by the deletion flip rate against the flip rate of every matched swap at the same slots (section 7), and the prior updated (section 18). |
 | N1 | The threshold rationale was wrong: exact Shapley's 0.079 was not the best per-memory score (exact Banzhaf 0.031, SNIPW-64 0.070), and the pilot README's "additive-credit floor" claim is false, since any keep set is the top B of some score. | Fixed: section 7 reworded; the pilot README corrected. |
 | N2 | `power()` multiplied regrets by the scale, which shrinks their variance and overstated the power at 1/2 and 1/4. | Fixed: Bernoulli thinning (`thin`), rerun at 347 questions on the host CPU (`de721578`, 2 minutes); section 9 and `power.json` replaced. Leave-one-out at half the effect: 0.91 (was 1.00). |
 | N3 | The ADEQUATE rationale treated a per-cell flip rate as a regret resolution. | Text: 0.02 is stated as a chosen tolerance, the per-table regret's sensitivity to kernel numerics as unmeasured, and ADEQUATE as nearly out of reach (section 7). Not measured: that needs every cell of job 1411's GPU-1 tables judged. |
@@ -550,3 +595,24 @@ was opened.
 | N8 | Process: the gauntlet ruling of D103 is open; the merge will conflict with G2c in `program/state.json` and `program/log.md`; the config's validation comment said "per development question". | The gauntlet ruling is left to the program and flagged in section 16 (item 2). The merge conflicts are for the merge, not this branch. The config comment is fixed. |
 | N9 | BM25 for MiniLM, thinking off, the 13.1% reorder sensitivity and unseparated causes of non-monotonicity limit the program reading; lead it with the paired leave-one-out minus exact Shapley difference, since exact Shapley was 0.079 in the pilot. | Fixed: the program reading names its scope and is read with the paired difference (section 7; `verdicts.headline.loo_minus_exact_shapley`). |
 | N10 | Checked and passing (pins, digests, config diff, eager mode, tests, seeds, ledger chain, capsule). | Kept; the pins of section 17 are refreshed for this revision. |
+
+### Round 2
+
+A fresh re-checker that drafted none of it checked the round-1 revision (`20f85d66`) and found
+one blocking item and seven notes. All are fixed in one commit, which carries this section, the
+code (`scripts/memcredit_analyze.py`, `tests/test_memcredit_study.py`), the config's comments and
+the pilot README's AM2 lines; section 17 is re-pinned there. Before it, the branch merged `main`
+(D110, D111, G2c). Everything used the development set only; nothing of the confirmatory set was
+opened.
+
+| Item | Finding | Disposition |
+|---|---|---|
+| B5 | The round-1 AM2 floor was fixed by its design. The swap-only rate counts swap flips only where deletion does not flip (`swap_when_null`), which leaves out the slots where both flip and pushes the floor down, so the verdict was ABOVE by design. Pilot: 0.024 [0.002, 0.047], ABOVE; resampled to 347 questions 300 times, ABOVE in 100%. | Fixed: the verdict reads the deletion flip rate minus the flip rate of every matched swap at the same non-gold slots (`cluster_difference(deletion, swap)`, `deletion_minus_swap`, in `placebo_summary` and `am2_reading`); the conditional swap rate is a descriptive number only (sections 6 and 7). Pilot under the new rule: 0.0006 [-0.013, 0.013], NOT ABOVE (section 18; `recheck-am2-floor/am2-floor.json`, reproduced by a test from the committed tables). Tests: deletion and swaps flipping together is NOT ABOVE (the old floor would say ABOVE there), deletion alone is ABOVE, swaps flipping more is NOT ABOVE, gold slots stay out. The pilot README's AM2 lines are corrected. |
+| N1 | 19 confirmatory ids appear in two files of the old program (`legacy/experiments/memory/stage1-longmemeval-screen.yaml`, `legacy/harness/memory_trials/public_sources.py`); the repository holds no model output for them. | Disclosed in the status paragraph with the ids; they stay in the confirmatory set. |
+| N2 | Under D110 another project's inference runs on 1-2 GPUs through 2026-10-20; the compute plan did not say how that bears on submission. | Section 11: those jobs do not block submission (they use other GPUs), may slow the host's CPU, and the job needs 2 free H100s. |
+| N3 | G2 did not check that the labelled items are the seeded sample, and the config said the sample is stratified by label and question type; the code stratifies by label only. | Fixed: `analyze` redraws `hand-sample`'s items and G2 FAILs unless the labels file labels exactly them, none twice (`matches_seeded_sample`; section 8; tests). The config comment says label only, and its seed comment matches section 10. |
+| N4 | `analyze` crashed when `judge-items.json` was missing (a judge phase that never ran). | Fixed: it writes the record with G1 INCOMPLETE, every table incomplete and `inputs_present` (test). |
+| N5 | `analyze`, `hand-sample` and `aa` did not check the artifact's SHA-256 as the driver does. | Fixed: `--expected-evidence-sha256`, required under this config and checked (section 17's commands; test). |
+| N6 | The void rule, K2-K4, AM2's direction and AM6's readings had no tests pinning them. | Fixed: tests at each threshold (void at 2% and just above, K2 at 60% and just above, K3's three conditions, K4 at 150 and 149, AM2 in both directions, AM6's margin and floor). |
+| N7 | No contingency for the 3,600 s reader cap. | Registered: a reader pass stopped by its time budget makes the run INCOMPLETE with no rerun under this id (sections 8, 11 and 13); `replay_gate` records `reader_time_capped` and `rerun_allowed`, and the H2 blocker says so (test). |
+| D111 | The gauntlet ruling of section 16, item 2, was open. | Resolved by D111 (merged from `main`): admitted without a further gauntlet wave, no gauntlet score, disclosed in the results (sections 14 and 16). |
