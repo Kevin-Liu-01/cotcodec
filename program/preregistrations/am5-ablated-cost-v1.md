@@ -5,7 +5,7 @@
 `scripts/preregister.py` after two independent pre-freeze checks (D121) and the checklist of
 section 17. A material change after the freeze is a new experiment id.
 
-This registration runs one GPU job and one image build, about 0.35 physical GPU-h, capped at 1.25
+This registration runs one GPU job and one image build, about 0.35 physical GPU-h, capped at 1.42
 (section 11). It measures, on AM1's 347 held-out answerable questions with their evidence sessions
 removed, how often the non-abstention keep rule, capped at K reads, abandons BM25 top 4's correct
 abstention for an answer judged wrong, and compares that cost, question by question, with the gain
@@ -66,11 +66,18 @@ their original pools (the evidence present):
   with each reader's tokenizer and the judge items (one placeholder reply per pool) with the
   judge's, and recorded only their lengths (section 15). No reader or judge ran on an ablated
   held-out pool, and no model output of them exists.
-- **The evidence's absence rests on LongMemEval's own annotations.** The leakage facts (section 6.7) count LongMemEval's `has_answer`
-  turns left in each ablated haystack and pool, pool memories whose text equals an evidence-session
-  user turn, and memories or remaining turns that contain the normalized reference answer (crude:
-  short answers match by chance). They cannot rule out an answer that can be guessed, or one stated
-  in a session LongMemEval did not mark.
+- **The evidence's absence rests on LongMemEval's own annotations.** The leakage facts (section
+  6.7) count LongMemEval's `has_answer` turns left in each ablated haystack and pool, pool memories
+  whose text equals an evidence-session user turn, and memories or remaining turns that contain the
+  normalized reference answer (crude: short answers match by chance). They cannot rule out an answer
+  that can be guessed, or one stated in a session LongMemEval did not mark. The summary's counts:
+  700 evidence sessions removed; none of LongMemEval's 691 `has_answer` turns survives in any
+  ablated haystack or pool; no pool memory equals an evidence-session user turn; but by the crude
+  string match **27 of the 347 ablated pools hold a memory that contains the reference answer, and
+  91 of the 347 questions have it in a remaining user turn** (AM5's development figures: 4 and 10 of
+  63). A switched reply that is right because of such leakage is not a cost, so leakage can only
+  lower the measured cost, which favours COST_BELOW_GAIN; section 6.6 reports the switches, the
+  switched replies judged correct and the costs split by both flags.
 
 ### 1.3 Development work that shaped the design
 
@@ -85,6 +92,11 @@ their original pools (the evidence present):
   steps, the gain side and the hand-check protocol, unchanged.
 - **The power** (section 9) was computed from AM5's development cost rates and the known gains,
   before any held-out ablated output existed.
+- **The hand labels differ from AM5's.** AM5's labeller was told that a reply that declines to
+  answer is 0 (AM5's and am3g's check "answer"). Here a reply that declines and gives no answer is
+  1, with a note starting "decline:" (section 8), because on an evidence-absent pool a decline is
+  not a wrong answer; the development dry run relabelled AM5's replies under these instructions
+  (section 15).
 - **The development gains understate the held-out gains** (on the same 63 questions the rule
   gained 1, 4 and 3 at K = 8 against held-out 31, 27 and 26 of 347), so AM5's side-by-side was not
   a deployment estimate; this registration pairs the held-out cost with the held-out gain.
@@ -165,7 +177,7 @@ It does not decide:
 | Reader prompt | Step 0's template (the pilot config's `prompt`), SHA-256 of the template text `e63a0f995fe94ee72d6dcda7462a09c20e83f86dcc8252a53cdefb1ccf6fb37c`, thinking off for both Qwen readers |
 | Judge prompt | LongMemEval's `get_anscheck_prompt` answer-check templates as AM1 ported them (`harness.memcredit_study.JUDGE_TEMPLATES`, SHA-256 `2e27234d4c7d50a1fd99da3e8d3c97704a1f10cc9d52185924b6d8ece3ef71d4`) |
 | Abstention patterns | AM1d's four (`scripts/memcredit_label_free.py`), SHA-256 `031bee27e934a772f3419e38f9956d33dbea01096e6657e67426fd8a399d935f` |
-| Hand check | am3g's labeller model (`claude-opus-5-5`) and launch prompt (`HAND_LABELLER_PROMPT`, SHA-256 `98c35ceac9710033b095f01abe4a5fc98f6ed3a597b461e12a98ac213a7ae096`); this registration's instructions (`memcredit_am5r.HAND_INSTRUCTIONS`, SHA-256 in the plan and every receipt) |
+| Hand check | am3g's labeller model (`claude-opus-5-5`) and launch prompt (`HAND_LABELLER_PROMPT`, SHA-256 `98c35ceac9710033b095f01abe4a5fc98f6ed3a597b461e12a98ac213a7ae096`); this registration's instructions (`memcredit_am5r.HAND_INSTRUCTIONS`, SHA-256 `1745340a5e05ebb149aaffee4beba23d2c13dc42b33d1872731defd09359a5c5`, also in the plan, the manifest and every receipt) |
 | Engine and image | vLLM 0.31.0 (`db9527a46873454610df6dbedf79a36d6bf1a7f6`), the cotcodec-vllm cu129 overlay built by `scripts/build_vllm_overlay_on_h100.sh` from the freeze commit's source capsule on the base `docker.io/vllm/vllm-openai@sha256:b18abb2df97b8f798e81862bd93f872ea18613372e2c3adc0cc2ac21e66ac12f` (am3g's and AM5's base); the image id is recorded by the build and the job checks it through the lane's provenance verification |
 | Code | section 16 |
 
@@ -212,11 +224,16 @@ It does not decide:
   4 of 30 decoys), which would hide costs. (c) The four patterns are the rule's own signal: with
   this scoring, BM25 top 4 is correct whenever the rule leaves it, so the cost indicator is exactly
   "the rule switched, and the judge rejects the reply it switched to", as AM5 defined it, and the
-  development dry run reproduces AM5's figures under it. (d) Its two error modes are measured: a
-  judge that accepts or rejects a switched reply wrongly, and a switched reply that declines in
-  words outside the four patterns (which this scoring counts as a wrong answer, overstating the
-  cost); the blind hand check labels both (section 8). A reply that matches a pattern and still
-  guesses ("I don't know, maybe X") counts as an abstention; that error mode is not measured.
+  development dry run reproduces AM5's figures under it. (d) Its two error modes are checked by
+  the blind hand check (section 8): a judge that accepts or rejects a switched reply wrongly, and a
+  switched reply that declines in words outside the four patterns, which this scoring counts as a
+  wrong answer, overstating the cost. The hand label does not tell these apart by itself: a correct
+  answer and a decline are both 1 ("not a wrong answer"). The labeller is told to start the note of
+  a 1 given for a decline with "decline:", and the text-free counts of such notes per role are
+  reported (section 6.6); they depend on the labeller following that instruction, and a decline
+  labelled 1 without the note is counted as a correct answer, which changes no cost. A reply that
+  matches a pattern and still guesses ("I don't know, maybe X") counts as an abstention; that error
+  mode is not measured.
 
 ### 6.2 The cost and gain indicators
 
@@ -280,7 +297,12 @@ Per reader (`memcredit_am5.ablated_block`, unchanged, and this registration's bl
 - the abstention patterns' counts;
 - the replay control: the 63 control pools' figures for every reader (`control_ablated`), which
   for the batch-invariant readers equal AM5's job 1487 figures when V3 passes;
-- the judge's validation counts (section 8, G-J1) on the held-out part and on the control.
+- the judge's validation counts (section 8, G-J1) on the held-out part and on the control;
+- per crude leak flag (the reference answer in a pool memory; in a remaining user turn) and its
+  value: the questions and, at K = 8 and 70, the switches, the switched replies judged correct and
+  the costs (`leak_breakdown`);
+- the hand check's decline notes: the items labelled 1 with a note starting "decline:", by role,
+  the switched replies among them per reader at each cap, and any 0 with such a note.
 
 ### 6.7 Leakage facts (from the prepare summary)
 
@@ -289,7 +311,10 @@ Per question and in total: evidence sessions removed (and repeated evidence sess
 memories in the ablated pool, ablated-pool memories whose text equals an evidence-session user
 turn, pools with a memory containing the normalized reference answer and questions whose remaining
 user turns contain it (crude), and memories shared with the original pool
-(`memcredit_am5.pool_facts`). Reported, and listed beside each hand-labelled reply.
+(`memcredit_am5.pool_facts`). Reported, and listed beside each hand-labelled reply
+(`labelled_items`: AM5's `memcredit_am5.labelled_items`, which refuses one reply digest with two
+judge labels): its uses, the judge's and the hand label, whether the 1 was a decline, and its
+question's leakage facts.
 
 ## 7. Hypotheses and decision rules
 
@@ -358,6 +383,11 @@ batch schedule):
 - *One kind of unanswerable question.* Removing the evidence sessions makes the question
   unanswerable from the history by LongMemEval's annotations; it is not a sample of deployment's
   unanswerable questions (section 3).
+- *Possible leakage.* By the crude string match, 27 of the 347 ablated pools hold a memory that
+  contains the reference answer and 91 questions have it in a remaining user turn (section 1.2). A
+  switched reply that is right by leakage is not a cost, so leakage can only lower the measured
+  cost: it favours COST_BELOW_GAIN. The split by both flags (section 6.6) shows how much of the
+  cost and of the judged-correct switches sit in flagged pools.
 - *A read cost.* The capped rule calls the reader up to 8 times per pool, against BM25 top 4's
   once; the reads are reported (section 6.6).
 
@@ -409,7 +439,12 @@ job's driver and workers record their own failures in `summary.json`).
   engine mode other than the pinned one; or the features' recorded provenance (population, artifact
   and id digests, pattern and template digests, and the digests of the fourteen repository modules
   the extraction imports, `FEATURE_CODE`). An input is fixed, never the code; a code change is a
-  new registration id.
+  new registration id. *An engine mode other than the pinned one voids the whole run*, whichever
+  step finds it, OLMo-2's batch-invariant step included and even when its default-mode fallback
+  then completes: the mode is set per step by the driver's environment (`am3.worker_env`), so a
+  mismatch in any step means the environment that sets it is not the registered one, and the
+  batch-invariant steps that the run rests on (the gated replay control's reader and the judge)
+  depend on the same mechanism. This is am3g's rule, unchanged (its rerun rule's step 2).
 - **VOID (V2): incomplete, and the rerun rule.** am3g's rule, unchanged
   (`memcredit_am3g.rerun_decision`; its essential steps are this registration's: a complete pass
   of each reader, OLMo-2 from either of its steps, and of judge32). Right after the GPU job ends,
@@ -420,6 +455,17 @@ job's driver and workers record their own failures in `summary.json`).
   writes the decision through a temporary file, so a failed run leaves none. A `summary.json` that
   is not a JSON object is a named V2 error. A job that ended without the lane's termination record,
   or whose summary is such an error, cannot be decided, and the run is VOID (V2, incomplete).
+  *The lost record.* Slurm forgets a job 300 s after it ends (MinJobAge) and accounting is off, so
+  the operator polls `am5r-job-state.sh` at most every 120 s while a job runs. If scontrol has
+  forgotten a job that was never recorded, `am5r-job-state.sh` saves a "forgotten" record instead
+  (`JobState=FORGOTTEN`, with the lane's termination record copied into it and its digest) when the
+  lane's `termination.env` of that job exists, which means the job's workload ended; the rerun rule
+  accepts that record like any other and decides from the driver's summary and the lane's record,
+  as always. Without a termination record the job cannot be decided: VOID (V2, incomplete).
+  *Extract reads only a decided job, once.* `am5r-extract.sh` and `extract` refuse a job whose
+  rerun-rule record (`R/rerun-decision-POP-JOB.json`) does not say "complete" for that job and
+  population, and refuse existing features; the features record the job id and the record's
+  SHA-256, and `hand-sample` refuses features of another job than the run directory it reads.
   1. **rerun** when the workload never started (lane reasons `gpu_prolog_unavailable`,
      `foreign_gpu_process`, `hard_stop_before_start`). Without a driver summary: **no-rerun**
      after the lane's hard stop, **rerun** otherwise.
@@ -503,9 +549,10 @@ job's driver and workers record their own failures in `summary.json`).
     "answer-or-decline": 1 if the reply gives the reference answer (LongMemEval's answer-check
     criteria per question type, as am3g's check "answer"), or declines to answer and gives no
     answer (says it does not know, that the messages do not say, that the information is missing,
-    or asks for it); 0 if it gives an answer that is not the reference answer (a different answer,
-    a guess, part of the needed information, or alternatives none of which is the reference); a
-    reply that declines and still offers an answer is labelled by that answer. They tell the
+    or asks for it), and then the note must start with "decline:"; 0 if it gives an answer that is
+    not the reference answer (a different answer, a guess, part of the needed information, or
+    alternatives none of which is the reference); a reply that declines and still offers an answer
+    is labelled by that answer. The decline notes are counted, text-free (section 6.6). They tell the
     labeller that the messages the reply was written from may or may not hold the needed
     information. A hand label of 1 on a switched reply is therefore "not a wrong answer": the
     judge-based cost counts a switched refusal outside the four patterns as a cost, the hand-based
@@ -514,8 +561,9 @@ job's driver and workers record their own failures in `summary.json`).
     (per item only its id, the question id and type, the check, the question, the reference answer
     and the reply: no reader, judge label, role, mask or rule identity), the instructions, the
     chunks of 60 consecutive items (`memcredit_am3g.write_chunks`), one launch prompt per chunk, the
-    text-free plan and a text-free manifest. The features and every judge label stay in
-    `R/private/`, which no labeller sees.
+    text-free plan (`hand-plan.json`, which holds each use's judge label) and a text-free manifest.
+    The labeller is given only its chunk and the instructions, copied to a fresh directory on the
+    Mac; it never sees `R/hand/`'s other files, nor `R/private/`, which holds the features.
   - *The labeller.* For each chunk, in order and one at a time, a fresh Claude agent, model
     `claude-opus-5-5`, in a fresh context and a fresh working directory that holds only the chunk
     and the instructions, launched with am3g's pinned prompt (`HAND_LABELLER_PROMPT`, SHA-256
@@ -638,6 +686,15 @@ Qwen3-8B's COST_ABOVE_GAIN probability is 0.46-0.70 at q = 0.15 and 0.99-1.00 at
   NOT_SEPARATED is the expected outcome. At its upper bound (0.176) COST_ABOVE_GAIN has 0.97-0.99.
 - Qwen3.5-9B: COST_BELOW_GAIN 0.07-0.20; at its upper bound (0.133) COST_ABOVE_GAIN 0.48-0.72.
 
+**Averaged over the development uncertainty** (`averaged_over_development_uncertainty` in
+`power.json`: the power integrated over q ~ Beta(k + 1/2, m - k + 1/2), Jeffreys' prior and AM5's k
+costs of m = 63 pools at K = 8): Qwen3-8B reads COST_BELOW_GAIN with probability 0.98; OLMo-2 reads
+either direction with 0.15-0.24 (COST_BELOW_GAIN 0.05-0.09, COST_ABOVE_GAIN 0.10-0.15); Qwen3.5-9B
+with 0.25-0.37 (COST_BELOW_GAIN 0.23-0.33). **NOT_SEPARATED is not evidence that the cost equals
+the gain**: for OLMo-2 and Qwen3.5-9B it is the likeliest outcome whatever the truth near their
+development rates, and only the difference's interval and the break-even share say how close they
+are.
+
 **Readings.** The power reaches about 0.8 only when the cost rate is about 0.045 below the gain
 rate, or about 0.07 above it. Near AM5's development rates it is likely to read
 COST_BELOW_GAIN for Qwen3-8B and NOT_SEPARATED for the other two, and the break-even share
@@ -675,20 +732,24 @@ involve no random draw.
   passes of about 215, 220 and 380 s; the judge on about 3,000 items (about 1,800 distinct replies
   and 1,228 validation items) about 25 s; with the starts, the checks and the lane's prolog about
   20 minutes, 0.33 GPU-h; the build about 1 minute, 0.02 GPU-h; about 0.35 GPU-h in all.
-- **Caps.** Slurm limits: build 5 minutes, the job 70 minutes: **1.25 GPU-h**; with the one rebuild
-  and the one rerun section 8 allows, 2.50 GPU-h. Well under D24's 8 GPU-h line.
+- **Caps.** Slurm limits: build 5 minutes, the job 80 minutes: **1.42 GPU-h**; with the one rebuild
+  and the one rerun section 8 allows, 2.83 GPU-h. Well under D24's 8 GPU-h line.
 - **Step budgets** (`jobs.heldout` in the config: per step [`min_start_s`, `max_s`]). A step starts
   only with `min_start_s` left before the job's deadline (the limit minus the lane's 210 s), and
   its passes stop at `max_s`. They are sized with am3g's held-out overhead model
   (`budget.overhead_model`: per job 100 s; per step outside its pass 135 s for a reader, 155 s for
   the judge, 125 s for a batch-invariant step whose engine refuses to start), which am3g's job
-  1480 fitted inside at 49,274 requests per reader: readers [750, 600] (2.7 times the expected
-  pass), Qwen3.5-9B [1150, 1000], judge32 [480, 300]. With every step at its cap, judge32 starts
-  with 1,285 s left on the normal path, 1,160 s on the fallback path (OLMo-2's batch-invariant
-  engine refuses to start and the default-mode step runs) and 550 s on the residual path (OLMo-2's
-  batch-invariant pass stopped by its `max_s`, then the fallback), and the job ends by 3,160,
-  3,285 and 3,895 s of its 3,990; a test simulates the three paths
-  (`test_the_judge_starts_and_fits_on_every_path`).
+  1480 fitted inside at 49,274 requests per reader, plus, after every step, the driver's wait of
+  up to 120 s for the GPU's memory to fall below 1 GiB (`run_step`; it took seconds in jobs 1487
+  and 1507): readers [750, 600] (2.7 times the expected pass), Qwen3.5-9B [1150, 1000], judge32
+  [480, 300]. With every step and every wait at its maximum, judge32 starts with 1,525 s left on
+  the normal path, 1,280 s on the fallback path (OLMo-2's batch-invariant engine refuses to start
+  and the default-mode step runs) and 670 s on the residual path (OLMo-2's batch-invariant pass
+  stopped by its `max_s`, then the fallback), and the job ends, the last wait included, by 3,640,
+  3,885 and 4,495 s of its 4,590; a test simulates the three paths
+  (`test_the_judge_starts_and_fits_on_every_path`). (Check 1 found that the first draft's model
+  left out the release wait, with which the residual path skipped judge32 under a 70-minute
+  limit; the limit is now 80 minutes.)
   - **A hung engine start.** A step's `max_s` bounds its passes, not its engine start. An engine
     start that hangs is stopped only near the job's end (the lane's USR1, which the driver passes
     on, or the worker overrunning the deadline by 90 s, killed as late). Either way no later step
@@ -696,7 +757,8 @@ involve no random draw.
     registration accepts this risk: every engine start of these models in am3g's and AM5's jobs
     took 27-41 s.
   - **A cold page cache** can lengthen an engine start by tens of seconds; the smallest slack, on
-    the residual path, is 70 s at judge32's start and 95 s at the job's end.
+    the residual path with every wait at its maximum, is 190 s at judge32's start and 95 s at the
+    job's end.
 - **Order.** Build (rebuilt once if it fails); the post-build CPU selftest of the held-out
   population (no GRES); the GPU job, its rerun decision and its one rerun if the rule says so; then,
   on the host CPU, extract and the blind hand-check sample; the labelling on the operator's Mac,
@@ -743,7 +805,8 @@ batch-invariant step is then followed by its declared default-mode fallback.
 - the blind hand check: the plan's counts per role and reader, the distractor shortfall and the
   digest, the labels' digest, the receipts (labeller model and launch, prompt digest, transcript
   audits, the repair stage's size), hand-against-judge agreement with kappa overall and per role,
-  and any correction found after the join, separately;
+  the decline notes' counts, the labelled items with their leakage facts, and any correction found
+  after the join, separately;
 - the replay control (R1, R2 for the anchor; the other readers' replay and the judge's item-level
   replay), G-J1 with the decoy count;
 - every rerun decision with its reason;
@@ -844,9 +907,9 @@ parses this table and refuses to run unless every file matches.
 
 | File | Role | SHA-256 |
 |---|---|---|
-| `scripts/memcredit_am5r.py` | this registration: gate and config binding, the held-out artifact, driver and workers, extract and the replay control, the cost and gain indicators, the paired test with Holm, the break-even share, the hand check's plan, sample and join, the confirmation rule, analyze, the dry-run comparison, power | `b24766ddb8f90b268fa7660d5c09dec98009827b5a799a87767c92bb039e2006` |
-| `tests/test_memcredit_am5r.py` | its tests | `8727795313c4c8767298b4f1d49564ebcb097a0b924082abda7e076dc274b2ef` |
-| `experiments/am5/am5-ablated-cost-v1.yaml` | this registration's config | `f18eeb7317c9fd4f2673934e3c435295605e6d3d89af6f973d86a7bcb2a0f863` |
+| `scripts/memcredit_am5r.py` | this registration: gate and config binding, the held-out artifact, driver and workers, extract and the replay control, the cost and gain indicators, the paired test with Holm, the break-even share, the hand check's plan, sample and join, the confirmation rule, analyze, the dry-run comparison, power | `35bab9f9a8fa647542f25d1f608afe49121c29618e22c89118534cd983a646fb` |
+| `tests/test_memcredit_am5r.py` | its tests | `a9f0cd508d989534e14f74bb6dbfda9a8e1954668653d68f07ce89867577d9b7` |
+| `experiments/am5/am5-ablated-cost-v1.yaml` | this registration's config | `58ccc67373f74705e625f2908cfcb310ae2060aac3501dccdf85438f4b130df3` |
 | `scripts/memcredit_am5.py` | AM5's ablation, capped rule, per-pool records and blocks (imported) | `225e42e7d4f2e9a1ccfce1c4a826a04bcdb57511fea248f8009bf97467b6fa0b` |
 | `experiments/am5/am5-evidence-ablated-dev.yaml` | AM5's config (the dry run's comparison) | `0c49e157755a3a67e83eed9c07e1c37ba912e93aaf29416d9ac7fbc643ea88a9` |
 | `scripts/memcredit_am3g.py` | am3g's readers, steps, pools, judge items, rerun rule, hand-check protocol (imported) | `4bb0d42c09f9fca6e728a2487966bc13c08715672dce33316db195f6e7573e26` |
@@ -887,20 +950,20 @@ parses this table and refuses to run unless every file matches.
 | `ops/am5r/am5r-prepare-heldout.sh` | operator: the held-out ablated artifact (before the freeze) | `50e2e9f8413645c6274354d5ed4660420eae17dd69e2aa3283970c7612f7b33d` |
 | `ops/am5r/am5r-capsule.sh` | operator: source capsule | `26cd09af379f4425f24c3e61ed8aa318268c84d025527be3e408e32597490b79` |
 | `ops/am5r/am5r-preflight.sh` | operator: queue and GPU check (reports on stderr) | `2280dd2bcea713751edcebc7bccca1d7487c528aea1ad9168e80ec7a0fd297d5` |
-| `ops/am5r/am5r-build.sh` | operator: image build, and the one rebuild | `16424eb10ca6a329103865d8381bda1338e364e84c0bb265bd5d31287656df9a` |
+| `ops/am5r/am5r-build.sh` | operator: image build, and the one rebuild | `47ce8033d1a33c15aac9740556819a3ebfb7e1837c8bd8d7d2623d99238ed09e` |
 | `ops/am5r/am5r-image.sh` | operator: the built image id, after its provenance and receipt checks | `6a020d8614b90766d7597b1e0177325b64c91df6ddc9dfc8df5628b3b6fa748d` |
-| `ops/am5r/am5r-job-state.sh` | operator: a job's state, and its scontrol record when it ends | `56f3e3ffa0d8cab4bbf051611476fe13a9f6cf12cf5ed7cb5bb7f052be5dea46` |
+| `ops/am5r/am5r-job-state.sh` | operator: a job's state, and its scontrol record when it ends | `ce58c082054aeaf37189a75cb695271184fd826144a8eb217eecd49be93e4467` |
 | `ops/am5r/am5r-selftest.sh` | operator: submits the CPU selftest | `2ea474db02bc7b0dc2247e57f35437fd293dc4c4db9b238ebef8380608761a9f` |
 | `ops/am5r/am5r-selftest-cpu.sbatch` | operator: CPU selftest in the image | `938d915d5fce6d0118ce92845db0a11d3c00acd7b1a7c33842fb4fc81e9d2783` |
 | `ops/am5r/am5r-submit.sh` | operator: lane manifest, dry run, test-only check, submit, the rerun the rule allows | `7a950119f0e60b6e8a29a0f85dbdb44ea0b23612127d3fbe251ed28209bd20d6` |
 | `ops/am5r/am5r-rerun-decision.sh` | operator: the mechanical rerun rule | `824a55829000dd20a14b04f30c741377be5ce1969a3fb635e8b0afd1a552f529` |
-| `ops/am5r/am5r-extract.sh` | operator: extract and the replay checks | `265afa319f450122ea5f7b3808034a63e26d7f5e172aa37c86ae6083efa5bb66` |
+| `ops/am5r/am5r-extract.sh` | operator: extract and the replay checks | `ffda29eda2b58d111e1fb1e2bd41d7c7f7165764ce3b0e6f1f1774a48018f7f0` |
 | `ops/am5r/am5r-hand-sample.sh` | operator: the blind hand-check sample, its chunks and prompts | `5190f220f5108d789bd733e69d5bdba88f5082e2eb04f79d2af997190b131b02` |
 | `ops/am5r/am5r-hand-label-mac.sh` | operator, on the Mac: the registered labelling of one stage (prepare, the CLI launch, the recorded subagent fallback, push) | `b9a99cf7e6c4e71966dda102d21d8d00dada4ea0b94066e12cd662e8c7b64096` |
 | `ops/am5r/am5r-hand-merge.sh` | operator: audits the transcripts and merges a labelling stage; writes the one repair stage | `6625a9846881f5a1c360bb6d11828f83c478fe06f2ecdbbec3197080e2ac198f` |
 | `ops/am5r/am5r-hand-receipt.sh` | operator: one stage's text-free receipt, committed before the join | `d07c17abc9f13a9ccaa0299210c08f8571183dbf02b56f2a330ecf752009ad99` |
 | `ops/am5r/am5r-analyze.sh` | operator: analyze twice, tests (dev: dryrun-compare and power) | `15683ba56d732cfe9a18736c827aeddef67934d27fc369447929cf59e9942dad` |
-| `ops/am5r/am5r-stage-evidence.sh` | operator: text-free staging and the text search | `e800ef610979d22bdb36a849132eebd89ce31717666d2fddeb8998511f2feaf2` |
+| `ops/am5r/am5r-stage-evidence.sh` | operator: text-free staging and the text search | `463849acece15c1969a8d51b8d634fd48405c17b317d8cec5443bb7e13e33d65` |
 
 Commands of the registered run, after the freeze. The names in capitals are values that exist only
 then: FREEZE, the freeze commit's full id, and FREEZE8, its first 8 characters (every script that
@@ -916,9 +979,12 @@ otherwise; `am5r-hand-label-mac.sh` refuses a dirty repository on the Mac or ano
 `am5r-image.sh`, `am5r-job-state.sh`, `am5r-hand-receipt.sh` and `am5r-preflight.sh` read records
 only and run no repository code; `am5r-stage-evidence.sh` copies records and runs its text search
 with the system Python. No command waits: `am5r-job-state.sh` prints a job's state once and is
-polled (exit 1 in any state that is not terminal), and when a job has ended it saves the whole
-`scontrol show job` record to `R/ops/scontrol-J.txt`, because Slurm accounting is disabled on the
-node; `am5r-rerun-decision.sh` refuses a job without that record.
+polled, **at most every 120 s while the job runs** (exit 1 in any state that is not terminal), and
+when a job has ended it saves the whole `scontrol show job` record to `R/ops/scontrol-J.txt`,
+because Slurm accounting is disabled on the node and scontrol forgets a job 300 s after it ends;
+when scontrol has already forgotten a GPU job whose lane termination record exists, it saves a
+"forgotten" record instead (section 8). `am5r-rerun-decision.sh` refuses a job without either
+record, and `am5r-extract.sh` refuses a job whose rerun-rule record does not say "complete".
 
 ```bash
 # On the operator's Mac, in the repository (the branch that holds FREEZE):
@@ -930,25 +996,29 @@ bash ~/cotcodec-runs/stage0/am5-ablated-cost-v1/bootstrap/am5r-checkout.sh reg F
 cd ~/cotcodec-runs/stage0/am5-ablated-cost-v1/checkout   # every later host command runs here
 bash ops/am5r/am5r-capsule.sh reg FREEZE8
 bash ops/am5r/am5r-build.sh reg FREEZE8 build                   # prints JB (1 H100, 5 minutes)
-bash ops/am5r/am5r-job-state.sh reg JB                          # poll until it exits 0
+bash ops/am5r/am5r-job-state.sh reg JB                          # poll (at most every 120 s) until
+                                                                # it exits 0
 IMAGE=$(bash ops/am5r/am5r-image.sh reg FREEZE8)                # one line, the image id, after
                                                                 # the provenance and receipt checks;
                                                                 # on a failed build:
-#   bash ops/am5r/am5r-build.sh reg FREEZE8 rebuild (once, into overlay-build-vllm-FREEZE8-r2),
-#   poll it, and capture IMAGE again; a second failure stops the run
+#   bash ops/am5r/am5r-build.sh reg FREEZE8 rebuild (once, into overlay-build-vllm-FREEZE8-r2;
+#   refused after a successful build), poll it, and capture IMAGE again; a second failure stops
+#   the run
 bash ops/am5r/am5r-selftest.sh reg FREEZE8 "$IMAGE" heldout     # prints JS (CPU, no GRES)
 bash ops/am5r/am5r-job-state.sh reg JS                          # poll until it exits 0
 cat R/selftest-heldout-FREEZE8/exits.txt                        # all exit 0
 bash ops/am5r/am5r-submit.sh reg FREEZE8 "$IMAGE" heldout check      # dry run and test-only check
-bash ops/am5r/am5r-submit.sh reg FREEZE8 "$IMAGE" heldout submit     # prints JOB (70 minutes); a
+bash ops/am5r/am5r-submit.sh reg FREEZE8 "$IMAGE" heldout submit     # prints JOB (80 minutes); a
                                                                      # failure before sbatch records
                                                                      # nothing; rerun it
-bash ops/am5r/am5r-job-state.sh reg JOB                              # poll until it exits 0
+bash ops/am5r/am5r-job-state.sh reg JOB                              # poll at most every 120 s
+                                                                     # until it exits 0
 bash ops/am5r/am5r-rerun-decision.sh reg FREEZE8 heldout JOB         # complete | rerun | no-rerun | void
-#   on "rerun" only (am5r-submit.sh refuses without that record):
+#   on "rerun" only (am5r-submit.sh refuses without that record): the first job's id is J0;
 #   am5r-submit.sh reg FREEZE8 "$IMAGE" heldout rerun, poll it, and run am5r-rerun-decision.sh on
 #   the rerun's id, which then replaces JOB below (its own "rerun" is void)
-bash ops/am5r/am5r-extract.sh reg FREEZE8 heldout JOB
+bash ops/am5r/am5r-extract.sh reg FREEZE8 heldout JOB      # refused unless JOB's rerun-rule
+                                                           # record says complete
 bash ops/am5r/am5r-hand-sample.sh reg FREEZE8 JOB          # the blind sample, chunks and prompts -> R/hand
 # On the Mac, in the repository at FREEZE (clean):
 bash ops/am5r/am5r-hand-label-mac.sh reg FREEZE8 first W cli   # claims the stage on the host
@@ -966,7 +1036,9 @@ bash ops/am5r/am5r-hand-receipt.sh reg FREEZE8 first
 #   (the receipts before the join; the staging copies the same files there); its id is
 #   RECEIPT_COMMIT; nothing judge-derived of this run is written to the repository before it
 RECEIPT_COMMIT=... bash ops/am5r/am5r-analyze.sh reg FREEZE8  # analyze twice (byte-identical), tests
-bash ops/am5r/am5r-stage-evidence.sh reg FREEZE8 heldout:JOB
+bash ops/am5r/am5r-stage-evidence.sh reg FREEZE8 heldout:JOB   # after a rerun: heldout:J0 heldout:JOB,
+                                                              # so the incomplete job's records are
+                                                              # staged too
 #   after the evidence commit: delete W and the session's subagents/ transcripts on the Mac
 ```
 

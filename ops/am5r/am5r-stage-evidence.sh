@@ -93,8 +93,14 @@ cp "$R"/extract-*.log "$R"/extract-*.json "$E/logs/" 2>/dev/null || true
 # the development artifact rides along in the held-out job: both artifacts' texts are searched.
 [[ -r $HELD_ART ]] && ARTS+=("$HELD_ART")
 ARTS+=("$DEV_ART")
-# $HOME is written as ~ in records and logs.
-grep -rl "$HOME" "$E" | xargs -r sed -i "s#$HOME#~#g"
+# $HOME is written as ~ in records and logs, the gzipped ones included (pipefail-safe: a grep that
+# finds nothing must not end the script).
+{ grep -rl --exclude='*.gz' "$HOME" "$E" || true; } | xargs -r sed -i "s#$HOME#~#g"
+while IFS= read -r -d '' f; do
+  if gzip -dc "$f" | grep -c "$HOME" > /dev/null; then
+    gzip -dc "$f" | sed "s#$HOME#~#g" | gzip -n > "$f.tmp" && mv "$f.tmp" "$f"
+  fi
+done < <(find "$E" -type f -name '*.gz' -print0)
 # No reply text, question, answer or memory text in the staged tree.
 python3 - "$E" "$R/runs" "${ARTS[@]}" <<'PY'
 import gzip, json, pathlib, sys

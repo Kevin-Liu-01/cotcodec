@@ -160,16 +160,19 @@ of the others.
     user's personal information correctly; it need not cover every point.
 - 1 also if the reply declines to answer and gives no answer: it says that it does not know, that
   the messages do not say, that the information is missing or not enough, or it asks for the
-  missing information.
+  missing information. When you give a 1 for this reason, the note must start with "decline:".
 - 0 if the reply gives an answer that is not the reference answer: a different answer, a guess,
   only part of the information the answer needs, or alternatives none of which is the reference
   answer. A reply that declines and then still offers an answer is labelled by that answer.
 
 Use only the question, the check, the reference text and the reply. Do not look for, open or
 infer any other file, label or result. Write one JSON object per line, in the sample's order:
-{"item_id": "...", "label": 1 or 0, "note": "optional, short"}.
+{"item_id": "...", "label": 1 or 0, "note": "short"}. A note for a 1 given because the reply
+declines starts with decline: (for example "decline: says the messages do not say").
 """
 HAND_CHECK = "answer-or-decline"
+#: The note prefix that marks a 1 given for a decline (registration section 8).
+DECLINE_NOTE = "decline:"
 #: Item roles of the hand plan (registration section 8).
 ROLE_RIGHT = "switched-judged-correct"
 ROLE_WRONG_PRIMARY = "switched-judged-wrong-primary"
@@ -285,8 +288,7 @@ def load_config(path: Path = CONFIG_PATH) -> dict[str, Any]:
         if not isinstance(spec.get("questions"), int) or spec["questions"] < 1:
             raise Am5rError(f"populations.{name}.questions must be a positive integer")
         for key in ("artifact_sha256", "summary_sha256"):
-            pin = spec.get(key)
-            if not (_is_digest(pin) or (name == "heldout" and pin == "PENDING")):
+            if not _is_digest(spec.get(key)):
                 raise Am5rError(f"populations.{name}.{key} must be a SHA-256")
         ref = spec.get("reference") or {}
         if sorted(ref.get("readers", {})) != sorted(READERS) or not ref.get("sha256"):
@@ -360,7 +362,7 @@ def population_spec(config: dict[str, Any], population: str) -> dict[str, Any]:
 def artifact_pin(config: dict[str, Any], population: str) -> str:
     pin = population_spec(config, population)["artifact_sha256"]
     if not _is_digest(pin):
-        raise Am5rError(f"the {population} artifact is not pinned yet (run prepare-heldout)")
+        raise Am5rError(f"the {population} artifact is not pinned")
     return pin
 
 
@@ -1113,6 +1115,30 @@ def replay_checks(
             "pass": bool(anchor.get("r1") and anchor.get("r2"))}  # fmt: skip
 
 
+def job_id_of(run_dir: Path) -> str:
+    """The job id of a run directory, ``R/runs/POP/JOB/am5r``: its parent's name."""
+
+    return Path(run_dir).parent.name
+
+
+def check_rerun_decision(run_dir: Path, decision_path: Path, population: str) -> str:
+    """The job extract may read: the rerun rule's record for it (``am5r-rerun-decision.sh``) must
+    say "complete" and name this job directory and population (registration section 8). Returns
+    the job id."""
+
+    job_id = job_id_of(run_dir)
+    record = g.read_run_json(decision_path, "the rerun rule's record of the job")
+    if not isinstance(record, dict) or record.get("decision") != "complete":
+        why = record.get("decision") if isinstance(record, dict) else record
+        raise Am5rError(f"the rerun rule's record does not say complete ({why}): not extracted")
+    if record.get("job_dir") != job_id or record.get("population") != population:
+        raise Am5rError(
+            f"the rerun rule's record names job {record.get('job_dir')} of "
+            f"{record.get('population')}, not job {job_id} of {population}"
+        )
+    return job_id
+
+
 def part_validation(
     items: Sequence[dict[str, Any]], labels: dict[str, dict[int, int]], part: range
 ) -> dict[str, Any]:
@@ -1130,10 +1156,14 @@ def cmd_extract(args: argparse.Namespace) -> dict[str, Any]:
     population = args.population
     if population == "development":
         for p in (args.run_dir, args.evidence, args.private_dir, args.summary,
-                  args.reference_run_dir):  # fmt: skip
+                  args.reference_run_dir, args.rerun_decision):  # fmt: skip
             check_dev_path(p)
     gate(population)
     refuse_inside_repo(args.private_dir)
+    target = Path(args.private_dir) / f"features-{population}.json.gz"
+    if target.exists():
+        raise Am5rError(f"{target} exists: extract reads one job, once")
+    job_id = check_rerun_decision(Path(args.run_dir), Path(args.rerun_decision), population)
     config = load_config(Path(args.config))
     artifact = load_artifact(config, population, args.evidence)
     pin = artifact_pin(config, population)
@@ -1218,6 +1248,8 @@ def cmd_extract(args: argparse.Namespace) -> dict[str, Any]:
     payload = {
         "experiment": EXPERIMENT,
         "population": population,
+        "job_id": job_id,
+        "rerun_decision_sha256": sha256_file(Path(args.rerun_decision)),
         "arms": list(ARMS),
         "artifact_sha256": pin,
         "question_ids_sha256": spec["question_ids_sha256"],
@@ -1275,15 +1307,14 @@ def cmd_extract(args: argparse.Namespace) -> dict[str, Any]:
         "replay": replay,
         "readers": readers,
     }
-    private = Path(args.private_dir)
-    private.mkdir(parents=True, exist_ok=True)
-    target = private / f"features-{population}.json.gz"
+    Path(args.private_dir).mkdir(parents=True, exist_ok=True)
     write_gz_json(target, payload)
     brief_replay = {k: v for k, v in replay.items() if k != "readers"} | {
         "readers": {r: {k: v for k, v in d.items() if k != "token_differences"}
                     for r, d in replay["readers"].items()}}  # fmt: skip
     return {
         "population": population,
+        "job_id": job_id,
         "readers": {
             r: {k: v for k, v in d.items() if k not in ("pools", "control_pools")}
             for r, d in readers.items()
@@ -1689,6 +1720,11 @@ def cmd_hand_sample(args: argparse.Namespace) -> dict[str, Any]:
     config = load_config(Path(args.config))
     features = read_gz_json(Path(args.features))
     check_features(features, config, population)
+    if features.get("job_id") != job_id_of(Path(args.run_dir)):
+        raise Am5rError(
+            f"{VOID_DIGEST}: the features are job {features.get('job_id')}'s, the "
+            f"run directory is job {job_id_of(Path(args.run_dir))}'s"
+        )
     artifact = load_artifact(config, population, args.evidence)
     plan = hand_plan(features, config)
     lines = _sample_rows(plan, features, artifact, Path(args.run_dir))
@@ -1756,6 +1792,26 @@ def hand_join(
     hand_of = {(i["question_id"], i["reply_digest"]): int(by_id[i["item_id"]])
                for i in plan["items"]}  # fmt: skip
     out["hand_of"] = hand_of
+    notes = {str(row.get("item_id")): str(row.get("note") or "").strip().lower()
+             for row in labels}  # fmt: skip
+    decline = {i["item_id"]: by_id[i["item_id"]] == 1 and notes.get(i["item_id"], "").startswith(
+        DECLINE_NOTE) for i in plan["items"]}  # fmt: skip
+    out["decline_of"] = {(i["question_id"], i["reply_digest"]): decline[i["item_id"]]
+                         for i in plan["items"]}  # fmt: skip
+    out["decline_items"] = sorted(k for k, v in decline.items() if v)
+    by_role_decl: Counter = Counter()
+    for i in plan["items"]:
+        if decline[i["item_id"]]:
+            for role in sorted({u["role"] for u in i["uses"]}):
+                by_role_decl[role] += 1
+    out["decline_notes"] = {
+        "rule": f'a label 1 whose note starts with "{DECLINE_NOTE}" (case-folded): the reply '
+        "declines to answer; counts only, no text",
+        "items": sum(decline.values()),
+        "by_role": dict(sorted(by_role_decl.items())),
+        "label_0_with_decline_note": sum(1 for i in plan["items"] if by_id[i["item_id"]] == 0
+                                         and notes.get(i["item_id"], "").startswith(DECLINE_NOTE)),
+    }  # fmt: skip
     pairs = [(int(i["uses"][0]["judge_primary"]), hand_of[(i["question_id"], i["reply_digest"])])
              for i in plan["items"]]  # fmt: skip
     out["agreement"] = g._agreement(pairs)
@@ -1851,6 +1907,36 @@ def by_type(records: Sequence[dict[str, Any]], gains: dict[str, dict[str, int]])
                 "gain": sum(gains[str(cap)][r["question_id"]] for r in sub),
             }
         out[qtype] = row
+    return out
+
+
+#: The two crude leak flags of the prepare summary (``memcredit_am5.pool_facts``).
+LEAK_FLAGS = {
+    "answer_in_a_pool_memory": "pool_memories_containing_the_answer",
+    "answer_in_a_remaining_user_turn": "remaining_user_turns_containing_the_answer",
+}
+
+
+def leak_breakdown(
+    records: Sequence[dict[str, Any]], facts: dict[str, dict[str, Any]]
+) -> dict[str, Any]:
+    """Descriptive: per crude leak flag (the normalized reference answer as words in a pool memory,
+    or in a remaining user turn) and its value, the questions, and at K = 8 and 70 the switches,
+    the switched replies judged correct and the costs."""
+
+    out: dict[str, Any] = {}
+    for name, key in LEAK_FLAGS.items():
+        out[name] = {}
+        for value in (True, False):
+            sub = [r for r in records if (int(facts[r["question_id"]][key]) > 0) is value]
+            row: dict[str, Any] = {"questions": len(sub)}
+            for cap in CAPS:
+                switched = [r for r in sub if r["caps"][str(cap)]["switched"]]
+                row[str(cap)] = {"switched": len(switched),
+                                 "switched_judged_correct": sum(int(r["caps"][str(cap)]["u"])
+                                                                for r in switched),
+                                 "cost": sum(cost_indicator(r, cap) for r in sub)}  # fmt: skip
+            out[name]["flag" if value else "no_flag"] = row
     return out
 
 
@@ -1994,12 +2080,26 @@ def analyze_population(
     for cap in CAPS:
         sensitivity[str(cap)] = readings_block(recs, gains, cap, hand, resamples, seed, alpha,
                                                non_preference)  # fmt: skip
-    hand_public = {k: v for k, v in hand.items() if k != "hand_of"}
+    hand_public = {k: v for k, v in hand.items() if k not in ("hand_of", "decline_of")}
+    labels_by_id = ({row["item_id"]: int(row["label"]) for row in hand_labels or []}
+                    if hand["status"] == "joined" else None)  # fmt: skip
+    items, item_agreement = a5.labelled_items(features, plan, labels_by_id)
+    declined = set(hand.get("decline_items", []))
+    for item in items:
+        item["decline"] = item["item_id"] in declined if labels_by_id is not None else None
+    facts = {f["question_id"]: f for f in features["leakage_per_question"]}
     descriptive: dict[str, Any] = {"readers": {}}
     hand_of = hand.get("hand_of", {})
     for r in READERS:
         block = a5.ablated_block(recs[r], CAPS, hand_of)
+        decline_of = hand.get("decline_of", {})
+        switched_declines = {
+            str(c): sum(1 for rec in recs[r] if rec["caps"][str(c)]["switched"] and decline_of.get(
+                (rec["question_id"], rec["caps"][str(c)]["digest"]))) for c in CAPS
+        } if hand["status"] == "joined" else None  # fmt: skip
         descriptive["readers"][r] = {
+            "by_leak_flag": leak_breakdown(recs[r], facts),
+            "switched_replies_hand_labelled_declines": switched_declines,
             "step": features["readers"][r]["step"],
             "batch_invariant": features["readers"][r]["batch_invariant"],
             "finish": features["readers"][r]["finish"],
@@ -2051,7 +2151,8 @@ def analyze_population(
         "primary": primary,
         "secondary": secondary,
         "sensitivity_without_preference": sensitivity,
-        "hand_check": hand_public,
+        "hand_check": hand_public | {"agreement_items": item_agreement},
+        "labelled_items": items,
         "descriptive": descriptive,
         "verdicts": {"primary_k8": {r: primary["readers"][r]["reading"] for r in READERS}
                      | {"status": primary["status"]},
@@ -2168,6 +2269,23 @@ def render_markdown(results: dict[str, Any]) -> str:
         lines += [f"Hand against judge (descriptive): {a['agree']} of {a['items']} agree "
                   f"(judge yes, hand no {a['judge_yes_hand_no']}; judge no, hand yes "
                   f"{a['judge_no_hand_yes']}; kappa {_f(a['kappa'], 2)}).", ""]  # fmt: skip
+    if hc["status"] == "joined":
+        dn = hc["decline_notes"]
+        lines += [f"Hand labels of 1 given for a decline (note starting \"{DECLINE_NOTE}\"): "
+                  f"{dn['items']} items, by role {dn['by_role']}; label 0 with such a note: "
+                  f"{dn['label_0_with_decline_note']}.", ""]  # fmt: skip
+    lines += ["## Switches and costs by the crude leak flags (descriptive)", "",
+              "| Reader | flag | value | questions | K = 8: switched, judged correct, cost | "
+              "K = 70: switched, judged correct, cost |", "|---|---|---|---:|---|---|"]  # fmt: skip
+    for r, d in results["descriptive"]["readers"].items():
+        for name, by_value in d["by_leak_flag"].items():
+            for value, row in by_value.items():
+                cells = " | ".join(
+                    ", ".join(str(row[str(c)][f]) for f in ("switched", "switched_judged_correct",
+                                                            "cost"))
+                    for c in CAPS)  # fmt: skip
+                lines.append(f"| {r} | {name} | {value} | {row['questions']} | {cells} |")
+    lines.append("")
     lines += ["## Ablated pools (descriptive)", "",
               "| Reader | K | switch rate | cost (judge) | switched judged correct | top 4 does "
               "not abstain | all 8 abstains | every 4-subset abstains | mean reads |",
@@ -2456,6 +2574,31 @@ def power_cost_gain(
     return {"below": min(1.0, below), "above": min(1.0, above)}
 
 
+def predictive_power(
+    n: int, gains: int, k: int, m: int, alpha: float, directions: Any, grid: int = 200
+) -> dict[str, float]:
+    """The power averaged over the development uncertainty of the cost rate: q ~ Beta(k + 1/2,
+    m - k + 1/2) (Jeffreys' prior and k costs of m development pools), truncated to [0, 0.5],
+    integrated on q = t^2 / 2 with t at ``grid`` midpoints (the substitution removes the density's
+    singularity at 0 when k = 0)."""
+
+    import numpy as np
+
+    t = (np.arange(grid) + 0.5) / grid
+    qs = 0.5 * t * t
+    log_w = (k - 0.5) * np.log(qs) + (m - k - 0.5) * np.log1p(-qs) + np.log(t)
+    w = np.exp(log_w - log_w.max())
+    w /= w.sum()
+    below = above = 0.0
+    for q, weight in zip(qs, w, strict=True):
+        if weight < 1e-10:
+            continue
+        p = power_cost_gain(n, gains, float(q), alpha, directions=directions)
+        below += float(weight) * p["below"]
+        above += float(weight) * p["above"]
+    return {"below": below, "above": above, "any": below + above}
+
+
 def power_report(config: dict[str, Any], am5_results: dict[str, Any]) -> dict[str, Any]:
     """The test's power per reader, the gain side fixed at the known held-out counts, at AM5's
     development cost rates (and their exact upper bounds) and on a grid; Holm rejects a reader at
@@ -2503,10 +2646,17 @@ def power_report(config: dict[str, Any], am5_results: dict[str, Any]) -> dict[st
                                                           d_lo)["above"],
                     "above_alpha_0.05": power_cost_gain(n, gains, q, ALPHA, a, d_hi)["above"]}
                     for a in (1.0, 0.9, 0.8)}  # fmt: skip
+            k, m = int(dev[str(cap)]["count"]), int(dev[str(cap)]["n"])
+            lo = predictive_power(n, gains, k, m, ALPHA / 3, d_lo)
+            hi = predictive_power(n, gains, k, m, ALPHA, d_hi)
+            averaged = {"prior": f"q ~ Beta({k} + 1/2, {m - k} + 1/2) on [0, 0.5]",
+                        **{f"{key}_alpha_0.0167": lo[key] for key in lo},
+                        **{f"{key}_alpha_0.05": hi[key] for key in hi}}  # fmt: skip
             entry["caps"][str(cap)] = {
                 "gains": gains,
                 "gain_rate": gains / n,
                 "scenarios": rows,
+                "averaged_over_development_uncertainty": averaged,
                 "with_the_hand_check": hand,
             }
         out["readers"][r] = entry
@@ -2604,6 +2754,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     extract.add_argument("--summary", required=True)
     extract.add_argument("--private-dir", required=True)
     extract.add_argument("--reference-run-dir", default=None)
+    extract.add_argument("--rerun-decision", required=True)
     hand = sub.add_parser("hand-sample", allow_abbrev=False)
     hand.add_argument("--population", required=True, choices=POPULATIONS)
     hand.add_argument("--run-dir", required=True)

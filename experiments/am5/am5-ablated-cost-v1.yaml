@@ -139,8 +139,9 @@ populations:
 
 # Per job: the Slurm limit and, per step, [min_start_s, max_s]: a step starts only with min_start_s
 # left before the deadline (the limit minus the lane's 210 s), and its passes stop at max_s. The
-# held-out job's budgets are sized with budget.overhead_model (registration section 11; a test
-# simulates the normal, fallback and residual paths). The development job is AM5's job 1487
+# held-out job's budgets are sized with budget.overhead_model, including the driver's wait of up to
+# 120 s after every step for the GPU's memory to be released (registration section 11; a test
+# simulates the normal, fallback and residual paths with every step and wait at its maximum). The development job is AM5's job 1487
 # repeated (6:41 of a 20-minute limit there); its limit is 13 minutes so that the dry run stays
 # within 0.3 GPU-h at the limits (with the 5-minute build), and its budgets fit job 1487's
 # measured timeline, not the worst case.
@@ -156,7 +157,7 @@ jobs:
       judge32: [100, 45]
   heldout:
     gpus: 1
-    minutes: 70
+    minutes: 80
     step_budgets:
       rd-qwen3-8b: [750, 600]
       rd-olmo2: [750, 600]
@@ -164,8 +165,8 @@ jobs:
       rd-qwen35-9b-default: [1150, 1000]
       judge32: [480, 300]
 
-# Physical GPU-hours: the image build (5 min on 1 H100) and the held-out job (70 min), 1.25 GPU-h
-# at the limits; with the one rebuild and the one rerun section 8 allows, 2.50. The development dry
+# Physical GPU-hours: the image build (5 min on 1 H100) and the held-out job (80 min), 1.42 GPU-h
+# at the limits; with the one rebuild and the one rerun section 8 allows, 2.83. The development dry
 # run: a 5-minute build and a 13-minute job, 0.30 at the limits.
 budget:
   build_minutes: 5
@@ -173,12 +174,13 @@ budget:
   # confirmed by job 1480 at 49,274 requests per reader; this job has 29,110): job: the lane's
   # prolog and the driver's model verification; per step: the prompt rendering, the engine start,
   # the smoke pass and the hand-off; failed_engine_step: a batch-invariant engine that refuses to
-  # start, before the fallback runs.
+  # start, before the fallback runs; release: the driver's wait after every step until the GPU's
+  # memory is below 1 GiB (run_step), at most 120 s.
   overhead_model:
     source: "am3g's held-out overhead model (job 1471; job 1480's held-out run fitted inside it)"
-    heldout: {job: 100, reader: 135, failed_engine_step: 125, judge32: 155}
-  registered_cap_gpu_hours: 1.25
-  registered_cap_with_reruns_gpu_hours: 2.5
+    heldout: {job: 100, reader: 135, failed_engine_step: 125, judge32: 155, release: 120}
+  registered_cap_gpu_hours: 1.42
+  registered_cap_with_reruns_gpu_hours: 2.83
   dry_run_cap_gpu_hours: 0.3
 
 analysis:

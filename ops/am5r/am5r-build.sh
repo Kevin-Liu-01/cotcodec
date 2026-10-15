@@ -17,6 +17,9 @@ case "$ACT" in
   build) ROOT="$R/overlay-build-vllm-${SHORT}"
          [[ "$N" == 0 ]] || { echo "a build was submitted already; a second attempt is 'rebuild'" >&2; exit 2; } ;;
   rebuild) [[ "$N" == 1 ]] || { echo "rebuild follows exactly one submitted build ($N recorded)" >&2; exit 2; }
+           B1="$R/overlay-build-vllm-${SHORT}"
+           if [[ -f "$B1/image-id.txt" ]] && python3 -c "import json,sys;sys.exit(json.load(open(sys.argv[1])).get('status')!='PASS')" "$B1/provenance-verification.json" 2>/dev/null; then
+             echo "the build succeeded (image and provenance PASS in $B1): a rebuild follows only a failed build" >&2; exit 2; fi
            ROOT="$R/overlay-build-vllm-${SHORT}-r2" ;;
   *) echo "action is build or rebuild" >&2; exit 2 ;;
 esac

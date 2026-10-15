@@ -80,6 +80,8 @@ def _write_config(tmp_path: Path, mutate) -> Path:
         lambda c: c["populations"]["heldout"].update(arms=["retrieved", "gold"]),
         lambda c: c["populations"]["heldout"].update(split="heldout"),
         lambda c: c["populations"]["development"].update(artifact_sha256="PENDING"),
+        lambda c: c["populations"]["heldout"].update(artifact_sha256="PENDING"),
+        lambda c: c["populations"]["heldout"].update(summary_sha256="PENDING"),
         lambda c: c["populations"]["heldout"]["control"].update(questions=62),
         lambda c: c["populations"]["heldout"]["reference"].update(name="another"),
         lambda c: c["populations"]["heldout"]["gain"]["expected"].pop("70"),
@@ -182,9 +184,10 @@ def test_gain_of_reads_the_records_as_am4s_crosscheck():
 
 def _simulate(config: dict, path: str) -> dict:
     """Worst case of the held-out job under budget.overhead_model: every step takes its overhead
-    plus its full max_s. path: "normal"; "fallback" (OLMo-2's batch-invariant engine fails to
-    start, then its default-mode step runs); "capped-fallback" (OLMo-2's batch-invariant pass is
-    stopped by its max_s, then the fallback runs)."""
+    plus its full max_s, and the driver's GPU-memory release wait after it (run_step) its full 120
+    s. path: "normal"; "fallback" (OLMo-2's batch-invariant engine fails to start, then its
+    default-mode step runs); "capped-fallback" (OLMo-2's batch-invariant pass is stopped by its
+    max_s, then the fallback runs)."""
 
     job = config["jobs"]["heldout"]
     over = config["budget"]["overhead_model"]["heldout"]
@@ -203,7 +206,16 @@ def _simulate(config: dict, path: str) -> dict:
             t += over["failed_engine_step"]
         else:
             t += over["judge32" if sid == "judge32" else "reader"] + max_s
+        t += over["release"]
     return {"started": started, "skipped": skipped, "end": t, "deadline": deadline}
+
+
+def test_the_release_wait_is_run_steps():
+    import inspect
+
+    source = inspect.getsource(r.run_step)
+    assert "release_until = time.time() + 120" in source
+    assert r.load_config()["budget"]["overhead_model"]["heldout"]["release"] == 120
 
 
 @pytest.mark.parametrize("path", ["normal", "fallback", "capped-fallback"])
@@ -247,7 +259,9 @@ def test_the_caps_are_the_limits():
     assert caps["registered_cap_gpu_hours"] == round(
         (jobs["heldout"]["minutes"] + caps["build_minutes"]) / 60, 2
     )
-    assert caps["registered_cap_with_reruns_gpu_hours"] == 2 * caps["registered_cap_gpu_hours"]
+    assert caps["registered_cap_with_reruns_gpu_hours"] == round(
+        2 * (jobs["heldout"]["minutes"] + caps["build_minutes"]) / 60, 2
+    )
     assert caps["dry_run_cap_gpu_hours"] == round(
         (jobs["development"]["minutes"] + caps["build_minutes"]) / 60, 2
     )
@@ -290,7 +304,7 @@ def test_the_heldout_population_is_refused_before_the_freeze(tmp_path, monkeypat
          "--expected-evidence-sha256", "0" * 64],
         ["extract", "--population", "heldout", "--run-dir", str(tmp_path), "--evidence",
          str(dummy), "--summary", str(dummy), "--private-dir", str(tmp_path / "p"),
-         "--reference-run-dir", str(tmp_path)],
+         "--reference-run-dir", str(tmp_path), "--rerun-decision", str(dummy)],
         ["hand-sample", "--population", "heldout", "--run-dir", str(tmp_path), "--evidence",
          str(dummy), "--features", str(dummy), "--hand-dir", str(tmp_path / "h")],
         ["analyze", "--population", "heldout", "--features", str(dummy), "--output-dir",
@@ -364,7 +378,7 @@ def test_heldout_commands_refuse_another_config(tmp_path, capsys):
     other = tmp_path / "config.yaml"
     other.write_text(r.CONFIG_PATH.read_text())
     for argv in (["extract", "--population", "heldout", "--run-dir", "x", "--evidence", "x",
-                  "--summary", "x", "--private-dir", str(tmp_path / "p")],
+                  "--summary", "x", "--private-dir", str(tmp_path / "p"), "--rerun-decision", "x"],
                  ["analyze", "--population", "heldout", "--features", "x", "--output-dir",
                   str(tmp_path / "o")],
                  ["selftest", "--population", "heldout", "--evidence", "x"],
@@ -619,14 +633,19 @@ def _pipeline(tmp_path, monkeypatch, population: str = "heldout", n: int = 12, m
     monkeypatch.setattr(r, "gate", lambda *a, **k: {"population": population})
     monkeypatch.setattr(r, "check_dev_path", lambda *a, **k: None)
     monkeypatch.setattr(r, "load_gain_rows", lambda c, p: gain_rows)
-    run = tmp_path / "run" / r.OUTPUT
+    run = tmp_path / "runs" / population / "1600" / r.OUTPUT
     _write_run(run, artifact, population, config, replies)
+    decision = tmp_path / f"rerun-decision-{population}-1600.json"
+    decision.write_text(json.dumps({"population": population, "job_dir": "1600",
+                                    "decision": "complete"}))  # fmt: skip
     private = tmp_path / "private"
     brief = r.cmd_extract(r.argparse.Namespace(
         config=str(r.CONFIG_PATH), population=population, run_dir=str(run), evidence="x",
-        summary=str(summary), private_dir=str(private), reference_run_dir=str(ref)))  # fmt: skip
+        summary=str(summary), private_dir=str(private), reference_run_dir=str(ref),
+        rerun_decision=str(decision)))  # fmt: skip
     features_path = private / f"features-{population}.json.gz"
     assert brief["features_sha256"] == r.sha256_file(features_path)
+    assert brief["job_id"] == "1600"
     return {
         "config": config,
         "artifact": artifact,
@@ -635,6 +654,8 @@ def _pipeline(tmp_path, monkeypatch, population: str = "heldout", n: int = 12, m
         "ref": ref,
         "summary": summary,
         "brief": brief,
+        "decision": decision,
+        "population": population,
     }
 
 
@@ -681,7 +702,7 @@ def test_the_replay_reference_files_are_checked(tmp_path, monkeypatch):
         r.cmd_extract(r.argparse.Namespace(
             config="x", population="heldout", run_dir=str(ctx["run"]), evidence="x",
             summary=str(ctx["summary"]), private_dir=str(tmp_path / "p2"),
-            reference_run_dir=str(ctx["ref"])))  # fmt: skip
+            reference_run_dir=str(ctx["ref"]), rerun_decision=str(ctx["decision"])))  # fmt: skip
 
 
 def test_validation_items_are_am1s_per_part():
@@ -896,6 +917,12 @@ def _label(row: dict) -> int:
     return int(row["reference"] in reply or reply.startswith("sorry"))
 
 
+def _note(row: dict, label: int) -> str:
+    """The toy labeller's note: "decline: ..." for a 1 given to a refusal."""
+
+    return "decline: says it has nothing" if label and row["reply"].startswith("Sorry") else ""
+
+
 def _hand_check(tmp_path, monkeypatch, ctx, label=_label) -> dict:
     from test_memcredit_am3g import _write_launch, _write_transcript
 
@@ -926,7 +953,8 @@ def _hand_check(tmp_path, monkeypatch, ctx, label=_label) -> dict:
     by_id = {x["item_id"]: x for x in rows}
     _write_launch(hand, "first", manifest)
     for n, chunk in enumerate(manifest["first"], start=1):
-        lines = [json.dumps({"item_id": i, "label": label(by_id[i]), "note": ""})
+        lines = [json.dumps({"item_id": i, "label": label(by_id[i]),
+                             "note": _note(by_id[i], label(by_id[i]))})
                  for i in chunk["items"]]  # fmt: skip
         (hand / chunk["output"]).write_text("\n".join(lines) + "\n")
         _write_transcript(hand, "first", n, chunk)
@@ -969,6 +997,25 @@ def test_extract_hand_check_and_analyze_end_to_end_and_text_free(tmp_path, monke
         assert hand["switched_replies"]["unlabelled"] == 0
         assert hand["cost"] == jb["cost"] - hand["switched_replies"]["judge_no_hand_yes"]
     assert res["sensitivity_without_preference"]["questions"] == 20
+    # Declines are counted from the notes; labelled items carry the leakage facts and both labels.
+    declines = [x for x in hc["rows"] if x["reply"].startswith("Sorry")]
+    assert res["hand_check"]["decline_notes"]["items"] == len(declines) > 0
+    assert res["hand_check"]["decline_notes"]["label_0_with_decline_note"] == 0
+    items = res["labelled_items"]
+    assert [i["item_id"] for i in items] == hc["manifest"]["items"]
+    assert sum(i["decline"] for i in items) == len(declines)
+    assert all(set(i["facts"]) == set(a5.ITEM_FACTS) and i["hand"] in (0, 1) for i in items)
+    for reader in r.READERS:
+        d = res["descriptive"]["readers"][reader]
+        for name in r.LEAK_FLAGS:
+            parts = d["by_leak_flag"][name]
+            assert parts["flag"]["questions"] + parts["no_flag"]["questions"] == 30
+            for cap in ("8", "70"):
+                total = parts["flag"][cap]["cost"] + parts["no_flag"][cap]["cost"]
+                assert total == res["primary" if cap == "8" else "secondary"]["judge"][
+                    "readers"][reader]["cost"]  # fmt: skip
+        assert d["switched_replies_hand_labelled_declines"]["8"] <= d["ablated"]["caps"]["8"][
+            "switch_rate"]["count"]  # fmt: skip
     # Byte-identical on a rerun.
     again = _analyze(tmp_path, ctx, hc, "out2")
     for f in ("results.json", "per-table.json.gz", "tables.md"):
@@ -989,6 +1036,56 @@ def test_extract_hand_check_and_analyze_end_to_end_and_text_free(tmp_path, monke
             output_dir=str(tmp_path / "out3")))  # fmt: skip
     with pytest.raises(r.Am5rError, match="exists"):
         _analyze(tmp_path, ctx, hc, "out")
+
+
+def test_extract_reads_only_a_complete_job_once(tmp_path, monkeypatch):
+    ctx = _pipeline(tmp_path, monkeypatch)
+
+    def extract(decision: Path, private: Path) -> dict:
+        return r.cmd_extract(r.argparse.Namespace(
+            config="x", population="heldout", run_dir=str(ctx["run"]), evidence="x",
+            summary=str(ctx["summary"]), private_dir=str(private),
+            reference_run_dir=str(ctx["ref"]), rerun_decision=str(decision)))  # fmt: skip
+
+    with pytest.raises(r.Am5rError, match="exists"):
+        extract(ctx["decision"], ctx["features"].parent)
+    with pytest.raises(g.Am3gError, match="V2"):
+        extract(tmp_path / "no-decision.json", tmp_path / "p4")
+    for record, why in (({"decision": "no-rerun", "job_dir": "1600", "population": "heldout"},
+                         "does not say complete"),
+                        ({"decision": "void", "job_dir": "1600", "population": "heldout"},
+                         "does not say complete"),
+                        ({"decision": "complete", "job_dir": "1599", "population": "heldout"},
+                         "names job 1599"),
+                        ({"decision": "complete", "job_dir": "1600",
+                          "population": "development"}, "names job")):  # fmt: skip
+        path = tmp_path / "decision.json"
+        path.write_text(json.dumps(record))
+        with pytest.raises(r.Am5rError, match=why):
+            extract(path, tmp_path / "p5")
+    assert not (tmp_path / "p4").exists() and not (tmp_path / "p5").exists()
+    assert r.read_gz_json(ctx["features"])["job_id"] == "1600"
+
+
+def test_hand_sample_refuses_features_of_another_job(tmp_path, monkeypatch):
+    ctx = _pipeline(tmp_path, monkeypatch)
+    other = tmp_path / "runs" / "heldout" / "1601" / r.OUTPUT
+    with pytest.raises(r.Am5rError, match="job 1600's"):
+        r.cmd_hand_sample(r.argparse.Namespace(
+            config="x", population="heldout", run_dir=str(other), evidence="x",
+            features=str(ctx["features"]), hand_dir=str(tmp_path / "hand")))  # fmt: skip
+    assert not (tmp_path / "hand").exists()
+
+
+def test_predictive_power_is_the_power_averaged_over_the_development_rate():
+    n, gains = 60, 6
+    d = r.rejection_directions(n - gains, gains, 0.05)
+    sharp = r.predictive_power(n, gains, 300, 2000, 0.05, d)
+    point = r.power_cost_gain(n, gains, 0.15, 0.05, directions=d)
+    assert abs(sharp["above"] - point["above"]) < 0.03
+    assert sharp["any"] == pytest.approx(sharp["below"] + sharp["above"])
+    vague = r.predictive_power(n, gains, 0, 10, 0.05, d)
+    assert 0 <= vague["below"] <= 1 and 0 <= vague["above"] <= 1
 
 
 def test_the_registered_analysis_needs_the_receipted_labels(tmp_path, monkeypatch):
@@ -1092,7 +1189,7 @@ def test_missing_judge_items_is_a_named_void_not_a_traceback(tmp_path, monkeypat
     code = r.main(["extract", "--population", "heldout", "--run-dir", str(ctx["run"]),
                    "--evidence", "x", "--summary", str(ctx["summary"]),
                    "--private-dir", str(tmp_path / "p3"), "--reference-run-dir",
-                   str(ctx["ref"])])  # fmt: skip
+                   str(ctx["ref"]), "--rerun-decision", str(ctx["decision"])])  # fmt: skip
     err = capsys.readouterr().err
     assert code == 2 and "VOID (V2, incomplete)" in err and "Traceback" not in err
 

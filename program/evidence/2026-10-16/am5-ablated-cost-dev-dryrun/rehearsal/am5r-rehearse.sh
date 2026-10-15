@@ -117,6 +117,11 @@ check "a malformed image-id.txt is refused" "[[ $rc -ne 0 ]]"
 rm -rf "$R/overlay-build-vllm-$SHORT"
 j1=$(bash $O/am5r-build.sh dev "$SHORT" 2>/dev/null)
 check "build submits, prints only its job id and records the attempt" "[[ '$j1' =~ ^[0-9]+\$ && \$(cat $R/ops/build-attempts-$SHORT.txt) == '$j1' ]]"
+# Round 1: a rebuild after a successful build is refused.
+mk_build "$R/overlay-build-vllm-$SHORT" "$BASE_IMG"
+bash $O/am5r-build.sh dev "$SHORT" rebuild > "$BASE/rebuild-ok.out" 2>&1; rc=$?
+check "a rebuild after a successful build is refused (round 1)" "[[ $rc -eq 2 ]] && grep -q 'build succeeded' $BASE/rebuild-ok.out && [[ \$(grep -c . $R/ops/build-attempts-$SHORT.txt) -eq 1 ]]"
+rm -rf "$R/overlay-build-vllm-$SHORT"
 # The build fails before its build root exists (no mk_build here).
 bash $O/am5r-build.sh dev "$SHORT" > /dev/null 2>&1; rc=$?
 check "a second 'build' is refused although the failed build left no build root (check 3)" "[[ $rc -ne 0 && ! -e $R/overlay-build-vllm-$SHORT ]]"
@@ -251,10 +256,32 @@ for c in "9601 no-rerun a hard stop on an incomplete job, even with a failed ste
   check "rerun rule: $why -> $want" "[[ \$(decision $j) == $want ]]"
 done
 
+# --- round 1 (M1): a job that scontrol forgot, and extract's refusals
+fake_job 9700 completed 2026-10-15T10:00:00Z 2026-10-15T11:00:00Z "{'steps':{'rd-qwen3-8b':{'status':'complete'},'rd-olmo2':{'status':'complete'},'rd-qwen35-9b-default':{'status':'complete'},'judge32':{'status':'complete'}},'model_verification':{}}"
+rm -f "$R/ops/scontrol-9700.txt"   # never polled while scontrol knew it
+bash $O/am5r-rerun-decision.sh dev "$SHORT" development 9700 > /dev/null 2>&1; rc=$?
+check "rerun-decision refuses a job with no saved scontrol record (round 1)" "[[ $rc -eq 2 && ! -e $R/rerun-decision-development-9700.json ]]"
+bash $O/am5r-job-state.sh dev 9700 > "$BASE/state-9700.out" 2>&1; rc=$?
+check "job state records a job scontrol forgot when the lane's termination record exists (exit 0) (round 1)" "[[ $rc -eq 0 ]] && grep -q 'JobState=FORGOTTEN' $R/ops/scontrol-9700.txt && grep -q 'Lane_reason=completed' $R/ops/scontrol-9700.txt && grep -q 'job 9700 forgotten by scontrol' $R/ops/jobs.log"
+bash $O/am5r-rerun-decision.sh dev "$SHORT" development 9700 > /dev/null 2>&1
+check "rerun-decision accepts the forgotten record and decides the job (round 1)" "[[ \$(decision 9700) == complete ]]"
+bash $O/am5r-job-state.sh dev 9701 > "$BASE/state-9701.out" 2>&1; rc=$?
+check "job state exits 2, recording nothing, for a forgotten job without a termination record (round 1)" "[[ $rc -eq 2 && ! -e $R/ops/scontrol-9701.txt ]] && grep -q 'no termination record' $BASE/state-9701.out"
+bash $O/am5r-extract.sh dev "$SHORT" development 9701 > "$BASE/extract-9701.out" 2>&1; rc=$?
+check "extract refuses a job without a rerun-rule record (round 1)" "[[ $rc -eq 2 ]] && grep -q 'does not say complete' $BASE/extract-9701.out && [[ ! -e $R/extract-development-$SHORT.log ]]"
+for j in 9601 9602 9606; do
+  bash $O/am5r-extract.sh dev "$SHORT" development "$j" > "$BASE/extract-$j.out" 2>&1; rc=$?
+  check "extract refuses job $j, whose rerun-rule record says $(decision $j) (round 1)" "[[ $rc -eq 2 ]] && grep -q 'does not say complete' $BASE/extract-$j.out && [[ ! -e $R/extract-development-$SHORT.log ]]"
+done
+
 # --- the blind hand check's records and the Mac's labelling script (check 3: major 1, minors 3, 5, 8)
 mkdir -p "$R/private" "$R/runs/development"
 cp "$REAL_R/private/features-development.json.gz" "$R/private/"
 ln -s "$REAL_R/runs/development/$DEV_JOB" "$R/runs/development/$DEV_JOB"
+bash $O/am5r-extract.sh dev "$SHORT" development 9605 > "$BASE/extract-9605.out" 2>&1; rc=$?
+check "extract refuses to overwrite existing features, even for a complete job (round 1)" "[[ $rc -eq 2 ]] && grep -q 'extract runs once' $BASE/extract-9605.out && [[ ! -e $R/extract-development-$SHORT.log ]]"
+bash $O/am5r-hand-sample.sh dev "$SHORT" 9605 > "$BASE/hand-9605.out" 2>&1; rc=$?
+check "hand-sample refuses features of another job, writing no sample (round 1)" "[[ $rc -eq 2 && ! -e $R/hand && ! -e $R/hand-sample-$SHORT.json ]] && grep -q \"job $DEV_JOB's, the run directory is job 9605's\" $BASE/hand-9605.out"
 bash $O/am5r-hand-sample.sh dev "$SHORT" "$DEV_JOB" > /dev/null 2>&1; rc=$?
 check "hand-sample draws the development sample" "[[ $rc -eq 0 && -s $R/hand-sample-$SHORT.json && -f $R/hand/hand-first-chunk-01.jsonl ]]"
 h0=$(sha256sum "$R/hand-sample-$SHORT.json")
@@ -313,5 +340,5 @@ bash $O/am5r-hand-merge.sh dev "$SHORT" first > "$BASE/merge-2.out" 2>&1; rc=$?
 check "an extra transcript is visible (2 attempts for chunk 01) and voids the hand check: empty final labels, no repair" "[[ $rc -eq 0 && ! -s $R/hand/hand-labels.jsonl && ! -e $R/hand/hand-repair-sample.jsonl ]] && python3 -c \"import json,sys;d=json.load(open('$R/hand-merge-first-$SHORT.json'));sys.exit(not (d['void'] and d['labelling_attempts']==2))\""
 bash $O/am5r-hand-receipt.sh dev "$SHORT" first > /dev/null 2>&1; rc=$?
 check "the receipt of the void stage records it" "[[ $rc -eq 0 ]] && python3 -c \"import json,sys;d=json.load(open('$R/hand-check/hand-receipt-first.json'));sys.exit(not (d['void'] and d['labelling_attempts']=={'01':2} and d['matching_subagent_transcripts']==2))\""
-rm -f "$A/study-artifact.json" "$R/private/features-development.json.gz"
+rm -f "$A/ablated-artifact.json" "$R/private/features-development.json.gz"
 echo "rehearsal $SHORT: $pass passed, $fail failed"
