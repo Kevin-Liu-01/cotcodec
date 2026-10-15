@@ -31,6 +31,8 @@ receipt = {
     "labeller_model": manifest["labeller_model"],
     "labeller_launch": ((h / f"labeller-{stage}.txt").read_text().strip()
                         if (h / f"labeller-{stage}.txt").is_file() else None),
+    "cli_error_sha256": (digest(h / f"labeller-{stage}-cli-error.txt")
+                         if (h / f"labeller-{stage}-cli-error.txt").is_file() else None),
     "labeller_prompt_sha256": manifest["labeller_prompt_sha256"],
     "instructions_sha256": manifest["instructions_sha256"],
     "sample_sha256": manifest["sample_sha256"],

@@ -789,8 +789,8 @@ parses this table and refuses to run unless every file matches.
 | `ops/am3g/am3g-image.sh` | operator: the built image id, after its provenance and receipt checks | `eece44202eee8172dac412ccdc8e3c5f8adf377d070914692bddae1872bfa65d` |
 | `ops/am3g/am3g-rerun-decision.sh` | operator: the mechanical rerun rule | `9f7aaa98d44f291e81aa612e1e9612bf6b8c2c6872df82bdde5ddda0a07224c1` |
 | `ops/am3g/am3g-hand-sample.sh` | operator: H1's blind hand-check sample | `82e5a34db467e9fc6660c33f1794eb2fb6c1863303ededa4e62ca3491fdbee78` |
-| `ops/am3g/am3g-hand-receipt.sh` | operator: the hand labels' receipt, committed before the join | `82909d09e78b4afb1ac75d458c1005d984dab98776818aa231cfee468195e6a6` |
-| `ops/am3g/am3g-hand-label-mac.sh` | operator, on the Mac: the registered labelling of one stage, chunk by chunk | `a99fe4a84b6d74e1102a3e0750ba2da5ba8d851e07d263bc5e2bd368ed3ffb20` |
+| `ops/am3g/am3g-hand-receipt.sh` | operator: the hand labels' receipt, committed before the join | `7d3650859d66a4f26f3baa98b757b95349b811414004e6294fa3890f2b4276c7` |
+| `ops/am3g/am3g-hand-label-mac.sh` | operator, on the Mac: the registered labelling of one stage, chunk by chunk | `ad200098a36ca59402b6fc36de316829c87ab9bfd97d9a3344fde217db23a4d3` |
 | `ops/am3g/am3g-hand-merge.sh` | operator: merges a labelling stage; writes the one repair stage | `1282e19908c6cb35485a31595fa79ae32c80c26b6ae0983fe67cd42cbb7bd04e` |
 | `scripts/verify_compute_provenance.py` | the lane, inside the container: image provenance | `ca62d62ae5c0e820a08574d5c5b1227c4495a24f3abcf342a1ae3ff1958d54ba` |
 | `scripts/check_compute_env.sh` | the lane, inside the container: environment doctor | `76fc5d64f7e84fd1e93340688b6be845d97f01c4791981c31ac8e70d66ff08ff` |

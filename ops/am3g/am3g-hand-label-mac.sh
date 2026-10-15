@@ -17,7 +17,8 @@
 #     only: a transcript may quote the sample), with the transcripts' SHA-256 in
 #     R/hand/transcripts-<stage>.sha256 and the launch used ("cli" or "subagent") in
 #     R/hand/labeller-<stage>.txt, all for the receipt. A stage is pushed once.
-#   The fallback, only when the CLI cannot start a session (its error is kept): after prepare,
+#   The fallback, only when the CLI cannot start a session on chunk 01 (cli then stops with exit
+#     3 before any other chunk, and push sends its error to R/hand/labeller-<stage>-cli-error.txt):
 #     the operator's Claude Code session launches, per chunk and in order, a fresh subagent with
 #     model claude-opus-5-5 and prompt-NN-abs.txt as its whole prompt, saves that subagent's
 #     transcript as W/<stage>/transcript-NN.jsonl, and runs push with the launch "subagent".
@@ -64,6 +65,9 @@ PY
   echo "prepared $n chunks in $S" >&2
 }
 
+# 0 when the CLI ran chunk 01 (its transcript holds an assistant message); 1 when it could not
+# start a session there, in which case nothing else is launched and its output is kept as
+# cli-error-01.* for push.
 run_cli() {
   local n=0 nn d chunk output t
   while read -r chunk output; do
@@ -72,6 +76,14 @@ run_cli() {
        --tools Read,Write --permission-mode acceptEdits --no-session-persistence \
        --output-format stream-json --verbose "$(cat "../prompt-$nn.txt")" < /dev/null > "$t" \
        2> "$S/transcript-$nn.stderr") || echo "chunk $nn: the labeller exited non-zero" >&2
+    if [[ "$n" == 1 ]] && ! grep -q '"type": *"assistant"' "$t"; then
+      mv "$t" "$S/cli-error-01.jsonl"; mv "$S/transcript-01.stderr" "$S/cli-error-01.stderr"
+      rm -f "$d/$output"
+      echo "the CLI could not start a session on chunk 01 ($S/cli-error-01.*); the fallback" \
+        "applies: one fresh subagent per chunk with prompt-NN-abs.txt, its transcript saved as" \
+        "$S/transcript-NN.jsonl, then: $0 $MODE $SHORT $STAGE $W push subagent" >&2
+      return 1
+    fi
   done < "$S/chunks.txt"
 }
 
@@ -93,6 +105,10 @@ push() {
     fi
   done < "$S/chunks.txt"
   echo "$LAUNCH" > "$S/labeller.txt"
+  if [[ -f "$S/cli-error-01.stderr" ]]; then
+    cat "$S/cli-error-01.stderr" "$S/cli-error-01.jsonl" > "$S/cli-error.txt"
+    scp -q "$S/cli-error.txt" "$HOST:$R/hand/labeller-$STAGE-cli-error.txt" < /dev/null
+  fi
   scp -q "$S/labeller.txt" "$HOST:$R/hand/labeller-$STAGE.txt" < /dev/null
   scp -q "$S/transcripts.sha256" "$HOST:$R/hand/transcripts-$STAGE.sha256" < /dev/null
   echo "pushed $n chunks of stage $STAGE (launch $LAUNCH); next, on the host: am3g-hand-merge.sh $MODE $SHORT $STAGE" >&2
@@ -100,7 +116,7 @@ push() {
 
 case "$ACT" in
   cli) [[ "$LAUNCH" == cli ]] || { echo "the cli action pushes with the launch cli" >&2; exit 2; }
-       prepare; run_cli; push ;;
+       prepare; run_cli || exit 3; push ;;
   prepare) prepare ;;
   push) push ;;
   *) echo "action is cli, prepare or push" >&2; exit 2 ;;
