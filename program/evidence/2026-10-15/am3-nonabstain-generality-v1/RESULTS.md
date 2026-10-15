@@ -184,3 +184,18 @@ A fresh verifier checked the run from scratch.
   records, including the saved `scontrol` records.
 - **What stays on the host.** The reply texts, features and hand-label texts stay under
   `~/cotcodec-runs/stage0/am3-nonabstain-generality-v1/`.
+
+## Post-run test maintenance (2026-10-15, after the run; no data, result or registration change)
+
+`main` changed `models/registry.yaml` in `2baacac2` (D122, the Kimi-K2.6 entry). The frozen
+registration's section 16 pins that file, so
+`tests/test_memcredit_am3g.py::test_gate_opens_with_a_scratch_ledger_row_and_matching_pins`,
+which compared section 16's pins with the working tree, failed from then on (found while
+preparing `am5-ablated-cost-v2`, D123). After a registration's run is complete the working tree
+legitimately moves on, so that test, and only that test, was changed: when the real ledger holds
+this registration's row (row 25), it checks the pins against the files at the freeze commit (the
+row's `git_head_at_freeze`, `78e9c00f`; the ledger commit `6384f294` adds only the row) and that
+the registration file is still the frozen one; before a freeze it keeps the scratch-ledger check
+against the working tree. The registration file, the code, the results and every other test are
+unchanged. The changed test file no longer matches its own section 16 pin, which the test now
+reads at the freeze commit.

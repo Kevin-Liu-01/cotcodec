@@ -997,7 +997,7 @@ parses this table and refuses to run unless every file matches.
 | `scripts/memcredit_am3.py` | AM3's engine helpers, rule and per-pool helpers (imported) | `25f634edd29a23f2fdee12b0825013d624aa5305d49cf512f74fdf1827ea130f` |
 | `experiments/am3/am3-reader-replication-v1.yaml` | AM3's config (the reader blocks) | `525ebf29e80941ef02e646e04c66fdaa40aba67f6bb0dbb9d5926c68befa07c4` |
 | `tests/test_memcredit_am3.py` | AM3's tests (supply a pass writer to these tests) | `1ab5196ca553f8cc92deda0a728ec98987853ec81d3f75041561661659d848b3` |
-| `tests/test_memcredit_am3g.py` | am3g's tests (supply the transcript and launch writers to these tests) | `e4f5f152e5dc6e89bdaa0eed94dfbb21f02dde36001b32813d2fd638e928032e` |
+| `tests/test_memcredit_am3g.py` | am3g's tests (supply the transcript and launch writers to these tests) | `67bd78f8a16a0b8e304bac9102995ee2d7e143b6fde76dc7b5eb4c1aec9355a1` |
 | `scripts/memcredit_keepset_search.py` | McNemar, paired readings, reads, ledger and pin parsing | `3fbb804328bd310a6c8626f408d0d1b44a4624f06829a0762e3afc6134add584` |
 | `scripts/memcredit_cost_curve.py` | table decoding (imported by am3g) | `431f4cb21ccd398e1433e29a5b40c1a697d48b9aecc5fc728956f819e28c9bab` |
 | `scripts/memcredit_label_free.py` | AM1d's abstention patterns, BM25 order | `721015de434021a72ab3bbbab5e91d0de39a2fc359df7283068f83026dcb9d8f` |
@@ -1160,7 +1160,8 @@ Before the freeze, by the orchestrator:
    held-out artifact, the dataset file), that the registration root's `inputs/` directory and its
    two files are read-only, and that `git diff 9d66c4c4 --
    program/evidence/2026-10-15/am3-nonabstain-generality-v1 program/evidence/2026-10-16/am4-read-caps
-   program/evidence/2026-10-16/am5-evidence-ablated` is empty.
+   program/evidence/2026-10-16/am5-evidence-ablated` shows no change but the post-run
+   test-maintenance note appended to am3g's `RESULTS.md` (section 19, v2).
 6. The fill commit rewrites the status line (line 3) to the frozen wording that am3g uses
    ("**Status: frozen in `program/preregistrations/ledger.jsonl`; see the ledger row for the freeze
    time and `git_head_at_freeze`.**"). The file must then contain no to-be-decided marker and no
@@ -1261,3 +1262,12 @@ host directory deleted afterwards. The memcredit tests on the host: every test o
 registration, AM5 and AM3 passed; the one failure is am3g's own gate test, which fails the same
 way on `main` because `models/registry.yaml`, pinned by am3g's frozen section 16, changed in D122;
 this registration never calls am3g's gate.
+
+*Post-run test maintenance of am3g (after D123).* am3g's gate test compared its frozen section
+16 with the working tree and failed once D122 changed `models/registry.yaml`. That test alone was
+changed to check the pins at am3g's freeze commit (`git_head_at_freeze`) once the ledger holds its
+row, with a note appended to am3g's `RESULTS.md`; am3g's registration and every other file are
+unchanged. The other frozen-and-run memcredit registrations' pin tests (`am1-memory-credit-v1`,
+`am1-keepset-search-v1`) pass against the working tree and were not changed. v2 pins
+`tests/test_memcredit_am3g.py`, so its section 16 row is re-pinned; section 17 step 5 allows that
+one note in am3g's evidence directory.
