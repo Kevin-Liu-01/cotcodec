@@ -1,0 +1,30 @@
+{
+  "chunk_size": 60,
+  "chunks": 1,
+  "features_sha256": "5e2e336669e7cbd169bbd73de1c6ad44824d7dba6c3653760bf8d81ed26bb856",
+  "instructions_sha256": "2c127f82c4ef7aef441a0fab6731152a03bd35706e84de612806f48c160d0943",
+  "items": 27,
+  "labeller_model": "claude-opus-5-5",
+  "labeller_prompt_sha256": "98c35ceac9710033b095f01abe4a5fc98f6ed3a597b461e12a98ac213a7ae096",
+  "plan_sha256": "85497ef8075304320f2715cbc2c0b3aea4b05ad157b3504ceddd0116e17aa8b8",
+  "population": "development",
+  "readers": {
+    "development": {
+      "olmo-2-1124-7b-instruct": {
+        "discordant_questions": 4,
+        "distractor_questions": 4,
+        "distractors_where_it_kept_top4": 0,
+        "distractors_where_the_rule_switched": 4,
+        "switched_shortfall": 0
+      },
+      "qwen3.5-9b": {
+        "discordant_questions": 3,
+        "distractor_questions": 3,
+        "distractors_where_it_kept_top4": 0,
+        "distractors_where_the_rule_switched": 3,
+        "switched_shortfall": 0
+      }
+    }
+  },
+  "sample_sha256": "9597c6cac436d11ed3d5378bda3f6e75e8a97be966ffd23cecd4e02506c2bb0d"
+}
