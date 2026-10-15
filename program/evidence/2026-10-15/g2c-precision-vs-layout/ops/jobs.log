@@ -20,3 +20,6 @@
 2026-10-15T00:54:21Z CPU analysis (both models, git df4f35d4) submitted: 1433 (no GRES)
 2026-10-15T00:54:38Z note: smoke teacher-force 1422 COMPLETED 0:0 RunTime 00:01:00 as observed at completion (r1 24, r4 4); the scontrol captures of 1414, 1418 and 1420 taken at completion were overwritten at 00:54Z by a re-capture after their records expired; their RunTimes as observed at completion (00:05:34, 00:21:37, 00:24:36) are in the lines above and match the lane intervals within 1 s
 2026-10-15T00:58:26Z CPU analysis (both models, git 7f7143af, adds the same-seed pairs) submitted: 1437 (no GRES)
+2026-10-15T01:03:08Z CPU analysis (final, git 4273c223: figure layout only) submitted: 1438 (no GRES)
+2026-10-15T01:10:04Z CPU checks at 1e7ed676 submitted: 1442 (no GRES)
+2026-10-15T01:17:33Z CPU checks 1442 done at 1e7ed676: ruff clean; full pytest 3291 passed, 2 failed (tests/test_r04_evidence.py, tests/test_r04_nuisance.py; both also fail at a213572e); architecture and provider validators pass; seed-42 reproduction exact

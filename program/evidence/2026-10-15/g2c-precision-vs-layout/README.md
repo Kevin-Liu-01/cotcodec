@@ -15,9 +15,10 @@
     95% CI over prompts [0.99, 1.01]) and 0.0352 against 0.0365 on the 9B (0.96 [0.94, 0.99]).
     The within-sequence growth is the same: +1.31e-3 against +1.33e-3 per 1K tokens on the 4B,
     and +1.46e-3 against +1.46e-3 on the 9B (differences include 0).
-  - On the 4B the forced-block rollouts are G2b's bf16 rollouts, token for token: 66 of 72 are
-    identical up to the shorter of the two (27 to the end, the rest until the time budget cut
-    one of them), and 99.96% of the decode log-probs on the shared tokens are bit-equal. On the
+  - On the 4B the forced-block rollouts are G2b's bf16 rollouts, token for token: 27 of 72 are
+    identical to their EOS, 39 more are identical until the time budget cut both (bf16_b528 108
+    tokens earlier), 6 diverge, and 99.96% of the decode log-probs on the shared tokens are
+    bit-equal. On the
     9B they diverge after a median 220 tokens, as any two arms do, but the drift statistics
     still match.
   - fp16, at bf16's layout and memory, removes most of the drift: 0.0151 (4B) and 0.0124 (9B),
@@ -116,7 +117,7 @@ All GPU jobs used the docker-research lane through `scripts/submit_docker_resear
 `3833d544` (the G2b route: retained source capsule, offline overlay builds), Slurm GRES and time
 limits, and lane receipts (`jobs/`). GPU-h are physical: GPUs times the Slurm `RunTime`.
 - `RunTime` was read with `scontrol` at completion for every GPU job and logged in
-  `ops/jobs.log`. Records are committed for the builds (`builds/scontrol-build-*.txt`) and for
+  `ops/jobs.log` (1422's in a later note). Records are committed for the builds (`builds/scontrol-build-*.txt`) and for
   1428 and 1431. The captures for 1414, 1418 and 1420 were overwritten by a later re-capture
   after the records had expired, and 1422's was not captured (Problems). For all four, the
   logged `RunTime` equals the lane interval (`job.env` started_at to `termination.env`
@@ -138,7 +139,7 @@ limits, and lane receipts (`jobs/`). GPU-h are physical: GPUs times the Slurm `R
 | 1431 | teacher forcing 9B: r1 (144), r4 (32) | research | 00:10:15 | 0.1708 | COMPLETED 0:0 |
 | 1423-1425 | CPU: analysis dry runs on the smoke outputs (1423 and 1424 failed, Problems) | host checkouts | <1 min | 0 | 1425 pass |
 | 1433, 1437, 1438 | CPU: analysis at `df4f35d4`, `7f7143af` (adds the same-seed pairs), `4273c223` (figure layout only; tables identical) | host checkouts | ~1 min each | 0 | done |
-| @@CHECKS_JOB@@ | CPU: lint, tests, validators at the final commit | host checkout | | 0 | @@CHECKS_OUTCOME@@ |
+| 1442 | CPU: ruff on the new files, the full test suite, validators, the seed-42 reproduction (`ops/checks-cpu.sbatch`) at `1e7ed676` | host checkout | ~7 min | 0 | ruff clean; 3,291 tests pass, 2 fail (`test_r04_evidence.py`, `test_r04_nuisance.py`, which fail the same way at `a213572e`, before this branch's code); validators pass; seed-42 rows reproduce exactly |
 | | **Total** | | 4,377 GPU-s | **1.2158** | of the 1.5 cap |
 
 ## Design as run
@@ -202,7 +203,7 @@ Arm contrasts on the decode path (bootstrap over prompts):
 | Contrast | 4B mean abs ratio | 4B slope difference per 1K | 9B mean abs ratio | 9B slope difference per 1K |
 |---|---|---|---|---|
 | bf16_b528 / bf16 (layout only) | 1.00 [0.99, 1.01] | -1.2e-5 [-3.2e-5, +1.1e-6] | 0.96 [0.94, 0.99] | -2.5e-6 [-7.7e-5, +7.5e-5] |
-| fp16 / bf16 (number format only) | 0.42 [0.39, 0.45] | -7.5e-4 [-8.6e-4, -6.6e-4] | 0.34 [0.32, 0.36] | -1.0e-3 [-1.1e-3, -9.2e-4] |
+| fp16 / bf16 (state dtype only) | 0.42 [0.39, 0.45] | -7.5e-4 [-8.6e-4, -6.6e-4] | 0.34 [0.32, 0.36] | -1.0e-3 [-1.1e-3, -9.2e-4] |
 | fp16 / fp32 | 1.96 [1.83, 2.05] | +5.7e-4 [+5.3e-4, +6.2e-4] | 1.67 [1.56, 1.77] | +4.4e-4 [+4.1e-4, +4.7e-4] |
 | bf16_b528 / fp32 | 4.64 [4.34, 4.87] | +1.31e-3 [+1.22e-3, +1.42e-3] | 4.74 [4.48, 4.96] | +1.45e-3 [+1.37e-3, +1.54e-3] |
 
@@ -247,7 +248,7 @@ r4 subset (seed 42, 16 prompts) of each arm.
 
 ### Same prompt and seed across arms
 
-| Model | Pair | Identical to the end | Identical up to the shorter | Shared prefix median [IQR] | Decode mean |d| on the shared prefix | Bit-equal decode log-probs |
+| Model | Pair | Identical to the end | Identical up to the shorter | Shared prefix median [IQR] | Decode mean abs difference on the shared prefix | Bit-equal decode log-probs |
 |---|---|---:|---:|---|---:|---:|
 | 4B | bf16_b528 vs bf16 | 27 / 72 | 66 / 72 | 31,687 [7,819, 31,687] | 0.000003 | 99.96% |
 | 4B | fp16 vs fp32 | 0 | 0 | 242 [92, 454] | 0.0045 | 22.9% |
@@ -270,7 +271,7 @@ the two arms match.
 | 4B | fp32 (G2b) | 57 | 15 | 0 | 17,562 | 23 / 36 / 49 / 51 | 52 |
 | 4B | bf16 (G2b) | 32 | 0 | 40 (at 31,795) | 31,795 | 17 / 26 / 28 / 31 | 29 |
 | 4B | **fp16** | 54 | 18 | 0 | 21,468 | 21 / 31 / 43 / 50 | 47 |
-| 4B | **bf16_b528** | 31 | 0 | 41 (at 31,687) | 31,687 | 17 / 26 / 27 / 30 | 28 |
+| 4B | **bf16_b528** | 31 | 0 | 41 (at 31,687-31,688) | 31,687 | 17 / 26 / 27 / 30 | 28 |
 | 9B | fp32 (G2b) | 65 | 7 | 0 | 13,748 | 22 / 38 / 52 / 62 | 58 |
 | 9B | bf16 (G2b) | 37 | 35 | 0 | 30,056 | 18 / 29 / 33 / 33 | 33 |
 | 9B | **fp16** | 65 | 7 | 0 | 15,096 | 20 / 38 / 51 / 59 | 57 |
@@ -408,7 +409,7 @@ teacher-forcing inputs.
 
 Code: `experiments/g2/g2c-precision-layout-v1.yaml`, `harness/g2c_precision_layout.py`,
 `scripts/run_g2c_rollouts.py`, `scripts/run_g2c_teacher_force.py`,
-`scripts/analyze_g2c_precision_layout.py`, and `tests/test_g2c_precision_layout.py` (23 tests,
+`scripts/analyze_g2c_precision_layout.py`, and `tests/test_g2c_precision_layout.py` (22 tests,
 among them: the config refuses tampering and inherits G2b's settings; the block rule reproduces
 G2b's resolved blocks and paddings and predicts 544 for fp32 at 272; the four-arm contrasts
 recover injected effects; the committed G2b seed-42 subsets reproduce G2b's committed numbers).

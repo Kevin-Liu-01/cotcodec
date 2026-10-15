@@ -5791,7 +5791,8 @@ they say so.)
   prefill in each arm's own engine): 1418 (4B), 1420 (9B); teacher forcing r1 (all 144) and r4
   (32): 1428, 1431. **1.2158 physical GPU-h of the 1.5 cap.** CPU: source checks 1403 and 1409
   (with selftests), analysis dry runs 1423-1425 (two early failures, fixed), analyses 1433,
-  1437, 1438, checks @@CHECKS_JOB@@. No fresh-job resume test (AGENTS.md hard rule 2): the
+  1437, 1438, checks 1442 (ruff clean; 3,291 tests pass; the 2 failures, both r04 tests, fail
+  the same way at `a213572e`). No fresh-job resume test (AGENTS.md hard rule 2): the
   disclosed exemption G2b used.
 - Readings (exploratory, one stack, 72 rollouts per arm and model):
   - Precision drives the drift; the layout does not. bf16_b528's rollout-vs-trainer mean
