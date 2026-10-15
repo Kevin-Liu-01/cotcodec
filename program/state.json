@@ -491,7 +491,8 @@
     "q2-stage1-successor-e-v1",
     "q2-zinv-reserve-validation-v1",
     "am1-memory-credit-v1",
-    "am1-keepset-search-v1"
+    "am1-keepset-search-v1",
+    "am3-nonabstain-generality-v1"
   ],
   "infrastructure": {
     "serving_probe": "v1 and v2 done (1.15 GPU-h): cu129 vLLM works on R570; Q1 sampling within cap; Q2 ladder needs rescoping",
@@ -1606,6 +1607,13 @@
       "label": "COMPLETE, CONFIRMATORY, VERIFIED (fresh verifier: features digest and all outputs byte-identical, independent recomputation exact; no gauntlet score, D115; H-B descriptive, D116): H-A INCONCLUSIVE (A1-A6 SEARCH_BETTER, A7 greedy backward NOT_SEPARATED); H-C NONABSTAIN_HELPS",
       "outcome": "CPU only on AM1's 694 held-out tables and job 1458's reader pass (no GPU, no new model call): H-A retrieved B = 4, 251 tables, direct search minus rule: LOO@9 -0.151, SNIPW-64 equal calls -0.078, SNIPW-64 vs search@26 -0.049, MSR-Banzhaf-64@64 -0.076, MSR-64 vs search@26 -0.042, perm-Shapley-16 vs search@26 -0.096 (all SEARCH_BETTER), greedy backward@26 -0.032 upper bound +0.0014 (NOT_SEPARATED); H-C nonabstain-BM25 0.571 vs BM25 top 4 0.458 (+0.112 [0.081, 0.147], 39 vs 0, exact p 3.6e-12), median 1 read; descriptive: BM25 top 4 minus all 8 -0.066 (15 vs 38), nonabstain-BM25 minus all 8 +0.046 (33 vs 17, p 0.033)",
       "evidence": "program/evidence/2026-10-16/am1-keepset-search/RESULTS.md"
+    },
+    {
+      "registration": "am3-nonabstain-generality-v1",
+      "date": "2026-10-15",
+      "label": "COMPLETE, CONFIRMATORY, VERIFIED (fresh verifier: analyze byte-identical from a new export, extract digests reproduced, independent recomputation exact; no gauntlet score, D118; agent hand labels, D9): H1 NONABSTAIN_HELPS for OLMo-2 and Qwen3.5-9B, hand-confirmed; H2 descriptive, JUDGE_QUALIFIED (G-J2 26/30)",
+      "outcome": "jobs 1475 (build), 1480 (held-out, 33:01), 1482 (abstention, 06:13): 0.6722 GPU-h. Anchor Qwen3-8B replayed job 1458 token for token on 49,274 of 49,274 and reproduced 39 vs 0. H1 retrieved, Qwen3-32B: OLMo-2 0.329 -> 0.429 (35 vs 0, Holm p 1.2e-10), Qwen3.5-9B 0.464 -> 0.553 (31 vs 0, Holm p 9.3e-10); blind hand check confirms both (35/0, 31/0; agreement 274/278, kappa 0.967). H2 on LongMemEval-S's 30 abstention questions (descriptive, judge-qualified): cost rates Qwen3-8B 5/30, OLMo-2 8/30, Qwen3.5-9B 1/30 (hand 0/30); natural-mix net +0.096, +0.079, +0.082; break-even unanswerable share 0.40, 0.27, 0.73. Unanswerable questions cost a median of 70 reads",
+      "evidence": "program/evidence/2026-10-15/am3-nonabstain-generality-v1/RESULTS.md"
     }
   ]
 }

@@ -5995,3 +5995,24 @@ they say so.)
 - A fresh verifier reproduced the features and outputs byte for byte and recomputed every
   headline number independently.
 - Evidence: `program/evidence/2026-10-16/am1-keepset-search/RESULTS.md`.
+
+## 2026-10-15 — `am3-nonabstain-generality-v1` (CONFIRMATORY, frozen, ledger row 25; GPU 0.67 h): H1 NONABSTAIN_HELPS for OLMo-2 and Qwen3.5-9B (hand-confirmed); H2 cost on unanswerable questions 1-8 of 30 (descriptive, judge-qualified); verified
+
+- Process. Drafted from D118, checked three times by independent checkers, filled at
+  `78e9c00f` and frozen at `6384f294`.
+- Run. Section 16 ran once: build 1475, selftests 1476 and 1477, held-out job 1480, abstention
+  job 1482. No rerun was needed.
+- Hand labels. Blind, 278 items in 5 chunks, one subagent per chunk with audited transcripts.
+  The receipt `417d1149` came before analyze.
+- H1 (Qwen3-32B, retrieved arm):
+  - OLMo-2: 0.329 to 0.429, 35 against 0;
+  - Qwen3.5-9B: 0.464 to 0.553, 31 against 0;
+  - the hand labels confirm both (agreement 274 of 278, kappa 0.967);
+  - the anchor replays job 1458 token for token and reproduces 39 against 0.
+- H2 (30 abstention questions, descriptive, JUDGE_QUALIFIED because G-J2 passed only 26 of 30):
+  - cost 5, 8 and 1 of 30 for Qwen3-8B, OLMo-2 and Qwen3.5-9B (hand counts 5, 8 and 0);
+  - the net effect at LongMemEval-S's mix stays positive (+0.08 to +0.10);
+  - the break-even unanswerable share is 0.27-0.73.
+- Verification. A fresh verifier reran analyze, byte-identical; extract digests reproduced;
+  its own recomputation was exact.
+- Evidence: `program/evidence/2026-10-15/am3-nonabstain-generality-v1/RESULTS.md`.
