@@ -1,0 +1,24 @@
+PASS command python: /workspace/cotcodec/.venv/bin/python
+PASS output mount is writable: /outputs
+CoTCodec harness environment check
+================================
+
+Python modules
+- yaml     OK      native YAML parsing
+- rich     OK      rich terminal output
+- tiktoken OK      token fertility measurement
+- numpy    OK      degradation statistics
+- scipy    OK      McNemar/Fisher significance tests
+- pandas   OK      trace analysis
+
+Executables
+- ruby     MISSING YAML fallback parser
+- pdflatex MISSING paper compilation
+
+Readiness
+- config parsing: ready
+- canary smoke runs: ready
+- full stats stack: ready
+PASS command nvidia-smi: /usr/bin/nvidia-smi
+INFO visible_gpus=1 names=NVIDIA H100 80GB HBM3
+STATUS PASS mode=container

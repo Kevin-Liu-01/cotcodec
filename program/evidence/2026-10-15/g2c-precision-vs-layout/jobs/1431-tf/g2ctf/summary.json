@@ -1,0 +1,85 @@
+{
+  "claim_level": "exploratory",
+  "deadline_source": "job.env started_at",
+  "deadline_utc": "2026-10-15T00:59:59Z",
+  "evidence_sha256": "d96e2e66e239da4d6521005b8f1458e3f9fe3b88e22156fc882c3c3ff13cc1ee",
+  "experiment_id": "g2c-precision-layout-v1",
+  "finished_at": "2026-10-15T00:53:42Z",
+  "gdn": {
+    "original": "transformers.models.qwen3_5.modeling_qwen3_5.torch_chunk_gated_delta_rule",
+    "stock_resolution": "fla.ops.gated_delta_rule.chunk.chunk_gated_delta_rule",
+    "torch_chunk": "transformers.models.qwen3_5.modeling_qwen3_5.torch_chunk_gated_delta_rule"
+  },
+  "gdn_layers": 24,
+  "job": "teacher-force",
+  "load_s": 3.7,
+  "model": "qwen3.5-9b",
+  "path_members": {
+    "r1": 144,
+    "r4": 32
+  },
+  "paths": {
+    "r1": {
+      "gdn_impl": "fla_chunk",
+      "members": 144,
+      "param_dtype": "torch.bfloat16",
+      "precision": {
+        "allow_tf32": false,
+        "float32_matmul_precision": "highest",
+        "sdpa_backends": [
+          "FLASH_ATTENTION",
+          "EFFICIENT_ATTENTION"
+        ],
+        "sdpa_gqa_flag": "stock"
+      },
+      "sequences_scored": 144,
+      "status": "complete",
+      "wall_s": 250.7
+    },
+    "r4": {
+      "gdn_impl": "torch_chunk_fp32",
+      "members": 32,
+      "param_dtype": "torch.float32",
+      "precision": {
+        "allow_tf32": false,
+        "float32_matmul_precision": "highest",
+        "sdpa_backends": [
+          "EFFICIENT_ATTENTION"
+        ],
+        "sdpa_gqa_flag": "off (repeat_kv)"
+      },
+      "sequences_scored": 32,
+      "status": "complete",
+      "wall_s": 304.3
+    }
+  },
+  "sequences": 144,
+  "signal": null,
+  "started_at": "2026-10-15T00:43:55Z",
+  "trainer_state_probe": {
+    "chunk_state_snapshot_dtype": "torch.bfloat16",
+    "final_state_dtype": "torch.float32",
+    "hf_teacher_forcing_call": "initial_state=None, output_final_state=False (no cache)",
+    "input_dtype": "torch.bfloat16",
+    "output_dtype": "torch.bfloat16"
+  },
+  "verification": {
+    "artifact_root_sha256": "9845026dbe255e24b105224eebbb5436d315713b9a5c53c434137896b160c5b1",
+    "mode": "full",
+    "model_id": "qwen3.5-9b",
+    "receipt": "/model-cache/cotcodec-receipts/qwen3.5-9b.json",
+    "receipt_sha256": "0a9e052d561b017c505adf5a1c6fcdc048522660a0db134486b84edbf3de5cb3",
+    "repo_id": "Qwen/Qwen3.5-9B",
+    "revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+    "total_bytes": 19329393661,
+    "verified_by": "lane (model-verification.txt)"
+  },
+  "versions": {
+    "fla": "0.5.2",
+    "gpu": "NVIDIA H100 80GB HBM3",
+    "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+    "torch": "2.11.0+cu128",
+    "torch_cuda": "12.8",
+    "transformers": "5.15.0"
+  }
+}

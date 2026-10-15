@@ -1,0 +1,90 @@
+# G2c (EXPLORATORY): in vLLM 0.31.0, does the bf16 GDN recurrent state's train-inference drift
+# (G2b, program/evidence/2026-10-15/g2b-state-dtype/) come from the state's precision or from the
+# changed block layout (528 to 272 tokens per block) that the smaller state brings with it?
+#
+# EXPLORATORY. Not a registered experiment: no preregistration, no hypothesis test, no decision
+# rule, no confirmatory claim. Cap: 1.5 physical GPU-h in all, image builds and smoke runs
+# included.
+#
+# Two new arms, on the same 24 prompts, seeds and engine settings as G2b (inherited from G2b's
+# config below, hash-bound):
+#   fp16       mamba_ssm_cache_dtype float16 at vLLM's own block size. Same bytes as bf16, so the
+#              same layout (272-token blocks), with 10 mantissa bits instead of 7 and 5 exponent
+#              bits instead of 8.
+#   bf16_b528  mamba_ssm_cache_dtype bfloat16 with block_size forced to 528, the fp32 arm's block.
+#              Same precision as bf16, same layout and block pool as fp32 (the GDN page is padded
+#              up to the 528-token attention page).
+# The fp32 and bf16 arms are G2b's (jobs 1368-1391), reused from their committed and hash-bound
+# outputs and not rerun.
+#
+# Why not fp32 at 272 (the other off-diagonal cell): vLLM 0.31.0 cannot place a GDN state in an
+# attention page smaller than the state. platforms/interface.py _align_hybrid_block_size
+# (lines 835-1018): the kernel alignment is max(16, user block_size) (lines 951-957), the minimum
+# block is that alignment times cdiv(mamba page, alignment x attention page per token)
+# (979-982), a smaller user block is raised to it (987-993), and attention page >= mamba page is
+# asserted (999-1000). A user block_size of 272 with an fp32 state is raised to 544. Forcing it
+# needs code changes. A user block_size of 528 with a bf16 state is kept (528 >= 272) and the GDN
+# page is padded to the attention page (1005-1018). Source: source-check/ of this evidence.
+schema_version: 1
+experiment_id: g2c-precision-layout-v1
+claim_level: exploratory
+
+# Declared before the run, as in G2b: phase R samples every prompt once per seed (per-request
+# vLLM seed = the seed); the engine seed is the first one.
+seeds: [42, 43, 44]
+
+# Everything not named here (prompts, models' revisions, engine, rollout sampling and time
+# budgets, saturation wave shape, prefill engine, teacher-forcing r4 subset, analysis settings)
+# is G2b's config, loaded and validated by harness.g2b_state_dtype.load_config.
+base_config:
+  file: experiments/g2/g2b-state-dtype-v1.yaml
+  sha256: "6036cc83127d620657ca593f91848249590a38141f94b6d26131b762209d852c"
+
+models: [qwen3.5-4b, qwen3.5-9b]
+
+arms:
+  fp16:
+    mamba_ssm_cache_dtype: float16
+    block_size: null
+  bf16_b528:
+    mamba_ssm_cache_dtype: bfloat16
+    block_size: 528
+
+# The fp32 arm's block size in G2b (engine.json and the "Setting attention block size" log line
+# of jobs 1368 and 1372). bf16_b528's block_size must equal it for every model.
+fp32_block_tokens:
+  qwen3.5-4b: 528
+  qwen3.5-9b: 528
+
+# Phase S: one saturation wave per arm (the first seed), G2b's wave shape. Not requested by the
+# question; it records whether each arm keeps the bf16 throughput lever.
+saturation_seeds: [42]
+
+# Smoke-only probe: the fp32 state with the bf16 arm's block size, to record what vLLM resolves
+# (expected 544, not 272). Dummy weights and eager mode: a config probe, not data.
+probe:
+  mamba_ssm_cache_dtype: auto
+  block_size: 272
+  load_format: dummy
+  enforce_eager: true
+
+# Teacher forcing: r1 (HF+FLA unpacked bf16, the trainer path) on every rollout; r4 (the fp32
+# reference) on G2b's subset (r4_seeds x the first r4_prompts prompts of the 24). No r2: G2b found
+# the packed path equal to r1 on this stack.
+teacher_force:
+  paths: [r1, r4]
+
+# G2b's committed outputs the analysis reads (the G2b commit is an ancestor of this branch).
+reference:
+  g2b_commit: "6ee0d672223c5fe20ad74b3a9e36e056fc625bc9"
+  evidence_dir: program/evidence/2026-10-15/g2b-state-dtype
+  # The full per-token files stay on the host; SHA-256 from G2b's analysis/SHA256SUMS-host.txt.
+  per_token_sha256:
+    qwen3.5-4b: "c29a9d4eece5878a60745b8e22293a59e151e2b8e396db1ded726fb1efcd3e5b"
+    qwen3.5-9b: "199ae09f7839229c0b73f37e7b1b32a1488def6c27d6d41868e4a4191ca8cc93"
+  rollout_jobs:
+    qwen3.5-4b: {fp32: 1368, bf16: 1370}
+    qwen3.5-9b: {fp32: 1372, bf16: 1374}
+
+budget:
+  total_physical_gpu_hours: 1.5

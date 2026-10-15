@@ -468,7 +468,7 @@
     "Gauntleted packages that ended at honest exits and can advance only by your ruling (D24, D70, D76). S2 v3 (65) continues as S2 v4 under your delegation (D80 (iv)); its images are built and its registration is in a repair round before the freeze (D84). C5 Phase 1 (70-97 GPU-h) stays yours; its identification defect stands",
     "Shelved by Kevin (D101), not to be raised unless he asks: the outward items (disclosures, licence requests, host-admin request, publication, the GitHub Support request), key rotation and account items. Drafts are in the private archive."
   ],
-  "gpu_hours_spent_this_program": 24.3692,
+  "gpu_hours_spent_this_program": 25.585,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -1329,6 +1329,54 @@
       ],
       "outcome": "batch-invariant mode: every A/A comparison identical in tokens and log-prob bits (4,096 of 4,096 greedy under a shuffled order, a restart and a reconfigured engine, 95% CP [0.9991, 1]; concurrency 8, batch 1, warm cache; 1,024 of 1,024 sampled shuffled and restarted); default mode changes 0.07% (shuffled) to 2.7-3.1% (concurrency 8, batch 1) of greedy replies; batch-invariant costs 1.32-1.38x wall time batched, 2.5-3.1x at concurrency <= 8; 2.8 GPU-s per question for both arms' 256-subset tables (exploratory; program/evidence/2026-10-15/am1-step0/README.md)",
       "basis": "physical (scontrol RunTime 00:10:48 on 1 H100; the lane's records 23:01:40Z-23:12:27Z); Slurm limit 75 min (1.25 GPU-h cap); Step 0 total with the build 0.1978 of the 1.5 cap"
+    },
+    {
+      "experiment": "g2c-precision-layout-v1 (EXPLORATORY, not registered; G2b follow-up, GDN state precision vs block layout in vLLM 0.31.0) image builds: cotcodec-vllm cu129 overlay and research source overlay, commit 3833d544",
+      "gpu_hours": 0.0233,
+      "jobs": [
+        "1406 vLLM overlay build 3833d544 (1 H100; COMPLETED 0:0, 00:01:04; image sha256:7f6d49d7...)",
+        "1407 research source-overlay build 3833d544 (1 H100; COMPLETED 0:0, 00:00:20; image sha256:ba5b3ce3...)"
+      ],
+      "outcome": "vLLM overlay provenance PASS; offline builds from the retained source capsule 3d3bea32; CPU post-build selftest 1409 passes (both images, plus a second read-only source pass)",
+      "basis": "physical (scontrol RunTime x 1 H100, 84 s in all; records committed in builds/scontrol-build-*.txt)"
+    },
+    {
+      "experiment": "g2c-precision-layout-v1 (EXPLORATORY, not registered; G2b follow-up, GDN state precision vs block layout in vLLM 0.31.0) smoke jobs (end-to-end checks, not data): fp32 block-272 config probe and both arms on the 4B, teacher forcing on the smoke rollouts",
+      "gpu_hours": 0.1094,
+      "jobs": [
+        "1414 smoke rollouts, probe + fp16 + bf16_b528 (1 H100; COMPLETED 0:0, 00:05:34)",
+        "1422 smoke teacher forcing r1 + r4 (1 H100; COMPLETED 0:0, 00:01:00)"
+      ],
+      "outcome": "probe: fp32 state with block_size 272 resolved to 544 (GDN page padded 3.82%); fp16 at 272 tokens, bf16_b528 at 528 with fp32's 3,733 blocks (padding 97.01%); every path passed",
+      "basis": "physical (scontrol RunTime read and logged at completion in ops/jobs.log, each within 1 s of the lane interval; the saved captures were overwritten after the records expired)"
+    },
+    {
+      "experiment": "g2c-precision-layout-v1 (EXPLORATORY, not registered; G2b follow-up, GDN state precision vs block layout in vLLM 0.31.0) Qwen3.5-4B: fp16 and bf16_b528 arms in turn on one H100, phase R (72 long reasoning rollouts), one saturation wave (seed 42), prefill in each arm's own engine",
+      "gpu_hours": 0.3603,
+      "jobs": [
+        "1418 (1 H100; COMPLETED 0:0, 00:21:37)"
+      ],
+      "outcome": "fp16 rollouts end like fp32's (54 EOS, 18 cap; all within 389 s); bf16_b528 like bf16's (31 EOS, 41 cut at 450 s) and token-identical to G2b's bf16 rollouts up to the shorter in 66 of 72; waves 19,968 and 19,739 tok/s (1.34x and 1.33x over G2b's fp32 wave); exploratory",
+      "basis": "physical (scontrol RunTime read and logged at completion, equal to the lane interval; the saved capture was overwritten after the record expired); Slurm limit 32 min"
+    },
+    {
+      "experiment": "g2c-precision-layout-v1 (EXPLORATORY, not registered; G2b follow-up, GDN state precision vs block layout in vLLM 0.31.0) Qwen3.5-9B: fp16 and bf16_b528 arms in turn on one H100, phase R, one saturation wave (seed 42), prefill in each arm's own engine",
+      "gpu_hours": 0.41,
+      "jobs": [
+        "1420 (1 H100; COMPLETED 0:0, 00:24:36)"
+      ],
+      "outcome": "fp16 65 EOS / 7 cap (as fp32); bf16_b528 40 EOS / 32 cap (bf16: 37 / 35); waves 16,161 and 14,356 tok/s (1.38x and 1.23x; bf16_b528 repeats fp32's 114 preemptions); exploratory",
+      "basis": "physical (scontrol RunTime read and logged at completion, equal to the lane interval; the saved capture was overwritten after the record expired); Slurm limit 37 min"
+    },
+    {
+      "experiment": "g2c-precision-layout-v1 (EXPLORATORY, not registered; G2b follow-up, GDN state precision vs block layout in vLLM 0.31.0) HF+FLA teacher forcing: r1 unpacked on all 144 rollouts and r4 fp32 reference on 32 (4B, 9B)",
+      "gpu_hours": 0.3128,
+      "jobs": [
+        "1428 Qwen3.5-4B (1 H100; COMPLETED 0:0, 00:08:31)",
+        "1431 Qwen3.5-9B (1 H100; COMPLETED 0:0, 00:10:15)"
+      ],
+      "outcome": "rollout vs trainer mean |dlogp| fp16 0.0151 / 0.0124 and bf16_b528 0.0357 / 0.0352, against G2b's fp32 0.0077 / 0.0074 and bf16 0.0357 / 0.0365; within-sequence slope fp16 +5.8e-4 / +4.5e-4 per 1K, bf16_b528 equal to bf16's; the drift tracks the state's number format, not the block layout (exploratory; program/evidence/2026-10-15/g2c-precision-vs-layout/README.md)",
+      "basis": "physical (committed scontrol RunTime x 1 H100 each, 1 s above the lane intervals); Slurm limits 16 and 20 min; G2c total with builds and smokes 1.2158 of the 1.5 cap"
     },
     {
       "experiment": "memcredit-study-v1 image build (EXPLORATORY AM1 development pilot, D104/D107): cotcodec-vllm cu129 overlay, commit b94672f4",

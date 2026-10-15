@@ -53,7 +53,8 @@ for whatever gains actual results"; D80). Under that delegation:
     KV-starved, and the hybrids' fp32 GDN state caps concurrency.
   - **G2b (D108):** bf16 GDN state gives 1.33-1.38x throughput, but makes
     rollouts about 5x more off-policy, growing with length, and longer.
-    G2c is running: precision vs layout, with fp16 state.
+    **G2c (D109):** the number format drives the drift, not the layout. fp16
+    state keeps the 1.3-1.4x throughput at about 2x fp32's off-policy gap.
   - AM1 step 0 (D107): bit-exact reader replay works; exact credit tables are
     cheap.
 - The public-history purge ran (D99). Old commit ids resolve through
@@ -71,7 +72,7 @@ See `pending_decisions_for_kevin` in `program/state.json`.
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
 `uv run python scripts/preregister.py check-chain`, 22 rows). Decisions taken
-on Kevin's behalf are D1-D108 in `program/decisions.md`. GPU-hours are in
+on Kevin's behalf are D1-D109 in `program/decisions.md`. GPU-hours are in
 `program/state.json` (`gpu_hours_ledger`, physical hours): 10.37 in total.
 
 | Registration | Outcome | Evidence |

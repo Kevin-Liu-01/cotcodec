@@ -1,0 +1,293 @@
+== vllm '0.31.0'
+6f5f0f7f304a3899c50a3a558eecd07f66675910befbfa251bc9779ee05a7775  platforms/interface.py
+== platforms/interface.py:610-710
+   610	            b = layer.get_attn_backend()
+   611	            if not b.is_ssm() and b not in backends:
+   612	                backends.append(b)
+   613	        return backends
+   614	
+   615	    @classmethod
+   616	    def _preferred_block_size_for_backends(
+   617	        cls,
+   618	        backend_classes: "list[type[AttentionBackend]]",
+   619	        default_block_size: int,
+   620	        vllm_config: "VllmConfig",
+   621	    ) -> int:
+   622	        """Smallest block size every backend accepts.
+   623	
+   624	        ``supports_block_size`` may be overridden to accept exact sizes only
+   625	        (CPU_MLA takes 16 and no multiple of it), so candidates are the LCMs of
+   626	        one supported size per backend, each checked against every backend.
+   627	
+   628	        Raises:
+   629	            ValueError: If the backends share no supported block size.
+   630	
+   631	        """
+   632	        from vllm.config.vllm import set_current_vllm_config
+   633	        from vllm.v1.attention.backend import MultipleOf
+   634	
+   635	        # Backends may read the current config to decide a preference.
+   636	        with set_current_vllm_config(vllm_config):
+   637	            if len(backend_classes) == 1:
+   638	                return backend_classes[0].get_preferred_block_size(default_block_size)
+   639	            if all(b.supports_block_size(default_block_size) for b in backend_classes):
+   640	                return default_block_size
+   641	            # A backend declaring no sizes accepts any, so it contributes 1.
+   642	            per_backend_sizes = [
+   643	                [
+   644	                    s.base if isinstance(s, MultipleOf) else s
+   645	                    for s in b.get_supported_kernel_block_sizes()
+   646	                ]
+   647	                or [1]
+   648	                for b in backend_classes
+   649	            ]
+   650	            candidates = sorted(
+   651	                {math.lcm(*sizes) for sizes in itertools.product(*per_backend_sizes)}
+   652	            )
+   653	            for candidate in candidates:
+   654	                if all(b.supports_block_size(candidate) for b in backend_classes):
+   655	                    return candidate
+   656	        raise ValueError(
+   657	            "The attention backends share no supported KV cache block size ("
+   658	            + "; ".join(
+   659	                f"{b.get_name()}: {b.get_supported_kernel_block_sizes()}"
+   660	                for b in backend_classes
+   661	            )
+   662	            + ")."
+   663	        )
+   664	
+   665	    @classmethod
+   666	    def update_block_size_for_backend(cls, vllm_config: "VllmConfig") -> None:
+   667	        """Ensure block_size is compatible with the attention backend.
+   668	        For hybrid models, also aligns block_size with mamba page sizes.
+   669	        """
+   670	        from vllm.config.cache import CacheConfig
+   671	
+   672	        cache_config = vllm_config.cache_config
+   673	        model_config = vllm_config.model_config
+   674	
+   675	        # model_config may be None during testing.
+   676	        if not model_config:
+   677	            return
+   678	
+   679	        backend_classes = cls._find_non_ssm_backends(vllm_config)
+   680	        if not backend_classes:
+   681	            return
+   682	
+   683	        # Phase 1: Pick a block size every attention backend supports (skip if
+   684	        # user set --block-size). Models can mix backends with disjoint
+   685	        # preferences, and a size from the first alone later fails
+   686	        # select_common_block_size().
+   687	        if not cache_config.user_specified_block_size:
+   688	            preferred = cls._preferred_block_size_for_backends(
+   689	                backend_classes, CacheConfig.DEFAULT_BLOCK_SIZE, vllm_config
+   690	            )
+   691	            if preferred != CacheConfig.DEFAULT_BLOCK_SIZE:
+   692	                logger.info(
+   693	                    "Setting kv cache block size to %d for %s backend(s).",
+   694	                    preferred,
+   695	                    "/".join(b.get_name() for b in backend_classes),
+   696	                )
+   697	            cache_config.block_size = preferred
+   698	
+   699	        # Phase 2: Align block/mamba sizes for hybrid models
+   700	        # (may override user settings).
+   701	        if model_config.is_hybrid:
+   702	            cls._align_hybrid_block_size(vllm_config, backend_classes[0])
+   703	
+   704	        # Phase 3: Align block/page sizes when multiple KV dtypes share the
+   705	        # block pool (e.g. nvfp4 primary + unquantized skip layers).
+   706	        # May override the user's --block-size.
+   707	        if cache_config.kv_cache_dtype_skip_layers:
+   708	            cls._align_heterogeneous_kv_block_size(vllm_config, backend_classes[0])
+   709	
+   710	    @classmethod
+24eecc78e8fc4849d4eac948c7586ee349ebfd503d07e80f05ec6c859da06fdd  v1/engine/core_client.py
+== v1/engine/core_client.py:820-870
+   820	
+   821	    def _apply_ready_response(self, payload: bytes) -> None:
+   822	        """Decode an EngineCoreReadyResponse and sync any post-initialization
+   823	        config changes (e.g. auto-fitted max_model_len) back to the frontend."""
+   824	        vllm_config = self.vllm_config
+   825	        response = (
+   826	            msgspec.msgpack.decode(payload, type=EngineCoreReadyResponse)
+   827	            if payload
+   828	            else None
+   829	        )
+   830	        self._effective_attention_block_sizes.add(
+   831	            response.effective_attention_block_size if response is not None else None
+   832	        )
+   833	        sizes = self._effective_attention_block_sizes
+   834	        vllm_config.cache_config.effective_attention_block_size = (
+   835	            next(iter(sizes)) if len(sizes) == 1 else None
+   836	        )
+   837	        if response is None:
+   838	            return
+   839	        vllm_config.model_config.max_model_len = min(
+   840	            vllm_config.model_config.max_model_len, response.max_model_len
+   841	        )
+   842	
+   843	        # Setup KV cache config with initialization state from
+   844	        # engine core process. Sum num_gpu_blocks from all engines in DP case.
+   845	        num_gpu_blocks = vllm_config.cache_config.num_gpu_blocks or 0
+   846	        num_gpu_blocks += response.num_gpu_blocks
+   847	        vllm_config.cache_config.num_gpu_blocks = num_gpu_blocks
+   848	
+   849	        # Sync block_size: may be enlarged by _align_hybrid_block_size in the
+   850	        # worker for hybrid Mamba models.
+   851	        cache_config = vllm_config.cache_config
+   852	        cache_config.block_size = response.block_size
+   853	        cache_config.mamba_block_size = response.mamba_block_size
+   854	        # Keep these as per-engine cache_config_info values; do not sum across DP.
+   855	        cache_config.kv_cache_size_tokens = (
+   856	            getattr(cache_config, "kv_cache_size_tokens", None)
+   857	            if getattr(cache_config, "kv_cache_size_tokens", None) is not None
+   858	            else response.kv_cache_size_tokens
+   859	        )
+   860	        cache_config.kv_cache_max_concurrency = (
+   861	            getattr(cache_config, "kv_cache_max_concurrency", None)
+   862	            if getattr(cache_config, "kv_cache_max_concurrency", None) is not None
+   863	            else response.kv_cache_max_concurrency
+   864	        )
+   865	
+   866	        # In external DP LB mode, the coordinator address that the
+   867	        # front-end procs connect to is obtained by each engine via it's
+   868	        # initial handshake with the rank 0 front-end.
+   869	        if response.dp_stats_address is not None:
+   870	            if self.stats_update_address is None:
+3cb039b80fe9b03dc1122f93c1f8a4098ef1355104b317ff6df25358f4349494  v1/executor/uniproc_executor.py
+== v1/executor/uniproc_executor.py:60-90
+    60	            distributed_init_method=distributed_init_method,
+    61	            is_driver_worker=True,
+    62	            shared_worker_lock=Lock(),
+    63	        )
+    64	
+    65	        # Set net device env vars for the worker if VLLM_GPU_NIC_PCIE_MAPPING is set
+    66	        set_worker_net_device(local_rank, self.vllm_config)
+    67	
+    68	        self.driver_worker.init_worker(all_kwargs=[kwargs])
+    69	        self.driver_worker.init_device()
+    70	
+    71	        if envs.VLLM_ELASTIC_EP_SCALE_UP_LAUNCH:
+    72	            self.driver_worker.elastic_ep_execute("load_model")
+    73	        else:
+    74	            self.driver_worker.load_model()
+    75	        current_platform.update_block_size_for_backend(self.vllm_config)
+    76	
+    77	    def _distributed_args(self) -> tuple[str, int, int]:
+    78	        """Return (distributed_init_method, rank, local_rank)."""
+    79	        if aiter_requires_tcp_store():
+    80	            distributed_init_method = get_distributed_init_method(
+    81	                get_ip(), get_open_port()
+    82	            )
+    83	        else:
+    84	            distributed_init_method = get_file_store_init_method()
+    85	        # set local rank as the device index if specified
+    86	        device_info = self.vllm_config.device_config.device.__str__().split(":")
+    87	        local_rank = int(device_info[1]) if len(device_info) > 1 else 0
+    88	        return distributed_init_method, 0, local_rank
+    89	
+    90	    def collective_rpc(  # type: ignore[override]
+11a1554380d1efa516bb481416c798798d5839f38ac3b0f379ef4b8b547f4d1b  v1/executor/multiproc_executor.py
+== v1/executor/multiproc_executor.py:685-705
+   685	        self.use_async_scheduling = scheduler_config.async_scheduling
+   686	        if self.use_async_scheduling:
+   687	            self.async_output_queue: queue.Queue = queue.Queue()
+   688	            self.async_output_copy_thread = Thread(
+   689	                target=self.async_output_busy_loop,
+   690	                daemon=True,
+   691	                name="WorkerAsyncOutputCopy",
+   692	            )
+   693	            self.async_output_copy_thread.start()
+   694	
+   695	        # Set block size based on the attention backends
+   696	        current_platform.update_block_size_for_backend(vllm_config)
+   697	
+   698	        # Initialize message queues after init_device() since multi-node setups
+   699	        # (nnodes_within_dp > 1) require distributed groups to be initialized
+   700	        self._init_message_queues(input_shm_handle, vllm_config)
+   701	
+   702	        # Enable environment variable cache (e.g. assume no more
+   703	        # environment variable overrides after this point)
+   704	        enable_envs_cache()
+   705	
+95be1adb96f55933f6a52260c8cb2181d04707401ca21d97c33108c5ab58f3ac  engine/arg_utils.py
+== engine/arg_utils.py:568-573
+   568	    max_parallel_loading_workers: int | None = (
+   569	        ParallelConfig.max_parallel_loading_workers
+   570	    )
+   571	    block_size: int | None = None
+   572	    enable_prefix_caching: bool | None = None
+   573	    prefix_caching_hash_algo: PrefixCachingHashAlgo = (
+== engine/arg_utils.py:2205-2226
+  2205	            "enable_prefix_caching must be set by this point"
+  2206	        )
+  2207	
+  2208	        cache_config = CacheConfig(
+  2209	            block_size=self.block_size,  # type: ignore[arg-type]
+  2210	            gpu_memory_utilization=self.gpu_memory_utilization,
+  2211	            kv_cache_memory_bytes=self.kv_cache_memory_bytes,
+  2212	            cache_dtype=resolved_cache_dtype,  # type: ignore[arg-type]
+  2213	            is_attention_free=model_config.is_attention_free,
+  2214	            num_gpu_blocks_override=self.num_gpu_blocks_override,
+  2215	            sliding_window=sliding_window,
+  2216	            enable_prefix_caching=self.enable_prefix_caching,
+  2217	            prefix_caching_hash_algo=self.prefix_caching_hash_algo,
+  2218	            prefix_cache_retention_interval=self.prefix_cache_retention_interval,
+  2219	            kv_cache_dtype_skip_layers=self.kv_cache_dtype_skip_layers,
+  2220	            kv_sharing_fast_prefill=self.kv_sharing_fast_prefill,
+  2221	            swa_bounded_replay=self.swa_bounded_replay,
+  2222	            mamba_cache_dtype=self.mamba_cache_dtype,
+  2223	            mamba_ssm_cache_dtype=self.mamba_ssm_cache_dtype,
+  2224	            mamba_block_size=self.mamba_block_size,
+  2225	            prefix_match_unit=self.prefix_match_unit,
+  2226	            mamba_cache_mode=self.mamba_cache_mode,
+a9b2a804c9c353e7bded64081bf920c79432d4e44ca180c05e275c69e642a280  config/cache.py
+== config/cache.py:56-80
+    56	    "nvfp4",
+    57	    "nvfp4_4over6",
+    58	]
+    59	
+    60	
+    61	MambaDType = Literal["auto", "float32", "float16", "bfloat16"]
+    62	MambaCacheMode = Literal["all", "align", "none"]
+    63	PrefixCachingHashAlgo = Literal["sha256", "sha256_cbor", "xxhash", "xxhash_cbor"]
+    64	KVOffloadingBackend = Literal["native", "lmcache"]
+    65	
+    66	
+    67	@config
+    68	class CacheConfig:
+    69	    """Configuration for the KV cache."""
+    70	
+    71	    DEFAULT_BLOCK_SIZE: ClassVar[int] = 16
+    72	
+    73	    block_size: int = Field(default=None, gt=0)  # type: ignore[assignment]
+    74	    """Size of a contiguous cache block in number of tokens.
+    75	    Accepts None (meaning "use default"). After construction, always int."""
+    76	    user_specified_block_size: bool = field(default=False, init=False)
+    77	    """Whether block_size was explicitly provided. Derived automatically."""
+    78	    user_specified_mamba_block_size: bool = field(default=False, init=False)
+    79	    """Whether mamba_block_size was explicitly provided. Derived automatically."""
+    80	    kv_cache_layout: str | None = field(default=None, init=False)
+== config/cache.py:160-180
+   160	    prefix_cache_retention_interval: int | None = Field(default=0, ge=0)
+   161	    """Token interval between retained sliding-window and Mamba prefix-cache
+   162	    checkpoints. ``0`` retains only semantic checkpoints, including the latest
+   163	    replay boundary and shared-prefix junctions. Positive values additionally
+   164	    retain periodic checkpoints at the specified interval, which must be a
+   165	    multiple of the scheduler block size. ``None`` retains checkpoints densely.
+   166	    Applies only to sliding-window and Mamba cache groups."""
+   167	    kv_cache_dtype_skip_layers: list[str] = field(default_factory=list)
+   168	    """Layer patterns to skip KV cache quantization. Accepts layer indices
+   169	    (e.g., '0', '2', '4') or attention type names (e.g., 'sliding_window')."""
+   170	    mamba_page_size_padded: int | None = None
+   171	    """ Optional override for mamba page size; used by hybrid mamba/attention
+   172	    models to ensure exact alignment with attention page size."""
+   173	    skip_page_size_padded: int | None = None
+   174	    """Optional override for the page size of layers skipped from KV cache
+   175	    quantization (``--kv-cache-dtype-skip-layers``); set during block-size
+   176	    alignment so unquantized skip layers pad up to the quantized primary's
+   177	    page."""
+   178	    mamba_block_size: int | None = Field(default=None, gt=0)
+   179	    """Size of a contiguous cache block in number of tokens for mamba cache.
+   180	    Can be set only when prefix caching is enabled.

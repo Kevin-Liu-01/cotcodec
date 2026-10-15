@@ -2504,3 +2504,88 @@ growing with length, and changes behaviour.**
   - An RL training comparison (fp32 vs reduced-precision state rollouts) would
     test whether this off-policy gap matters for training. It exceeds 8 GPU-h,
     so it goes through the gauntlet first.
+
+**D109. G2c (exploratory): the state's number format drives the drift, and
+fp16 state keeps the throughput lever with much less drift.**
+- What ran. Exploratory, 1.22 physical GPU-h, on Qwen3.5-4B and 9B with
+  G2b's 24 prompts and seeds 42-44. There were two arms:
+  - fp16 state at bf16's layout and memory;
+  - bf16 state at fp32's 528-token block, the forced-block control.
+  fp32 state at 272-token blocks cannot be forced in vLLM 0.31.0 without
+  code changes (source cited). A fresh checker passed the numbers, and its
+  wording items were fixed (`2266979f`).
+- Findings (exploratory):
+  - The layout does not drive the drift. bf16 at fp32's block keeps bf16's
+    drift: on the 4B a ratio of 1.00 [0.99, 1.01], with rollouts identical
+    to G2b's token for token; on the 9B about 3% lower at matched positions,
+    not separable from the engine instance.
+  - fp16 removes most of the drift at the same memory and throughput:
+    - mean |Δlogp| 0.015 (4B) and 0.012 (9B), against fp32's 0.0077 and
+      0.0074 and bf16's 0.036;
+    - that keeps a fifth to under a third of bf16's excess;
+    - 0.35-0.58% of ratios fall outside [0.8, 1.25];
+    - it still grows within sequences, to about 2-3x fp32 near 30K;
+    - its rollout lengths behave like fp32's;
+    - throughput is 1.34x and 1.38x over fp32 in one wave per arm.
+  - The drift stays in vLLM's decode path in every arm.
+  - Not separated: the dtype-specialized kernel from precision, and fp16's
+    mantissa from its exponent range.
+- Reading (exploratory). For GDN-hybrid rollouts on this stack, a 16-bit
+  state is a 1.3-1.4x throughput lever. As fp16 it costs about 2x fp32's
+  off-policy gap; as bf16, about 5x and growing with length. Whether either
+  gap matters for RL training is not measured.
+- Next. An RL training comparison, with fp32, fp16 and bf16 state for
+  rollouts, would show whether the gap changes learning. It exceeds 8 GPU-h,
+  so it goes through the gauntlet first.
+
+**D110. The node is shared with another of Kevin's projects for inference
+through 2026-10-20.** At Kevin's request, relayed by another of his Claude
+sessions, the node hosts inference only, on 1-2 GPUs, through 2026-10-20.
+- What runs. Open models (Apache-2.0 image inpainting and video text removal,
+  and SAM 3.1 once Kevin arranges its gated access) as long Slurm jobs. Each
+  serves HTTP on the host's localhost only, in a digest-pinned image.
+- Conditions:
+  - Code runs on GPUs only after review and SHA-256 pinning (the unpatched
+    R570 driver; D7).
+  - No code or data of that project enters this public repository. It lives
+    under a separate host directory, and the data is deleted after the
+    release.
+  - Containers run unprivileged, with a read-only root.
+  - No credentials are created or entered by agents, and no licences are
+    accepted on Kevin's behalf.
+- This program's GPU jobs keep the remaining GPUs, and Slurm allocates them.
+
+**D111. AM1 development pilot (exploratory): memories interact, and
+leave-one-out credit picks the wrong memories. Ruling on the gauntlet for
+AM1's confirmatory run.**
+- Pilot. Exploratory, 1.49 physical GPU-h, on the 63-question development
+  split of LongMemEval-S only (`stage0/am1-study`,
+  `program/evidence/2026-10-15/am1-dev-pilot/`). It built 126 exact 256-subset
+  tables with the batch-invariant Qwen3-8B reader. The judge was Qwen3-32B
+  with LongMemEval's official prompt: 117 of 120 agreed with a blind hand
+  check by an agent, not a human (κ 0.95).
+- Findings (exploratory):
+  - Of 89 non-constant tables, 53 are non-monotone, and a non-gold memory
+    matters in 58.
+  - Interactions of order ≥ 2 carry 37% of the variance: an excess of +0.12
+    [0.05, 0.20] over a gold-count AND/OR baseline.
+  - Keep-set regret at B = 4 against the exact optimum: leave-one-out 0.21
+    (suboptimal in 53% of tables), exact Shapley 0.08, exact Banzhaf 0.03,
+    SNIPW-64 0.07, raw attention 0.26. LOO minus exact Shapley is +0.135
+    [0.05, 0.23].
+  - 71% of gold deletion labels survive a matched placebo swap, against 17% of
+    non-gold labels. A content-free reorder flips correctness in 13% of pools.
+  - Cross-fitted attention heads predict necessity at AUROC 0.935.
+  - Compiled-mode replay differed across GPUs (an inductor autotune choice),
+    while eager mode replays bit-exactly. The confirmatory run uses eager mode.
+- Registration. `am1-memory-credit-v1` is drafted, and a fresh pre-freeze audit
+  found five blocking items, all fixed (`20f85d66`). A second fresh check is
+  running before the freeze.
+- Gauntlet ruling. The confirmatory run is about 3.1 physical GPU-h, under 8,
+  and comes from the D103/D104 question sweep, which had verified priors and
+  three independent judges. It also has a development pilot and two
+  independent pre-freeze checks. It is admitted without a further gauntlet
+  wave. It therefore carries no gauntlet score. Blind discrimination and the
+  two provider-distinct reviews did not run, and that is disclosed in its
+  results.
+- G2's hand check uses agent labels unless Kevin chooses to label (D9).
