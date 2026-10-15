@@ -604,3 +604,12 @@ def test_heldout_artifact_needs_the_frozen_registration(
     dev.write_text(json.dumps(artifact))
     with pytest.raises(ms.StudyError):
         driver.load_artifact(dev, None, reg)  # the registration never runs development data
+
+
+def test_eager_check_config() -> None:
+    eager = ms.load_config(ms.EAGER_CONFIG_PATH)
+    assert eager["experiment_id"] == "memcredit-study-v1-eager"
+    workers = [w for p in eager["job"]["phases"] for w in p["workers"]]
+    assert all(w.get("enforce_eager") for w in workers)
+    assert driver.worker_spec(eager, "rd-eager-gpu0")["passes"] == ["smoke", "all", "replicate"]
+    assert ms.artifact_rule(eager) == (ms.EXPERIMENT_ID, "development")

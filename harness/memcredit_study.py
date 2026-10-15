@@ -36,8 +36,14 @@ CONFIG_PATH = PROJECT_ROOT / "experiments" / "am1" / "memcredit-study-v1.yaml"
 EXPERIMENT_ID = "memcredit-study-v1"
 #: Configs that share this module: the development pilot, its cross-GPU A/A diagnostic and the
 #: draft registration's confirmatory config (the only one that may read the held-out split).
-CONFIG_IDS = (EXPERIMENT_ID, "memcredit-study-v1-aa", "am1-memory-credit-v1")
+CONFIG_IDS = (
+    EXPERIMENT_ID,
+    "memcredit-study-v1-aa",
+    "memcredit-study-v1-eager",
+    "am1-memory-credit-v1",
+)
 AA_CONFIG_PATH = PROJECT_ROOT / "experiments" / "am1" / "memcredit-study-v1-aa.yaml"
+EAGER_CONFIG_PATH = PROJECT_ROOT / "experiments" / "am1" / "memcredit-study-v1-eager.yaml"
 REGISTRATION_CONFIG_PATH = PROJECT_ROOT / "experiments" / "am1" / "am1-memory-credit-v1.yaml"
 REGISTRATION_PATH = PROJECT_ROOT / "program" / "preregistrations" / "am1-memory-credit-v1.md"
 LEDGER_PATH = PROJECT_ROOT / "program" / "preregistrations" / "ledger.jsonl"
