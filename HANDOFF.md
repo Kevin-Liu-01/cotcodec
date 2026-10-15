@@ -70,8 +70,16 @@ for whatever gains actual results"; D80). Under that delegation:
       39 gained and 0 lost.
     - **H-A INCONCLUSIVE:** search beats the credit rules in 6 of 7
       comparisons; greedy backward is not separated.
-    - Next is AM3: does H-C hold for a second reader and judge (development
-      split, 2 GPU-h or less).
+  - AM3 (D118), exploratory: on the development split the rule never lost
+    a question under the primary judge, for three readers.
+  - **`am3-nonabstain-generality-v1` (row 25; D119), verified:**
+    - **H1 NONABSTAIN_HELPS** for OLMo-2 (+0.101, 35 against 0) and
+      Qwen3.5-9B (+0.089, 31 against 0), hand-confirmed.
+    - **H2 (descriptive, judge-qualified):** the rule turns correct
+      abstentions on the 30 unanswerable questions into wrong answers 1-8
+      times. The net effect at LongMemEval-S's mix stays positive.
+    - Next is AM4, exploratory on CPU: read caps, then an internal
+      write-up.
   - G2-RL is closed at an honest exit (gauntlet 63; D114).
   - The node also hosts LaMa and ROSE inference for another of Kevin's
     projects through 2026-10-20 (D110).
@@ -89,9 +97,9 @@ See `pending_decisions_for_kevin` in `program/state.json`.
 
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
-`uv run python scripts/preregister.py check-chain`, 24 rows). Decisions taken
-on Kevin's behalf are D1-D117 in `program/decisions.md`. GPU-hours are in
-`program/state.json` (`gpu_hours_ledger`, physical hours): 27.13 in total.
+`uv run python scripts/preregister.py check-chain`, 25 rows). Decisions taken
+on Kevin's behalf are D1-D119 in `program/decisions.md`. GPU-hours are in
+`program/state.json` (`gpu_hours_ledger`, physical hours): 28.19 in total.
 
 | Registration | Outcome | Evidence |
 |---|---|---|
@@ -109,6 +117,7 @@ on Kevin's behalf are D1-D117 in `program/decisions.md`. GPU-hours are in
 | `q2-stage1-successor-e-v1` | **DR2 Near-equivalent** (δ 0.00 pp, 90% [−2.44, +2.44]; each harness 263 of 904; π_small upper bound 0.1187 vs 0.12, about the Monte Carlo error); **DR5 NO-GO** (π_small 0.055, [0.010, 0.119]); 1,808 episodes, 0 losses; not externally anchored; two verifiers (D97) | `program/evidence/2026-10-12/q2-stage1-successor-e-run/RESULTS.md` |
 | `am1-memory-credit-v1` | **All gates pass; H2 MISSPECIFIED for all five primary rules** (D112). At B = 4 of 8 retrieved memories, leave-one-out regret is 0.277, 99% [0.223, 0.333], which is +0.233 [0.194, 0.273] more than exact Shapley. Every reader request and primary-judge item replayed bit for bit. Verified by a fresh rerun (11 of 11 outputs byte-identical). No gauntlet score (D111); agent hand labels (D9) | `program/evidence/2026-10-16/am1-confirmatory/RESULTS.md` |
 | `am1-keepset-search-v1` | **H-C NONABSTAIN_HELPS; H-A INCONCLUSIVE** (D117). A label-free keep rule (best-BM25-ranked 4-subset whose reply does not abstain) scores 0.571 against 0.458 for BM25 top 4 (+0.112, 39 vs 0, p 3.6e-12). With an oracle, direct search beats sampled credit rules at equal calls (6 of 7; greedy backward not separated). CPU only; verified byte for byte | `program/evidence/2026-10-16/am1-keepset-search/RESULTS.md` |
+| `am3-nonabstain-generality-v1` | **H1 NONABSTAIN_HELPS for OLMo-2 and Qwen3.5-9B** (D119): +0.101 (35 vs 0) and +0.089 (31 vs 0), confirmed by a blind hand check; anchor Qwen3-8B replays token for token. **H2 (descriptive, judge-qualified):** cost on 30 unanswerable questions 5, 8, 1 of 30; net at LongMemEval-S's mix +0.08 to +0.10. 0.67 GPU-h; verified | `program/evidence/2026-10-15/am3-nonabstain-generality-v1/RESULTS.md` |
 | `q2-zinv-reserve-validation-v1` | **PASS, descriptive** (D88). zinv accepts 13 of 13 held-out z-order equivalence mutants and newly accepts none of 15 violation mutants. The original comparator rejects 13 of 13 | `program/evidence/2026-10-12/q2-zinv-reserve-run/` |
 
 Gauntlet records: K1 v2 (45, honest exit), K1 v3 (51, 55, 56; honest exit, D54), Q1 Stage 0 (45, honest exit).

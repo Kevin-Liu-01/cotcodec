@@ -2833,3 +2833,37 @@ unanswerable questions.**
     AM3.
   - Descriptive: the net effect at LongMemEval-S's own mix of answerable and
     unanswerable questions; the gold arm; the second judge.
+
+**D119. `am3-nonabstain-generality-v1` result: the non-abstention keep rule
+holds for two more readers on held-out questions, at a measurable cost on
+unanswerable ones. Next: a read-capped variant (exploratory) and an internal
+write-up of the memory line.**
+- Run. Ledger row 25 (freeze `6384f294`), 0.67 GPU-h, with three pre-freeze
+  checks, a blind hand check and a fresh verifier: byte-identical, with an
+  independent recomputation (`program/evidence/2026-10-15/am3-nonabstain-generality-v1/RESULTS.md`).
+- H1: NONABSTAIN_HELPS for OLMo-2-1124-7B-Instruct (+0.101, 35 against 0) and
+  for Qwen3.5-9B (+0.089, 31 against 0). The hand check confirms both. The
+  anchor Qwen3-8B replays token for token (39 against 0).
+- H2, descriptive and judge-qualified (G-J2 26 of 30): on the 30
+  unanswerable questions the rule turns correct abstentions into wrong
+  answers 5, 8 and 1 times (hand counts 5, 8 and 0). The net effect at
+  LongMemEval-S's mix stays positive, at +0.08 to +0.10. The rule stops
+  paying when unanswerable questions exceed 27-73% of the mix, depending on
+  the reader. On unanswerable questions it reads a median of 70 subsets.
+- The memory line now stands as follows:
+  1. Per-memory deletion credit picks the wrong memories to keep (AM1).
+  2. With an oracle, search over keep sets beats sampled credit at equal
+     calls (6 of 7; `am1-keepset-search-v1`).
+  3. Without labels, the reader's own abstention is a usable signal.
+     Switching away from an abstaining keep set gains 9-11 points for three
+     readers from two families. Its cost on unanswerable questions is
+     measured.
+- Next:
+  - AM4, exploratory, CPU only, no new model call. A read cap K on the stop
+    rule (K = 2, 4, 8, 16, 70) trades the gains on answerable questions
+    against reads and against the cost on unanswerable questions. It is
+    computed from this run's features on the host. These data are held-out,
+    so AM4 is labelled post hoc and licenses nothing. A confirmation would
+    need new questions (another dataset or LongMemEval-M).
+  - An internal write-up of the memory line in `paper/`. Publication is an
+    outward action and stays Kevin's call (D101).
