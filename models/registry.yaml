@@ -975,3 +975,41 @@ models:
       serving code admitted under D49 (iii): read and hashed before use (receipt and
       program/evidence/2026-10-08/q2-stage1-g0/opencua-remote-code/), run only in a container with no
       network; never executed on a GPU before the S1a freeze'
+  olmo-2-1124-7b-instruct:
+    backend: huggingface
+    repo_id: allenai/OLMo-2-1124-7B-Instruct
+    revision: 470b1fba1ae01581f270116362ee4aa1b97f4c84
+    runtime: vllm-transformers-backend
+    architecture_family: transformer
+    license: apache-2.0
+    access: public
+    trust_remote_code: false
+    publication_eligible: true
+    roles:
+    - am3-second-reader-family
+    metadata_files:
+    - README.md
+    - config.json
+    - generation_config.json
+    - special_tokens_map.json
+    - tokenizer_config.json
+    required_files:
+    - config.json
+    - generation_config.json
+    - model-00001-of-00003.safetensors
+    - model-00002-of-00003.safetensors
+    - model-00003-of-00003.safetensors
+    - model.safetensors.index.json
+    - special_tokens_map.json
+    - tokenizer.json
+    - tokenizer_config.json
+    source_url: https://huggingface.co/allenai/OLMo-2-1124-7B-Instruct
+    registered_at: '2026-10-15'
+    registered_for: >-
+      AM3 (D117, exploratory, development split only): a second reader from a non-Qwen family.
+      Apache-2.0 per the model card and the Hub's license tag (the repository has no LICENSE
+      file); ungated: the Hub API reports gated false, and config.json and a weight shard's
+      headers resolved anonymously at this revision on 2026-10-15. Olmo2ForCausalLM runs in
+      vLLM 0.31.0 through the Transformers modeling backend (vllm/model_executor/models/
+      registry.py at v0.31.0, _TRANSFORMERS_SUPPORTED_MODELS); no remote code. Context
+      4,096 tokens.
