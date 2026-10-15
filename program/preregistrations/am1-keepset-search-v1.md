@@ -1,0 +1,663 @@
+# am1-keepset-search-v1: at equal reader calls, does search over keep sets beat sampled memory credit, and does a label-free non-abstention search beat BM25 top 4? (AM1's held-out LongMemEval-S tables, CPU only)
+
+**Status: DRAFT, not frozen.** Drafted on branch `stage0/am1-keepset-search` from `main` at
+`ea9d57dc`, as decision D115 specifies (`program/decisions.md`). Freezing is the orchestrator's,
+with `scripts/preregister.py`, after two independent pre-freeze checks (D115) and the checklist of
+section 17. A material change after the freeze is a new experiment id.
+
+This registration runs no GPU job and makes no new model call. It reads two things the program
+already holds: AM1's 694 committed held-out tables (the judged utility of all 256 subsets of each
+pool) and, for the label-free rule, the held-out reader pass that made them. Every hypothesis
+below was shaped by development results, and several held-out quantities are already public from
+AM1. Section 1 lists both before anything else.
+
+## 1. Disclosures
+
+### 1.1 What AM1 already reported about these tables
+
+AM1 (`am1-memory-credit-v1`, ledger row 23, freeze `9ad36b10`, job 1458) committed these tables
+and published, in `program/evidence/2026-10-16/am1-confirmatory/RESULTS.md`, the following figures
+about them. They were read, as text, before this file was drafted.
+
+- **Census.** Retrieved arm: 347 tables, 96 constant (all 0), 251 non-constant, u(full pool) 0.524.
+  Gold arm: 59 constant, 288 non-constant, u(full pool) 0.579. "Every constant table is constant 0,
+  and the empty pool is never answered right." 43 of 347 questions are constant in both arms. The
+  retrieved pool holds no gold turn for 43 questions, 1 for 117, 2 for 174, and 3-5 for 13.
+  Structure classes (retrieved): 167 non-monotone, 57 single, 12 AND, 8 OR, 7 monotone-mixed.
+- **Keep-set regret at B = 4, retrieved arm, 251 tables** (95% intervals; "suboptimal" is the
+  share of tables with any regret):
+
+  | Rule | Calls | Regret | Suboptimal |
+  |---|---|---|---:|
+  | leave-one-out | 9 | 0.277 [0.235, 0.319] | 0.546 |
+  | permutation Shapley-16 (seeds 42-44) | at most 129 | 0.138 [0.107, 0.173] | 0.279 |
+  | SNIPW-64 (seeds 42-44) | 64 | 0.094 [0.066, 0.123] | 0.171 |
+  | retrieval rank (BM25 top 4) | 0 | 0.343 [0.287, 0.402] | 0.343 |
+  | raw attention | 1 + 1 forward | 0.311 [0.251, 0.371] | 0.311 |
+  | exact Shapley | 256 | 0.044 [0.020, 0.072] | 0.044 |
+  | exact Banzhaf | 256 | 0.025 [0.009, 0.043] | 0.036 |
+  | random keep set | 0 | 0.625 [0.596, 0.653] | 0.976 |
+
+  AM1 also reported, at B = 4, leave-one-in 0.420, permutation Shapley-4 0.231, the
+  placebo-filtered deletion label 0.396, the swap effect 0.251, cross-fitted attention 0.255,
+  question overlap 0.329, overlap with the reply 0.328 and length 0.406; the gold arm's regrets
+  (leave-one-out 0.239, permutation Shapley-16 0.138, SNIPW-64 0.082, retrieval rank 0.278, raw
+  attention 0.271, exact Shapley 0.032, exact Banzhaf 0.021, random 0.671); B = 1-3; and the
+  second judge's tables. Its verdicts: all five primary rules MISSPECIFIED, leave-one-out minus
+  exact Shapley +0.233 [0.194, 0.273].
+- **What AM1 did not report, and nobody has computed:** direct search at any number of calls,
+  MSR-Banzhaf, greedy selection, SNIPW-64 or permutation Shapley-16 beyond seeds 42-44, u(BM25 top
+  4) as an accuracy, any statistic of the held-out replies' abstention, and any label-free rule.
+
+### 1.2 What AM1's figures already imply for H-B, H-C and H-A
+
+The figures above are rounded, but on these denominators they pin integer counts. A retrieval-rank
+regret of 0.343 over 251 tables is 86 tables (85/251 = 0.339, 87/251 = 0.347): BM25 top 4 is
+suboptimal, so wrong, on exactly 86 non-constant retrieved tables. u(full pool) 0.524 over 347
+questions is 182 questions (181/347 = 0.522, 183/347 = 0.527). BM25 top 4 is therefore right on at
+most 251 - 86 = 165 questions (fewer if some non-constant table has no right 4-subset), against 182
+for all 8.
+
+- **H-B is not blind.** Over the 347 questions, u(BM25 top 4) - u(all 8) is at most
+  (165 - 182)/347 = **-0.049**: all 8 is right on at least 17 more questions than BM25 top 4. The
+  reading PRUNING_HELPS cannot occur. The development lead that motivated H-B (BM25 top 4 ahead of
+  all 8 by +0.105 on the non-constant development tables, 4 tables against 0) is already reversed
+  in sign on the held-out tables. H-B is kept because D115 names it, and it is read as a test of
+  whether the reversal is detectable (section 7.2). At a net count of exactly 17, the exact test of
+  section 7.2 rejects unless there are more than 67 discordant pairs (25 or more questions where
+  BM25 top 4 is right and all 8 wrong). On the gold arm the same arithmetic bounds the difference
+  by (288 - 80 - 201)/347 = +0.020, which implies no direction.
+- **H-C's direction is not implied.** nonabstain-BM25 keeps BM25 top 4 whenever that set's reply
+  does not abstain, so it can differ from BM25 top 4 only where top 4's reply abstains. It can gain
+  only on the 86 tables where BM25 top 4 is wrong. It can lose only where an abstaining top-4
+  reply was judged correct (2 of 2,405 abstaining 4-subset replies on the development retrieved
+  arm). No held-out abstention statistic exists.
+- **H-A's directions are not implied.** The 3-seed SNIPW-64 and permutation Shapley-16 regrets
+  and the leave-one-out regret are known; direct search's regret at any number of calls, MSR
+  Banzhaf and greedy elimination are not. AM1's random keep-set regret (0.625) does not identify
+  direct search's curve, which depends on how many 4-subsets are optimal in each table.
+
+### 1.3 Development work that shaped the hypotheses
+
+- **AM1b** (`program/evidence/2026-10-15/am1b-cost-curve/README.md`, exploratory, the 126
+  development tables): on the retrieved arm at B = 4 (38 tables), no query-based credit rule beat
+  direct search at equal calls, even on the point estimate. Direct search lost 0.091 at 9 calls
+  and 0.024 at 26 calls; leave-one-out lost 0.214 at 9 calls, greedy backward 0.079 at 26, SNIPW-64
+  0.050 at about 57, MSR-Banzhaf-64 0.043 at 64, permutation Shapley-16 0.095 at about 83. AM1's
+  3-seed SNIPW-64 figure (0.070) was seed noise; AM1b used 20 seeds. The comparisons of H-A, their
+  call counts, the 26-call point and the 200 seeds here all come from AM1b.
+- **AM1d** (`program/evidence/2026-10-15/am1d-label-free/README.md`, exploratory, development
+  replies of job 1411): confidence and vote utilities were anti-informative; the only usable
+  label-free signal was whether the reply abstains. `nonabstain@70` was the best of 40 label-free
+  rules in sample (+0.026 [0.000, 0.079] over BM25 top 4 on 38 tables, one table), and BM25 top 4
+  led all 8 by 4 tables against 0 (exact p = 0.125). H-C tests that one rule, chosen in sample on
+  development data; H-B tests that lead. AM1d's abstention pattern list was committed at
+  `7465903f` before AM1d read any reply; it is used unchanged.
+
+### 1.4 Development and held-out differ
+
+On the retrieved arm at B = 4, retrieval rank lost 0.132 on development and 0.343 on held-out;
+exact Shapley 0.079 and 0.044; the random keep set 0.576 and 0.625; SNIPW-64 (seeds 42-44) 0.070
+and 0.094; leave-one-out 0.214 and 0.277. Development effects need not transfer, and section 1.2
+shows that one did not.
+
+### 1.5 Reader, judge, tables; no gauntlet score
+
+- The reader (Qwen3-8B, eager batch-invariant vLLM, greedy, thinking off, Step 0's prompt) and the
+  judge (Qwen3-32B with LongMemEval's official prompt) are AM1's. AM1's judge gate G2 passed with
+  agent hand labels, kappa 0.867 (D9, D111).
+- The tables come from job 1458's GPU-0 eager pass (`reader-gpu0`, canonical order) and its
+  primary judge (`judge32-gpu0`). That pass replayed bit-exactly across GPUs, processes and orders:
+  190,156 of 190,156 reader requests and 10,230 of 10,230 judge items (AM1's G1).
+- The utilities in H-A are oracle utilities: u(S) is the judge's label against the reference
+  answer. H-A measures attribution quality per question when labels are available, not a keep
+  policy that runs without labels. H-C's rule reads no label; its choices are scored with the
+  same oracle utility.
+- **No gauntlet score (D115).** The registration is CPU-only, on data the program holds, and
+  continues a confirmed line. No gauntlet wave runs; two independent pre-freeze checks are
+  required instead.
+
+### 1.6 What the drafter opened
+
+The drafter read `RESULTS.md` and `README.md` of the AM1 confirmatory directory and its SHA-256
+records (`raw-sha256.txt`, `judge-items.sha256.txt`, `study-artifact.sha256`,
+`analysis/logs/outputs.sha256`), and computed SHA-256 digests of the committed held-out
+`tables.json.gz` and, on the host, of the held-out input files (and of `gzip -n` copies of the two
+passes' `all.json`, which equal the committed `all.json.gz` digests). No held-out table, reply or
+JSON or gz output was decoded or analysed. The script refuses held-out inputs until this file is
+frozen (section 8). The development selftest (section 15) ran in a new host directory,
+`~/cotcodec-runs/stage0/am1ks-dev-selftest/`, on development data only.
+
+## 2. Question
+
+When the decision is which 4 of a question's 8 retrieved memories to keep, on LongMemEval-S with
+AM1's reader and judge:
+
+- **H-A (oracle utility).** If the judged utility of a subset can be queried, does direct search
+  over keep sets (read m distinct random 4-subsets, keep the best one read) lose less than the
+  sampled and greedy credit rules at the same or fewer reader calls?
+- **H-B.** Does pruning the pool to BM25 top 4 change the reader's accuracy against keeping all 8?
+- **H-C (label-free, deployable).** Does keeping the best-BM25-ranked 4-subset whose reply does not
+  abstain change accuracy against BM25 top 4?
+
+Closest prior work is AM1's (section 1 of `am1-memory-credit-v1.md`). The delta here is the
+cost axis: credit rules and search scored against the exact optimum at matched reader calls, with
+exact expectations over the search's draws, on held-out tables.
+
+## 3. What it decides and what it does not
+
+It decides H-A's verdict (SEARCH_DOMINATES, RULE_BEATS_SEARCH or INCONCLUSIVE), H-B's reading
+(PRUNING_HELPS, PRUNING_HURTS or NO_DETECTED_DIFFERENCE) and H-C's reading (NONABSTAIN_HELPS,
+NONABSTAIN_HURTS or NO_DETECTED_DIFFERENCE), all on the retrieved arm (section 7). The gold arm,
+the question types and every other number are descriptive.
+
+It does not decide:
+- which credit rule is best, or anything at B other than 4;
+- anything under a noisy utility: direct search keeps the set that maximizes the same noiseless
+  u it is scored on, so under reader or judge noise it would suffer a winner's curse that
+  averaging credit rules largely avoid; the tables are deterministic replays;
+- anything about token cost: a 7-memory leave-one-out call is longer than a 4-memory search call;
+- whether H-A's search is deployable (it reads labels);
+- why abstention tracks correctness, or anything for other readers, judges, prompts, retrievers,
+  pool sizes or memory units;
+- credit's remaining case: one ranking for every budget, or credits that transfer across
+  questions (D113).
+
+## 4. Identity and pins
+
+| Item | Pin |
+|---|---|
+| Experiment id | `am1-keepset-search-v1` (this file) |
+| Held-out tables | `program/evidence/2026-10-16/am1-confirmatory/analysis/tables.json.gz` as committed in AM1's results commit `32996482` (unchanged since): SHA-256 `841e79452d7af6441492abfce64d85cadf5b51415cc7e0461df76ce228df0729`; uncompressed, the `tables.json` of AM1's registered `analyze`, SHA-256 `2d3574be5d3686d73b73dc2d1b36ed3c9b04b23731078bcb6b5f92b83cc3a9cd` (`analysis/logs/outputs.sha256`; the host's `analysis/1458/tables.json` has the same digest) |
+| Questions | AM1's confirmatory set: 347 ids, SHA-256 of the newline-joined ids in the split's order `d4f024fbcda5394984a46c421cd938f2b6db6067fef0f21a5c6e72359b27e50a` (`experiments/am1/am1-memory-credit-v1.yaml`, `confirmatory_set`; checked against `experiments/am1/memcredit-split-v1.json`, SHA-256 `4fa1b774d4131080855d668ac8f00f5cb07d49cf741f2051d5f8d96577edb3e3`) |
+| Study artifact (H-C only) | host `~/cotcodec-runs/stage0/am1-memory-credit-v1/study-artifact.json`, SHA-256 `f23bca047dc7246c5a8db12f67a76a2ea36304d8669dc5c62ae6c42821f73eb7` (`jobs/1458-main/study-artifact.sha256`) |
+| Held-out pass (H-C only) | job 1458, host `~/cotcodec-runs/stage0/am1-memory-credit-v1/runs/main/1458/am1/`; the files of the table below |
+| Reader, judge | AM1's (registration `am1-memory-credit-v1.md`, section 3) |
+| Abstention patterns | AM1d's four patterns (`scripts/memcredit_label_free.py`, `ABSTENTION_PATTERNS`), SHA-256 of their canonical JSON `031bee27e934a772f3419e38f9956d33dbea01096e6657e67426fd8a399d935f`, committed at `7465903f` |
+| Code | section 16 |
+
+The held-out pass files that `extract` reads (paths relative to the job's `am1` directory). The
+`all.npz` and `all.texts.jsonl.gz` digests equal AM1's committed `raw-sha256.txt` records; the
+`all.json` digests were computed on the host, and `gzip -n` of each gives the SHA-256 of AM1's
+committed `all.json.gz` copy (`dfeeae61...` reader, `40fe5408...` judge, `7480fba1...` second
+judge); `worker-progress.jsonl` equals AM1's committed copy; `judge-items.json` equals
+`judge-items.sha256.txt`.
+
+| File | SHA-256 |
+|---|---|
+| `sessions/reader-gpu0/all.json` | `c8381bcbe4afe33e436ad101cbe313ef1608c40916dbd8a6e3a4c0191322e189` |
+| `sessions/reader-gpu0/all.npz` | `8f985d8a2b40ecbb4fcbed1c2a63323c3d4ce398da83eea5fef8bca137054776` |
+| `sessions/reader-gpu0/all.texts.jsonl.gz` | `b05d5d87f9b9c7445cb053d8e4830e2fcf105f04f7c265551773dd9665fcfd39` |
+| `sessions/reader-gpu0/worker-progress.jsonl` | `0f280d34fa6ede8f6e0a11e4428e7114a9489595fae17a7a22940cb55c9ec470` |
+| `sessions/judge32-gpu0/all.json` | `5a36bbac383c6a5395c148dc837c75906cf806ff64969cc67ef770b417929300` |
+| `sessions/judge32-gpu0/all.npz` | `229cefd3fdadc060a89f5d16e6c7ab76d8a20f7f444bc88fd7d48740c6f9f7f6` |
+| `sessions/judge32-gpu0/all.texts.jsonl.gz` | `e2166086dfe773a4e52054d2dc6d58372adb7cde8a4e4a060e990a6e66fb53f4` |
+| `sessions/judge8-gpu0/all.json` | `33c280bf120a551fe41c9569cd2c350d31eca50da4b791b64867ec62a370883c` |
+| `sessions/judge8-gpu0/all.npz` | `9fe7bf7d1ac5a35478d8dc064d88f30e6f5f65631d664a74d5f8720f932d1ba7` |
+| `sessions/judge8-gpu0/all.texts.jsonl.gz` | `e31d77ad7f39a56d829b5ccbef033e56b5b99fe90d01725d03d837a82de95cae` |
+| `judge-items.json` | `c3eec6515b4e654bb88cccef65dba1d88e210326bbf238c27c6f8dfa1c3a2999` |
+
+`memcredit_analyze.join_rows`, the join that built the tables, also loads the second judge's pass
+(`judge8-gpu0`) and computes containment against the reference answer; neither is used here, and
+the second judge's files are pinned because they are read.
+
+## 5. Units and inputs
+
+- **Questions** are the unit of resampling: the 347 of AM1's confirmatory set, one table per
+  question per arm.
+- **Arms.** `retrieved` (primary: the BM25 top 8 user turns, chronological) and `gold`
+  (secondary), as AM1 built them.
+- **Decoding.** `values[m]` is bit m of `int(values_hex, 16)`; bit i of a mask keeps memory i in
+  pool order. AM1b validated this decoding against every committed credit, regret and bootstrap
+  row of the development tables (`memcredit_cost_curve.decode_values`).
+- **Non-constant tables.** A table is non-constant when its 256 values are not all equal (AM1's
+  `summary.constant` is false): 251 retrieved and 288 gold, as AM1 reported. H-A reads only these:
+  a constant table has no keep decision to score. H-B and H-C read every question; a constant table
+  is 0 for every rule and so concordant.
+- **BM25 ranks** come from each table's `credits.retrieval_rank` (minus the rank; distinct within
+  a pool). **BM25 top 4** is the set of the four best-ranked memories, AM1's retrieval-rank keep set
+  (checked for every table).
+- **The 70 4-subsets** of the 8 memories, and their order for H-C (section 6.6).
+
+## 6. Rules, calls and estimands
+
+### 6.1 Calls and regret
+
+- A **call** is one distinct subset whose u(S) a rule reads, memoized per pool, as a deployed
+  system would cache it; the empty and full sets count when they are read (AM1b).
+- **Regret** at B = 4 is OPT_4 minus u(keep set), OPT_4 = max over the 70 4-subsets of u. A credit
+  rule keeps its top 4 by credit, and its regret is averaged uniformly over every keep set its ties
+  allow (`harness.memcredit.keep_set_regret_range`, `mean`; AM1's convention). A search rule returns
+  one set, scored by the same function on that set's indicator (`memcredit_cost_curve.set_regret`).
+
+### 6.2 The rules of H-A (AM1b's definitions and code, unchanged)
+
+| Rule | Calls | Definition |
+|---|---|---|
+| leave-one-out | 9 | `mc.loo_credit`: u(N) - u(N minus i); the full set and the 8 deletions |
+| SNIPW-64 | distinct exposures read (about 57) | `ms.snipw`: 64 i.i.d. exposures, each memory kept with probability 1/2; mean u with i kept minus mean u with i dropped |
+| MSR-Banzhaf-64 | 64 | `cc.msr_banzhaf`: 64 distinct uniform subsets without replacement; maximum-sample-reuse Banzhaf in exact rational arithmetic |
+| permutation Shapley-16 | distinct subsets read (about 83) | `ms.permutation_shapley`: 16 uniform orders |
+| greedy backward, BM25 ties | 26 | `cc.greedy_backward`: remove, 4 times, the memory whose removal leaves the highest u (8 + 7 + 6 + 5 sets, of sizes 7 to 4; never the full set); ties drop the worse BM25 rank |
+| direct search at m calls | m | read m distinct uniformly random 4-subsets and keep the best one read |
+
+**Direct search's regret is an exact expectation over its draws** (`cc.direct_search_curve`): with
+the 70 4-subsets sorted by regret r_(1) ≤ ... ≤ r_(70), the best of m distinct uniform draws is
+the j-th with probability C(70 - j, m - 1)/C(70, m), so E[regret] = sum over j of r_(j) C(70 - j,
+m - 1)/C(70, m). Every best-read set has the same u, so ties cannot change it. At 70 calls it is
+0.
+
+**Sampled rules** (SNIPW-64, MSR-Banzhaf-64, permutation Shapley-16) run 200 seeds, 42 to 241,
+each with `random.Random(f"{seed}:{question_id}:{arm}:{rule}")` and the rule names `snipw_64`,
+`msr_banzhaf_64` and `perm_shapley_16`. That is AM1's and AM1b's scheme, so seeds 42-44 are AM1's
+draws and seeds 42-61 AM1b's. A table's value for a sampled rule is its mean over the 200 seeds:
+the estimand is the expectation over the rule's random draws.
+
+### 6.3 H-A's comparisons
+
+Each comparison j is a paired difference per non-constant retrieved table,
+
+  D_j(table) = regret of direct search at the comparison's calls - regret of the rule,
+
+averaged over seeds for a sampled rule. **Negative D_j means direct search loses less.** For
+"matched" comparisons, direct search reads exactly as many 4-subsets as the rule read on that
+table and seed (AM1b's pairing; for SNIPW-64 the count varies by draw).
+
+| Id | Rule | Rule's calls | Direct search's calls |
+|---|---|---|---|
+| A1 | leave-one-out | 9 | 9 (matched) |
+| A2 | SNIPW-64 | about 57 | matched, per table and seed |
+| A3 | SNIPW-64 | about 57 | 26 (fewer) |
+| A4 | MSR-Banzhaf-64 | 64 | 64 (matched) |
+| A5 | MSR-Banzhaf-64 | 64 | 26 (fewer) |
+| A6 | permutation Shapley-16 | about 83 | 26 (fewer) |
+| A7 | greedy backward, BM25 ties | 26 | 26 (matched) |
+
+Permutation Shapley-16 has no matched comparison: it reads more than 70 subsets, where direct
+search is exhaustive and loses nothing, so that comparison could only restate its regret.
+
+The estimand of comparison j is the mean of D_j over the 251 non-constant retrieved tables.
+
+### 6.4 H-B
+
+Over all 347 questions, retrieved arm: u(BM25 top 4) and u(all 8), each 0 or 1. The discordant
+counts are b (BM25 top 4 right, all 8 wrong) and c (the reverse). The estimand is the accuracy
+difference (b - c)/347.
+
+### 6.5 H-C
+
+`nonabstain-BM25` keeps the best-BM25-ranked 4-subset whose reply does not abstain, and BM25 top 4
+when every 4-subset abstains. "Abstains" means AM1d's rule (`memcredit_label_free.abstention`): the
+reply, normalized by `harness.memcredit.normalize_answer`, is empty or matches one of the four
+patterns pinned in section 4. This is AM1d's `nonabstain@70`; it reads no label. Over all 347
+questions, retrieved arm: b (nonabstain-BM25 right, BM25 top 4 wrong), c (the reverse), and the
+difference (b - c)/347.
+
+### 6.6 The BM25 reading order and the stop rule's reads (descriptive)
+
+The 70 4-subsets are read in ascending sum of their four BM25 ranks; equal sums go to the
+lexicographically smaller sorted rank tuple (AM1d's `rank_key`, read in descending key order).
+BM25 ranks are distinct within a pool, so this is a total order, and BM25 top 4 is first. The
+stop rule reads in this order and stops at the first reply that does not abstain; its choice is
+exactly nonabstain-BM25's (checked per pool). Its **reads** are the position of that reply (the
+answering call included), or 70 when no 4-subset answers (it then answers with BM25 top 4's
+reply, already read). Reported: mean, median, 90th percentile, maximum, the counts at 1, at most
+8 and at most 16, and the full distribution, over all questions and over non-constant tables,
+per arm; and AM1d's capped variants (at most 8, 16, 26, 38 reads, then BM25 top 4).
+
+### 6.7 Descriptive outputs
+
+Per arm, and per question type within each arm:
+- the oracle-search ceiling: the mean of OPT_4 over every question (the accuracy of exhaustive
+  oracle search);
+- direct search at m = 8, 16, 26, 38 and 70 calls: mean regret over the non-constant tables, and
+  accuracy (OPT_4 minus regret) over every question;
+- the accuracies of BM25 top 4, all 8 and nonabstain-BM25;
+- the abstention rate of the 4-subset replies, the number of pools where BM25 top 4 or all 8
+  abstains, the number where every 4-subset abstains, and abstaining replies judged correct;
+- H-A's comparisons, rule regrets and decision bounds on the gold arm, under the same rule as
+  section 7.1 but without a decision;
+- H-B and H-C on the gold arm, under the same tests but without a decision;
+- nonabstain-BM25 against all 8 on both arms.
+
+### 6.8 Intervals
+
+Question-cluster percentile bootstrap, `harness.memcredit_study.cluster_bootstrap`: 10,000
+resamples of questions with replacement, numpy `default_rng(42)`. With one table per question per
+arm it resamples tables, and since every comparison of an arm has the same questions and the same
+seed, all of them use the same resamples. 95% two-sided intervals throughout; H-A's decision
+bounds are the one-sided ends of section 7.1.
+
+## 7. Hypotheses and decision rules
+
+### 7.1 H-A (primary): search against credit at equal or fewer calls
+
+**Family**: the seven comparisons A1-A7 of section 6.3, retrieved arm, B = 4, 251 non-constant
+tables.
+
+**Bounds.** For each comparison, U_j and L_j are the one-sided upper and lower bootstrap bounds
+of the mean of D_j at level 1 - 0.05/7 (one-sided 99.29%): the
+ceil((1 - 0.05/7)(R - 1))-th and floor((0.05/7)(R - 1))-th order statistics of the R = 10,000
+resampled means (the ends of `cluster_bootstrap`'s two-sided interval at alpha 2 x 0.05/7).
+
+**Monte Carlo margin.** A bound clears 0 only if it clears it by more than 3 Monte Carlo standard
+errors of that comparison's mean (section 7.4), and by any margin for A1 and A7, whose rules are
+deterministic.
+
+Each comparison is classified SEARCH_BETTER if U_j is below 0 by more than the margin,
+RULE_BETTER if L_j is above 0 by more than the margin, and NOT_SEPARATED otherwise. Then:
+
+- **SEARCH_DOMINATES** if all seven are SEARCH_BETTER;
+- **RULE_BEATS_SEARCH** if any is RULE_BETTER (the report names them);
+- **INCONCLUSIVE** otherwise (the report names the comparisons not separated).
+
+The three are exclusive: a comparison cannot be both, and SEARCH_DOMINATES leaves none RULE_BETTER.
+
+**Why this family, this alpha, this bootstrap.**
+- The family is the set of rules D113 and D115 name for this test, each at the calls where the
+  claim "direct search at equal or fewer calls" is made: the two rules AM1 scored with seeds
+  (permutation Shapley-16 and SNIPW-64), the cheapest exact rule (leave-one-out), the best sampled
+  Banzhaf rule per call in AM1b (MSR-Banzhaf-64), and the only search rule AM1b tried (greedy
+  backward with BM25 ties; forward selection with BM25 ties lost more on development, 0.105).
+- Alpha 0.05 family-wise, one-sided in each direction, matches AM1's H2 (99% two-sided intervals,
+  Bonferroni over five rules: family-wise 5%). One-sided because the hypothesis has a direction
+  (search loses less), and the opposite direction is its falsifier, tested by its own one-sided
+  bound at the same level.
+- Bonferroni rather than Holm, because it gives bounds, the dual of the tests, that the report can
+  print and a reader can check. SEARCH_DOMINATES is an intersection-union claim: it is wrong only if
+  some D_j is at least 0, and then it fires with probability at most 0.05/7, so Bonferroni is
+  conservative for it. RULE_BEATS_SEARCH is a union claim, and Bonferroni holds its family-wise
+  error at 0.05 or below.
+- A2 and A4 are nearly implied by A3 and A5: direct search's expected regret does not increase
+  with calls, so whenever a SNIPW-64 draw reads at least 26 subsets (every development draw read
+  47 or more) D_A2 is at most D_A3 table by table, and with shared resamples U_A2 is at most U_A3
+  and L_A2 at most L_A3; MSR-Banzhaf-64 always reads 64. So A2 and A4 can change the verdict only
+  through their Monte Carlo margins. They are kept because they are the equal-calls comparisons
+  D113 names, and their classifications are reported; Bonferroni over seven, not five, is the
+  price, and it is conservative.
+- The percentile bootstrap of questions is AM1's, AM1b's and AM1d's, with AM1b's and AM1d's 10,000
+  resamples. At one-sided 99.29% the bound is the 72nd most extreme of 10,000 resampled means; its
+  bootstrap Monte Carlo error is about 0.04 standard errors of the mean.
+
+**Program reading.** SEARCH_DOMINATES licenses, within the scope of section 3: "with the oracle
+utility, direct search over random 4-subsets loses less keep-set regret than leave-one-out and
+greedy backward elimination at the same calls, and than SNIPW-64, MSR-Banzhaf-64 and permutation
+Shapley-16 at 26 calls, fewer than they read" (this reader, this judge, BM25 user-turn pools, 4 of
+8). RULE_BEATS_SEARCH names the rules that beat direct search, and at which calls. INCONCLUSIVE
+names the comparisons not separated, and the others' classifications stand as reported. The gold
+arm's verdict under the same rule is descriptive.
+
+### 7.2 H-B: BM25 top 4 against all 8
+
+**Test.** The exact two-sided McNemar test on the discordant pairs of section 6.4: p = min(1,
+2 P(X ≤ min(b, c))), X ~ Binomial(b + c, 1/2), in exact rational arithmetic; p = 1 when b + c = 0.
+Alpha 0.05.
+
+- **PRUNING_HELPS** if p ≤ 0.05 and b > c;
+- **PRUNING_HURTS** if p ≤ 0.05 and b < c;
+- **NO_DETECTED_DIFFERENCE** otherwise.
+
+**Interval.** The paired difference (b - c)/347 with its exact conditional 95% interval: given
+the b + c discordant pairs, ((b + c)/347)(2 pi - 1) at the ends of pi's Clopper-Pearson interval
+for b of b + c (`harness.memcredit.clopper_pearson`). It is the inversion of the same exact test,
+so it excludes 0 exactly when the test rejects (tested over every b, c up to 25). The
+question-cluster bootstrap 95% interval is reported beside it, as AM1d did.
+
+**Reading in light of section 1.2.** AM1's figures already put the difference at -0.049 or below,
+so PRUNING_HELPS cannot occur, and H-B is not a blind test. Its registered content is whether the
+reversal of the development lead is detectable by this test, and how large it is. PRUNING_HURTS
+would license "on the retrieved arm, pruning the BM25 top 8 to the BM25 top 4 loses answers for
+this reader". NO_DETECTED_DIFFERENCE would mean the reversal is real (section 1.2) but within the
+noise of this test, which happens only with more than 67 discordant pairs at the smallest net
+count.
+
+### 7.3 H-C: nonabstain-BM25 against BM25 top 4
+
+**Test.** The same exact McNemar test on the discordant pairs of section 6.5, alpha 0.05 two-sided,
+with the same exact conditional and bootstrap intervals.
+
+- **NONABSTAIN_HELPS** if p ≤ 0.05 and b > c;
+- **NONABSTAIN_HURTS** if p ≤ 0.05 and b < c;
+- **NO_DETECTED_DIFFERENCE** otherwise.
+
+NONABSTAIN_HELPS licenses "keeping the best-BM25-ranked 4-subset whose reply does not abstain is
+more accurate than BM25 top 4 for this reader and prompt", a deployable keep rule (no label read)
+whose cost is the stop rule's reads (section 6.6). Because an abstaining reply is almost never
+judged correct, c is expected near 0; with c = 0 the test rejects when b is 6 or more, with c = 1
+when b is 8 or more.
+
+### 7.4 Monte Carlo error of the sampled rules
+
+For each comparison and rule with seeds, the Monte Carlo standard error is the standard deviation
+over the 200 seeds of the seed's mean over tables, divided by the square root of 200 (AM1b's
+`seed_mc_se`). On the 38 development tables it was 0.0013-0.0020 (section 9); on 251 tables it is
+expected near 0.0005-0.0008. It enters H-A through the margin of section 7.1 and is reported for
+every comparison, with the list of comparisons whose bounds lie within it
+(`bounds_within_mc_margin`).
+
+### 7.5 Multiplicity across hypotheses
+
+H-A, H-B and H-C answer different questions, and no claim is made from "any of" them, so each is
+read at its own alpha without a correction across them. H-A's family carries its own correction.
+The secondary and descriptive readings carry none and license nothing.
+
+## 8. Validity checks, void and kill rules
+
+`scripts/memcredit_keepset_search.py` evaluates every check below and stops before writing a
+result when one fails.
+
+- **Freeze gate.** With `--split heldout`, `extract` and `analyze` refuse to open any held-out
+  input unless the ledger holds a row for `am1-keepset-search-v1` whose SHA-256 equals this file's,
+  and every code pin of section 16 matches the working tree (parsed from this file). A test checks
+  that the refusal fires before any read.
+- **VOID, nothing read (V1): a digest differs.** The tables' gz file or the uncompressed tables
+  (section 4), any code pin, or the abstention list's digest. For H-C also the study artifact, any
+  pass file of section 4 or the features' recorded provenance (V5). An input is fixed, never the
+  code; a code change is a new registration id.
+- **VOID, nothing read (V2): the tables are not AM1's.** Not exactly 694 tables over the 347
+  confirmatory ids (checked against the split file and the id digest), one per question and arm;
+  any table incomplete; any `values_hex` that does not round-trip; `summary.constant` disagreeing
+  with the decoded values; non-constant counts other than 251 retrieved and 288 gold; BM25 ranks
+  not distinct; BM25 top 4 not AM1's retrieval-rank keep set.
+- **VOID for H-C only (V3): the join fails.** The joined labels (`memcredit_analyze.join_rows`,
+  unchanged) must reproduce `values_hex` on all 694 tables and their `distinct_replies`
+  (`memcredit_label_free.validate_tables`); AM1d's join must agree with it on every request's reply
+  and label; every table request must have a reply and a label; no log-prob may be missing. A
+  failure voids H-C and the abstention outputs; H-A and H-B read only the pinned tables and stand.
+- **VOID (V4): a confirmatory file changed.** At the freeze commit and at the analysis commit,
+  `git diff ea9d57dc -- program/evidence/2026-10-16/am1-confirmatory` must be empty (freeze
+  checklist and the analysis record), and the tables' digests are checked by the code (V1).
+- **V5: features provenance.** `analyze` refuses features whose recorded split, pass digests,
+  artifact digest, abstention-list digest or code digests (this script and the five modules it
+  reuses) differ from the pins.
+- **Kill.** None beyond the void rules: every hypothesis is read when its inputs pass. A void is
+  reported with its check, and the registration is not rerun under this id with other inputs.
+- **Monte Carlo sensitivity** is handled inside H-A's rule (section 7.1), not as a void.
+
+## 9. Operating characteristics (from the development dry run)
+
+Computed by `scripts/memcredit_keepset_search.py power` from the development dry run of this code
+(`program/evidence/2026-10-16/am1-keepset-search-dev-selftest/power.json`; section 15).
+
+**H-A.** 1,000 simulations, each drawing 251 tables with replacement from the 38 development
+retrieved non-constant tables (their seven differences together), with a 1,000-resample bootstrap
+inside and section 7.1's rule (without the Monte Carlo margin). Reduced effects by Bernoulli
+thinning: each drawn table keeps its seven differences with probability 1/2 or 1/4, else all are
+0.
+
+| Development mean of D_j | A1 | A2 | A3 | A4 | A5 | A6 | A7 |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| (38 tables, 200 seeds) | -0.123 | -0.044 | -0.025 | -0.046 | -0.025 | -0.069 | -0.055 |
+
+| Effect | P(SEARCH_DOMINATES) | P(INCONCLUSIVE) | P(RULE_BEATS_SEARCH) | Weakest comparisons, P(SEARCH_BETTER) |
+|---|---:|---:|---:|---|
+| as on development | 0.999 | 0.001 | 0 | A7 0.999 |
+| half | 0.909 | 0.091 | 0 | A7 0.919, A5 0.988 |
+| quarter | 0.372 | 0.622 | 0.006 | A7 0.449, A5 0.773 |
+
+Readings: if the held-out differences resemble development's, the design calls SEARCH_DOMINATES
+with probability near 1, and with probability about 0.9 at half the effect. Greedy backward (A7)
+is the weak link: on development it lost 0.055 more than direct search at 26 calls, 95% [-0.003,
++0.130] in AM1b's sign, on a few tables. These figures rest on 38 development tables, and
+development and held-out differ (section 1.4).
+
+**H-B.** The exact power of the exact test over 347 questions, at a discordance rate r (the share
+of questions where BM25 top 4 and all 8 disagree) and a share s of discordant pairs favouring BM25
+top 4 (`mcnemar_power`; symmetric in s and 1 - s). At the development rate (4 of 63, r = 0.0635):
+power 1.00 at s = 1 or 0, 0.98 at s = 0.9 or 0.1, 0.78 at s = 0.8 or 0.2, 0.39 at s = 0.7 or 0.3.
+Section 1.2 already fixes the sign (s below 1/2) and a net count of at least 17: the test then
+rejects unless there are more than 67 discordant pairs.
+
+**H-C.** At the development rate (1 discordant pair of 63, r = 0.016) and every discordant pair
+favouring the rule, power is 0.47; at r = 0.03, 0.95; at r = 0.05, 1.00. Conditioning on AM1's
+published count instead (BM25 top 4 wrong on exactly 86 retrieved tables, the only tables where
+the rule can gain), with c = 0 and a share q of those 86 tables converted to right answers: power
+0.008 at q = 0.02, 0.26 at q = 0.05, 0.87 at q = 0.1 and 1.00 at q = 0.2. On development q was 1
+of 5. The design detects a conversion rate of about 1 in 10 of the tables BM25 top 4 gets wrong,
+and is unlikely to detect one of 1 in 20.
+
+## 10. Seeds
+
+200 seeds for the sampled rules, 42 to 241 (section 6.2; AM1's 42-44 and AM1b's 42-61 among
+them). Bootstrap: numpy `default_rng(42)`. Power simulation: numpy `default_rng(43)`. Direct
+search, H-B and H-C involve no random draw. No unseeded randomness.
+
+## 11. Compute plan
+
+CPU only, no GPU, no Slurm GPU allocation. `extract` reads one reader pass and its judge
+(190,156 requests; AM1d's extract of 126 pools took under a minute) and `analyze` computes 200
+seeds of three sampled rules on 539 non-constant tables (the development dry run, 89 tables, took
+about 15 s of CPU). Both run on the host's login node, outside Slurm, as AM1's CPU steps did, in
+minutes. Under D110 another project's inference jobs hold some GPUs; this registration needs none.
+
+## 12. Data handling
+
+The held-out replies, the study artifact and the features stay on the host. `extract` writes the
+features (per request: label, token count, log-prob sums, abstention flag and pattern name, reply
+class id, SHA-256 of the normalized reply; no text) to a host-only directory and refuses a
+directory inside the repository. The repository gets `results.json`, `per-table.json.gz` (ids,
+question types, masks, utilities, regrets, differences and reads; no text) and `tables.md` from
+`analyze`, and the text-free stdout of `extract` (its validation counts and the features' digest).
+
+## 13. Exclusions and infrastructure failures
+
+No question is excluded for its outcome. The 347 questions are AM1's confirmatory set (Step 0's
+eight demo questions were excluded there before any run). Constant tables are outside H-A by
+definition and inside H-B and H-C. AM1 had no incomplete table; any incomplete table now is a void
+(V2), not an exclusion. A crash of `extract` or `analyze` before it writes its outputs is rerun
+with the same commands at the same commit; the outputs are deterministic, so a rerun that
+completes is byte-identical.
+
+## 14. Reported regardless of outcome
+
+- H-A on both arms: every comparison's mean difference, 95% interval, decision bounds, Monte Carlo
+  standard error, classification and the verdict; every rule's regret, calls and 95% interval;
+  direct search's regret at 8, 9, 16, 26, 38, 64 and 70 calls (and its full exact curve per table);
+- H-B and H-C on both arms: b, c, the accuracies, the difference with both intervals, the exact
+  p-value and the reading; nonabstain-BM25 against all 8;
+- the stop rule's reads (section 6.6) and the descriptive outputs of section 6.7 by question type;
+- every validity check of section 8 with its counts, and the features' provenance;
+- the disclosures of section 1, including that H-B's direction was known before the run and that
+  the run carries no gauntlet score; every deviation.
+
+## 15. What development fixed in this design: the development selftest
+
+Before the freeze, the code ran on development data only
+(`program/evidence/2026-10-16/am1-keepset-search-dev-selftest/README.md`). It reproduced AM1b's
+and AM1d's committed numbers wherever this code overlaps them, and ran the full analysis on the
+development tables and replies as a dry run. The record lists every check; in short:
+
+- AM1b, per table and in aggregate, at B = 4 on both arms: direct search's exact curve,
+  leave-one-out, greedy backward, the random set, retrieval rank, and SNIPW-64, MSR-Banzhaf-64 and
+  permutation Shapley-16 at AM1b's 20 seeds (per seed), with AM1b's means, 95% and 99% intervals
+  and rule-minus-direct differences;
+- AM1d: `extract` on job 1411 reproduces AM1d's feature file pool for pool, and the analysis
+  reproduces AM1d's per-table choices, accuracies with intervals, abstention counts, stop-rule
+  positions and the exact sign tests its README quotes (4 vs 0, p = 0.125; 5 vs 0, p = 0.0625;
+  1 vs 0).
+
+Development also set: the 200 seeds (AM1's 3-seed SNIPW-64 was off by 0.020 from AM1b's 20-seed
+mean); the Monte Carlo margin; the 26-call point (greedy selection's cost, where direct search's
+development regret, 0.024, is already below every credit rule's at any cost, the lowest being
+exact Banzhaf's 0.031); and H-C's single rule (AM1d's best in sample).
+
+## 16. Code of record (at the draft revision; re-pinned at the freeze)
+
+The fill commit re-pins every row; a row that changes is reviewed before the freeze. In held-out
+mode the script parses this table and refuses to run unless every file matches.
+
+| File | Role | SHA-256 |
+|---|---|---|
+| `scripts/memcredit_keepset_search.py` | this registration's analysis: gate, extract, analyze, development selftest and power | `a80e10a41b461a9ed4d11743cd9ef7fb2545fd1289abe8c537dcc297eac7ac07` |
+| `tests/test_memcredit_keepset_search.py` | its tests: exact order-statistic expectation, exact McNemar test and its interval, H-A per table and verdict, H-C's stop rule, the gate and the pins | `50b1f748757c1196f1889ad4af905d4753b4d822eb4c61dda3f09167dd2ad0ce` |
+| `scripts/memcredit_cost_curve.py` | AM1b's decoding, memoized calls, rules, greedy search and exact direct-search curve | `431f4cb21ccd398e1433e29a5b40c1a697d48b9aecc5fc728956f819e28c9bab` |
+| `scripts/memcredit_label_free.py` | AM1d's abstention list, join, features, BM25 order and stop rule | `721015de434021a72ab3bbbab5e91d0de39a2fc359df7283068f83026dcb9d8f` |
+| `scripts/memcredit_analyze.py` | AM1's join (`join_rows`, `pool_views`) and artifact loader | `5444104d3c760b17f311656f4e0dbd50b2b154c89d806f1e4aa2ab6791fb0f34` |
+| `scripts/memcredit_study.py` | AM1's pass reader (`load_pass`) | `f27ecd21e769655cddc1e9b06ee8f4c7c4ee8494348b4fc73dba7c68fdb66bb3` |
+| `harness/memcredit.py` | set functions, keep-set regret, Clopper-Pearson, answer normalization | `ad0964d0caab382b5541b64d56a30105bc306d2286f6e62137b1eff9121dd607` |
+| `harness/memcredit_study.py` | configs, split, confirmatory set, estimators, bootstrap | `14a97d826ba619e23ea9686e2d2d57149d9f0119df3f80240843178953cf301b` |
+| `experiments/am1/am1-memory-credit-v1.yaml` | AM1's registration config (confirmatory set, pools) | `8466d6d42ace1477bb9b2377de8ed67027502ff11b179a369eed352fda212069` |
+| `experiments/am1/memcredit-study-v1.yaml` | AM1's pilot config (development selftest) | `ecdb5c11ff4eaf757ec6712c6f2c75d61c79882bb3d418202b7143abf90793db` |
+| `experiments/am1/memcredit-split-v1.json` | the split | `4fa1b774d4131080855d668ac8f00f5cb07d49cf741f2051d5f8d96577edb3e3` |
+| `tests/test_memcredit_cost_curve.py` | AM1b's tests | `fd162d8a401f7eab7f56a36302263032604085329bd736678c8cac4849f621f3` |
+| `tests/test_memcredit_label_free.py` | AM1d's tests | `139bb5098735a06a6c68765e02a3889426b617d074efc31fbbd8e78bbb7ee809` |
+| `scripts/preregister.py` | the ledger | `21fc3ef0ed0958b1600ce742c3b4f8d557d0a298635acb20342710eb814b2c0d` |
+
+Commands of the registered run, on the host from a `git archive` export of the freeze commit, in
+the export's `uv` environment (AM1d's usage). The names in capitals are host paths:
+HELDOUT_RUN is `~/cotcodec-runs/stage0/am1-memory-credit-v1/runs/main/1458/am1`; HELDOUT_ARTIFACT
+is `~/cotcodec-runs/stage0/am1-memory-credit-v1/study-artifact.json`; PRIVATE_DIR is a new
+host-only directory, `~/cotcodec-runs/stage0/am1-keepset-search-v1/private`; OUTPUT_DIR is a new
+directory beside it.
+
+```bash
+uv run --offline python scripts/memcredit_keepset_search.py extract --split heldout \
+  --run-dir HELDOUT_RUN --evidence HELDOUT_ARTIFACT --private-dir PRIVATE_DIR
+uv run --offline python scripts/memcredit_keepset_search.py analyze --split heldout \
+  --features PRIVATE_DIR/features-heldout-1458.json.gz --output-dir OUTPUT_DIR
+uv run --offline --extra dev pytest -q tests/test_memcredit_keepset_search.py
+```
+
+The defaults are the registered settings: 200 seeds from 42, 10,000 bootstrap resamples with seed
+42. `analyze` runs once; a fresh verifier reruns it from a new export, and the outputs must be
+byte-identical.
+
+## 17. Freeze checklist
+
+Before the freeze, by the orchestrator:
+
+1. Two independent pre-freeze checks of this file and the code of section 16 (D115), by reviewers
+   that did not draft them, and the corrections they require; their dispositions go in section 19.
+2. The gauntlet question: resolved by D115. No gauntlet wave runs, and the run carries no gauntlet
+   score (section 1.5).
+3. If any code of section 16 changed after the development selftest, rerun the selftest and update
+   its record.
+4. Re-pin section 16 in a fill commit; run the tests locally and on the host.
+5. Confirm that `git diff ea9d57dc -- program/evidence/2026-10-16/am1-confirmatory` is empty at
+   the fill commit, and on the host that the files of section 4 still have their digests.
+6. The ledger row, by `uv run python scripts/preregister.py freeze am1-keepset-search-v1
+   program/preregistrations/am1-keepset-search-v1.md`, in a commit that adds only that row. A test
+   freezes this file into a scratch ledger, so the command's text checks pass.
+
+After the freeze: export the freeze commit to the host, run section 16's commands once, commit the
+text-free outputs and `extract`'s stdout, and have a fresh verifier rerun `analyze` from a new
+export.
+
+## 18. Priors (for the record; not tested)
+
+- **H-A:** SEARCH_DOMINATES. Development differences are all negative, and on held-out every rule
+  AM1 scored lost more than on development (section 1.4). The weak links are greedy backward (A7)
+  and MSR-Banzhaf-64 against 26 calls (A5).
+- **H-B:** PRUNING_HURTS, from section 1.2: AM1's figures put BM25 top 4 at least 17 questions
+  behind all 8.
+- **H-C:** uncertain. On development, nonabstain-BM25 converted 1 of the 5 tables BM25 top 4 got
+  wrong; at that rate over the 86 held-out tables the test rejects with probability near 1, at a
+  quarter of it rarely. The reads: on development, 1.21 on average over non-constant retrieved
+  tables and 12.87 over all 63 questions (most of them pools where no 4-subset answers).
+- **Descriptive:** abstention around half of the 4-subset replies (development: 54.5% retrieved,
+  58.9% gold); oracle ceiling well above all 8 (development: 0.587 against 0.444 over every
+  retrieved question).
+
+## 19. Review log: the independent checks
+
+No independent check has run yet. Two are required before the freeze (D115).
