@@ -1,0 +1,20 @@
+{
+  "experiment_id": "am1-memory-credit-v1",
+  "file": "hand-labels.jsonl",
+  "host_path": "/home/kevin/cotcodec-runs/stage0/am1-confirmatory/hand-labels.jsonl",
+  "sha256": "70a5f2ec5fb27391732481421288842f5669171397d8c7d21f260c2233670c66",
+  "bytes": 11248,
+  "rows": 120,
+  "fields": ["item_id", "item_index", "label", "note"],
+  "label_encoding": "integer 1 (yes) or 0 (no); item_id equals item_index; rows in the sample's order",
+  "labels_sample": {
+    "file": "hand-check-sample.jsonl",
+    "sha256": "cebfe1911deeab24f139beebf41bf327403014254dfd43ada4fb78f061ebf94c",
+    "rows": 120,
+    "same_item_order": true
+  },
+  "labeller": "an isolated agent, blind to every judge label, analysis output and result (registration section 8; D9, D111); Kevin did not label",
+  "joined": false,
+  "receipted_before_join": "this file and hand-labels.sha256.txt are committed before analyze --hand-labels joins the labels to the judges (registration sections 8 and 17)",
+  "file_stays_on_host": "the labels file carries the labeller's free-text notes, which may quote LongMemEval text, so it stays on the host (registration section 12); only its digest is committed"
+}
