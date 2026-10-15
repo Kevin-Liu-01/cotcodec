@@ -109,9 +109,9 @@ both with the Qwen3-8B reader, which is this registration's anchor.
 - **The second judge's known error.** Qwen3-8B called the reply "I don't know." correct on 49 of
   347 held-out validation items (AM1) and 11 of 63 development items (AM3), and AM3's
   second-judge losses were mostly that error. On answerable questions its readings are
-  descriptions only. On abstention questions, where "I don't know." is the right answer, its
-  error has the opposite effect on H2's estimand and is not measured beyond the validation items
-  of section 6.3; its H2 figures are descriptions.
+  descriptions only. On abstention questions accepting "I don't know." is right, so that error
+  does not bias H2; its other errors there are measured only by the validation items of section
+  6.3, and its H2 figures are descriptions.
 
 ### 1.5 No gauntlet score (D118)
 
@@ -305,8 +305,8 @@ the three readers tried.
 statistic. Holm controls the family-wise error at 0.05 and is uniformly more powerful than
 Bonferroni for two hypotheses. Under the primary judge c is expected near 0 (an abstaining
 top-4 reply is almost never judged correct: 6 of 13,598 held-out abstaining 4-subset replies for
-Qwen3-8B; 0-8 per reader and arm on development), so the test is in effect one-directional, as
-H-C's was.
+Qwen3-8B; 0-8 of about 2,200-2,600 per reader and arm on development), so the test is in effect
+one-directional, as H-C's was.
 
 ### 7.2 H2 (descriptive, registered estimand): the rule's cost on the abstention questions
 
@@ -369,8 +369,9 @@ traceback.
   to start) is rerun once, as a new job of this registration with the same commit, image, inputs
   and seeds (`am3g-submit.sh ... rerun`); the incomplete job's records are kept and reported.
   A job stopped by a time budget (a step's `max_s` or the job's deadline) is not rerun: the
-  budgets are part of the design. If the held-out job is still incomplete, H1 and H2 are VOID
-  (there is no anchor check). If only the abstention job is, H2 is VOID with the named error and
+  budgets are part of the design. If the held-out job remains incomplete (after its rerun, or
+  after a time budget), H1 and H2 are VOID (there is no complete anchor check). If only the
+  abstention job remains incomplete, H2 is VOID with the named error and
   `analyze` runs once with `--abstention-void REASON` (section 16); H1 stands. A missing
   second-judge label affects only the second judge's descriptions: a reader and arm with any
   missing second-judge label is reported as incomplete under that judge.
@@ -446,9 +447,10 @@ rule, the tests and the exact intervals involve no random draw.
 - **Steps.** One image build, then two GPU jobs on one H100 each, from the freeze commit, in the
   image built from its source capsule, through the docker-research lane
   (`scripts/submit_docker_research_job.py`): the container runs read-only with `--cap-drop ALL`,
-  `no-new-privileges`, the user's uid:gid, a tmpfs `/tmp`, no network and `--gpus
-  device=` the Slurm-allocated GPU, stock vLLM only. Steps per job, in order: `rd-qwen3-8b`, `rd-olmo2`
-  (`rd-olmo2-default` only if it does not complete), `rd-qwen35-9b-default`, `judge32`, `judge8`.
+  `no-new-privileges`, the user's uid:gid, a tmpfs `/tmp`, no network and only the GPU Slurm
+  allocated (`--gpus device=` that GPU), stock vLLM only. Steps per job, in order: `rd-qwen3-8b`,
+  `rd-olmo2` (`rd-olmo2-default` only if it does not complete), `rd-qwen35-9b-default`,
+  `judge32`, `judge8`.
 - **Estimate**, from AM3's job 1466 (0.18 GPU-h for three readers x 8,946 requests and both
   judges on 2,743 items: reader passes of 70, 73 and 122 s, engine starts of 27-41 s, judges 19
   and 4 s):
@@ -475,14 +477,16 @@ rule, the tests and the exact intervals involve no random draw.
 ## 12. Data handling
 
 The reply texts, the judge items, the study artifacts (pool texts, questions, explanations,
-decoys) and the features stay on the host under `~/cotcodec-runs/stage0/am3-nonabstain-generality-v1/`.
+decoys) and the features stay on the host, under `~/cotcodec-runs/stage0/am3-nonabstain-generality-v1/`
+(AM1's held-out artifact stays where AM1 left it).
 `extract` writes the features (per mask: labels, abstention flag and pattern, finish reason,
 token count, SHA-256 of the normalized reply; no text) to a host-only directory and refuses one
 inside the repository. The repository gets `results.json`, `per-table.json.gz` (ids, types,
 masks, outcomes, reads; no text) and `tables.md` from `analyze`, the text-free logs and lane
 records, and a judge-item list with each response replaced by its SHA-256. The staging script
 searches every staged file for every reply of 12 or more characters and every question,
-explanation, decoy and memory text of the two artifacts, and refuses to stage on a hit.
+explanation, decoy and memory text of the two artifacts, and exits with an error on a hit; a
+staged tree with a hit is not committed.
 
 ## 13. Exclusions and infrastructure failures
 
