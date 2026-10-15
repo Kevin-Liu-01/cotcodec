@@ -6,6 +6,8 @@
 # text, question, explanation or decoy answer reached the staged tree (every distinct reply of
 # at least 12 characters, and every study-artifact question and answer text, is searched for in
 # every staged file).
+# The commit is the one whose analysis outputs ($R/out-<short>-a) are staged; the checkout may be
+# at a later commit of the same branch.
 # Usage: am3g-stage-evidence.sh dev|reg <commit short id> <population>:<job id> [...]
 set -Eeuo pipefail
 source "$(dirname "$0")/am3g-env.sh" "${1:?mode}"
@@ -80,6 +82,8 @@ if [[ -d $R/out-$SHORT-a ]]; then
   for f in "$R"/analyze-"$SHORT"-a.stderr "$R"/dryrun-compare-"$SHORT".stderr "$R"/power-"$SHORT".stderr; do
     [[ -f $f ]] && gzip -n -c "$f" > "$E/logs/$(basename "$f").gz"; done
 fi
+# The abstention artifact's summary is staged in both modes, so its texts are searched too.
+[[ -r $ABS_ART ]] && ARTS+=("$ABS_ART")
 # $HOME is written as ~ in records and logs.
 grep -rl "$HOME" "$E" | xargs -r sed -i "s#$HOME#~#g"
 # No reply text, question, explanation, decoy answer or memory text in the staged tree.

@@ -69,8 +69,10 @@ both with the Qwen3-8B reader, which is this registration's anchor.
   artifact and a text-free summary (ids, digests, pool coordinates, BM25 ranks and scores, each
   full-pool prompt's length in characters, the decoys' ids and the twin facts). The drafter read
   the summary and no memory, question or explanation text. Before the freeze, the image's CPU
-  selftest rendered the abstention population's prompts with each reader's and judge's tokenizer
-  and recorded only their lengths (section 15). No model ran on an abstention question.
+  selftest (job 1469, no GRES) rendered the abstention population's prompts with each reader's
+  and judge's tokenizer and recorded only their lengths: at most 1,027 (Qwen3-8B), 972 (OLMo-2)
+  and 1,040 (Qwen3.5-9B) tokens, and 272 for the judge items (section 15). No model ran on an
+  abstention question.
 
 ### 1.3 Development work that shaped the design
 
@@ -95,10 +97,12 @@ both with the Qwen3-8B reader, which is this registration's anchor.
 - **Qwen3.5-9B is not replay-exact.** vLLM 0.31.0 refuses batch-invariant mode for GDN attention,
   so it runs in vLLM's default mode (AM3). Its replies can depend on the batch schedule. The
   schedule is fixed by the request list and order, the engine settings and the hardware, all
-  pinned; the development dry run measured whether it repeats AM3's job 1466 (section 15). Its
-  held-out replies carry no replay guarantee, and its readings say so.
-- **OLMo-2** runs in batch-invariant mode through vLLM's Transformers backend; AM3 did not replay
-  it; the dry run did (section 15).
+  pinned. In the development dry run, with AM3's request list and order in a freshly built image,
+  it repeated all 8,946 of AM3's job 1466 replies in tokens and log-prob bits (section 15). That
+  shows the schedule is reproducible, not that the replies are invariant to it: its held-out
+  replies carry no batch-invariance guarantee, and its readings say so.
+- **OLMo-2** runs in batch-invariant mode through vLLM's Transformers backend. AM3 did not replay
+  it; the dry run did, 8,946 of 8,946 bit for bit against job 1466 (section 15).
 - **The anchor** is AM1's reader in AM1's eager batch-invariant engine. Its replies must equal
   job 1458's bit for bit (section 8, V3), which AM1's G1 and AM3's anchor check (2,272 of 2,272
   against the pilot's eager pass) support.
@@ -367,8 +371,9 @@ traceback.
   A job stopped by a time budget (a step's `max_s` or the job's deadline) is not rerun: the
   budgets are part of the design. If the held-out job is still incomplete, H1 and H2 are VOID
   (there is no anchor check). If only the abstention job is, H2 is VOID with the named error and
-  `analyze` runs once with `--abstention-void REASON` (section 16); H1 stands. A missing or
-  incomplete second-judge label drops that pool from the second judge's descriptions only.
+  `analyze` runs once with `--abstention-void REASON` (section 16); H1 stands. A missing
+  second-judge label affects only the second judge's descriptions: a reader and arm with any
+  missing second-judge label is reported as incomplete under that judge.
 - **VOID (V3): the anchor replay fails.** On the held-out job, extract compares the anchor's
   replies with job 1458's `reader-gpu0` at every requested cell (R1: identical tokens and finish
   reasons at all 49,274 cells; log-prob bits are reported, not gated), and its primary-judge
@@ -503,16 +508,46 @@ followed by its declared default-mode fallback.
 
 ## 15. What development fixed in this design: the development dry run
 
-Before the freeze the whole pipeline ran on the development split only (the image build from a
-pre-freeze commit, the post-build CPU selftests, the GPU job, extract, analyze twice, the
-comparison with AM3 and the tests), within 0.5 GPU-h, in a new host directory
-(`program/evidence/2026-10-16/am3-nonabstain-generality-dev-dryrun/README.md`). The abstention
-population's CPU selftest (tokenizer lengths only) ran there too. Its figures are added to this
-section once it has run.
+Before the freeze the whole pipeline ran on the development split only, from commit `eae156cf`
+(whose `scripts/memcredit_am3g.py` is the code of record), in a new host directory
+(`~/cotcodec-runs/stage0/am3g-dev-dryrun/`), with the operator scripts of section 16 in their
+`dev` mode. Record: `program/evidence/2026-10-16/am3-nonabstain-generality-dev-dryrun/README.md`.
+
+- **Build** (job 1467, 1 H100, 00:01:05, 0.0181 GPU-h): image
+  `sha256:a8571a4150585cbb31432a2f3b1e88d53315315df8500f6904d50bed14394584` from capsule
+  `9cd8e794...`, provenance PASS.
+- **Post-build CPU selftests** (no GRES): development (job 1468) and abstention (job 1469). Every
+  prompt fits: development at most 1,169 (Qwen3-8B), 1,099 (OLMo-2) and 1,190 (Qwen3.5-9B) tokens,
+  as in AM3; abstention 1,027, 972 and 1,040; judge items at most 302 and 272. vLLM 0.31.0
+  resolves the three architectures (OLMo-2 through its Transformers backend).
+- **GPU job** (job 1471, 1 H100, 00:10:18, 0.1717 GPU-h; limit 25 minutes): every step complete
+  (OLMo-2's fallback not needed); reader passes 70.1, 73.2 and 122.1 s after engine starts of
+  28-41 s; the judges 20.7 and 4.7 s on 2,869 items (2,555 replies, 188 validation and 126
+  calibration items).
+- **Host CPU**: extract, analyze twice (byte-identical), `dryrun-compare`, `power` and the tests
+  (81 passed).
+- **Total 0.1898 GPU-h** of the 0.5 allowed (`program/state.json`, `gpu_hours_ledger`).
+
+**It reproduced AM3 exactly** (`dryrun-compare.json`, 20 of 20 checks):
+- every reader's 8,946 replies equal job 1466's in tokens and log-prob bits, for Qwen3-8B,
+  OLMo-2 and Qwen3.5-9B;
+- both judges' labels equal job 1466's on all 2,743 shared items;
+- the 378 per-pool records equal AM3's committed `per-table.json.gz` (the file is byte-identical,
+  `0fc5635b...`), and the 12 reader x judge x arm cells equal AM3's committed `results.json`.
+
+**Abstention-template calibration** (development questions only, a generic explanation in the
+Explanation slot): Qwen3-32B said yes to "I don't know." on 63 of 63 questions and to the
+reference answer on 0 of 63; Qwen3-8B on 63 and 4. The template renders and the primary judge
+behaves as G-J2 requires; these are answerable questions, so this is a calibration, not G-J2.
+
+**Tests.** Locally and on the host, `tests/test_memcredit_am3g.py` and `tests/test_memcredit_am3.py`
+pass (81). The whole suite on the host at `eae156cf`: 3,535 passed, 64 skipped and 2 failed in
+another experiment's tests (`test_r04_evidence.py`, `test_r04_nuisance.py`), the same two that
+`am1-keepset-search-v1`'s selftest found failing on `main`; this branch changes no existing code.
 
 Development also set: the readers and engines (AM3), the 71 requests per pool, H2's status as a
-description (section 7.2), the abstention-judge validation items, and the step budgets (from AM3's
-job 1466 timings).
+description (section 7.2), the abstention-judge validation items, and the step budgets (from the
+timings above, which match AM3's job 1466).
 
 ## 16. Code of record (at the draft revision; re-pinned at the freeze)
 
@@ -560,7 +595,7 @@ parses this table and refuses to run unless every file matches.
 | `ops/am3g/am3g-submit.sh` | operator: lane manifest, dry run, submit, rerun | `d166590236aa9abe6f4a917ceccb62271c725874e533e25ff8b8088173c22fdd` |
 | `ops/am3g/am3g-extract.sh` | operator: extract | `721ad622375b9f33fbcef70332e0be3367f895ef29f858fc4050d1449a85fc5f` |
 | `ops/am3g/am3g-analyze.sh` | operator: analyze twice, tests | `ba9cfc3ac62948a8b04af37caab20419ece47142ef959a9ffd61c29d97ad78a9` |
-| `ops/am3g/am3g-stage-evidence.sh` | operator: text-free staging and the text search | `ca33f4b6f167c87d2e09bb399a26d7753b80a31f5d44e15995aea2285a15df8f` |
+| `ops/am3g/am3g-stage-evidence.sh` | operator: text-free staging and the text search | `03c8d76dfbf694fbb5bcfd9fe395ca0f9b03cde6338d843fcb52567495c0c2ad` |
 
 Commands of the registered run, on the host, after the freeze. The names in capitals are values
 that exist only then: FREEZE, the freeze commit (full id; its first 8 characters where the
@@ -634,7 +669,8 @@ verifier rerun `analyze` from a new clone.
 - **H2:** a nonzero cost for OLMo-2 (its development switch rate on gold-free subsets was 0.175)
   and a small one for the Qwen readers (0.048 and 0.063), possibly larger on LongMemEval's edited
   questions than on the proxy. G-J2 is expected to pass: the abstention template asks whether
-  the response identifies the question as unanswerable, which a bare "I don't know." does.
+  the response identifies the question as unanswerable, which a bare "I don't know." does, and
+  the development calibration gave 63 of 63 (section 15).
 - **Natural mix:** at LongMemEval-S's 6% unanswerable questions, a reader whose held-out gain
   resembles the anchor's (0.112 per answerable question, 0.105 at the mix) stays ahead whatever
   its cost on the 30 (at most 0.06 at the mix), so the break-even unanswerable share is the more
