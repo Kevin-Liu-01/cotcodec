@@ -14,7 +14,7 @@
    "A6": "SEARCH_BETTER",
    "A7": "NOT_SEPARATED"
   },
-  "gold_arm_same_rule_descriptive": "INCONCLUSIVE",
+  "gold_arm_descriptive_label_no_decision": "INCONCLUSIVE",
   "not_separated": [
    "A3",
    "A5",
@@ -26,7 +26,7 @@
  },
  "H-C": {
   "arm": "retrieved",
-  "gold_arm_descriptive": "NO_DETECTED_DIFFERENCE",
+  "gold_arm_descriptive_label_no_decision": "NO_DETECTED_DIFFERENCE",
   "reading": "NO_DETECTED_DIFFERENCE"
  }
 }

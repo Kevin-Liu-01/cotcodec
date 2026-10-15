@@ -2245,12 +2245,12 @@
    "harness/memcredit_study.py": "14a97d826ba619e23ea9686e2d2d57149d9f0119df3f80240843178953cf301b",
    "scripts/memcredit_analyze.py": "5444104d3c760b17f311656f4e0dbd50b2b154c89d806f1e4aa2ab6791fb0f34",
    "scripts/memcredit_cost_curve.py": "431f4cb21ccd398e1433e29a5b40c1a697d48b9aecc5fc728956f819e28c9bab",
-   "scripts/memcredit_keepset_search.py": "a367036085a4cb199d3a5ba46f48931a19fee306d2c22432fd9e590328bdb33d",
+   "scripts/memcredit_keepset_search.py": "3fbb804328bd310a6c8626f408d0d1b44a4624f06829a0762e3afc6134add584",
    "scripts/memcredit_label_free.py": "721015de434021a72ab3bbbab5e91d0de39a2fc359df7283068f83026dcb9d8f",
    "scripts/memcredit_step0.py": "57f2e4bbbd11bf750ff224852ba5dd19923ecb3decfde74d23a6913a7f9a7227",
    "scripts/memcredit_study.py": "f27ecd21e769655cddc1e9b06ee8f4c7c4ee8494348b4fc73dba7c68fdb66bb3"
   },
-  "features_sha256": "ba1dd648731bcfb7b0a8fbfe914542afb7c170a016f52832948e027ee409f850",
+  "features_sha256": "48e9ffd4a5db0e7bb2369c8aef9db5a9fb939767cfeea6d7d8a9450a17c2ac85",
   "pass": {
    "end_of_turn_id": 151645,
    "job": "1411",
@@ -2416,6 +2416,31 @@
      "upper": 0.009655307431004446
     }
    },
+   "decides": false,
+   "descriptive_label_no_decision": {
+    "bounds_within_mc_margin": [
+     "A3",
+     "A5"
+    ],
+    "classifications": {
+     "A1": "NOT_SEPARATED",
+     "A2": "SEARCH_BETTER",
+     "A3": "NOT_SEPARATED",
+     "A4": "SEARCH_BETTER",
+     "A5": "NOT_SEPARATED",
+     "A6": "SEARCH_BETTER",
+     "A7": "NOT_SEPARATED"
+    },
+    "descriptive_label": "INCONCLUSIVE",
+    "not_separated": [
+     "A1",
+     "A3",
+     "A5",
+     "A7"
+    ],
+    "rule_better_at_equal_calls": [],
+    "rule_better_at_more_calls": []
+   },
    "direct_search": {
     "16": {
      "ci95": [
@@ -2567,31 +2592,7 @@
      "upper": 0.17081699346405227
     }
    },
-   "tables": 51,
-   "verdict": {
-    "bounds_within_mc_margin": [
-     "A3",
-     "A5"
-    ],
-    "classifications": {
-     "A1": "NOT_SEPARATED",
-     "A2": "SEARCH_BETTER",
-     "A3": "NOT_SEPARATED",
-     "A4": "SEARCH_BETTER",
-     "A5": "NOT_SEPARATED",
-     "A6": "SEARCH_BETTER",
-     "A7": "NOT_SEPARATED"
-    },
-    "not_separated": [
-     "A1",
-     "A3",
-     "A5",
-     "A7"
-    ],
-    "rule_better_at_equal_calls": [],
-    "rule_better_at_more_calls": [],
-    "verdict": "INCONCLUSIVE"
-   }
+   "tables": 51
   },
   "retrieved": {
    "alpha_family": 0.05,
@@ -2724,6 +2725,7 @@
      "upper": 0.005550325736065474
     }
    },
+   "decides": true,
    "direct_search": {
     "16": {
      "ci95": [
@@ -2957,6 +2959,8 @@
     -0.01977125963606795,
     0.047619047619047616
    ],
+   "decides": false,
+   "descriptive_label": "NO_DETECTED_DIFFERENCE",
    "difference": 0.047619047619047616,
    "discordant": 3,
    "nonabstain_minus_all_8": {
@@ -2981,7 +2985,6 @@
    },
    "p_exact_mcnemar": 0.25,
    "questions": 63,
-   "reading": "NO_DETECTED_DIFFERENCE",
    "reads": {
     "all_questions": {
      "at_1": 48,
@@ -3039,6 +3042,7 @@
     -0.01507936507936508,
     0.015873015873015872
    ],
+   "decides": true,
    "difference": 0.015873015873015872,
    "discordant": 1,
    "nonabstain_minus_all_8": {
@@ -3114,12 +3118,12 @@
    "harness/memcredit_study.py": "14a97d826ba619e23ea9686e2d2d57149d9f0119df3f80240843178953cf301b",
    "scripts/memcredit_analyze.py": "5444104d3c760b17f311656f4e0dbd50b2b154c89d806f1e4aa2ab6791fb0f34",
    "scripts/memcredit_cost_curve.py": "431f4cb21ccd398e1433e29a5b40c1a697d48b9aecc5fc728956f819e28c9bab",
-   "scripts/memcredit_keepset_search.py": "a367036085a4cb199d3a5ba46f48931a19fee306d2c22432fd9e590328bdb33d",
+   "scripts/memcredit_keepset_search.py": "3fbb804328bd310a6c8626f408d0d1b44a4624f06829a0762e3afc6134add584",
    "scripts/memcredit_label_free.py": "721015de434021a72ab3bbbab5e91d0de39a2fc359df7283068f83026dcb9d8f",
    "scripts/memcredit_step0.py": "57f2e4bbbd11bf750ff224852ba5dd19923ecb3decfde74d23a6913a7f9a7227",
    "scripts/memcredit_study.py": "f27ecd21e769655cddc1e9b06ee8f4c7c4ee8494348b4fc73dba7c68fdb66bb3"
   },
-  "features_sha256": "ba1dd648731bcfb7b0a8fbfe914542afb7c170a016f52832948e027ee409f850",
+  "features_sha256": "48e9ffd4a5db0e7bb2369c8aef9db5a9fb939767cfeea6d7d8a9450a17c2ac85",
   "tables": {
    "json_sha256": null,
    "path": "program/evidence/2026-10-15/am1-dev-pilot/analysis/tables.json.gz",
@@ -3200,7 +3204,7 @@
     "A6": "SEARCH_BETTER",
     "A7": "NOT_SEPARATED"
    },
-   "gold_arm_same_rule_descriptive": "INCONCLUSIVE",
+   "gold_arm_descriptive_label_no_decision": "INCONCLUSIVE",
    "not_separated": [
     "A3",
     "A5",
@@ -3212,7 +3216,7 @@
   },
   "H-C": {
    "arm": "retrieved",
-   "gold_arm_descriptive": "NO_DETECTED_DIFFERENCE",
+   "gold_arm_descriptive_label_no_decision": "NO_DETECTED_DIFFERENCE",
    "reading": "NO_DETECTED_DIFFERENCE"
   }
  }

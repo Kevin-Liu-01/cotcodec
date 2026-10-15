@@ -429,10 +429,13 @@ leaves none RULE_BETTER, and RULE_BEATS_SEARCH takes precedence over RULE_AT_MOR
   comparisons, wrong with probability at most 4 x 0.05/7; RULE_AT_MORE_CALLS_BETTER a union over
   the three others, at most 3 x 0.05/7.
 - **These rates are nominal.** The percentile bootstrap does not hold them under the skewed
-  differences of these tables: in the size simulation of section 9, built from the development
-  differences, the measured rates exceed the nominal ones in one direction (section 9 gives
-  them). The method is kept, as registered, and the measured size is reported with it; a verdict
-  is read with that size, not the nominal one.
+  differences of these tables. In the size simulation of section 9, built from the development
+  differences, a centred comparison was called RULE_BETTER in up to 0.0185 of runs (nominal
+  0.0071), a wrong RULE_BEATS_SEARCH came out in about 0.04 (nominal 0.029), and a wrong
+  SEARCH_DOMINATES stayed at or below 0.0065, except in a skew stress case where a rule wins large
+  on 2% of tables, where it reached about 0.04. Every measured verdict error was under 0.05. The
+  method is kept, as registered, and the measured size is reported with it; a verdict is read
+  with that size, not the nominal one.
 - A2 and A4 are nearly implied by A3 and A5: direct search's expected regret does not increase
   with calls, so whenever a SNIPW-64 draw reads at least 26 subsets (every development draw read
   47 or more) D_A2 is at most D_A3 table by table, and with shared resamples U_A2 is at most U_A3
@@ -595,6 +598,29 @@ is the weak link: on development it lost 0.055 more than direct search at 26 cal
 +0.130] (AM1b, rule minus direct). These figures rest on 38 development tables, and development
 and held-out differ (section 1.4).
 
+**H-A's measured size** (`power.json`, `size`; `size_simulation`, seed 44). The same rule
+(without the Monte Carlo margin) on 2,000 simulated sets of 251 tables, each drawn with
+replacement from the 38 development tables' seven differences, with 2,000 bootstrap resamples
+each. The nominal rates of section 7.1 are 0.0071 per comparison and direction, 0.029 for
+RULE_BEATS_SEARCH and 0.021 for RULE_AT_MORE_CALLS_BETTER.
+
+| Case | Measured | Nominal |
+|---|---|---|
+| All seven centred (mean 0): a comparison called RULE_BETTER, per comparison | 0.009-0.0185 (A7 highest) | 0.0071 |
+| All seven centred: a comparison called SEARCH_BETTER, per comparison | 0.0025-0.0085 (A1 highest) | 0.0071 |
+| All seven centred: RULE_BEATS_SEARCH | **0.0385** | 0.029 |
+| All seven centred: RULE_AT_MORE_CALLS_BETTER | 0.010 | 0.021 |
+| All seven centred: SEARCH_DOMINATES | 0 | at most 0.0071 |
+| One comparison centred, the other six at twice their development mean: SEARCH_DOMINATES | 0.001-0.0065 by comparison | at most 0.0071 |
+| Skew stress: as above, but the centred comparison is +1 (the rule wins a whole answer) on 2% of tables and -0.0204 on the rest: SEARCH_DOMINATES | **0.032-0.0395** by comparison | at most 0.0071 |
+
+Readings: the percentile bootstrap is anti-conservative toward RULE_BETTER under these
+differences, which are skewed (a few tables where the rule wins), so RULE_BEATS_SEARCH's measured
+size, about 0.04, exceeds its nominal 0.029 but stays under 0.05. SEARCH_DOMINATES is
+conservative when the differences resemble development's (at most 0.0065 with one comparison at
+zero), but when a rule wins large on a few tables, as in the stress case, a wrong SEARCH_DOMINATES
+reaches about 0.04, still under 0.05. A verdict is read with these measured sizes (section 7.1).
+
 **H-B (descriptive, D116; its resolution, not a decision's power).** The exact power of the exact
 test over 347 questions, at a discordance rate r (the share
 of questions where BM25 top 4 and all 8 disagree) and a share s of discordant pairs favouring BM25
@@ -671,14 +697,14 @@ completes is byte-identical.
 
 ## 15. What development fixed in this design: the development selftest
 
-Before the freeze, the code ran on development data only, at commit `f97697b5` (after check 1's
-fixes), in a new host directory deleted afterwards
-(`program/evidence/2026-10-16/am1-keepset-search-dev-selftest/README.md`). It reproduced AM1b's
-and AM1d's committed numbers wherever this code overlaps them, by exact equality: 19 of 19 checks
-pass (`selftest.json`). It also ran the full analysis on the development tables and replies as a
-dry run; two runs were byte-identical. The whole test suite on the host: 3,450 passed, 66
-skipped, and 2 failed in another experiment's tests (`test_r04_*`), which fail identically on
-`main` there. In short:
+Before the freeze, the code ran on development data only, at commit `ff935a86` (after check 2's
+fixes), on the platform of record with `--python 3.14.6`, in a new host directory deleted
+afterwards (`program/evidence/2026-10-16/am1-keepset-search-dev-selftest/README.md`). It
+reproduced AM1b's and AM1d's committed numbers wherever this code overlaps them, by exact
+equality: 19 of 19 checks pass (`selftest.json`). It also ran the full analysis on the
+development tables and replies as a dry run; two runs were byte-identical. The whole test suite
+on the host: 3,452 passed, 66 skipped, and 2 failed in another experiment's tests
+(`test_r04_*`), which fail identically on `main` there. In short:
 
 - AM1b, per table and in aggregate, at B = 4 on both arms (89 tables): direct search's exact
   curve, leave-one-out, greedy backward, the random set and retrieval rank, and SNIPW-64,
@@ -855,3 +881,27 @@ host directories that were deleted afterwards.
 | m8 | Partial or unreadable features and missing pass files gave tracebacks. | Fixed with M1: named V3 errors, tested end to end. |
 | m9 | H-C's reading lacked a scope. | Fixed in section 7.3, matching H-A's. |
 | Info | Permutation Shapley-16 read 68-94 subsets on development; H-A's reading should say it holds in expectation. | Both stated (sections 6.3 and 7.1). |
+
+### Round 2
+
+Pre-freeze check 2 ran on `1accdd93`. It confirmed every round-1 fix in the code, rehearsed
+section 16 on the host with no failing command, and found the file ready to freeze after fixes:
+no blocking item, one major, ten minor and three for information. The fixes are commit
+`ff935a86` (code, tests, this file) and the commit that carries this section and the refreshed
+development selftest (section 15). Nothing of the held-out data was decoded; the selftest used
+development data only, in a new host directory that was deleted afterwards.
+
+| Item | Finding | Disposition |
+|---|---|---|
+| 1 (major) | The per-direction error rates of section 7.1 are nominal; under the skewed differences the percentile bootstrap measured 0.009-0.022 per comparison against 0.0071, a false RULE_BEATS_SEARCH of 0.041 against the stated 0.029, and a false SEARCH_DOMINATES up to 0.042 in a skew stress case. | Fixed: section 7.1 calls the rates nominal and quotes the measured ones. `power` now has a deterministic size block (`size_simulation`; 2,000 runs x 2,000 resamples, seed 44): all seven centred, one centred among six at twice the development effect, and the skew stress case. Its numbers are in `power.json` and section 9: per-comparison RULE_BETTER 0.009-0.0185, SEARCH_BETTER 0.0025-0.0085, false RULE_BEATS_SEARCH 0.0385, false RULE_AT_MORE_CALLS_BETTER 0.010, false SEARCH_DOMINATES 0 (all centred), 0.001-0.0065 (one centred) and 0.032-0.0395 (stress). The percentile bootstrap is kept. |
+| 2 | `zlib.error` was missing from the H-C read errors. | Fixed: `READ_ERRORS` includes `zlib.error`; the test corrupts 40 features files mid-stream and injects a `zlib.error`, and it fails without the fix. (On a Mac's Python 3.13 the streaming reader turned the corruptions into CRC errors, so the injection is what tests the fix there.) |
+| 3 | The estimand read as a fixed finite mean. | Fixed in sections 6.3 and 7.1: the expected D_j over questions drawn as AM1's confirmatory set was, estimated by the 251-table mean, questions resampled. |
+| 4 | The order-statistic wording was off by one. | Fixed: 0-based indices 71 and 9,928, the 72nd smallest and the 72nd largest. |
+| 5 | The interpreter was not pinned. | Fixed: `--python 3.14.6` on every `uv run` of section 16, and the platform of record named (the host, x86_64 Linux, uv's CPython 3.14.6, numpy 2.5.2 from `uv.lock`), with what a Mac run may differ in. The selftest ran with those flags. |
+| 6 | Section 16 did not capture logs or define REASON. | Fixed: each command logs to LOG_DIR, a sibling directory, and appends its exit code; REASON is the `error: ` line's text with `~` for the home directory, single-quoted with embedded quotes escaped, passed identically to the verifier. |
+| 7 | The freeze checklist lacked the status-line rewrite. | Added as item 6 of section 17, for the orchestrator to do in the fill commit; this file's status line is unchanged. |
+| 8 | Three statements said no test reads the held-out tables, but one test hashes the committed gz. | Reworded in section 8, the test module's docstring and the inline comment: no test decodes the held-out tables; one test hashes the committed gz to check its pin. |
+| 9 | NONABSTAIN_HELPS could be read as beating all 8. | Section 7.3 now says it does not; that comparison is a description. |
+| 10 | The second judge called "I don't know." correct on 49 of 347. | Disclosed in section 1.1; H-C's scope keeps "this judge". |
+| 11 | Gold-arm labels looked like decisions. | Fixed: `h_c.gold` carries `descriptive_label` with `decides: false`, H-A's gold arm `descriptive_label_no_decision`, and `tables.md` prints "Descriptive label (no decision)"; section 6.7 says so; tested. |
+| Info | The hand-check file's reply digests; A4's and A7's open signs; INCONCLUSIVE's other classifications. | Added to sections 1.1, 1.2 and 7.1. |

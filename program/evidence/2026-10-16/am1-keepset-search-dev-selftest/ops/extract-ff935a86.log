@@ -2,9 +2,9 @@ Using CPython 3.14.6
 Creating virtual environment at: .venv
 Installed 50 packages in 44ms
 {
- "features": "~/cotcodec-runs/stage0/am1ks-dev-selftest-f97697b5/private-f97697b5/features-development-1411.json.gz",
+ "features": "~/cotcodec-runs/stage0/am1ks-dev-selftest-ff935a86/private-ff935a86/features-development-1411.json.gz",
  "pools": 126,
- "sha256": "ba1dd648731bcfb7b0a8fbfe914542afb7c170a016f52832948e027ee409f850",
+ "sha256": "48e9ffd4a5db0e7bb2369c8aef9db5a9fb939767cfeea6d7d8a9450a17c2ac85",
  "validation": {
   "distinct_replies_reproduced": 126,
   "failures": [],

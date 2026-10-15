@@ -372,5 +372,124 @@
  },
  "seed": 43,
  "simulations": 1000,
+ "size": {
+  "all_null": {
+   "rule_better_rate": {
+    "A1": 0.0095,
+    "A2": 0.012,
+    "A3": 0.0145,
+    "A4": 0.009,
+    "A5": 0.0125,
+    "A6": 0.0115,
+    "A7": 0.0185
+   },
+   "search_better_rate": {
+    "A1": 0.0085,
+    "A2": 0.003,
+    "A3": 0.0025,
+    "A4": 0.0035,
+    "A5": 0.003,
+    "A6": 0.0045,
+    "A7": 0.0045
+   },
+   "verdict_rate": {
+    "INCONCLUSIVE": 0.9515,
+    "RULE_AT_MORE_CALLS_BETTER": 0.01,
+    "RULE_BEATS_SEARCH": 0.0385
+   }
+  },
+  "n_tables": 251,
+  "nominal_one_sided_per_comparison": 0.0071428571428571435,
+  "nominal_rule_at_more_calls_better": 0.02142857142857143,
+  "nominal_rule_beats_search": 0.028571428571428574,
+  "note": "percentile bootstrap, no Monte Carlo margin, resampling tables with replacement; rates are error rates of the rule under the stated cases (registration section 9)",
+  "one_null": {
+   "A1": {
+    "INCONCLUSIVE": 0.987,
+    "RULE_BEATS_SEARCH": 0.007,
+    "SEARCH_DOMINATES": 0.006
+   },
+   "A2": {
+    "INCONCLUSIVE": 0.9835,
+    "RULE_BEATS_SEARCH": 0.0155,
+    "SEARCH_DOMINATES": 0.001
+   },
+   "A3": {
+    "INCONCLUSIVE": 0.972,
+    "RULE_AT_MORE_CALLS_BETTER": 0.024,
+    "SEARCH_DOMINATES": 0.004
+   },
+   "A4": {
+    "INCONCLUSIVE": 0.977,
+    "RULE_BEATS_SEARCH": 0.0165,
+    "SEARCH_DOMINATES": 0.0065
+   },
+   "A5": {
+    "INCONCLUSIVE": 0.9785,
+    "RULE_AT_MORE_CALLS_BETTER": 0.016,
+    "SEARCH_DOMINATES": 0.0055
+   },
+   "A6": {
+    "INCONCLUSIVE": 0.9815,
+    "RULE_AT_MORE_CALLS_BETTER": 0.015,
+    "SEARCH_DOMINATES": 0.0035
+   },
+   "A7": {
+    "INCONCLUSIVE": 0.974,
+    "RULE_BEATS_SEARCH": 0.0205,
+    "SEARCH_DOMINATES": 0.0055
+   }
+  },
+  "resamples": 2000,
+  "seed": 44,
+  "simulations": 2000,
+  "skew_stress": {
+   "A1": {
+    "INCONCLUSIVE": 0.9635,
+    "RULE_BEATS_SEARCH": 0.0005,
+    "SEARCH_DOMINATES": 0.036
+   },
+   "A2": {
+    "INCONCLUSIVE": 0.96,
+    "RULE_BEATS_SEARCH": 0.0005,
+    "SEARCH_DOMINATES": 0.0395
+   },
+   "A3": {
+    "INCONCLUSIVE": 0.961,
+    "RULE_AT_MORE_CALLS_BETTER": 0.0005,
+    "SEARCH_DOMINATES": 0.0385
+   },
+   "A4": {
+    "INCONCLUSIVE": 0.9605,
+    "SEARCH_DOMINATES": 0.0395
+   },
+   "A5": {
+    "INCONCLUSIVE": 0.9675,
+    "RULE_AT_MORE_CALLS_BETTER": 0.0005,
+    "SEARCH_DOMINATES": 0.032
+   },
+   "A6": {
+    "INCONCLUSIVE": 0.9595,
+    "RULE_AT_MORE_CALLS_BETTER": 0.002,
+    "SEARCH_DOMINATES": 0.0385
+   },
+   "A7": {
+    "INCONCLUSIVE": 0.965,
+    "SEARCH_DOMINATES": 0.035
+   }
+  },
+  "stress_win_share": 0.02,
+  "summary": {
+   "all_null_false_rule_at_more_calls_better": 0.01,
+   "all_null_false_rule_beats_search": 0.0385,
+   "all_null_false_search_dominates": 0.0,
+   "all_null_per_comparison_wrong_direction": {
+    "rule_better_max": 0.0185,
+    "search_better_max": 0.0085
+   },
+   "one_null_false_search_dominates_max": 0.0065,
+   "skew_stress_false_search_dominates_max": 0.0395
+  }
+ },
  "source": "development dry run (38 retrieved non-constant tables)"
 }

@@ -21,7 +21,7 @@ Status: DEVELOPMENT DRY RUN: development tables only; not a result of the regist
    "A6": "SEARCH_BETTER",
    "A7": "NOT_SEPARATED"
   },
-  "gold_arm_same_rule_descriptive": "INCONCLUSIVE",
+  "gold_arm_descriptive_label_no_decision": "INCONCLUSIVE",
   "not_separated": [
    "A3",
    "A5",
@@ -33,7 +33,7 @@ Status: DEVELOPMENT DRY RUN: development tables only; not a result of the regist
  },
  "H-C": {
   "arm": "retrieved",
-  "gold_arm_descriptive": "NO_DETECTED_DIFFERENCE",
+  "gold_arm_descriptive_label_no_decision": "NO_DETECTED_DIFFERENCE",
   "reading": "NO_DETECTED_DIFFERENCE"
  }
 }
@@ -87,7 +87,7 @@ Difference = direct search's regret minus the rule's (negative: search loses les
 | A6 | permutation Shapley-16 vs direct search at 26 calls | 83.3 | -0.072 | [-0.120, -0.030] | -0.133 | -0.023 | 0.0013 | SEARCH_BETTER |
 | A7 | greedy backward, BM25 ties (26 calls) vs direct at 26 | 26.0 | -0.041 | [-0.095, +0.002] | -0.110 | +0.010 | 0.0000 | NOT_SEPARATED |
 
-Verdict: **INCONCLUSIVE**
+Descriptive label (no decision): **INCONCLUSIVE**
 
 | Rule | Calls (mean, range) | Regret | 95% CI |
 |---|---|---:|---|
@@ -116,10 +116,10 @@ Verdict: **INCONCLUSIVE**
 
 ## H-C: nonabstain-BM25 minus BM25 top 4
 
-| Arm | Questions | Rule acc. | Base acc. | b | c | Difference | 95% exact cond. | 95% bootstrap | p (exact McNemar) | Reading |
+| Arm | Questions | Rule acc. | Base acc. | b | c | Difference | 95% exact cond. | 95% bootstrap | p (exact McNemar) | Reading (retrieved); descriptive label, no decision (gold) |
 |---|---:|---:|---:|---:|---:|---:|---|---|---:|---|
 | retrieved | 63 | 0.524 | 0.508 | 1 | 0 | +0.016 | [-0.015, +0.016] | [+0.000, +0.048] | 1 | NO_DETECTED_DIFFERENCE |
-| gold | 63 | 0.619 | 0.571 | 3 | 0 | +0.048 | [-0.020, +0.048] | [+0.000, +0.111] | 0.25 | NO_DETECTED_DIFFERENCE |
+| gold | 63 | 0.619 | 0.571 | 3 | 0 | +0.048 | [-0.020, +0.048] | [+0.000, +0.111] | 0.25 | NO_DETECTED_DIFFERENCE (descriptive label, no decision) |
 
 ## H-C: reads of the BM25-ordered stop rule (the answering call included)
 

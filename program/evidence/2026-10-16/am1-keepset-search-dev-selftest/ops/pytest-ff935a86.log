@@ -9,14 +9,14 @@ Installed 10 packages in 25ms
 ........................................................................ [ 16%]
 ........................................................................ [ 18%]
 ........................................................................ [ 20%]
-........................................ssss............................ [ 22%]
+..........................................ssss.......................... [ 22%]
 ........................................................................ [ 24%]
 ........................................................................ [ 26%]
 ........................................................................ [ 28%]
 ........................................................................ [ 30%]
 ........................................................................ [ 32%]
-........................................................................ [ 35%]
-..................s..................................................... [ 37%]
+........................................................................ [ 34%]
+....................s................................................... [ 37%]
 ........................................................................ [ 39%]
 ........................................................................ [ 41%]
 ........................................................................ [ 43%]
@@ -24,35 +24,35 @@ Installed 10 packages in 25ms
 ........................................................................ [ 47%]
 ........................................................................ [ 49%]
 ........................................................................ [ 51%]
-..................................s..................................... [ 53%]
-......................................................ss................ [ 55%]
+....................................s................................... [ 53%]
+........................................................ss.............. [ 55%]
 ........................................................................ [ 57%]
-......ss................................................................ [ 59%]
-..........................................................ss.F.......... [ 61%]
-...........................F............................................ [ 63%]
+........ss.............................................................. [ 59%]
+............................................................ss.F........ [ 61%]
+.............................F.......................................... [ 63%]
 ........................................................................ [ 65%]
-..........ss............................................................ [ 67%]
-........................................................................ [ 70%]
+............ss.......................................................... [ 67%]
+........................................................................ [ 69%]
 ........................................................................ [ 72%]
 ........................................................................ [ 74%]
 ........................................................................ [ 76%]
-sssssssssssssssss..ss................................................... [ 78%]
+..sssssssssssssssss..ss................................................. [ 78%]
 ........................................................................ [ 80%]
-...........................................s........................s... [ 82%]
-....................................s................................... [ 84%]
-.......................................ss.s.....s..s.................... [ 86%]
+.............................................s........................s. [ 82%]
+......................................s................................. [ 84%]
+.........................................ss.s.....s..s.................. [ 86%]
 ........................................................................ [ 88%]
 ........................................................................ [ 90%]
 ........................................................................ [ 92%]
 ........................................................................ [ 94%]
 ........................................................................ [ 96%]
 ........................................................................ [ 98%]
-.........................................                                [100%]
+...........................................                              [100%]
 =================================== FAILURES ===================================
 ____ test_analysis_reproduces_from_the_committed_mirror[r04-registered-v1] _____
 
-mirror = PosixPath('~/cotcodec-runs/stage0/am1ks-dev-selftest-f97697b5/export-f97697b5/program/evidence/2026-10-12/r04-nuisance-confirm/r04-registered-v1')
-tmp_path = PosixPath('/tmp/pytest-of-kevin/pytest-364/test_analysis_reproduces_from_1')
+mirror = PosixPath('~/cotcodec-runs/stage0/am1ks-dev-selftest-ff935a86/export-ff935a86/program/evidence/2026-10-12/r04-nuisance-confirm/r04-registered-v1')
+tmp_path = PosixPath('/tmp/pytest-of-kevin/pytest-366/test_analysis_reproduces_from_1')
 
     @pytest.mark.parametrize("mirror", [m for m in MIRRORS if _reproducible(m)], ids=lambda p: p.name)
     def test_analysis_reproduces_from_the_committed_mirror(mirror, tmp_path):
@@ -67,7 +67,7 @@ E
 E         Omitting 15 identical items, use -vv to show
 E         Differing items:
 E         {'pinned': {'arms': {'build': {'cells': {'B1.ctrl_s.L0': 'INVARIANT', 'B2.ctrl_s.L0': 'INVARIANT', 'B3.ctrl_s.L0': 'IN...797cab', 'g:b8adbc24-cef2-4b15-99d5-ecbe7ff445eb', 's:70bca0cc:8852822df0067ee4', 's:9ec204e4:be8a1ca1634183e6', ...]}} != {'pinned': {'arms': {'build': {'cells': {'B1.ctrl_s.L0': 'INVARIANT', 'B2.ctrl_s.L0': 'INVARIANT', 'B3.ctrl_s.L0': 'IN...797cab', 'g:b8adbc24-cef2-4b15-99d5-ecbe7ff445eb', 's:70bca0cc:8852822df0067ee4', 's:9ec204e4:be8a1ca1634183e6', ...]}}
-E         {'zinv': {'arms': {'build': {'ce...
+E         {'descriptive': {'p1_replication...
 E         
 E         ...Full output truncated (3 lines hidden), use '-vv' to show
 
@@ -90,39 +90,39 @@ tests/test_r04_nuisance.py:861: AssertionError
 =============================== warnings summary ===============================
 tests/test_s1a_ops_report.py: 66 warnings
 tests/test_s1a_ops_steps.py: 1 warning
-  ~/cotcodec-runs/stage0/am1ks-dev-selftest-f97697b5/export-f97697b5/.venv/lib/python3.14/site-packages/numpy/lib/_nanfunctions_impl.py:1396: RuntimeWarning: All-NaN slice encountered
+  ~/cotcodec-runs/stage0/am1ks-dev-selftest-ff935a86/export-ff935a86/.venv/lib/python3.14/site-packages/numpy/lib/_nanfunctions_impl.py:1396: RuntimeWarning: All-NaN slice encountered
     return _nanquantile_unchecked(
 
 tests/test_s1a_ops_report.py: 12 warnings
-  ~/cotcodec-runs/stage0/am1ks-dev-selftest-f97697b5/export-f97697b5/harness/q2_stage1/analysis.py:142: RuntimeWarning: Mean of empty slice
+  ~/cotcodec-runs/stage0/am1ks-dev-selftest-ff935a86/export-ff935a86/harness/q2_stage1/analysis.py:142: RuntimeWarning: Mean of empty slice
     t_by_size = [E.paired_t(np.nanmean(E.harness_diff(y)[z], axis=-1)) for z in range(2)]
 
 tests/test_s1a_ops_report.py: 14 warnings
-  ~/cotcodec-runs/stage0/am1ks-dev-selftest-f97697b5/export-f97697b5/harness/q2_stage1/analysis.py:87: RuntimeWarning: Mean of empty slice
+  ~/cotcodec-runs/stage0/am1ks-dev-selftest-ff935a86/export-ff935a86/harness/q2_stage1/analysis.py:87: RuntimeWarning: Mean of empty slice
     "D_b": np.nanmean(db, axis=-1),
 
 tests/test_s1a_ops_report.py: 14 warnings
-  ~/cotcodec-runs/stage0/am1ks-dev-selftest-f97697b5/export-f97697b5/harness/q2_stage1/analysis.py:93: RuntimeWarning: Mean of empty slice
+  ~/cotcodec-runs/stage0/am1ks-dev-selftest-ff935a86/export-ff935a86/harness/q2_stage1/analysis.py:93: RuntimeWarning: Mean of empty slice
     "excess": np.nanmean(db - dw, axis=-1),
 
 tests/test_s1a_ops_report.py: 16 warnings
-  ~/cotcodec-runs/stage0/am1ks-dev-selftest-f97697b5/export-f97697b5/harness/q2_stage1/analysis.py:94: RuntimeWarning: Mean of empty slice
+  ~/cotcodec-runs/stage0/am1ks-dev-selftest-ff935a86/export-ff935a86/harness/q2_stage1/analysis.py:94: RuntimeWarning: Mean of empty slice
     "D_b_same_block": np.nanmean(E.d_between_same_block(y), axis=-1),
 
 tests/test_s1a_ops_report.py: 14 warnings
-  ~/cotcodec-runs/stage0/am1ks-dev-selftest-f97697b5/export-f97697b5/harness/q2_stage1/analysis.py:95: RuntimeWarning: Mean of empty slice
+  ~/cotcodec-runs/stage0/am1ks-dev-selftest-ff935a86/export-ff935a86/harness/q2_stage1/analysis.py:95: RuntimeWarning: Mean of empty slice
     "D_b_cross_block": np.nanmean(E.d_between_cross_block(y), axis=-1),
 
 tests/test_s1a_ops_report.py: 48 warnings
-  ~/cotcodec-runs/stage0/am1ks-dev-selftest-f97697b5/export-f97697b5/harness/q2_stage1/analysis.py:98: RuntimeWarning: Mean of empty slice
+  ~/cotcodec-runs/stage0/am1ks-dev-selftest-ff935a86/export-ff935a86/harness/q2_stage1/analysis.py:98: RuntimeWarning: Mean of empty slice
     "X": np.nanmean(x, axis=-1),
 
 tests/test_s1a_ops_report.py: 48 warnings
-  ~/cotcodec-runs/stage0/am1ks-dev-selftest-f97697b5/export-f97697b5/harness/q2_stage1/analysis.py:105: RuntimeWarning: Mean of empty slice
+  ~/cotcodec-runs/stage0/am1ks-dev-selftest-ff935a86/export-ff935a86/harness/q2_stage1/analysis.py:105: RuntimeWarning: Mean of empty slice
     "pi_small": np.nanmean(pis, axis=-1),
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
 =========================== short test summary info ============================
 FAILED tests/test_r04_evidence.py::test_analysis_reproduces_from_the_committed_mirror[r04-registered-v1]
 FAILED tests/test_r04_nuisance.py::test_power_run_is_deterministic_and_committed
-2 failed, 3450 passed, 66 skipped, 233 warnings in 410.55s (0:06:50)
+2 failed, 3452 passed, 66 skipped, 233 warnings in 405.83s (0:06:45)
