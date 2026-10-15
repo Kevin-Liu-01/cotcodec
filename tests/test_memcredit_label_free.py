@@ -369,7 +369,7 @@ def test_agreement_with_the_full_pool_costs_one_more_call():
     assert lf.select(pool, list(lf.FOUR_SETS), UTIL["agree_full"]) == agree
     assert lf.row_calls("agree_full@8") == 9 and lf.row_calls("conf_mean@8") == 8
     assert lf.row_calls("oracle_search@70") == 70
-    assert lf.row_calls("bm25_top4") == 0 and lf.row_calls("all_8") == 1
+    assert lf.row_calls("bm25_top4") == lf.row_calls("all_8") == lf.row_calls("random_4") == 1
 
 
 def test_table_results_on_a_toy_table():

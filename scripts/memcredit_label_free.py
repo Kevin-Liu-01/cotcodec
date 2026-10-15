@@ -595,9 +595,11 @@ def row_names() -> list[str]:
 
 
 def row_calls(name: str) -> int:
-    if name == "bm25_top4" or name == "random_4":
-        return 0
-    if name == "all_8":
+    """Reader calls per question, the call that produces the answer included: a zero-search
+    baseline makes one call; a search answers with the chosen subset's reply, already generated,
+    so it makes m calls (``agree_full`` one more, for the full pool)."""
+
+    if name in ("bm25_top4", "all_8", "random_4"):
         return 1
     base, m = name.split("@")
     extra = 0 if base == "oracle_search" else {u.name: u.extra_calls for u in UTILITIES}[base]
@@ -1085,6 +1087,9 @@ def analyze(
             "all_8_regret": "max u over 4-subsets minus u(all 8); negative when the full pool is "
             "right and no 4-subset is",
             "random_4": "expectation over the 70 4-subsets (exact)",
+            "calls": "reader calls per question, the answering call included: 1 for each "
+            "zero-search baseline, m for a search (it answers with the chosen subset's reply), "
+            "m + 1 for agree_full (the full pool)",
             "oracle_search": "AM1b's direct search on the judged utility (needs labels; "
             "exact expectation), a reference only",
             "nonconstant_rule": "AM1's summary.constant is False (AM1b's set)",
@@ -1209,8 +1214,10 @@ def render_markdown(results: dict[str, Any]) -> str:
         f"question-cluster bootstrap, {results['config']['bootstrap']['resamples']:,} "
         f"resamples, seed {results['config']['bootstrap']['seed']}. Searches: mean over "
         f"{results['config']['seeds']['count']} seeds of m random 4-subsets; ties to the lower "
-        "BM25 rank sum. se: Monte Carlo standard error over seeds. `oracle_search` reads the "
-        "judged utility (needs labels) and is a reference, not deployable.",
+        "BM25 rank sum. Calls: reader calls per question, the answering call included (a search "
+        "answers with the chosen subset's reply). se: Monte Carlo standard error over seeds. "
+        "`oracle_search` reads the judged utility (needs labels) and is a reference, not "
+        "deployable.",
         "",
     ]
     for arm in ARMS:
