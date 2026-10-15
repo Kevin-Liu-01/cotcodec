@@ -1,0 +1,57 @@
+# am3-nonabstain-generality-v1 (reg; population heldout): scripts/memcredit_am3g.py run in the
+# cotcodec-vllm cu129 overlay built from commit 6384f294's capsule. Steps on 1 H100, in order:
+# readers Qwen3-8B (anchor, eager batch-invariant), OLMo-2-1124-7B-Instruct (eager batch-invariant,
+# default-mode fallback only if it does not complete) and Qwen3.5-9B (eager, default mode), 71
+# requests per pool; then the Qwen3-32B and Qwen3-8B judges (eager, batch-invariant). Slurm limit
+# 90 min = 1.50 GPU-h cap. The lane's model is the primary judge, Qwen3-32B; the driver
+# re-verifies every other model against its receipt and the config's pins.
+runtime: docker-single-node-discovery-v1
+name: am3g-heldout
+image_id: sha256:674572dd988c45a510160f5be6e849697539fd985ea332aeef04c0d149de6bb1
+git_sha: "6384f2940e4ff30cfe287725d22eabc9c1392fa3"
+source_sha256: "15a0468550d2882f448e54f4f97c436617c8ef31fe6231b0c1c6ee7648baa7f8"
+run_root: ~/cotcodec-runs/stage0/am3-nonabstain-generality-v1/runs/heldout
+container_profile: vllm
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 16
+  memory_gb: 128
+  minutes: 90
+budget:
+  max_gpu_hours: 1.50
+randomness_contract: assignment-seed-matrix
+seeds: [42, 43, 44]
+seed_binding:
+  flag: "--seeds"
+model:
+  cache_host_path: ~/cotcodec-runs/hf-cache
+  model_id: qwen3-32b
+  revision: "9216db5781bf21249d130ec9da846c4624c16137"
+  receipt_sha256: "06e4a7e981eee4f6c079fd6b02dc58e3a9fd798e0d806820383d873cf9cd1fd1"
+  artifact_root_sha256: "8fcd9106bfb1854a5b160c64a0ff3d3463208ab69854ae8c1cc26ba19dbf5714"
+study_artifact:
+  source_id: am1-memory-credit-v1-heldout-pools
+  revision: "6384f2940e4ff30cfe287725d22eabc9c1392fa3"
+  license: MIT
+  host_path: ~/cotcodec-runs/stage0/am1-memory-credit-v1/study-artifact.json
+  sha256: "f23bca047dc7246c5a8db12f67a76a2ea36304d8669dc5c62ae6c42821f73eb7"
+  size_bytes: 12669196
+command:
+  - python
+  - scripts/memcredit_am3g.py
+  - run
+  - "--population"
+  - heldout
+  - "--seeds"
+  - "42"
+  - "43"
+  - "44"
+  - "--output-dir"
+  - /outputs/am3g
+  - "--allocation-minutes"
+  - "90"
+  - "--evidence"
+  - /inputs/study-artifact.json
+  - "--expected-evidence-sha256"
+  - "f23bca047dc7246c5a8db12f67a76a2ea36304d8669dc5c62ae6c42821f73eb7"

@@ -1,0 +1,37 @@
+2026-10-15T10:58:46Z clean checkout of ffa8675c17252815f5059633452ab17b163bdee7 (tree e5953ed5) from bundle d53e90ac; git archive sha256 95fbe9fb06e156428061e9fbe0147011440b1827834fd7274e27b56d47f77850
+2026-10-15T10:59:50Z abstention artifact f1c241baeaeddcd5 built at ffa8675c (CPU)
+2026-10-15T11:06:34Z clean checkout of eae156cf715541e45eb63866dd4ae50db5938250 (tree f4e34f97) from bundle e267e851; git archive sha256 24caad5ebfb771843be00b1f119b647f3d32785b7f939e2a8aca3ee55713ff17
+2026-10-15T11:06:59Z capsule 9cd8e794618662d228a1e669e8d813a3ec11fc42c315bd7bf726146f0cf91ae6 (git eae156cf)
+2026-10-15T11:07:00Z vLLM overlay build job 1467 submitted (git eae156cf, archive 9cd8e794, 1 H100, limit 5 min)
+2026-10-15T11:09:27Z vLLM overlay build 1467 COMPLETED 0:0 (RunTime 00:01:05): sha256:a8571a4150585cbb31432a2f3b1e88d53315315df8500f6904d50bed14394584
+2026-10-15T11:09:27Z post-build CPU selftest 1468 submitted (population development, image a8571a41, git eae156cf, no GRES)
+2026-10-15T11:09:27Z post-build CPU selftest 1469 submitted (population abstention, image a8571a41, git eae156cf, no GRES)
+2026-10-15T11:10:05Z am3g development GPU job submit: 1471 (git eae156cf, image a8571a41, artifact 15567cf1, 1 H100, limit 25 min)
+2026-10-15T11:20:48Z am3g development GPU job 1471 COMPLETED 0:0 (RunTime 00:10:18 on 1 H100 = 0.1717 GPU-h); steps rd-qwen3-8b, rd-olmo2 (batch-invariant), rd-qwen35-9b-default, judge32, judge8 complete; rd-olmo2-default not needed; judge items 2869 (2555 reader, 314 validation and calibration)
+2026-10-15T11:24:26Z clean checkout of 95c3ef5a3cb78539af03e29a2b766bb3f7df5ee2 (tree 9bb934f2) from bundle f8d072a5; git archive sha256 06712f2a463366bf5af966d189f3448e7002e2b3e8a2ec11c37442bc4e2bf3d1
+2026-10-15T11:29:14Z clean checkout of ea678a99162685ed29e7d444d79b93659ae9f097 (tree 36a42d97) from bundle 8f18f31a; git archive sha256 70c50e1448436582de209df2f6db5934892c1ed791a34f8001eb22c4aba732f4
+2026-10-15T11:32:40Z clean checkout of fc9ebb4db4bf45879cd84fd35ac44bd2d52cc727 (tree c68c1a1d) from bundle 0fdc8bd7; git archive sha256 922f64fb680395599c7c78073ca08c9c530df48544c79445880ad9a551a768e9
+2026-10-15T12:18:58Z clean checkout of 0d0300155d5659d249e916935c1b83bd20704e7a (tree 27dcd546) from bundle 65baf23e; git archive sha256 02aead4e7620e8ffb3812088f8dbfe8430f13cb279621387ca03b7f83c790da0
+2026-10-15T12:19:11Z extract development job 1471 at 0d030015: extract exit 0
+2026-10-15T12:19:11Z hand-check sample at 0d030015: 27 items, sample 1655d6b08d73eb60 plan cd7516b983110ce2
+2026-10-15T12:20:44Z hand labels receipted at 0d030015: 604896d5838ffc44
+2026-10-15T12:20:51Z analyze dev at 0d030015: 5 commands exited 0; analyze outputs byte-identical
+2026-10-15T12:23:41Z clean checkout of 8624a08b5d5364a2c7f89b0e9440f6daf3eb0681 (tree d812c15f) from bundle 5612da3c; git archive sha256 5ea714740aa4e31bf24b7d2b47eefa3a3066bb7d65d66a3ee47475cc959e9e7b
+2026-10-15T12:23:58Z analyze dev at 8624a08b: 5 commands exited 0; analyze outputs byte-identical
+2026-10-15T12:23:59Z evidence staged for eae156cf (development:1471): 100 files, no text found
+2026-10-15T12:24:15Z job 1474 ended: JobState=COMPLETED Reason=None RunTime=00:00:00
+2026-10-15T13:14:54Z clean checkout of c2eaa62b3de680aabe0b9b1f597ad959c15a2efa (tree 18c2acb7) from bundle b3a8836d; git archive sha256 23dc9db64d59c69891f83a802a7351ff9b1d4ded60b1d9bbcd76bb2a001cccc6
+2026-10-15T13:15:00Z extract development job 1471 at c2eaa62b: extract exit 0
+2026-10-15T13:15:00Z hand-check sample at c2eaa62b: 27 items in 1 chunks, sample 9597c6cac436d11e plan 85497ef807530432
+2026-10-15T13:16:24Z hand labels merged, stage first: {'valid_rows': 27, 'malformed_rows': 0, 'repeated_items': 0} 0
+2026-10-15T13:16:24Z hand labels receipted, stage first: raw 85320c6a582ed09e final 85320c6a582ed09e
+2026-10-15T13:17:00Z analyze dev at c2eaa62b: 5 commands exited 0; analyze outputs byte-identical
+2026-10-15T13:35:33Z clean checkout of 507f42847ed1b982fc356e18312fc7b627867341 (tree 6260ea08) from bundle 2d9f75a8; git archive sha256 fe0c0b3520119ab2453c2d990e4147a028f0a2654eaf51fcd8dbf1c0b85a623d
+2026-10-15T13:36:02Z hand-check sample at 507f4284: 27 items in 1 chunks, sample 9597c6cac436d11e plan 85497ef807530432
+2026-10-15T13:37:37Z clean checkout of 495090ef63509eefadedcdae57326594f6ce3ca9 (tree 9ccd2c6a) from bundle d1defacd; git archive sha256 401aff090af149c635dd2bc756f93485c50500385cbdfa1656a55fa03d043208
+2026-10-15T13:37:37Z hand-check sample at 495090ef: 27 items in 1 chunks, sample 9597c6cac436d11e plan 85497ef807530432
+2026-10-15T13:39:30Z clean checkout of 3d4762bade5652efcc00c8af480890fd59980baf (tree 1d1244cc) from bundle 587222dd; git archive sha256 12e9c9aa146b239b182a49bb82b8f065a2973b815eed70fdaf4da514173587c6
+2026-10-15T13:39:31Z hand-check sample at 3d4762ba: 27 items in 1 chunks, sample 9597c6cac436d11e plan 85497ef807530432
+2026-10-15T13:40:44Z hand labels merged, stage first: {'valid_rows': 27, 'malformed_rows': 0, 'repeated_items': 0} chunks failing the transcript audit 0 0
+2026-10-15T13:40:44Z hand labels receipted, stage first: raw 52ebe1437166f1cc final 52ebe1437166f1cc
+2026-10-15T13:41:25Z analyze dev at 3d4762ba: 5 commands exited 0; analyze outputs byte-identical

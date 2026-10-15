@@ -1,0 +1,26 @@
+{
+  "lane": {
+    "COTCODEC_GIT_SHA": "6384f2940e4ff30cfe287725d22eabc9c1392fa3",
+    "COTCODEC_MODEL_ID": "qwen3-32b",
+    "COTCODEC_SOURCE_SHA256": "15a0468550d2882f448e54f4f97c436617c8ef31fe6231b0c1c6ee7648baa7f8",
+    "CUDA_VISIBLE_DEVICES": null
+  },
+  "nvidia_smi": "name, uuid, driver_version, memory.total [MiB], clocks.max.sm [MHz], power.limit [W]\nNVIDIA H100 80GB HBM3, GPU-a485003c-eb56-c00a-5efc-ba2fb61d12d5, 570.148.08, 81559 MiB, 1980 MHz, 700.00 W\n",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "torch": "2.13.0+cu129",
+  "torch_cuda": "12.9",
+  "transformers": "5.17.0",
+  "utc": "2026-10-15T15:21:05Z",
+  "vllm": "0.31.0",
+  "vllm_cited_files_sha256": {
+    "config/vllm.py": "057b0a7f80db28522ee46b41f9ae5bd7a0c1998a08e111c5a6ddcb8c08f07f8d",
+    "engine/arg_utils.py": "95be1adb96f55933f6a52260c8cb2181d04707401ca21d97c33108c5ab58f3ac",
+    "envs.py": "1d7101800f67b803a700fbf7489292cf1f0022b570085166ad407e6b1513dc15",
+    "model_executor/determinism/batch_invariant.py": "fd39330e48f8b209def7378b1b83fa009534617e8fc41230dc4f40a528309993",
+    "model_executor/determinism/batch_invariant_configs.py": "9fef5b173374b7fe01f199332bea7477fde6384f63d62bc5662722e55f0bdaa4",
+    "model_executor/layers/attention/attention.py": "bde77677fd0e95ea09c6a580dfaf09b57741e8183e00cb106e2d1cc64d8e03f2",
+    "sampling_params.py": "3c37c655a0a60851e3d96d946eb10d1cbb347dee6cd143f38a7fc18c6f66dd8b",
+    "v1/attention/backends/flash_attn.py": "ea53fb41165323f13094604051c73d44a579994fe5a427243aa9faafc280b1c2",
+    "v1/worker/gpu_worker.py": "43bd01925cd84f7d8a1d4a2ec30e289014a485fe4492a5343cbc893e8ed2f518"
+  }
+}

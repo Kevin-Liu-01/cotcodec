@@ -1,0 +1,83 @@
+PASS bootstrap checkout at c2eaa62b, clean
+PASS a bootstrap copy that differs from the commit's is refused
+PASS the image checks pass on the real development build record (job 1467, eae156cf)
+PASS image capture prints exactly one line, the image id
+PASS IMAGE=$(am3g-image.sh) is the id itself
+PASS jobs.log records the image line whole
+PASS another base image is refused, nothing on stdout
+PASS another vLLM commit is refused
+PASS a malformed image-id.txt is refused
+FAIL build submits and prints only its job id
+PASS a second 'build' is refused
+FAIL the rebuild submits into overlay-build-vllm-c2eaa62b-r2
+PASS a third attempt is refused
+PASS the image is read from the latest attempt (-r2)
+../ops/am3g-rehearse.sh: line 105: ~/cotcodec-runs/stage0/am3g-rehearsal-c2eaa62b/home/stub-jobs/== build c2eaa62b at 2026-10-15T13:25:43Z
+-- squeue
+-- slurm gres
+   Gres=gpu:h100:8
+   GresUsed=gpu:h100:2(IDX:0-1)
+-- gpus
+0, 0 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+no GPU job of this program; 6 of 8 H100 free in Slurm (need 1)
+9001.txt: File name too long
+../ops/am3g-rehearse.sh: line 39: --: command not found
+../ops/am3g-rehearse.sh: line 40: --: command not found
+../ops/am3g-rehearse.sh: eval: line 42: syntax error near unexpected token `('
+../ops/am3g-rehearse.sh: eval: line 42: `   GresUsed=gpu:h100:2(IDX:0-1)'
+FAIL job state saves the full scontrol record once the job ends (exit 0)
+rm: cannot remove '~/cotcodec-runs/stage0/am3g-rehearsal-c2eaa62b/home/stub-jobs/== build c2eaa62b at 2026-10-15T13:25:43Z'$'\n''-- squeue'$'\n''-- slurm gres'$'\n''   Gres=gpu:h100:8'$'\n''   GresUsed=gpu:h100:2(IDX:0-1)'$'\n''-- gpus'$'\n''0, 0 MiB, 0 %'$'\n''1, 0 MiB, 0 %'$'\n''2, 0 MiB, 0 %'$'\n''3, 0 MiB, 0 %'$'\n''4, 0 MiB, 0 %'$'\n''5, 0 MiB, 0 %'$'\n''6, 0 MiB, 0 %'$'\n''7, 0 MiB, 0 %'$'\n''no GPU job of this program; 6 of 8 H100 free in Slurm (need 1)'$'\n''9001.txt': File name too long
+FAIL after scontrol forgets the job, the saved record is printed
+PASS job state exits 1 while a job runs
+PASS selftest refuses a two-line image id
+PASS selftest takes a valid image id and prints only its job id
+PASS submit refuses a malformed image id
+PASS a failed dry run stops submit before the test-only check and sbatch; no submit record
+PASS a failed test-only check stops submit; no submit record
+PASS check runs the dry run and test-only check and submits nothing
+PASS a failed sbatch keeps no submit record (the slot is not used); the output is kept as .tmp
+PASS a submitter output without a job id keeps no submit record
+FAIL after those failures, submit succeeds, prints only the job id and records it
+PASS a second submit is refused
+PASS rerun is refused without the rerun rule's record (minor 2)
+mkdir: cannot create directory ‘~/cotcodec-runs/stage0/am3g-rehearsal-c2eaa62b/home/cotcodec-runs/stage0/am3g-dev-dryrun/runs/development/== development submit c2eaa62b at 2026-10-15T13:25:46Z\n-- squeue\n-- slurm gres\n   Gres=gpu:h100:8\n   GresUsed=gpu:h100:2(IDX:0-1)\n-- gpus\n0, 0 MiB, 0 %\n1, 0 MiB, 0 %\n2, 0 MiB, 0 %\n3, 0 MiB, 0 %\n4, 0 MiB, 0 %\n5, 0 MiB, 0 %\n6, 0 MiB, 0 %\n7, 0 MiB, 0 %\nno GPU job of this program; 6 of 8 H100 free in Slurm (need 1)\n9008’: File name too long
+../ops/am3g-rehearse.sh: line 156: ~/cotcodec-runs/stage0/am3g-rehearsal-c2eaa62b/home/cotcodec-runs/stage0/am3g-dev-dryrun/runs/development/== development submit c2eaa62b at 2026-10-15T13:25:46Z
+-- squeue
+-- slurm gres
+   Gres=gpu:h100:8
+   GresUsed=gpu:h100:2(IDX:0-1)
+-- gpus
+0, 0 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+no GPU job of this program; 6 of 8 H100 free in Slurm (need 1)
+9008/termination.env: File name too long
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+OSError: [Errno 36] File name too long: '~/cotcodec-runs/stage0/am3g-rehearsal-c2eaa62b/home/cotcodec-runs/stage0/am3g-dev-dryrun/runs/development/== development submit c2eaa62b at 2026-10-15T13:25:46Z\n-- squeue\n-- slurm gres\n   Gres=gpu:h100:8\n   GresUsed=gpu:h100:2(IDX:0-1)\n-- gpus\n0, 0 MiB, 0 %\n1, 0 MiB, 0 %\n2, 0 MiB, 0 %\n3, 0 MiB, 0 %\n4, 0 MiB, 0 %\n5, 0 MiB, 0 %\n6, 0 MiB, 0 %\n7, 0 MiB, 0 %\nno GPU job of this program; 6 of 8 H100 free in Slurm (need 1)\n9008/am3g/summary.json'
+../ops/am3g-rehearse.sh: command substitution: line 58: syntax error near unexpected token `('
+../ops/am3g-rehearse.sh: command substitution: line 58: `   GresUsed=gpu:h100:2(IDX:0-1)'
+FAIL a failed reader step is a rerun
+FAIL rerun runs once the rule's record says rerun, and prints only the job id
+../ops/am3g-rehearse.sh: line 159: $1: unbound variable
+FAIL the rerun's own rerun decision is void (V2)
+PASS a second rerun is refused
+PASS rerun rule: a hard stop on an incomplete job, even with a failed step and a signal -> no-rerun
+PASS rerun rule: a signal well before the limit, even with a step stopped late -> rerun
+PASS rerun rule: a signal within 300 s of the hard stop -> no-rerun
+PASS rerun rule: a step stopped by its time budget -> no-rerun
+PASS rerun rule: every essential step complete (OLMo-2 by its fallback) -> complete
+PASS rerun rule: a job that never started -> rerun
+rehearsal c2eaa62b: 30 passed, 8 failed

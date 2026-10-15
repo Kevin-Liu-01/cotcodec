@@ -1,0 +1,218 @@
+{
+  "comparisons": {
+    "am3_job_1466": {
+      "judge_item_replay": {
+        "primary": {
+          "compared": 2743,
+          "same": 2743
+        },
+        "secondary": {
+          "compared": 2743,
+          "same": 2743
+        }
+      },
+      "readers": {
+        "olmo-2-1124-7b-instruct": {
+          "cells": 8946,
+          "compared": 8946,
+          "identical_bits": 8946,
+          "identical_text": 8946,
+          "identical_tokens": 8946,
+          "label_compared_identical_reply_primary": 8946,
+          "label_compared_identical_reply_secondary": 8946,
+          "label_compared_primary": 8946,
+          "label_compared_secondary": 8946,
+          "label_same_identical_reply_primary": 8946,
+          "label_same_identical_reply_secondary": 8946,
+          "label_same_primary": 8946,
+          "label_same_secondary": 8946
+        },
+        "qwen3-8b": {
+          "cells": 8946,
+          "compared": 8946,
+          "identical_bits": 8946,
+          "identical_text": 8946,
+          "identical_tokens": 8946,
+          "label_compared_identical_reply_primary": 8946,
+          "label_compared_identical_reply_secondary": 8946,
+          "label_compared_primary": 8946,
+          "label_compared_secondary": 8946,
+          "label_same_identical_reply_primary": 8946,
+          "label_same_identical_reply_secondary": 8946,
+          "label_same_primary": 8946,
+          "label_same_secondary": 8946
+        },
+        "qwen3.5-9b": {
+          "cells": 8946,
+          "compared": 8946,
+          "identical_bits": 8946,
+          "identical_text": 8946,
+          "identical_tokens": 8946,
+          "label_compared_identical_reply_primary": 8946,
+          "label_compared_identical_reply_secondary": 8946,
+          "label_compared_primary": 8946,
+          "label_compared_secondary": 8946,
+          "label_same_identical_reply_primary": 8946,
+          "label_same_identical_reply_secondary": 8946,
+          "label_same_primary": 8946,
+          "label_same_secondary": 8946
+        }
+      },
+      "reference": "job 1466 (AM3): rd-qwen3-8b, rd-olmo2, rd-qwen35-9b-default; judge32, judge8",
+      "reference_sha256": {
+        "judge-items.json": "5af213f094c5270e3a4b4b3c27d6d83ebaa3ad787265b49487937d05f985eea8",
+        "sessions/judge32/all.json": "47c187b69014d95ee4b516405b0c253a7fbf46117c9985eabce430687c02eff4",
+        "sessions/judge32/all.npz": "35b78a672d1c7ea39382bd584fe80a2387e519becdd55d6e984b6041d8502159",
+        "sessions/judge32/all.texts.jsonl.gz": "08d71ab7a896b4de33da70e30543d070ea7e75e0d7d9a3671a4900e57d0495d4",
+        "sessions/judge8/all.json": "83560abb3aa827dace411192210d735618681035a05ead44df7ec5c1e2e54879",
+        "sessions/judge8/all.npz": "d1e6019368e0d670c20e1fd0826166a2b7f68878ae83bdeee6dab70ff2ba828f",
+        "sessions/judge8/all.texts.jsonl.gz": "fd14d95efe468acc58e94eea1f9dbd216008a86fcacc5f2fa588dd76fdd002c0",
+        "sessions/rd-olmo2/all.json": "cb0e4fb06fc7d3ddf8e98e8acb9b5284042f8c810f8ceb2c0698383f077e0e4b",
+        "sessions/rd-olmo2/all.npz": "cd54bc3881a162d03bc0541697dcee1ed80712e0cd3dde9f620f472261dce3aa",
+        "sessions/rd-olmo2/all.texts.jsonl.gz": "9bc11bd6a96acf2573a704f5f24d90164bb2e2d9014453116c540aa8e8b7e45b",
+        "sessions/rd-qwen3-8b/all.json": "b6d01aa3bbfd9a53da9d54f92530f161b4d3a65ab9367798eef8599f1946a68f",
+        "sessions/rd-qwen3-8b/all.npz": "c77e8efaa2750a17c443279c69763b6a80b0d31a087acacb5329a03e1e4cc1ae",
+        "sessions/rd-qwen3-8b/all.texts.jsonl.gz": "f5d7524fd1111eb5946f112cbfeb491d55797b92c19b64f8bf41a7e6857eaf15",
+        "sessions/rd-qwen35-9b-default/all.json": "c88ab0794729a2b8d13a0e7c2c6602b449481a5bcd6aef6f890f5bf1a9ece4d3",
+        "sessions/rd-qwen35-9b-default/all.npz": "b25b5116bcd7758e32ef9a22897ad1b39ecc67f43175070cc11d3d961ddd0cde",
+        "sessions/rd-qwen35-9b-default/all.texts.jsonl.gz": "c042b3c969a30aa081d9cc1aa28731653c00bdd2691146029a1cab119dc8f070"
+      }
+    },
+    "anchor_vs_pilot_tables": {
+      "cells": 8946,
+      "cells_same_label": 8913,
+      "pools": 126
+    }
+  },
+  "features_sha256": "5e2e336669e7cbd169bbd73de1c6ad44824d7dba6c3653760bf8d81ed26bb856",
+  "population": "development",
+  "readers": {
+    "olmo-2-1124-7b-instruct": {
+      "batch_invariant": true,
+      "enforce_eager": true,
+      "finish": {
+        "length": 42,
+        "stop": 8904
+      },
+      "missing_logprobs": 0,
+      "pass_sha256": {
+        "sessions/rd-olmo2/all.json": "36538de02091a123e03c9cc001f44fde228f96440dcf2f90707f2901ced308d3",
+        "sessions/rd-olmo2/all.npz": "cd54bc3881a162d03bc0541697dcee1ed80712e0cd3dde9f620f472261dce3aa",
+        "sessions/rd-olmo2/all.texts.jsonl.gz": "06822c46c85506a080c4d594606958fdb28ba24cd0d0c6fc2fdab91776daf4f1"
+      },
+      "pools_complete": 126,
+      "pools_complete_primary": 126,
+      "requests": 8946,
+      "step": "rd-olmo2"
+    },
+    "qwen3-8b": {
+      "batch_invariant": true,
+      "enforce_eager": true,
+      "finish": {
+        "length": 1,
+        "stop": 8945
+      },
+      "missing_logprobs": 0,
+      "pass_sha256": {
+        "sessions/rd-qwen3-8b/all.json": "470dee70e1d0bf41b476ab47a1251f7c2c9f6b682bc207d8a133a052beca872c",
+        "sessions/rd-qwen3-8b/all.npz": "c77e8efaa2750a17c443279c69763b6a80b0d31a087acacb5329a03e1e4cc1ae",
+        "sessions/rd-qwen3-8b/all.texts.jsonl.gz": "d7cdff31a1c9c524ab5945610335a920625171df0e10aedf9a79fdb133045a99"
+      },
+      "pools_complete": 126,
+      "pools_complete_primary": 126,
+      "requests": 8946,
+      "step": "rd-qwen3-8b"
+    },
+    "qwen3.5-9b": {
+      "batch_invariant": false,
+      "enforce_eager": true,
+      "finish": {
+        "length": 9,
+        "stop": 8937
+      },
+      "missing_logprobs": 0,
+      "pass_sha256": {
+        "sessions/rd-qwen35-9b-default/all.json": "f4b220b458f2988dbb881b4ed4f302b2599b34acbe070f420edbc1579f0c67e7",
+        "sessions/rd-qwen35-9b-default/all.npz": "b25b5116bcd7758e32ef9a22897ad1b39ecc67f43175070cc11d3d961ddd0cde",
+        "sessions/rd-qwen35-9b-default/all.texts.jsonl.gz": "818c3a85556bcb8b2e9876dd909d119c273630d38459a3a6f82eb36e14ad6dab"
+      },
+      "pools_complete": 126,
+      "pools_complete_primary": 126,
+      "requests": 8946,
+      "step": "rd-qwen35-9b-default"
+    }
+  },
+  "validation": {
+    "judge_items": 2869,
+    "judge_items_reader": 2555,
+    "judge_items_sha256": "7d279ce30fc934d192c78e3b72e77d037ab8abbf9450e7a6302e36ce37ef32bf",
+    "judge_pass_sha256": {
+      "sessions/judge32/all.json": "b05dba606fffe6f78376cbea1056aa052a949807bd3c366fb1c8b3f144c808aa",
+      "sessions/judge32/all.npz": "bc101608da0d4c270f0d67411ef108656e6b95b8887b798f42937214a2a30c8a",
+      "sessions/judge32/all.texts.jsonl.gz": "85122e4e7a00018a387b7c7e7289b9d4a6c44cfefc67d338231f91fb89759275",
+      "sessions/judge8/all.json": "1ebbc26de6a37f63b48e051005acadcf48c0f58c039db216d865c0cf150637d6",
+      "sessions/judge8/all.npz": "5dcec3847c6232deadefb2a0590ace26a1037d6bd3b922a730347e7d371ed1b7",
+      "sessions/judge8/all.texts.jsonl.gz": "708bee0545b031857bffb77d8e4cea44636e37e2d250921e22266a6b0f7cbed8"
+    },
+    "judge_validation": {
+      "primary": {
+        "calibration:abs-template-idk": {
+          "items": 63,
+          "missing": 0,
+          "yes": 63
+        },
+        "calibration:abs-template-reference": {
+          "items": 63,
+          "missing": 0,
+          "yes": 0
+        },
+        "validation:idk": {
+          "items": 63,
+          "missing": 0,
+          "yes": 0
+        },
+        "validation:other-answer": {
+          "items": 62,
+          "missing": 0,
+          "yes": 4
+        },
+        "validation:reference": {
+          "items": 58,
+          "missing": 0,
+          "yes": 58
+        }
+      },
+      "secondary": {
+        "calibration:abs-template-idk": {
+          "items": 63,
+          "missing": 0,
+          "yes": 63
+        },
+        "calibration:abs-template-reference": {
+          "items": 63,
+          "missing": 0,
+          "yes": 4
+        },
+        "validation:idk": {
+          "items": 63,
+          "missing": 0,
+          "yes": 11
+        },
+        "validation:other-answer": {
+          "items": 62,
+          "missing": 0,
+          "yes": 5
+        },
+        "validation:reference": {
+          "items": 58,
+          "missing": 0,
+          "yes": 58
+        }
+      }
+    },
+    "labelled": {
+      "primary": 2869,
+      "secondary": 2869
+    }
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "engine_kwargs": {
+    "dtype": "bfloat16",
+    "enable_prefix_caching": true,
+    "enforce_eager": true,
+    "gpu_memory_utilization": 0.85,
+    "logprobs_mode": "raw_logprobs",
+    "max_model_len": 4096,
+    "max_num_batched_tokens": 8192,
+    "max_num_seqs": 256,
+    "model": "/model-cache/cotcodec-models/olmo-2-1124-7b-instruct",
+    "seed": 42,
+    "tokenizer": "/model-cache/cotcodec-models/olmo-2-1124-7b-instruct",
+    "trust_remote_code": false
+  },
+  "exit": 0,
+  "gpu": {
+    "CUDA_VISIBLE_DEVICES": "0",
+    "name": "NVIDIA H100 80GB HBM3",
+    "pci_bus_id": 99,
+    "uuid": "a485003c-eb56-c00a-5efc-ba2fb61d12d5"
+  },
+  "init_s": 27.9,
+  "passes": [
+    {
+      "info": {
+        "aborted": 0,
+        "add_s": 0.003,
+        "finished": 16,
+        "max_inflight": null,
+        "not_started": 0,
+        "steps": 31,
+        "stopped_by": null,
+        "unmatched": 0,
+        "wall_s": 2.501
+      },
+      "name": "smoke",
+      "requests": 16,
+      "status": "complete"
+    },
+    {
+      "info": {
+        "aborted": 0,
+        "add_s": 1.511,
+        "finished": 8946,
+        "max_inflight": null,
+        "not_started": 0,
+        "steps": 462,
+        "stopped_by": null,
+        "unmatched": 0,
+        "wall_s": 73.216
+      },
+      "name": "all",
+      "requests": 8946,
+      "status": "complete"
+    }
+  ],
+  "prompt_ids_sha256": "627be9702e4201987f3388bbc5b6107d5546f8e998e98b1dde4bd14220be5eab",
+  "step": {
+    "batch_invariant": true,
+    "enforce_eager": true,
+    "id": "rd-olmo2",
+    "kind": "reader",
+    "reader": "olmo-2-1124-7b-instruct"
+  }
+}

@@ -1,0 +1,371 @@
+{
+  "h1": {
+    "note": "power of the exact two-sided McNemar test per reader; Holm across two readers rejects a reader at least when p <= 0.025 and at most when p <= 0.05, so the two columns bound its power. with_the_hand_check: the power of the combined rule (the judge's test and the hand labels' test both reject), with no pair against the rule and each judge-counted gain confirmed by the hand with probability a",
+    "questions": 347,
+    "readers": {
+      "olmo-2-1124-7b-instruct": {
+        "development_b_c": [
+          4,
+          0
+        ],
+        "scenarios": {
+          "a quarter of it": {
+            "power_alpha_0.025": 0.3145863777099112,
+            "power_alpha_0.05": 0.4731363970752251,
+            "rate": 0.015873015873015872,
+            "share_for_rule": 1.0
+          },
+          "development rate": {
+            "power_alpha_0.025": 0.9999611128484032,
+            "power_alpha_0.05": 0.9999904552798389,
+            "rate": 0.06349206349206349,
+            "share_for_rule": 1.0
+          },
+          "development rate, 1 in 10 discordant pairs against": {
+            "power_alpha_0.025": 0.9566016903540232,
+            "power_alpha_0.05": 0.9779176777184512,
+            "rate": 0.06349206349206349,
+            "share_for_rule": 0.9
+          },
+          "half the development rate": {
+            "power_alpha_0.025": 0.9252962566222834,
+            "power_alpha_0.05": 0.9649472336549741,
+            "rate": 0.031746031746031744,
+            "share_for_rule": 1.0
+          },
+          "the anchor's held-out rate (39/347)": {
+            "power_alpha_0.025": 0.9999999999880751,
+            "power_alpha_0.05": 0.9999999999983937,
+            "rate": 0.11239193083573487,
+            "share_for_rule": 1.0
+          }
+        },
+        "with_the_hand_check": {
+          "a quarter of it": {
+            "a=0.8": {
+              "power_alpha_0.025": 0.15587394465322432,
+              "power_alpha_0.05": 0.2805150472024921
+            },
+            "a=0.9": {
+              "power_alpha_0.025": 0.23048326438515812,
+              "power_alpha_0.05": 0.3764624368450546
+            },
+            "a=1.0": {
+              "power_alpha_0.025": 0.3145863777099112,
+              "power_alpha_0.05": 0.4731363970752251
+            }
+          },
+          "development rate": {
+            "a=0.8": {
+              "power_alpha_0.025": 0.9989060669639555,
+              "power_alpha_0.05": 0.9996656999068675
+            },
+            "a=0.9": {
+              "power_alpha_0.025": 0.9997853363738823,
+              "power_alpha_0.05": 0.9999415046886134
+            },
+            "a=1.0": {
+              "power_alpha_0.025": 0.9999611128484032,
+              "power_alpha_0.05": 0.9999904552798389
+            }
+          },
+          "half the development rate": {
+            "a=0.8": {
+              "power_alpha_0.025": 0.7791210898124163,
+              "power_alpha_0.05": 0.8756671676983733
+            },
+            "a=0.9": {
+              "power_alpha_0.025": 0.8680406487966172,
+              "power_alpha_0.05": 0.9323790349176809
+            },
+            "a=1.0": {
+              "power_alpha_0.025": 0.9252962566222834,
+              "power_alpha_0.05": 0.9649472336549741
+            }
+          },
+          "the anchor's held-out rate (39/347)": {
+            "a=0.8": {
+              "power_alpha_0.025": 0.9999999834930888,
+              "power_alpha_0.05": 0.9999999971674016
+            },
+            "a=0.9": {
+              "power_alpha_0.025": 0.9999999995281572,
+              "power_alpha_0.05": 0.9999999999285891
+            },
+            "a=1.0": {
+              "power_alpha_0.025": 0.9999999999880751,
+              "power_alpha_0.05": 0.9999999999983937
+            }
+          }
+        }
+      },
+      "qwen3.5-9b": {
+        "development_b_c": [
+          3,
+          0
+        ],
+        "scenarios": {
+          "a quarter of it": {
+            "power_alpha_0.025": 0.12351595152544069,
+            "power_alpha_0.05": 0.23481413538454954,
+            "rate": 0.011904761904761904,
+            "share_for_rule": 1.0
+          },
+          "development rate": {
+            "power_alpha_0.025": 0.9976141832619494,
+            "power_alpha_0.05": 0.99922447323859,
+            "rate": 0.047619047619047616,
+            "share_for_rule": 1.0
+          },
+          "development rate, 1 in 10 discordant pairs against": {
+            "power_alpha_0.025": 0.8674736716440372,
+            "power_alpha_0.05": 0.9166981827117714,
+            "rate": 0.047619047619047616,
+            "share_for_rule": 0.9
+          },
+          "half the development rate": {
+            "power_alpha_0.025": 0.7206667096981241,
+            "power_alpha_0.05": 0.8348393946384118,
+            "rate": 0.023809523809523808,
+            "share_for_rule": 1.0
+          },
+          "the anchor's held-out rate (39/347)": {
+            "power_alpha_0.025": 0.9999999999880751,
+            "power_alpha_0.05": 0.9999999999983937,
+            "rate": 0.11239193083573487,
+            "share_for_rule": 1.0
+          }
+        },
+        "with_the_hand_check": {
+          "a quarter of it": {
+            "a=0.8": {
+              "power_alpha_0.025": 0.05042580249349443,
+              "power_alpha_0.05": 0.11671652684193376
+            },
+            "a=0.9": {
+              "power_alpha_0.025": 0.08229544977649836,
+              "power_alpha_0.05": 0.17147447982194436
+            },
+            "a=1.0": {
+              "power_alpha_0.025": 0.12351595152544069,
+              "power_alpha_0.05": 0.23481413538454954
+            }
+          },
+          "development rate": {
+            "a=0.8": {
+              "power_alpha_0.025": 0.9790721838989073,
+              "power_alpha_0.05": 0.9916334226836899
+            },
+            "a=0.9": {
+              "power_alpha_0.025": 0.99268761759412,
+              "power_alpha_0.05": 0.9973756025059841
+            },
+            "a=1.0": {
+              "power_alpha_0.025": 0.9976141832619494,
+              "power_alpha_0.05": 0.99922447323859
+            }
+          },
+          "half the development rate": {
+            "a=0.8": {
+              "power_alpha_0.025": 0.4915613862076346,
+              "power_alpha_0.05": 0.648871868328987
+            },
+            "a=0.9": {
+              "power_alpha_0.025": 0.6151564877476678,
+              "power_alpha_0.05": 0.7544026996106316
+            },
+            "a=1.0": {
+              "power_alpha_0.025": 0.7206667096981241,
+              "power_alpha_0.05": 0.8348393946384118
+            }
+          },
+          "the anchor's held-out rate (39/347)": {
+            "a=0.8": {
+              "power_alpha_0.025": 0.9999999834930888,
+              "power_alpha_0.05": 0.9999999971674016
+            },
+            "a=0.9": {
+              "power_alpha_0.025": 0.9999999995281572,
+              "power_alpha_0.05": 0.9999999999285891
+            },
+            "a=1.0": {
+              "power_alpha_0.025": 0.9999999999880751,
+              "power_alpha_0.05": 0.9999999999983937
+            }
+          }
+        }
+      }
+    }
+  },
+  "h2": {
+    "anchor_heldout_switch_rate_answerable": 0.20461095100864554,
+    "anchor_switch_power_alpha_0.05": 0.5970137532928042,
+    "anchor_switch_power_holm_strictest": 0.41790957131684214,
+    "clopper_pearson_95_at_30": {
+      "0/30": [
+        0.0,
+        0.11570330822202782
+      ],
+      "1/30": [
+        0.0008435709266304775,
+        0.17216945563341318
+      ],
+      "15/30": [
+        0.3129702858680369,
+        0.6870297141319728
+      ],
+      "3/30": [
+        0.02111713702972494,
+        0.26528845047420835
+      ],
+      "6/30": [
+        0.07713551200107155,
+        0.3856665109966073
+      ],
+      "9/30": [
+        0.14734518475470493,
+        0.493959041462554
+      ]
+    },
+    "development_gold_free_proxy": {
+      "olmo-2-1124-7b-instruct": {
+        "gold": {
+          "eligible": 60,
+          "gold_free_subsets_abstaining": [
+            1111,
+            1196
+          ],
+          "pools": 63,
+          "switch_rate": 0.08333333333333333,
+          "switches": 5,
+          "top_gold_free_abstains": 56
+        },
+        "retrieved": {
+          "eligible": 63,
+          "gold_free_subsets_abstaining": [
+            1258,
+            1690
+          ],
+          "pools": 63,
+          "switch_rate": 0.1746031746031746,
+          "switches": 11,
+          "top_gold_free_abstains": 42
+        }
+      },
+      "qwen3-8b": {
+        "gold": {
+          "eligible": 60,
+          "gold_free_subsets_abstaining": [
+            1196,
+            1196
+          ],
+          "pools": 63,
+          "switch_rate": 0.0,
+          "switches": 0,
+          "top_gold_free_abstains": 60
+        },
+        "retrieved": {
+          "eligible": 63,
+          "gold_free_subsets_abstaining": [
+            1377,
+            1690
+          ],
+          "pools": 63,
+          "switch_rate": 0.047619047619047616,
+          "switches": 3,
+          "top_gold_free_abstains": 44
+        }
+      },
+      "qwen3.5-9b": {
+        "gold": {
+          "eligible": 60,
+          "gold_free_subsets_abstaining": [
+            1176,
+            1196
+          ],
+          "pools": 63,
+          "switch_rate": 0.0,
+          "switches": 0,
+          "top_gold_free_abstains": 59
+        },
+        "retrieved": {
+          "eligible": 63,
+          "gold_free_subsets_abstaining": [
+            1372,
+            1690
+          ],
+          "pools": 63,
+          "switch_rate": 0.06349206349206349,
+          "switches": 4,
+          "top_gold_free_abstains": 46
+        }
+      }
+    },
+    "grid_cost_rate": {
+      "0.05": {
+        "power_alpha_0.05": 0.0032824855950018155,
+        "power_holm_strictest_alpha_0.0167": 0.0005734889867712743
+      },
+      "0.10": {
+        "power_alpha_0.05": 0.07319010839987992,
+        "power_holm_strictest_alpha_0.0167": 0.025826788661909898
+      },
+      "0.15": {
+        "power_alpha_0.05": 0.289424305216866,
+        "power_holm_strictest_alpha_0.0167": 0.15258096076280048
+      },
+      "0.20": {
+        "power_alpha_0.05": 0.5724875624096797,
+        "power_holm_strictest_alpha_0.0167": 0.39303008027426023
+      },
+      "0.25": {
+        "power_alpha_0.05": 0.7974019257778622,
+        "power_holm_strictest_alpha_0.0167": 0.6519457109758039
+      },
+      "0.30": {
+        "power_alpha_0.05": 0.9234052479924477,
+        "power_holm_strictest_alpha_0.0167": 0.8404770178041239
+      },
+      "0.35": {
+        "power_alpha_0.05": 0.976742192637328,
+        "power_holm_strictest_alpha_0.0167": 0.9414278819222605
+      },
+      "0.40": {
+        "power_alpha_0.05": 0.9943412036286002,
+        "power_holm_strictest_alpha_0.0167": 0.982816975003553
+      },
+      "0.50": {
+        "power_alpha_0.05": 0.9998375428840518,
+        "power_holm_strictest_alpha_0.0167": 0.9992845468223095
+      }
+    },
+    "proxy_power": {
+      "olmo-2-1124-7b-instruct": {
+        "power_alpha_0.05": 0.42940989085384523,
+        "power_holm_strictest_alpha_0.0167": 0.2612037747973014,
+        "switch_rate_retrieved": 0.1746031746031746
+      },
+      "qwen3-8b": {
+        "power_alpha_0.05": 0.002574768283502177,
+        "power_holm_strictest_alpha_0.0167": 0.0004281097745079274,
+        "switch_rate_retrieved": 0.047619047619047616
+      },
+      "qwen3.5-9b": {
+        "power_alpha_0.05": 0.010366111684642134,
+        "power_holm_strictest_alpha_0.0167": 0.002308364221375354,
+        "switch_rate_retrieved": 0.06349206349206349
+      }
+    },
+    "questions": 30,
+    "rejection_with_c2_0": "Holm's strictest step (0.05/3) needs b2 >= 7; alpha 0.05 needs b2 >= 6"
+  },
+  "inputs": {
+    "am1_keepset_results_sha256": "cb087fc974252f78d758ba6dfec41c2342999c1030292c336dda3d2eb1688e1e",
+    "am3_features_sha256": "67780c98a7451bece4de0f1ce3c60f0879cba8e8f85b226d84b8c71245f996d9",
+    "am3_results_sha256": "7988abfb6eb34e742e34a9a26e9489389e98e75ea1b83603fa66dd5e631576a7",
+    "anchor_heldout_switches": [
+      71,
+      347
+    ]
+  }
+}

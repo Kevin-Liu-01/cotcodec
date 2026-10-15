@@ -1,0 +1,126 @@
+{
+  "architectures": {
+    "Olmo2ForCausalLM": {
+      "in_transformers": true,
+      "reader": "olmo-2-1124-7b-instruct",
+      "supported": true,
+      "transformers_backend": true
+    },
+    "Qwen3ForCausalLM": {
+      "in_transformers": true,
+      "reader": "qwen3-8b",
+      "supported": true,
+      "transformers_backend": false
+    },
+    "Qwen3_5ForConditionalGeneration": {
+      "in_transformers": true,
+      "reader": "qwen3.5-9b",
+      "supported": true,
+      "transformers_backend": false
+    }
+  },
+  "judge_templates": {
+    "abstention_sha256": "5c0b365a1e1d06db36377c735432b56e122ca3c428f89faf61d43a0d5a7e050b",
+    "answer_sha256": "2e27234d4c7d50a1fd99da3e8d3c97704a1f10cc9d52185924b6d8ece3ef71d4",
+    "items_by_template": {
+      "answer": 1387
+    }
+  },
+  "judges": {
+    "primary": {
+      "fits": true,
+      "items": 1387,
+      "len_max": 349,
+      "model_id": "qwen3-32b"
+    },
+    "secondary": {
+      "fits": true,
+      "items": 1387,
+      "len_max": 349,
+      "model_id": "qwen3-8b"
+    }
+  },
+  "ok": true,
+  "plan": {
+    "arms": [
+      "retrieved",
+      "gold"
+    ],
+    "experiment_id": "am3-nonabstain-generality-v1",
+    "gpus": 1,
+    "job_minutes": 90,
+    "pools": 694,
+    "population": "heldout",
+    "questions": 347,
+    "readers": [
+      "qwen3-8b",
+      "olmo-2-1124-7b-instruct",
+      "qwen3.5-9b"
+    ],
+    "requests_per_pool": 71,
+    "requests_per_reader": 49274,
+    "steps": [
+      "rd-qwen3-8b",
+      "rd-olmo2",
+      "rd-olmo2-default",
+      "rd-qwen35-9b-default",
+      "judge32",
+      "judge8"
+    ]
+  },
+  "readers": {
+    "olmo-2-1124-7b-instruct": {
+      "architectures": [
+        "Olmo2ForCausalLM"
+      ],
+      "fits": true,
+      "len_max": 1061,
+      "len_mean": 387.1299062385842,
+      "len_min": 193,
+      "no_think_tag_when_unmarked": true,
+      "ok": true,
+      "prompt_ids_sha256": "a3f98d61a750139c01fa4859cdd23bb4c131e9b3eff41de2bf2e4f7493ec52d8",
+      "requests": 49274,
+      "stop_token_error": null,
+      "stop_token_id": 100257,
+      "thinking_marker_ok": true,
+      "tokens_total": 19075439
+    },
+    "qwen3-8b": {
+      "architectures": [
+        "Qwen3ForCausalLM"
+      ],
+      "fits": true,
+      "len_max": 1139,
+      "len_mean": 420.2006128992978,
+      "len_min": 224,
+      "no_think_tag_when_unmarked": true,
+      "ok": true,
+      "prompt_ids_sha256": "a45a2edad1e32810d27b8c29dd4a1ba7b55d786044c8bc903dfeb7230de92986",
+      "requests": 49274,
+      "stop_token_error": null,
+      "stop_token_id": 151645,
+      "thinking_marker_ok": true,
+      "tokens_total": 20704965
+    },
+    "qwen3.5-9b": {
+      "architectures": [
+        "Qwen3_5ForConditionalGeneration"
+      ],
+      "fits": true,
+      "len_max": 1159,
+      "len_mean": 427.0517920201323,
+      "len_min": 229,
+      "no_think_tag_when_unmarked": true,
+      "ok": true,
+      "prompt_ids_sha256": "7a40448bbf14fd29fb17e57a9bf3ee95c0777c1d58630dc0e7665ec393d14817",
+      "requests": 49274,
+      "stop_token_error": null,
+      "stop_token_id": 248046,
+      "thinking_marker_ok": true,
+      "tokens_total": 21042550
+    }
+  },
+  "transformers_version": "5.17.0",
+  "vllm_version": "0.31.0"
+}

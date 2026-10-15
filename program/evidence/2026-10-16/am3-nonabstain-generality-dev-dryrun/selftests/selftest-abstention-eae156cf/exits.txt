@@ -1,0 +1,3 @@
+image sha256:a8571a4150585cbb31432a2f3b1e88d53315315df8500f6904d50bed14394584 population abstention
+am3g selftest exit 0
+am3g plan exit 0

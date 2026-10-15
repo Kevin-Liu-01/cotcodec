@@ -1,0 +1,110 @@
+{
+  "all_pass": true,
+  "am3_inputs_sha256": {
+    "per-table.json.gz": "0fc5635bad037588e521980536e4548eb51a6a3d9573e703b0f92010be72701e",
+    "results.json": "7988abfb6eb34e742e34a9a26e9489389e98e75ea1b83603fa66dd5e631576a7"
+  },
+  "checks": [
+    {
+      "check": "replies olmo-2-1124-7b-instruct vs job 1466 (tokens)",
+      "compared": 8946,
+      "identical": 8946,
+      "identical_bits": 8946,
+      "pass": true
+    },
+    {
+      "check": "replies qwen3-8b vs job 1466 (tokens)",
+      "compared": 8946,
+      "identical": 8946,
+      "identical_bits": 8946,
+      "pass": true
+    },
+    {
+      "check": "replies qwen3.5-9b vs job 1466 (tokens)",
+      "compared": 8946,
+      "identical": 8946,
+      "identical_bits": 8946,
+      "pass": true
+    },
+    {
+      "check": "judge primary item replay vs job 1466",
+      "compared": 2743,
+      "identical": 2743,
+      "pass": true
+    },
+    {
+      "check": "judge secondary item replay vs job 1466",
+      "compared": 2743,
+      "identical": 2743,
+      "pass": true
+    },
+    {
+      "check": "per-pool records olmo-2-1124-7b-instruct vs AM3's per-table.json.gz",
+      "compared": 126,
+      "identical": 126,
+      "pass": true
+    },
+    {
+      "check": "per-pool records qwen3-8b vs AM3's per-table.json.gz",
+      "compared": 126,
+      "identical": 126,
+      "pass": true
+    },
+    {
+      "check": "per-pool records qwen3.5-9b vs AM3's per-table.json.gz",
+      "compared": 126,
+      "identical": 126,
+      "pass": true
+    },
+    {
+      "check": "cell olmo-2-1124-7b-instruct primary gold vs AM3's results.json",
+      "pass": true
+    },
+    {
+      "check": "cell olmo-2-1124-7b-instruct primary retrieved vs AM3's results.json",
+      "pass": true
+    },
+    {
+      "check": "cell olmo-2-1124-7b-instruct secondary gold vs AM3's results.json",
+      "pass": true
+    },
+    {
+      "check": "cell olmo-2-1124-7b-instruct secondary retrieved vs AM3's results.json",
+      "pass": true
+    },
+    {
+      "check": "cell qwen3-8b primary gold vs AM3's results.json",
+      "pass": true
+    },
+    {
+      "check": "cell qwen3-8b primary retrieved vs AM3's results.json",
+      "pass": true
+    },
+    {
+      "check": "cell qwen3-8b secondary gold vs AM3's results.json",
+      "pass": true
+    },
+    {
+      "check": "cell qwen3-8b secondary retrieved vs AM3's results.json",
+      "pass": true
+    },
+    {
+      "check": "cell qwen3.5-9b primary gold vs AM3's results.json",
+      "pass": true
+    },
+    {
+      "check": "cell qwen3.5-9b primary retrieved vs AM3's results.json",
+      "pass": true
+    },
+    {
+      "check": "cell qwen3.5-9b secondary gold vs AM3's results.json",
+      "pass": true
+    },
+    {
+      "check": "cell qwen3.5-9b secondary retrieved vs AM3's results.json",
+      "pass": true
+    }
+  ],
+  "passed": 20,
+  "total": 20
+}

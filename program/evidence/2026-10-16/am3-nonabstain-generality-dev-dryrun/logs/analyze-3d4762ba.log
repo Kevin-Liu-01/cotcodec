@@ -1,0 +1,13 @@
+start 2026-10-15T13:41:18Z commit 3d4762bade5652efcc00c8af480890fd59980baf mode dev tag 3d4762ba
+hand-label receipt commit ea449d9dd7bb937de938ad6e5d20375af85ea6be; labels 52ebe1437166f1cc; plan 85497ef807530432
+analyze a exit 0
+analyze b exit 0
+analyze outputs byte-identical
+14d73a99e3cadd961bf6270c05f760cb8b31841b01de35047f64101512235b8f  results.json
+0fc5635bad037588e521980536e4548eb51a6a3d9573e703b0f92010be72701e  per-table.json.gz
+4a24e239e77ae69b8e1a722f96a662f40f450c114bdba32f3ad237e999a439cc  tables.md
+5e2e336669e7cbd169bbd73de1c6ad44824d7dba6c3653760bf8d81ed26bb856  ~/cotcodec-runs/stage0/am3g-dev-dryrun/private/features-development.json.gz
+dryrun-compare exit 0 ({"all_pass":true,"passed":20,"sha256":"0020c709ed74630c552732470ab6688e7faee9f230410c42dc4f229f01cd1093","total":20})
+power exit 0
+pytest exit 0 (130 passed in 4.30s)
+end 2026-10-15T13:41:25Z

@@ -1,0 +1,133 @@
+{
+ "archive": "~/cotcodec-runs/stage0/am3g-dev-dryrun/capsule/source-eae156cf.tar.gz",
+ "archive_format": "normalized-worktree-tar+gzip-mtime-zero",
+ "archive_sha256": "9cd8e794618662d228a1e669e8d813a3ec11fc42c315bd7bf726146f0cf91ae6",
+ "data_excluded": true,
+ "file_count": 12860,
+ "file_manifest_sha256": "2ae5292415e6a4c4992c75cb0de60e9536a4461874f2ca51360ede4d2c886f00",
+ "git_sha": "eae156cf715541e45eb63866dd4ae50db5938250",
+ "git_tree": "f4e34f975fecdf361da66c467b4c412820662878",
+ "metadata_normalized": true,
+ "mode": "discovery",
+ "omittable_symlink_rules": [
+  [
+   ".agents/skills/",
+   ".claude/skills/"
+  ]
+ ],
+ "omitted_symlinks": [
+  {
+   "path": ".agents/skills/bgpt-paper-search",
+   "target": "../../.claude/skills/bgpt-paper-search"
+  },
+  {
+   "path": ".agents/skills/citation-management",
+   "target": "../../.claude/skills/citation-management"
+  },
+  {
+   "path": ".agents/skills/exa-search",
+   "target": "../../.claude/skills/exa-search"
+  },
+  {
+   "path": ".agents/skills/experimental-design",
+   "target": "../../.claude/skills/experimental-design"
+  },
+  {
+   "path": ".agents/skills/literature-review",
+   "target": "../../.claude/skills/literature-review"
+  },
+  {
+   "path": ".agents/skills/orx-agent-delegation",
+   "target": "../../.claude/skills/orx-agent-delegation"
+  },
+  {
+   "path": ".agents/skills/orx-compute",
+   "target": "../../.claude/skills/orx-compute"
+  },
+  {
+   "path": ".agents/skills/orx-create",
+   "target": "../../.claude/skills/orx-create"
+  },
+  {
+   "path": ".agents/skills/orx-customize",
+   "target": "../../.claude/skills/orx-customize"
+  },
+  {
+   "path": ".agents/skills/orx-evidence",
+   "target": "../../.claude/skills/orx-evidence"
+  },
+  {
+   "path": ".agents/skills/orx-experiment-tree",
+   "target": "../../.claude/skills/orx-experiment-tree"
+  },
+  {
+   "path": ".agents/skills/orx-figures",
+   "target": "../../.claude/skills/orx-figures"
+  },
+  {
+   "path": ".agents/skills/orx-git",
+   "target": "../../.claude/skills/orx-git"
+  },
+  {
+   "path": ".agents/skills/orx-instances",
+   "target": "../../.claude/skills/orx-instances"
+  },
+  {
+   "path": ".agents/skills/orx-lit-review",
+   "target": "../../.claude/skills/orx-lit-review"
+  },
+  {
+   "path": ".agents/skills/orx-paper",
+   "target": "../../.claude/skills/orx-paper"
+  },
+  {
+   "path": ".agents/skills/orx-reports",
+   "target": "../../.claude/skills/orx-reports"
+  },
+  {
+   "path": ".agents/skills/paper-lookup",
+   "target": "../../.claude/skills/paper-lookup"
+  },
+  {
+   "path": ".agents/skills/paperclip",
+   "target": "../../.claude/skills/paperclip"
+  },
+  {
+   "path": ".agents/skills/paperzilla",
+   "target": "../../.claude/skills/paperzilla"
+  },
+  {
+   "path": ".agents/skills/peer-review",
+   "target": "../../.claude/skills/peer-review"
+  },
+  {
+   "path": ".agents/skills/pytorch-lightning",
+   "target": "../../.claude/skills/pytorch-lightning"
+  },
+  {
+   "path": ".agents/skills/research-lookup",
+   "target": "../../.claude/skills/research-lookup"
+  },
+  {
+   "path": ".agents/skills/scholar-evaluation",
+   "target": "../../.claude/skills/scholar-evaluation"
+  },
+  {
+   "path": ".agents/skills/statistical-analysis",
+   "target": "../../.claude/skills/statistical-analysis"
+  },
+  {
+   "path": ".agents/skills/statistical-power",
+   "target": "../../.claude/skills/statistical-power"
+  },
+  {
+   "path": ".agents/skills/transformers",
+   "target": "../../.claude/skills/transformers"
+  }
+ ],
+ "omitted_symlinks_sha256": "083d40f19e2e1aa87c37fc80cf422ceb7e9b7761cf452663d8080d9fa72f5a52",
+ "schema_version": 3,
+ "selected_ref": "HEAD",
+ "uv_lock_sha256": "4721104d055ec9d7488f82831c24b7e080124f27e9b850abd51c91024629b60f",
+ "worktree_clean": true
+}

@@ -1,0 +1,260 @@
+{
+  "allocation_minutes": 30.0,
+  "arms": [
+    "retrieved"
+  ],
+  "claim_level": "confirmatory",
+  "deadline_source": "job.env started_at",
+  "deadline_utc": "2026-10-15T15:46:49Z",
+  "evidence_sha256": "f1c241baeaeddcd5690daa22337612843b049059c354fe25fe348947e346a0f5",
+  "experiment_id": "am3-nonabstain-generality-v1",
+  "finished_at": "2026-10-15T15:26:30Z",
+  "gpus": "0, GPU-a485003c-eb56-c00a-5efc-ba2fb61d12d5, 00000000:63:00.0, NVIDIA H100 80GB HBM3\n",
+  "judge_items": {
+    "from": [
+      "rd-qwen3-8b",
+      "rd-olmo2",
+      "rd-qwen35-9b-default"
+    ],
+    "reader": 186,
+    "total": 276,
+    "validation": 90
+  },
+  "model_verification": {
+    "olmo-2-1124-7b-instruct": {
+      "artifact_root_sha256": "ec7f69552c8917a97fc28cea3862d07f49148413226f6ebb01465ac69bcc5f4c",
+      "mode": "full",
+      "model_id": "olmo-2-1124-7b-instruct",
+      "receipt": "/model-cache/cotcodec-receipts-cpu-lane/olmo-2-1124-7b-instruct.json",
+      "receipt_sha256": "4120a5c9d0ba777b9e46311ac4008e11ee675fa45fbef851a27b887588f98b4a",
+      "repo_id": "allenai/OLMo-2-1124-7B-Instruct",
+      "revision": "470b1fba1ae01581f270116362ee4aa1b97f4c84",
+      "total_bytes": 14606987735,
+      "verified_by": "scripts/fetch_open_model.py verify",
+      "verify_exit": 0,
+      "verify_s": 10.4,
+      "verify_stderr": "",
+      "verify_stdout": "{\n  \"artifact_root_sha256\": \"ec7f69552c8917a97fc28cea3862d07f49148413226f6ebb01465ac69bcc5f4c\",\n  \"backend\": \"huggingface\",\n  \"mode\": \"full\",\n  \"model_id\": \"olmo-2-1124-7b-instruct\",\n  \"publication_eligible\": true,\n  \"revision\": \"470b1fba1ae01581f270116362ee4aa1b97f4c84\",\n  \"total_bytes\": 14606987735\n}\n",
+      "wall_s": 10.4
+    },
+    "qwen3-32b": {
+      "artifact_root_sha256": "8fcd9106bfb1854a5b160c64a0ff3d3463208ab69854ae8c1cc26ba19dbf5714",
+      "mode": "full",
+      "model_id": "qwen3-32b",
+      "receipt": "/model-cache/cotcodec-receipts/qwen3-32b.json",
+      "receipt_sha256": "06e4a7e981eee4f6c079fd6b02dc58e3a9fd798e0d806820383d873cf9cd1fd1",
+      "repo_id": "Qwen/Qwen3-32B",
+      "revision": "9216db5781bf21249d130ec9da846c4624c16137",
+      "total_bytes": 65540298478,
+      "verified_by": "lane (model-verification.txt)",
+      "wall_s": 0.0
+    },
+    "qwen3-8b": {
+      "artifact_root_sha256": "325ab760530dfa4eb0529cc56f17b5042326d1bcc8fddf902b10fde325ff6281",
+      "mode": "full",
+      "model_id": "qwen3-8b",
+      "receipt": "/model-cache/cotcodec-receipts-cpu-lane/qwen3-8b.json",
+      "receipt_sha256": "b9e3a74d42882abe218e77d6023010543dd98278dedcc9180dd7089d336287fa",
+      "repo_id": "Qwen/Qwen3-8B",
+      "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+      "total_bytes": 16397461266,
+      "verified_by": "scripts/fetch_open_model.py verify",
+      "verify_exit": 0,
+      "verify_s": 12.2,
+      "verify_stderr": "",
+      "verify_stdout": "{\n  \"artifact_root_sha256\": \"325ab760530dfa4eb0529cc56f17b5042326d1bcc8fddf902b10fde325ff6281\",\n  \"backend\": \"huggingface\",\n  \"mode\": \"full\",\n  \"model_id\": \"qwen3-8b\",\n  \"publication_eligible\": true,\n  \"revision\": \"b968826d9c46dd6066d109eabc6255188de91218\",\n  \"total_bytes\": 16397461266\n}\n",
+      "wall_s": 12.2
+    },
+    "qwen3.5-9b": {
+      "artifact_root_sha256": "9845026dbe255e24b105224eebbb5436d315713b9a5c53c434137896b160c5b1",
+      "mode": "full",
+      "model_id": "qwen3.5-9b",
+      "receipt": "/model-cache/cotcodec-receipts/qwen3.5-9b.json",
+      "receipt_sha256": "0a9e052d561b017c505adf5a1c6fcdc048522660a0db134486b84edbf3de5cb3",
+      "repo_id": "Qwen/Qwen3.5-9B",
+      "revision": "c202236235762e1c871ad0ccb60c8ee5ba337b9a",
+      "total_bytes": 19329393661,
+      "verified_by": "scripts/fetch_open_model.py verify",
+      "verify_exit": 0,
+      "verify_s": 13.9,
+      "verify_stderr": "",
+      "verify_stdout": "{\n  \"artifact_root_sha256\": \"9845026dbe255e24b105224eebbb5436d315713b9a5c53c434137896b160c5b1\",\n  \"backend\": \"huggingface\",\n  \"mode\": \"full\",\n  \"model_id\": \"qwen3.5-9b\",\n  \"publication_eligible\": true,\n  \"revision\": \"c202236235762e1c871ad0ccb60c8ee5ba337b9a\",\n  \"total_bytes\": 19329393661\n}\n",
+      "wall_s": 13.9
+    }
+  },
+  "population": "abstention",
+  "questions": 30,
+  "reader_requests_per_reader": 2130,
+  "signal": null,
+  "started_at": "2026-10-15T15:21:05Z",
+  "steps": {
+    "judge32": {
+      "argv": [
+        "/usr/local/bin/python",
+        "/workspace/cotcodec/scripts/memcredit_am3g.py",
+        "worker",
+        "--population",
+        "abstention",
+        "--step",
+        "judge32",
+        "--config",
+        "/workspace/cotcodec/experiments/am3/am3-nonabstain-generality-v1.yaml",
+        "--output-dir",
+        "/outputs/am3g",
+        "--deadline",
+        "1792079209.000",
+        "--evidence",
+        "/inputs/study-artifact.json",
+        "--expected-evidence-sha256",
+        "f1c241baeaeddcd5690daa22337612843b049059c354fe25fe348947e346a0f5"
+      ],
+      "batch_invariant": true,
+      "enforce_eager": true,
+      "exit": 0,
+      "kind": "judge",
+      "started_at": "2026-10-15T15:25:02Z",
+      "status": "complete",
+      "wall_s": 49.0,
+      "worker_done": {
+        "exit": 0,
+        "utc": "2026-10-15T15:25:48Z"
+      }
+    },
+    "judge8": {
+      "argv": [
+        "/usr/local/bin/python",
+        "/workspace/cotcodec/scripts/memcredit_am3g.py",
+        "worker",
+        "--population",
+        "abstention",
+        "--step",
+        "judge8",
+        "--config",
+        "/workspace/cotcodec/experiments/am3/am3-nonabstain-generality-v1.yaml",
+        "--output-dir",
+        "/outputs/am3g",
+        "--deadline",
+        "1792079209.000",
+        "--evidence",
+        "/inputs/study-artifact.json",
+        "--expected-evidence-sha256",
+        "f1c241baeaeddcd5690daa22337612843b049059c354fe25fe348947e346a0f5"
+      ],
+      "batch_invariant": true,
+      "enforce_eager": true,
+      "exit": 0,
+      "kind": "judge",
+      "started_at": "2026-10-15T15:25:51Z",
+      "status": "complete",
+      "wall_s": 39.0,
+      "worker_done": {
+        "exit": 0,
+        "utc": "2026-10-15T15:26:27Z"
+      }
+    },
+    "rd-olmo2": {
+      "argv": [
+        "/usr/local/bin/python",
+        "/workspace/cotcodec/scripts/memcredit_am3g.py",
+        "worker",
+        "--population",
+        "abstention",
+        "--step",
+        "rd-olmo2",
+        "--config",
+        "/workspace/cotcodec/experiments/am3/am3-nonabstain-generality-v1.yaml",
+        "--output-dir",
+        "/outputs/am3g",
+        "--deadline",
+        "1792079209.000",
+        "--evidence",
+        "/inputs/study-artifact.json",
+        "--expected-evidence-sha256",
+        "f1c241baeaeddcd5690daa22337612843b049059c354fe25fe348947e346a0f5"
+      ],
+      "batch_invariant": true,
+      "enforce_eager": true,
+      "exit": 0,
+      "kind": "reader",
+      "reader": "olmo-2-1124-7b-instruct",
+      "started_at": "2026-10-15T15:22:40Z",
+      "status": "complete",
+      "wall_s": 57.0,
+      "worker_done": {
+        "exit": 0,
+        "utc": "2026-10-15T15:23:34Z"
+      }
+    },
+    "rd-olmo2-default": {
+      "kind": "reader",
+      "reason": "rd-olmo2 completed",
+      "status": "not-needed"
+    },
+    "rd-qwen3-8b": {
+      "argv": [
+        "/usr/local/bin/python",
+        "/workspace/cotcodec/scripts/memcredit_am3g.py",
+        "worker",
+        "--population",
+        "abstention",
+        "--step",
+        "rd-qwen3-8b",
+        "--config",
+        "/workspace/cotcodec/experiments/am3/am3-nonabstain-generality-v1.yaml",
+        "--output-dir",
+        "/outputs/am3g",
+        "--deadline",
+        "1792079209.000",
+        "--evidence",
+        "/inputs/study-artifact.json",
+        "--expected-evidence-sha256",
+        "f1c241baeaeddcd5690daa22337612843b049059c354fe25fe348947e346a0f5"
+      ],
+      "batch_invariant": true,
+      "enforce_eager": true,
+      "exit": 0,
+      "kind": "reader",
+      "reader": "qwen3-8b",
+      "started_at": "2026-10-15T15:21:45Z",
+      "status": "complete",
+      "wall_s": 55.0,
+      "worker_done": {
+        "exit": 0,
+        "utc": "2026-10-15T15:22:37Z"
+      }
+    },
+    "rd-qwen35-9b-default": {
+      "argv": [
+        "/usr/local/bin/python",
+        "/workspace/cotcodec/scripts/memcredit_am3g.py",
+        "worker",
+        "--population",
+        "abstention",
+        "--step",
+        "rd-qwen35-9b-default",
+        "--config",
+        "/workspace/cotcodec/experiments/am3/am3-nonabstain-generality-v1.yaml",
+        "--output-dir",
+        "/outputs/am3g",
+        "--deadline",
+        "1792079209.000",
+        "--evidence",
+        "/inputs/study-artifact.json",
+        "--expected-evidence-sha256",
+        "f1c241baeaeddcd5690daa22337612843b049059c354fe25fe348947e346a0f5"
+      ],
+      "batch_invariant": false,
+      "enforce_eager": true,
+      "exit": 0,
+      "kind": "reader",
+      "reader": "qwen3.5-9b",
+      "started_at": "2026-10-15T15:23:37Z",
+      "status": "complete",
+      "wall_s": 85.0,
+      "worker_done": {
+        "exit": 0,
+        "utc": "2026-10-15T15:25:00Z"
+      }
+    }
+  }
+}

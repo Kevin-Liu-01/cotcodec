@@ -468,7 +468,7 @@
     "Gauntleted packages that ended at honest exits and can advance only by your ruling (D24, D70, D76). S2 v3 (65) continues as S2 v4 under your delegation (D80 (iv)); its images are built and its registration is in a repair round before the freeze (D84). C5 Phase 1 (70-97 GPU-h) stays yours; its identification defect stands",
     "Shelved by Kevin (D101), not to be raised unless he asks: the outward items (disclosures, licence requests, host-admin request, publication, the GitHub Support request), key rotation and account items. Drafts are in the private archive."
   ],
-  "gpu_hours_spent_this_program": 27.3311,
+  "gpu_hours_spent_this_program": 28.1931,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -491,7 +491,8 @@
     "q2-stage1-successor-e-v1",
     "q2-zinv-reserve-validation-v1",
     "am1-memory-credit-v1",
-    "am1-keepset-search-v1"
+    "am1-keepset-search-v1",
+    "am3-nonabstain-generality-v1"
   ],
   "infrastructure": {
     "serving_probe": "v1 and v2 done (1.15 GPU-h): cu129 vLLM works on R570; Q1 sampling within cap; Q2 ladder needs rescoping",
@@ -1476,6 +1477,51 @@
       ],
       "outcome": "anchor bit-exact against the pilot's eager pass 1441 (2,272 of 2,272) and 8,913 of 8,946 cells against the committed tables (99.63%); nonabstain-BM25 vs BM25 top 4, retrieved arm, Qwen3-32B: anchor 1 vs 0, OLMo-2 4 vs 0 (p 0.125), Qwen3.5-9B 3 vs 0 (p 0.25), c = 0 in all six Qwen3-32B cells; under the Qwen3-8B judge 20 gained vs 6 lost, every loss an abstaining top 4 judged correct (exploratory; program/evidence/2026-10-16/am3-reader-replication/README.md)",
       "basis": "physical (scontrol RunTime 00:10:58 on 1 H100); Slurm limit 55 min (0.92 GPU-h cap); AM3 total 0.2017 of the 2.0 cap; submitted with no other GPU job of this program queued or running and 6 of 8 H100 free (D110's jobs on GPUs 0-1)"
+    },
+    {
+      "experiment": "am3-nonabstain-generality-v1 development dry run, image build (EXPLORATORY, development split only, before the freeze; D118): cotcodec-vllm cu129 overlay from the source capsule of commit eae156cf",
+      "gpu_hours": 0.0181,
+      "jobs": [
+        "1467 vLLM overlay build eae156cf (1 H100; COMPLETED 0:0, 00:01:05)"
+      ],
+      "outcome": "image sha256:a8571a41 from capsule 9cd8e794, provenance PASS; post-build CPU selftests 1468 (development, 8,946 prompts per reader) and 1469 (abstention population, 2,130 prompts per reader, tokenizer lengths only, no model output) pass with no GRES: every prompt fits (at most 1,190 and 1,040 tokens), vLLM 0.31.0 resolves the three readers (program/evidence/2026-10-16/am3-nonabstain-generality-dev-dryrun/README.md)",
+      "basis": "physical (scontrol RunTime 00:01:05 on 1 H100); Slurm limit 5 min; submitted with no other GPU job of this program queued or running (D110's jobs on GPUs 0-1)"
+    },
+    {
+      "experiment": "am3-nonabstain-generality-v1 development dry run, GPU job (EXPLORATORY, development split only, before the freeze; D118): scripts/memcredit_am3g.py run --population development; readers Qwen3-8B (anchor, eager batch-invariant), OLMo-2-1124-7B-Instruct (eager batch-invariant) and Qwen3.5-9B (eager, default mode) on the pilot's 126 pools x 71 requests, then the Qwen3-32B and Qwen3-8B judges (eager batch-invariant) on 2,869 items",
+      "gpu_hours": 0.1717,
+      "jobs": [
+        "1471 steps rd-qwen3-8b, rd-olmo2, rd-qwen35-9b-default, judge32, judge8 (1 H100; COMPLETED 0:0, 00:10:18)"
+      ],
+      "outcome": "reproduced AM3 exactly (20 of 20 checks): all three readers' 8,946 replies bit-identical to job 1466 in tokens and log-prob bits (Qwen3.5-9B included, same schedule), both judges 2,743 of 2,743 items, per-table.json.gz byte-identical to AM3's (0fc5635b) and the 12 cells equal to AM3's results.json; abstention-template calibration on development questions: Qwen3-32B yes to \"I don't know.\" 63 of 63, to the reference answer 0 of 63 (program/evidence/2026-10-16/am3-nonabstain-generality-dev-dryrun/README.md)",
+      "basis": "physical (scontrol RunTime 00:10:18 on 1 H100); Slurm limit 25 min (0.42 GPU-h cap); dry run total 0.1898 of the 0.5 cap; submitted with no other GPU job of this program queued or running and 6 of 8 H100 free (D110's jobs on GPUs 0-1)"
+    },
+    {
+      "experiment": "am3-nonabstain-generality-v1 image build (CONFIRMATORY registration, frozen, ledger row 25; D118): cotcodec-vllm cu129 overlay from the source capsule of the freeze commit 6384f294",
+      "gpu_hours": 0.0183,
+      "jobs": [
+        "1475 vLLM overlay build 6384f294 (1 H100; COMPLETED 0:0, 00:01:06)"
+      ],
+      "outcome": "image sha256:674572dd from capsule 15a04685, provenance PASS and the build record checks against the pins; post-build CPU selftests 1476 (held-out, 00:01:44) and 1477 (abstention, 00:00:13) pass with no GRES (program/evidence/2026-10-15/am3-nonabstain-generality-v1/builds/, selftests/)",
+      "basis": "physical (scontrol RunTime 00:01:06 on 1 H100); Slurm limit 5 min; submitted with no other GPU job of this program queued or running and 6 of 8 H100 free (D110's jobs on GPUs 0-1)"
+    },
+    {
+      "experiment": "am3-nonabstain-generality-v1 held-out GPU job (CONFIRMATORY, frozen, ledger row 25; D118): readers Qwen3-8B (anchor, eager batch-invariant), OLMo-2-1124-7B-Instruct (eager batch-invariant) and Qwen3.5-9B (eager, default mode) on AM1's 347 held-out questions x 2 arms x 71 requests, then the Qwen3-32B and Qwen3-8B judges on 14,317 items",
+      "gpu_hours": 0.5503,
+      "jobs": [
+        "1480 steps rd-qwen3-8b, rd-olmo2, rd-qwen35-9b-default, judge32, judge8 (1 H100; COMPLETED 0:0, 00:33:01)"
+      ],
+      "outcome": "rerun rule: complete (every essential step; OLMo-2's fallback not needed); V3 anchor replay passes (R1, R2), anchor 39 vs 0 retrieved and 31 vs 0 gold; H1 NONABSTAIN_HELPS for OLMo-2 (35 vs 0, Holm p 1.2e-10) and Qwen3.5-9B (31 vs 0, Holm p 9.3e-10), confirmed by the blind hand check (receipt 417d1149, before the join) (program/evidence/2026-10-15/am3-nonabstain-generality-v1/)",
+      "basis": "physical (scontrol RunTime 00:33:01 on 1 H100); Slurm limit 90 min (1.5 GPU-h cap); submitted with no other GPU job of this program queued or running and 6 of 8 H100 free (D110's jobs on GPUs 0-1)"
+    },
+    {
+      "experiment": "am3-nonabstain-generality-v1 abstention GPU job (CONFIRMATORY registration, frozen, ledger row 25; H2 descriptive; D118): the same three readers on LongMemEval-S's 30 abstention questions x 71 requests, then both judges (abstention template)",
+      "gpu_hours": 0.1036,
+      "jobs": [
+        "1482 steps rd-qwen3-8b, rd-olmo2, rd-qwen35-9b-default, judge32, judge8 (1 H100; COMPLETED 0:0, 00:06:13)"
+      ],
+      "outcome": "rerun rule: complete; G-J2 fails (decoy no 26 of 30), so H2 is JUDGE_QUALIFIED; cost b2/30 (c2 0): Qwen3-8B 5, OLMo-2 8 (NONABSTAIN_COSTS after Holm), Qwen3.5-9B 1 (program/evidence/2026-10-15/am3-nonabstain-generality-v1/); registration total 0.6722 of the 2.08 cap",
+      "basis": "physical (scontrol RunTime 00:06:13 on 1 H100); Slurm limit 30 min (0.5 GPU-h cap); submitted after job 1480 ended, with no other GPU job of this program queued or running and 6 of 8 H100 free (D110's jobs on GPUs 0-1)"
     }
   ],
   "results": [
@@ -1561,6 +1607,13 @@
       "label": "COMPLETE, CONFIRMATORY, VERIFIED (fresh verifier: features digest and all outputs byte-identical, independent recomputation exact; no gauntlet score, D115; H-B descriptive, D116): H-A INCONCLUSIVE (A1-A6 SEARCH_BETTER, A7 greedy backward NOT_SEPARATED); H-C NONABSTAIN_HELPS",
       "outcome": "CPU only on AM1's 694 held-out tables and job 1458's reader pass (no GPU, no new model call): H-A retrieved B = 4, 251 tables, direct search minus rule: LOO@9 -0.151, SNIPW-64 equal calls -0.078, SNIPW-64 vs search@26 -0.049, MSR-Banzhaf-64@64 -0.076, MSR-64 vs search@26 -0.042, perm-Shapley-16 vs search@26 -0.096 (all SEARCH_BETTER), greedy backward@26 -0.032 upper bound +0.0014 (NOT_SEPARATED); H-C nonabstain-BM25 0.571 vs BM25 top 4 0.458 (+0.112 [0.081, 0.147], 39 vs 0, exact p 3.6e-12), median 1 read; descriptive: BM25 top 4 minus all 8 -0.066 (15 vs 38), nonabstain-BM25 minus all 8 +0.046 (33 vs 17, p 0.033)",
       "evidence": "program/evidence/2026-10-16/am1-keepset-search/RESULTS.md"
+    },
+    {
+      "registration": "am3-nonabstain-generality-v1",
+      "date": "2026-10-15",
+      "label": "COMPLETE, CONFIRMATORY, VERIFIED (fresh verifier: analyze byte-identical from a new export, extract digests reproduced, independent recomputation exact; no gauntlet score, D118; agent hand labels, D9): H1 NONABSTAIN_HELPS for OLMo-2 and Qwen3.5-9B, hand-confirmed; H2 descriptive, JUDGE_QUALIFIED (G-J2 26/30)",
+      "outcome": "jobs 1475 (build), 1480 (held-out, 33:01), 1482 (abstention, 06:13): 0.6722 GPU-h. Anchor Qwen3-8B replayed job 1458 token for token on 49,274 of 49,274 and reproduced 39 vs 0. H1 retrieved, Qwen3-32B: OLMo-2 0.329 -> 0.429 (35 vs 0, Holm p 1.2e-10), Qwen3.5-9B 0.464 -> 0.553 (31 vs 0, Holm p 9.3e-10); blind hand check confirms both (35/0, 31/0; agreement 274/278, kappa 0.967). H2 on LongMemEval-S's 30 abstention questions (descriptive, judge-qualified): cost rates Qwen3-8B 5/30, OLMo-2 8/30, Qwen3.5-9B 1/30 (hand 0/30); natural-mix net +0.096, +0.079, +0.082; break-even unanswerable share 0.40, 0.27, 0.73. Unanswerable questions cost a median of 70 reads",
+      "evidence": "program/evidence/2026-10-15/am3-nonabstain-generality-v1/RESULTS.md"
     }
   ]
 }

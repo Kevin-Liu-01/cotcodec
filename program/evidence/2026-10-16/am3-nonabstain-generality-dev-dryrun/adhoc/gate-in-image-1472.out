@@ -1,0 +1,6 @@
+registration in image: True ledger in image: True
+Traceback (most recent call last):
+  File "<string>", line 7, in <module>
+  File "/workspace/cotcodec/scripts/memcredit_keepset_search.py", line 356, in check_code_pins
+    raise KeepsetError(f"code differs from the registration's pins: {mismatched}")
+memcredit_keepset_search.KeepsetError: code differs from the registration's pins: ['legacy/harness/memory_trials/longmemeval_judge.py']

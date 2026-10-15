@@ -1,0 +1,42 @@
+{
+ "experiment_id": "am3-nonabstain-generality-v1",
+ "fields": [
+  "item_id",
+  "label",
+  "note"
+ ],
+ "file": "hand-labels.jsonl",
+ "hand_sample_record": {
+  "features_sha256": "ce7cf92c10b74e585ebfe0ee42d7f699d9c378d3c1394f5ce79b72737c56c5ba",
+  "instructions_sha256": "ce37d71c46c13ed54f2dd933fc80294d5ae7c613ee28d60a4490e7aaa2f25ad7",
+  "items": 27,
+  "plan_sha256": "cd7516b983110ce2573835aa06f21dea6776e47f4975a205ec05e3cf2704df98",
+  "population": "development",
+  "readers": {
+   "olmo-2-1124-7b-instruct": {
+    "discordant_questions": 4,
+    "distractor_questions": 4
+   },
+   "qwen3.5-9b": {
+    "discordant_questions": 3,
+    "distractor_questions": 3
+   }
+  },
+  "sample_sha256": "1655d6b08d73eb60816e7708e19cd313b52318c61de6abdbea5742a283236295"
+ },
+ "joined": false,
+ "label_counts": {
+  "0": 20,
+  "1": 7
+ },
+ "labeller": "an isolated agent, blind to every judge label, rule identity, reader and outcome (D9: agent labels, not human)",
+ "receipted_before_join": "this receipt and hand-labels.sha256.txt are committed before am3g-analyze.sh joins the labels",
+ "rows": 27,
+ "same_item_order_as_sample": true,
+ "sample": {
+  "file": "hand-check-sample.jsonl",
+  "rows": 27,
+  "sha256": "1655d6b08d73eb60816e7708e19cd313b52318c61de6abdbea5742a283236295"
+ },
+ "sha256": "604896d5838ffc447f71803b1a6158c97a0db921d5d0717596f854c9eb8f7bbf"
+}

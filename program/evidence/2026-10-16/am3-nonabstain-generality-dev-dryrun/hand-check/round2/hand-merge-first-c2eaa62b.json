@@ -1,0 +1,13 @@
+{
+  "chunks": 1,
+  "final_complete": true,
+  "final_rows": 27,
+  "final_sha256": "85320c6a582ed09e42af49ab07cfd69b158888e7ba7ae6d44826f7409724757b",
+  "items_lacking_a_valid_row": 0,
+  "malformed_rows": 0,
+  "missing_chunk_outputs": [],
+  "raw_sha256": "85320c6a582ed09e42af49ab07cfd69b158888e7ba7ae6d44826f7409724757b",
+  "repeated_items": 0,
+  "stage": "first",
+  "valid_rows": 27
+}
