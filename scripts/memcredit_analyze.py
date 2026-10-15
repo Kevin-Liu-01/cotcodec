@@ -422,9 +422,11 @@ def mean_or_none(values: list[float]) -> float | None:
     return sum(values) / len(values) if values else None
 
 
-def ci_mean(clusters: dict[str, list[float]], config: dict[str, Any]) -> dict[str, Any]:
+def ci_mean(
+    clusters: dict[str, list[float]], config: dict[str, Any], alpha: float = 0.05
+) -> dict[str, Any]:
     spec = config["analysis"]["bootstrap"]
-    return ms.cluster_bootstrap(clusters, int(spec["resamples"]), int(spec["seed"]))
+    return ms.cluster_bootstrap(clusters, int(spec["resamples"]), int(spec["seed"]), alpha)
 
 
 def h1_summary(tables: list[dict[str, Any]], config: dict[str, Any]) -> dict[str, Any]:
@@ -488,6 +490,7 @@ def h2_summary(tables: list[dict[str, Any]], config: dict[str, Any]) -> dict[str
                 clusters: dict[str, list[float]] = defaultdict(list)
                 worst: dict[str, list[float]] = defaultdict(list)
                 subopt: dict[str, list[float]] = defaultdict(list)
+                paired: dict[str, list[float]] = defaultdict(list)
                 for t in chosen:
                     r = t["regret"].get(name, {}).get(b)
                     if r is None:
@@ -496,12 +499,17 @@ def h2_summary(tables: list[dict[str, Any]], config: dict[str, Any]) -> dict[str
                     if "max" in r:
                         worst[t["question_id"]].append(r["max"])
                     subopt[t["question_id"]].append(float(r["mean"] > 1e-12))
+                    paired[t["question_id"]].append(
+                        r["mean"] - t["regret"]["shapley_exact"][b]["mean"]
+                    )
                 if not clusters:
                     continue
                 rows[name] = {
                     "mean_regret": ci_mean(clusters, config),
+                    "mean_regret_99": ci_mean(clusters, config, 0.01),
                     "worst_tie_regret": ci_mean(worst, config) if worst else None,
                     "suboptimal_rate": ci_mean(subopt, config),
+                    "minus_exact_shapley": ci_mean(paired, config),
                 }
             per_arm[b] = rows
         out[arm] = per_arm
@@ -1060,9 +1068,24 @@ def hand_sample(
 # --------------------------------------------------------------------------- power
 
 
+#: The registration's primary H2 family (retrieved arm, B = 4) and its decision thresholds.
+PRIMARY_FAMILY = ("loo", "perm_shapley_16", "snipw_64", "retrieval_rank", "attention_raw")
+MATERIAL_REGRET = 0.05
+ADEQUATE_REGRET = 0.02
+SCALES = (1.0, 0.5, 0.25)
+
+
 def power(analysis_dir: Path, config: dict[str, Any], heldout: int) -> dict[str, Any]:
-    """Resample development questions to the held-out size; for each registered statistic, the
-    distribution of its point estimate and 95% interval, and how often each decision fires."""
+    """Resample development questions to the held-out size and apply the registration's rules.
+
+    For every statistic (a per-question value: one table per question and arm), each simulation
+    draws the held-out number of units (held-out questions times the development rate of
+    non-constant tables) with replacement from the development values, optionally scaled by
+    0.5 or 0.25 (a smaller true effect with the same shape), and computes the mean and its
+    question-bootstrap interval: 99% (Bonferroni over the five primary estimators) for H2 and
+    95% for H1. It reports how often H2's rules fire: MISSPECIFIED when the 99% lower bound
+    exceeds 0.05, ADEQUATE when the 99% upper bound is below 0.02, else INCONCLUSIVE.
+    """
 
     import numpy as np
 
@@ -1078,11 +1101,7 @@ def power(analysis_dir: Path, config: dict[str, Any], heldout: int) -> dict[str,
         by_q[t["question_id"]][t["arm"]] = t
 
     def per_question(arm: str, fn: Callable[[dict[str, Any]], float | None]) -> list[float | None]:
-        out = []
-        for q in questions:
-            t = by_q[q].get(arm)
-            out.append(fn(t) if t is not None else None)
-        return out
+        return [fn(by_q[q][arm]) if arm in by_q[q] else None for q in questions]
 
     def regret_fn(name: str, budget: str) -> Callable[[dict[str, Any]], float | None]:
         def fn(t: dict[str, Any]) -> float | None:
@@ -1098,50 +1117,47 @@ def power(analysis_dir: Path, config: dict[str, Any], heldout: int) -> dict[str,
             return None
         return s["fourier_share_order_2_plus"] - s["and_or_baseline"]
 
-    stats: dict[str, list[float | None]] = {}
+    stats: dict[str, tuple[list[float | None], float, bool]] = {}
     for arm in ("retrieved", "gold"):
-        for name in (
-            "loo",
-            "perm_shapley_16",
-            "snipw_64",
-            "retrieval_rank",
-            "attention_raw",
-            "shapley_exact",
-            "random",
-        ):
-            for budget in (b, "2"):
-                stats[f"h2:{arm}:{name}:B{budget}"] = per_question(arm, regret_fn(name, budget))
-        stats[f"h1:{arm}:excess"] = per_question(arm, excess_fn)
+        for name in (*PRIMARY_FAMILY, "shapley_exact", "random"):
+            stats[f"h2:{arm}:{name}:B{b}"] = (per_question(arm, regret_fn(name, b)), 0.01, True)
+        stats[f"h1:{arm}:excess"] = (per_question(arm, excess_fn), 0.05, False)
     result: dict[str, Any] = {
-        "heldout_questions": heldout,
-        "simulations": sims,
-        "inner_bootstrap": inner,
-        "development_questions": len(questions),
-        "statistics": {},
-    }
-    for key, values in stats.items():
+        "heldout_questions": heldout, "simulations": sims, "inner_bootstrap": inner,
+        "development_questions": len(questions), "material_regret": MATERIAL_REGRET,
+        "adequate_regret": ADEQUATE_REGRET, "scales": list(SCALES), "statistics": {},
+    }  # fmt: skip
+    for key, (values, alpha, is_h2) in stats.items():
         present = np.array([v for v in values if v is not None], dtype=float)
-        rate = len(present) / len(values) if values else 0.0
         if len(present) < 2:
             continue
+        rate = len(present) / len(values)
         n_units = max(2, int(round(heldout * rate)))
-        means = np.empty(sims)
-        los = np.empty(sims)
-        his = np.empty(sims)
-        for s in range(sims):
-            sample = present[rng.integers(0, len(present), n_units)]
-            boot = sample[rng.integers(0, n_units, (inner, n_units))].mean(axis=1)
-            means[s] = sample.mean()
-            los[s], his[s] = np.quantile(boot, [0.025, 0.975])
-        result["statistics"][key] = {
-            "development_units": int(len(present)),
-            "development_mean": float(present.mean()),
-            "expected_heldout_units": n_units,
-            "mean_of_means": float(means.mean()),
-            "median_ci_halfwidth": float(np.median((his - los) / 2)),
-            "p_lower_above": {str(t): float(np.mean(los > t)) for t in (0.0, 0.01, 0.02, 0.05)},
-            "p_upper_below": {str(t): float(np.mean(his < t)) for t in (0.01, 0.02, 0.05, 0.1)},
-        }
+        row: dict[str, Any] = {
+            "development_units": int(len(present)), "development_mean": float(present.mean()),
+            "development_sd": float(present.std(ddof=1)), "unit_rate": rate,
+            "expected_heldout_units": n_units, "interval": 1 - alpha, "by_scale": {},
+        }  # fmt: skip
+        for scale in SCALES if is_h2 else (1.0,):
+            base = present * scale
+            means = np.empty(sims)
+            los = np.empty(sims)
+            his = np.empty(sims)
+            for s in range(sims):
+                sample = base[rng.integers(0, len(base), n_units)]
+                boot = sample[rng.integers(0, n_units, (inner, n_units))].mean(axis=1)
+                means[s] = sample.mean()
+                los[s], his[s] = np.quantile(boot, [alpha / 2, 1 - alpha / 2])
+            entry = {"true_mean": float(base.mean()), "median_halfwidth": float(np.median(
+                (his - los) / 2)), "p_lower_above_0": float(np.mean(los > 0))}  # fmt: skip
+            if is_h2:
+                material = los > MATERIAL_REGRET
+                adequate = his < ADEQUATE_REGRET
+                entry.update(p_misspecified=float(np.mean(material)),
+                             p_adequate=float(np.mean(adequate)),
+                             p_inconclusive=float(np.mean(~material & ~adequate)))  # fmt: skip
+            row["by_scale"][str(scale)] = entry
+        result["statistics"][key] = row
     return result
 
 
