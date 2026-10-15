@@ -5795,23 +5795,45 @@ they say so.)
   the same way at `a213572e`). No fresh-job resume test (AGENTS.md hard rule 2): the
   disclosed exemption G2b used.
 - Readings (exploratory, one stack, 72 rollouts per arm and model):
-  - Precision drives the drift; the layout does not. bf16_b528's rollout-vs-trainer mean
-    |dlogp| is 0.0357 (4B) and 0.0352 (9B) against bf16's 0.0357 and 0.0365 (ratio 1.00 and
-    0.96), with the same within-sequence growth (+1.31e-3 vs +1.33e-3; +1.46e-3 vs +1.46e-3 per
-    1K). On the 4B its rollouts repeat G2b's bf16 rollouts token for token (66 of 72 identical up
-    to the shorter, 99.96% of decode log-probs bit-equal); on the 9B they diverge after a median
-    220 tokens with the same statistics. Its rollouts run as long as bf16's.
-  - fp16 at bf16's layout keeps 26% (4B) and 17% (9B) of bf16's excess mean |dlogp| over fp32
-    (0.0151 and 0.0124), 14% and 7% of the excess k3, and 43% and 31% of the excess slope. It is
-    not fp32: 2.0x and 1.7x, growing +5.8e-4 and +4.5e-4 per 1K, about 3x fp32 at 30K. Its
-    rollouts end like fp32's (54 vs 57 and 65 vs 65 EOS; paired 37-24 and 38-29, p 0.12 and
-    0.33).
+  - The state's number format, not the block layout, drives the ~4.7x drift. bf16_b528's
+    rollout-vs-trainer mean |dlogp| is 4.64x (4B) and 4.74x (9B) fp32's, with bf16's
+    within-sequence growth (+1.31e-3 vs +1.33e-3; +1.46e-3 vs +1.46e-3 per 1,000 tokens).
+    - On the 4B it equals bf16's: 0.0357 vs 0.0357, ratio 1.00. Its rollouts repeat G2b's bf16
+      rollouts token for token: 66 of 72 are identical up to the shorter, and 99.96% of decode
+      log-probs are bit-equal.
+    - On the 9B it is 4% below bf16's (0.0352 vs 0.0365, 0.96 [0.94, 0.99]). Standardizing by
+      position removes only about a quarter of that gap. About 3% remains at matched positions
+      (0.97 [0.95, 0.99], independent check). One engine instance per arm cannot split it
+      between the layout and the instance. The 9B rollouts diverge after a median 220 tokens.
+    - bf16_b528's rollouts run as long as bf16's.
+  - fp16 at bf16's layout keeps 26% (4B) and 17% (9B) of bf16's excess mean |dlogp| over fp32,
+    pooled (0.0151 and 0.0124). At matched positions it keeps somewhat more, 28-29% and
+    20-21%, because fp16 rollouts are shorter. So it keeps a fifth to under a third of the
+    excess. It keeps 14% and 7% of the excess k3 and 43% and 31% of the excess slope.
+  - fp16 is not fp32: 2.0x and 1.7x fp32's mean, growing +5.8e-4 and +4.5e-4 per 1,000 tokens.
+    Near 30K it is about 3x fp32 on the 4B and 2-2.5x on the 9B. The 9B value rests on 7 fp32
+    sequences: 2.54 in the 1,024-token bin from 30,720, and 2.05 over positions
+    30,000-30,999. fp16 rollouts end like fp32's (54 vs 57 and 65 vs 65 EOS; paired 37-24 and
+    38-29, p 0.12 and 0.33).
   - The drift stays in vLLM's decode path: prefill in each arm's own engine is at fp32 level.
-  - One wave per arm: fp16 keeps bf16's throughput (1.34x and 1.38x over G2b's fp32 wave).
-    bf16_b528 (fp32's pool, bf16 state bytes) gives 1.33x on the 4B and 1.23x on the 9B with
-    fp32's preemptions: the 4B gain is state bandwidth, the 9B gain about 58% bandwidth.
+  - One wave per arm, in different jobs on a shared host: fp16 keeps bf16's throughput (1.34x
+    and 1.38x over G2b's fp32 wave). bf16_b528, the bf16 state dtype at fp32's block pool,
+    gives 1.33x on the 4B and 1.23x on the 9B, with fp32's preemptions.
+    - So the state dtype at fp32's pool carries the whole 4B gain and about 58% of the 9B gain
+      (roughly ±10 points from wave noise).
+    - Bytes moved and the dtype-specialized kernel are not separated.
   - Not separated: the dtype-specialized kernel instance from precision; within fp16, mantissa
-    from exponent range. No RL training ran.
+    from exponent range; the 9B's ~3% layout-arm residual, between layout and engine instance.
+    No RL training ran.
+- An independent check passed it with one medium and three low wording items. All four are
+  fixed in text and records only (README, this entry); no GPU job ran and no committed number
+  changed.
+  - The 9B layout gap is about 3% at matched positions, not length composition.
+  - fp16's excess fraction is a fifth to under a third.
+  - The position bins are 1,024 tokens wide, and the 30K tails depend on the bin edges.
+  - The throughput split is the state dtype at fp32's pool, from single waves.
+  - The standardized and 1,000-token-bin values are the check's (CPU jobs 1443-1445; its code
+    is not committed).
 - Evidence: `program/evidence/2026-10-15/g2c-precision-vs-layout/` (README with the four arms side
   by side, figure, problems; seed-42 per-token subsets, rollout texts, lane records, manifests,
   build, selftest and source-check records). Full per-token files and raw arrays stay on the

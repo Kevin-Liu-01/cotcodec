@@ -7,28 +7,35 @@
 > 00:10-00:54 UTC. **1.2158 physical GPU-h** of the 1.5 cap were used, image builds and smoke
 > runs included.
 
-## Main takeaways (exploratory)
+## Main takeaways (exploratory; wording corrected after an independent check)
 
-- **Precision drives the drift. The block layout does not.**
-  - bf16 at fp32's 528-token block (bf16_b528) drifts exactly as G2b's bf16 arm does.
-    Rollout-vs-trainer mean |Δ log p| is 0.0357 against bf16's 0.0357 on the 4B (ratio 1.00,
-    95% CI over prompts [0.99, 1.01]) and 0.0352 against 0.0365 on the 9B (0.96 [0.94, 0.99]).
-    The within-sequence growth is the same: +1.31e-3 against +1.33e-3 per 1K tokens on the 4B,
+- **The state's number format, not the block layout, drives the ~4.7x drift.**
+  - bf16 at fp32's 528-token block (bf16_b528) keeps the drift of G2b's bf16 arm.
+    Rollout-vs-trainer mean |Δ log p| is 4.64x fp32's on the 4B and 4.74x on the 9B (95% CIs
+    over prompts [4.34, 4.87] and [4.48, 4.96]), against bf16's 4.64x and 4.92x. The
+    within-sequence growth is the same: +1.31e-3 against +1.33e-3 per 1,000 tokens on the 4B,
     and +1.46e-3 against +1.46e-3 on the 9B (differences include 0).
+  - On the 4B, bf16_b528 matches bf16: 0.0357 against 0.0357 (ratio 1.00 [0.99, 1.01]). On the
+    9B it is 4% below: 0.0352 against 0.0365 (0.96 [0.94, 0.99]). Standardizing by position
+    removes only about a quarter of that gap. About 3% remains at matched positions, with a CI
+    that excludes 1 (0.97 [0.95, 0.99], independent check). Each arm is one engine instance,
+    so this residual cannot be split between the layout and the engine instance.
   - On the 4B the forced-block rollouts are G2b's bf16 rollouts, token for token: 27 of 72 are
     identical to their EOS, 39 more are identical until the time budget cut both (bf16_b528 108
     tokens earlier), 6 diverge, and 99.96% of the decode log-probs on the shared tokens are
-    bit-equal. On the
-    9B they diverge after a median 220 tokens, as any two arms do, but the drift statistics
-    still match.
+    bit-equal. On the 9B they diverge after a median 220 tokens, as any two arms do.
   - fp16, at bf16's layout and memory, removes most of the drift: 0.0151 (4B) and 0.0124 (9B),
-    against fp32's 0.0077 and 0.0074 and bf16's 0.0357 and 0.0365. It keeps 26% and 17% of
-    bf16's excess mean |Δ log p| over fp32, 14% and 7% of its excess k3, and 43% and 31% of
-    its excess within-sequence slope.
+    against fp32's 0.0077 and 0.0074 and bf16's 0.0357 and 0.0365. Pooled over all tokens, it
+    keeps 26% and 17% of bf16's excess mean |Δ log p| over fp32. Its rollouts are shorter than
+    bf16's, so at matched positions it keeps somewhat more: 28-29% and 20-21% (independent
+    check). It keeps 14% and 7% of bf16's excess k3, and 43% and 31% of its excess
+    within-sequence slope.
 - **fp16 is not fp32.** Its mismatch is 2.0x (4B) and 1.7x (9B) fp32's, k3 3.3x and 2.5x, and
   0.58% and 0.35% of importance ratios fall outside [0.8, 1.25] (fp32 0.03% and 0.02%, bf16
-  3.7% and 3.9%). It still grows within sequences (+5.8e-4 and +4.5e-4 per 1K), from 1.0x fp32
-  in the first 1K positions to about 3x (4B) and 2.5x (9B) at 30K, in every entropy bin.
+  3.7% and 3.9%). It still grows within sequences (+5.8e-4 and +4.5e-4 per 1,000 tokens), in
+  every entropy bin. It goes from 1.0x fp32 in the first 1,024 positions to about 3x (4B) and
+  2-2.5x (9B) near 30K. The 9B value rests on 7 fp32 sequences and depends on the bin edges
+  (by position, below).
 - **The length effect follows the drift.** The bf16_b528 rollouts run as long as bf16's (4B: 31
   ended with EOS against 32; 9B: 40 against 37; paired against bf16, 4 to 1 and 21 to 22). The
   fp16 rollouts end like fp32's (4B: 54 against 57; 9B: 65 against 65). Paired over (prompt,
@@ -38,17 +45,24 @@
 - **The drift stays in vLLM's decode path.** vLLM prefill in each arm's own engine is as close to
   the trainer as fp32's is (0.0075-0.0081 in every arm), and the trainer's distance to the fp32
   reference does not change (0.0073-0.0080).
-- **Throughput (one wave per arm).** fp16 keeps the bf16 lever: 19,968 and 16,161 output tok/s
-  against G2b's fp32 wave of 14,894 and 11,697 (1.34x and 1.38x). bf16_b528 splits G2b's gain
-  into its two sources. On the 4B it keeps all of it (19,739, 1.33x) with fp32's block pool and
-  fp32's 36 preemptions, so the 4B gain is state bandwidth. On the 9B it reaches 14,356 (1.23x
-  against bf16's 1.39x) with fp32's 114 preemptions, so about 58% of the 9B gain is bandwidth
-  and the rest the larger pool.
+- **Throughput (one wave per arm, in different jobs on a shared host).** fp16 keeps the bf16
+  lever: 19,968 and 16,161 output tok/s against G2b's fp32 wave of 14,894 and 11,697 (1.34x and
+  1.38x). bf16_b528, the bf16 state dtype at fp32's block pool, splits G2b's gain. On the 4B it
+  keeps all of it (19,739, 1.33x) with fp32's block pool and fp32's 36 preemptions. On the 9B
+  it reaches 14,356 (1.23x against bf16's 1.39x) with fp32's 114 preemptions. So the state
+  dtype at fp32's block pool gives about 58% of the 9B gain, and the larger pool the rest.
+  - The split rests on single waves. A few percent of noise on each of the three waves in it
+    (fp32, bf16, bf16_b528) moves the 58% by roughly ±10 points.
+  - The state dtype changes both the bytes moved and the dtype-specialized kernel. Which of the
+    two carries the gain is not separated.
 - **Reading.** On this stack the bf16 drift tracks the state's number format, not the attention
-  block layout. A float16 state costs the same memory as bf16, gives the same throughput, and
-  carries about a fifth to a quarter of bf16's excess mismatch. It is still not drift-free.
+  block layout. Moving the layout changes the mean by at most a few percent: not at all on the
+  4B, and about 3% lower on the 9B at matched positions. A float16 state costs the same memory
+  as bf16, gives the same throughput, and carries a fifth to under a third of bf16's excess
+  mismatch. It is still not drift-free.
   - Not separated: the kernel instance, which vLLM specializes per state dtype, from the
-    precision itself; and, within fp16, its extra mantissa bits from its narrower exponent range.
+    precision itself; within fp16, its extra mantissa bits from its narrower exponent range; and
+    the 9B's ~3% layout-arm residual, between the layout and the engine instance.
   - Not runnable: fp32 at 272-token blocks (below).
   - No RL training ran, so nothing here says how training would respond.
 
@@ -171,11 +185,12 @@ limits, and lane receipts (`jobs/`). GPU-h are physical: GPUs times the Slurm `R
 - **Analysis** (`scripts/analyze_g2c_precision_layout.py`, CPU, on the host):
   - The metric and statistics are G2b's: d = log p_A - log p_B on each rollout's own tokens;
     mean and p99 |d|; k3 and the share of ratios outside [0.8, 1.25] against the decode path;
-    slopes per 1K positions (within sequences; within sequence x entropy-bin cells); float
-    entropy bins; 1K position bins. G2b's fp32 and bf16 arms are recomputed from G2b's full
-    per-token files on the host (SHA-256 checked against G2b's `SHA256SUMS-host.txt`) with
-    the same code. The recomputed numbers equal G2b's committed `analysis.json` exactly (largest
-    difference 0; `analysis/tables.md`, last section).
+    slopes per 1,000 positions (within sequences; within sequence x entropy-bin cells); float
+    entropy bins; position bins 1,024 tokens wide (bin k covers positions 1,024k to
+    1,024k + 1,023; `tables.md` lists each bin by its start). G2b's fp32 and bf16 arms are
+    recomputed from G2b's full per-token files on the host (SHA-256 checked against G2b's
+    `SHA256SUMS-host.txt`) with the same code. The recomputed numbers equal G2b's committed
+    `analysis.json` exactly (largest difference 0; `analysis/tables.md`, last section).
   - Contrasts bootstrap over the 24 prompts, drawn jointly for all four arms (2,000 draws, seed
     42). The excess fraction is (arm - fp32) / (bf16 - fp32).
   - The same-seed comparison reads each arm's rollout tokens (G2b's stay on the host) and
@@ -207,18 +222,42 @@ Arm contrasts on the decode path (bootstrap over prompts):
 | fp16 / fp32 | 1.96 [1.83, 2.05] | +5.7e-4 [+5.3e-4, +6.2e-4] | 1.67 [1.56, 1.77] | +4.4e-4 [+4.1e-4, +4.7e-4] |
 | bf16_b528 / fp32 | 4.64 [4.34, 4.87] | +1.31e-3 [+1.22e-3, +1.42e-3] | 4.74 [4.48, 4.96] | +1.45e-3 [+1.37e-3, +1.54e-3] |
 
-The 9B bf16_b528 mean sits 4% under bf16's while its within-sequence slope is identical. Its
-rollouts end slightly more often (40 against 37), so it has fewer tokens at the longest, most
-drifted positions; the position table below shows the two arms on top of each other bin by bin.
+The 9B bf16_b528 mean sits 4% under bf16's while its within-sequence slope is the same.
+- Length composition explains only about a quarter of that gap. bf16_b528's 9B rollouts end
+  slightly more often (40 against 37), so it has fewer tokens at the longest, most drifted
+  positions.
+- An independent check standardized the means by position:
+  - Method: its own numpy code on the host's raw per-token arrays (CPU jobs 1443-1445; the code
+    is not part of this branch). The bins were 1,024 tokens wide, weighted by bf16's or by
+    fp32's tokens per bin, with the same bootstrap over the 24 prompts (2,000 draws).
+  - 9B bf16_b528 / bf16: 0.972 [0.954, 0.992] with bf16's weights and 0.972 [0.955, 0.989]
+    with fp32's, against 0.964 [0.943, 0.987] pooled. About 3% remains at matched positions.
+    bf16_b528 is below bf16 in 25 of the 33 position bins (`tables.md`) and in 4 of the 6
+    entropy bins.
+  - 4B: 0.999 [0.995, 1.003], as its token identity implies.
+- The two 9B arms ran on the same GPU of the host (device 3 in jobs 1374 and 1420), so a GPU
+  difference does not explain the residual. Each arm is one engine instance, so the residual
+  cannot be split between the layout and the engine instance (same-seed comparison, below). It
+  is small next to the 4.74x that separates bf16_b528 from fp32.
+- The same check standardized fp16's excess fraction. On the 4B it is 0.294 [0.276, 0.310] with
+  bf16's weights and 0.279 [0.264, 0.292] with fp32's; on the 9B, 0.210 [0.194, 0.225] and
+  0.195 [0.183, 0.207]. The pooled values are 0.26 and 0.17. fp16's rollouts are shorter (median
+  21,468 and 15,096 tokens against bf16's 31,795 and 30,056), with fewer tokens at the most
+  drifted positions. At matched positions it keeps somewhat more of bf16's excess.
 
-### By position (ratio to fp32 of the mean |d|, 95% bootstrap over prompts)
+### By position (ratio to fp32 of the mean |d|, 95% bootstrap over prompts; bins 1,024 tokens wide)
 
-| Position bin | 4B bf16 | 4B fp16 | 4B bf16_b528 | 9B bf16 | 9B fp16 | 9B bf16_b528 |
+| Positions | 4B bf16 | 4B fp16 | 4B bf16_b528 | 9B bf16 | 9B fp16 | 9B bf16_b528 |
 |---:|---|---|---|---|---|---|
-| 0-1K | 1.25 [1.18, 1.31] | 0.99 [0.95, 1.04] | 1.24 [1.18, 1.30] | 1.25 [1.19, 1.30] | 1.00 [0.96, 1.04] | 1.23 [1.18, 1.28] |
-| 1-2K | 1.75 [1.64, 1.87] | 1.04 [0.96, 1.13] | 1.73 [1.62, 1.85] | 1.78 [1.67, 1.90] | 1.09 [1.03, 1.15] | 1.78 [1.69, 1.88] |
-| 15-16K | 5.27 [4.86, 5.70] | 2.20 [1.97, 2.45] | 5.29 [4.87, 5.72] | 5.36 [4.83, 5.94] | 1.81 [1.55, 2.12] | 5.27 [4.75, 5.87] |
-| 30-31K | 7.03 [6.14, 8.57] | 3.17 [2.90, 3.61] | 7.04 [6.15, 8.59] | 6.91 [6.14, 8.09] | 2.54 [2.12, 3.14] | 6.77 [6.21, 7.84] |
+| 0-1,023 | 1.25 [1.18, 1.31] | 0.99 [0.95, 1.04] | 1.24 [1.18, 1.30] | 1.25 [1.19, 1.30] | 1.00 [0.96, 1.04] | 1.23 [1.18, 1.28] |
+| 1,024-2,047 | 1.75 [1.64, 1.87] | 1.04 [0.96, 1.13] | 1.73 [1.62, 1.85] | 1.78 [1.67, 1.90] | 1.09 [1.03, 1.15] | 1.78 [1.69, 1.88] |
+| 15,360-16,383 | 5.27 [4.86, 5.70] | 2.20 [1.97, 2.45] | 5.29 [4.87, 5.72] | 5.36 [4.83, 5.94] | 1.81 [1.55, 2.12] | 5.27 [4.75, 5.87] |
+| 30,720-31,743 | 7.03 [6.14, 8.57] | 3.17 [2.90, 3.61] | 7.04 [6.15, 8.59] | 6.91 [6.14, 8.09] | 2.54 [2.12, 3.14] | 6.77 [6.21, 7.84] |
+
+Few fp32 sequences reach the last row (18 on the 4B, 7 on the 9B), so its ratios depend on the
+bin edges. The independent check recomputed them with 1,000-token bins, positions 30,000-30,999.
+On the 4B: bf16 6.32, fp16 3.19 and bf16_b528 6.44. On the 9B: 6.29, 2.05 and 6.25. The 9B
+fp16 tail near 30K is therefore 2-2.5x fp32, not a firm 2.5x.
 
 ### By r1 entropy (mean |d|, decode vs trainer)
 
@@ -261,8 +300,9 @@ On the 4B, two vLLM engines with the same bf16 state and different block layouts
 pools produced the same tokens and almost always the same log-prob bits, in different jobs on
 different GPUs about two hours apart. On the 9B the two bf16 engines diverge as early as any pair of
 arms. Each arm is one engine instance, so this cannot tell whether the 9B divergence comes from
-the layout or from engine-instance variance (D105). Either way, the 9B drift statistics of
-the two arms match.
+the layout or from engine-instance variance (D105). The same holds for the 9B's ~3% drift
+residual at matched positions (above). Both arms show the same within-sequence growth and
+4.7x and 4.9x fp32's mean.
 
 ## Results: how the rollouts ended (phase R)
 
@@ -315,10 +355,17 @@ Paired over (prompt, seed), "ran longer" means the other arm's rollout ended wit
   scheduling is deterministic (bf16_b528 repeats fp32's 36 and 114 preemptions exactly). These
   are single waves in different jobs on a shared host, so differences of a few percent (fp16
   against bf16) are not resolved.
-- bf16_b528 holds fp32's block pool. Each sequence still reads and writes a bf16 state, so a
-  decode step moves about half of fp32's state bytes. On the 4B, where the pool never limits
-  running sequences much, that alone gives the whole gain. On the 9B, fp32's pool caps running
-  sequences (about 410-420 against 494), and the bandwidth alone gives 1.23x of the 1.39x.
+- bf16_b528 is the bf16 state dtype at fp32's block pool. That changes two things: the state
+  bytes a decode step moves (about half of fp32's), and the GDN decode kernel instance, which
+  vLLM specializes per dtype. The waves do not separate the two.
+  - On the 4B the pool never limits running sequences much, and the state dtype at fp32's pool
+    gives the whole gain.
+  - On the 9B, fp32's pool caps running sequences (about 410-420 against 494). There the state
+    dtype at fp32's pool gives 1.23x of the 1.39x, about 58% of the gain:
+    (14,356 - 11,697) / (16,251 - 11,697).
+- That split rests on one wave per arm, in different jobs on a shared host. G2b's three waves
+  per arm varied by 0.3-3.5%. A few percent of noise on each of the three waves in the ratio
+  moves the 58% by roughly ±10 points.
 
 ## Figure
 
@@ -337,13 +384,17 @@ is the state dtype (blue fp32, orange bf16, green fp16). Solid lines and plain b
 
 It says, for this stack, these prompts and these engines:
 1. With the state's number format held at bf16, moving the block layout from 272 to 528 tokens
-   (and the block pool to fp32's) leaves the drift, its growth with position and the longer
-   reasoning unchanged. On the 4B it leaves even the tokens unchanged.
-2. With the layout and memory held at bf16's, a float16 state removes most of the drift, and its
-   rollouts end like fp32's. The drift tracks the number format.
-3. fp16 still drifts: about 2x fp32 on average, growing within sequences, about 3x fp32 at 30K.
-4. fp16 keeps bf16's throughput. On the 4B all of bf16's gain is state bandwidth; on the 9B
-   about 58% is.
+   (and the block pool to fp32's) keeps the ~4.7x drift over fp32, its growth with position and
+   the longer reasoning. On the 4B it leaves even the tokens unchanged. On the 9B the mean is 4%
+   lower, about 3% at matched positions. That residual is not split between the layout and the
+   engine instance.
+2. With the layout and memory held at bf16's, a float16 state removes most of the drift. It
+   keeps a fifth to under a third of bf16's excess, and its rollouts end like fp32's. The drift
+   tracks the number format.
+3. fp16 still drifts: about 2x fp32 on average and growing within sequences. Near 30K it is
+   about 3x fp32 on the 4B and 2-2.5x on the 9B, where few fp32 sequences reach.
+4. fp16 keeps bf16's throughput. In one wave per arm, the bf16 state dtype at fp32's block pool
+   gives all of bf16's gain on the 4B and about 58% (roughly ±10 points) on the 9B.
 
 It does not say:
 - Anything confirmatory. There are 24 prompts, 72 rollouts per arm and model, one node, one vLLM
@@ -351,9 +402,10 @@ It does not say:
 - That precision is separated from the kernel. vLLM compiles the GDN decode kernel per state
   dtype, so "fp16" is the fp16 kernel instance with an fp16 state. Within fp16, the 3 extra
   mantissa bits and the 3 fewer exponent bits are not separated. If the excess scaled with the
-  rounding unit, fp16 (2^-11 against bf16's 2^-8) would keep about 1/8 of it; it keeps 17-26% of
-  the mean and 31-43% of the slope. That is consistent with an extra source, such as small state
-  entries losing precision in fp16's narrower range, but nothing here tests it.
+  rounding unit, fp16 (2^-11 against bf16's 2^-8) would keep about 1/8 of it. It keeps 17-26%
+  of the mean pooled (about 20-29% at matched positions) and 31-43% of the slope. That is
+  consistent with an extra source, such as small state entries losing precision in fp16's
+  narrower range, but nothing here tests it.
 - What fp32 at 272-token blocks would do. vLLM 0.31.0 cannot run it without code changes.
 - How RL training would respond, or which state dtype RL rollouts should use. No training ran.
   The k3 and importance-ratio numbers describe the off-policy gap a trainer would face.
@@ -386,6 +438,17 @@ It does not say:
 - **One saturation wave per arm** (G2b ran three), chosen before the run to fit the cap.
 - **Scope:** no MoE arm, no r2, no paired cross-dtype prefill (each arm's prefill ran in its own
   engine settings only).
+- **Corrections after an independent check.** The check passed and reproduced every number.
+  The fixes are in text and records only: no GPU job ran and no committed number changed.
+  - The 9B layout gap is about 3% at matched positions, not length composition.
+  - fp16's excess fraction is a fifth to under a third.
+  - The position bins are labelled as 1,024 tokens wide, and the 30K tail is shown to depend
+    on the bin edges.
+  - The throughput split is described as the state dtype at fp32's block pool, with its
+    single-wave uncertainty.
+  - The position-standardized ratios and the 1,000-token-bin values come from the check's own
+    code (CPU jobs 1443-1445), which is not part of this branch. The committed analysis does
+    not compute them.
 
 ## Files
 
@@ -442,11 +505,12 @@ This reproduces the seed-42 rows (`fp16/seed_42` and `bf16_b528/seed_42`) of the
 ## Next
 
 - For G1 (rollout memory levers): a float16 GDN state is the better half-memory setting on this
-  stack: bf16's throughput with about a fifth to a quarter of its excess mismatch. It still
+  stack: bf16's throughput with a fifth to under a third of its excess mismatch. It still
   drifts with position, so for long rollouts it is a smaller off-policy cost, not none.
 - If the residual fp16 drift matters, the cheap next measurements are a state-value histogram
   (how much of the state sits below fp16's normal range) and an fp32-accumulate decode check.
   Both would need a reviewed kernel or instrumentation change, which this step did not make.
 - An engine-instance A/A on the 9B (two bf16 engines, same layout) would say whether the 9B
-  token divergence between bf16 and bf16_b528 is the layout or the instance.
+  token divergence between bf16 and bf16_b528, and their ~3% drift difference at matched
+  positions, come from the layout or the instance.
 
