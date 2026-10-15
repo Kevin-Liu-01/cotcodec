@@ -2504,3 +2504,36 @@ growing with length, and changes behaviour.**
   - An RL training comparison (fp32 vs reduced-precision state rollouts) would
     test whether this off-policy gap matters for training. It exceeds 8 GPU-h,
     so it goes through the gauntlet first.
+
+**D109. G2c (exploratory): the state's number format drives the drift, and
+fp16 state keeps the throughput lever with much less drift.**
+- What ran. Exploratory, 1.22 physical GPU-h, on Qwen3.5-4B and 9B with
+  G2b's 24 prompts and seeds 42-44. There were two arms:
+  - fp16 state at bf16's layout and memory;
+  - bf16 state at fp32's 528-token block, the forced-block control.
+  fp32 state at 272-token blocks cannot be forced in vLLM 0.31.0 without
+  code changes (source cited). A fresh checker passed the numbers, and its
+  wording items were fixed (`2266979f`).
+- Findings (exploratory):
+  - The layout does not drive the drift. bf16 at fp32's block keeps bf16's
+    drift: on the 4B a ratio of 1.00 [0.99, 1.01], with rollouts identical
+    to G2b's token for token; on the 9B about 3% lower at matched positions,
+    not separable from the engine instance.
+  - fp16 removes most of the drift at the same memory and throughput:
+    - mean |Δlogp| 0.015 (4B) and 0.012 (9B), against fp32's 0.0077 and
+      0.0074 and bf16's 0.036;
+    - that keeps a fifth to under a third of bf16's excess;
+    - 0.35-0.58% of ratios fall outside [0.8, 1.25];
+    - it still grows within sequences, to about 2-3x fp32 near 30K;
+    - its rollout lengths behave like fp32's;
+    - throughput is 1.34x and 1.38x over fp32 in one wave per arm.
+  - The drift stays in vLLM's decode path in every arm.
+  - Not separated: the dtype-specialized kernel from precision, and fp16's
+    mantissa from its exponent range.
+- Reading (exploratory). For GDN-hybrid rollouts on this stack, a 16-bit
+  state is a 1.3-1.4x throughput lever. As fp16 it costs about 2x fp32's
+  off-policy gap; as bf16, about 5x and growing with length. Whether either
+  gap matters for RL training is not measured.
+- Next. An RL training comparison, with fp32, fp16 and bf16 state for
+  rollouts, would show whether the gap changes learning. It exceeds 8 GPU-h,
+  so it goes through the gauntlet first.
