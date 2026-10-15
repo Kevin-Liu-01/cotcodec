@@ -1752,13 +1752,78 @@ def cmd_hand_sample(args: argparse.Namespace) -> dict[str, Any]:
             "features_sha256": sha256_file(Path(args.features))}  # fmt: skip
 
 
+def judge_labels_of(item: dict[str, Any]) -> list[int]:
+    """The primary judge's label of each use of a hand-plan item, in the order of its uses."""
+
+    return [int(u["judge_primary"]) for u in item["uses"]]
+
+
+def judge_labels_differ(plan: dict[str, Any]) -> dict[str, Any]:
+    """The plan items whose uses carry different judge labels. Items are keyed by (question,
+    normalized-reply digest); two readers' replies can share a digest yet differ in their stripped
+    text, and the judge can label them differently. Such an item has no single judge label: it is
+    left out of every hand-against-judge agreement count and reported here (counts and ids)."""
+
+    ids, by_role = [], Counter()
+    for i in plan["items"]:
+        if len(set(judge_labels_of(i))) > 1:
+            ids.append(i["item_id"])
+            for role in sorted({u["role"] for u in i["uses"]}):
+                by_role[role] += 1
+    return {"rule": "uses of one (question, reply digest) with different judge labels: left out "
+            "of the hand-against-judge agreement, reported", "items": len(ids),
+            "item_ids": sorted(ids), "by_role": dict(sorted(by_role.items()))}  # fmt: skip
+
+
+def labelled_items(
+    features: dict[str, Any], plan: dict[str, Any], hand_labels: dict[str, int] | None
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    """AM5's ``labelled_items`` (scripts/memcredit_am5.py) without its refusal of one reply
+    digest with two judge labels. Per hand-plan item (text-free): its question, uses, the primary
+    judge's label of each use read from the features (``judge_by_use``), ``judge`` (the one label,
+    or None when the uses' labels differ), ``judge_labels_differ``, the hand label and the
+    question's leakage facts; and hand-against-judge agreement over the labelled items whose uses
+    agree (counts and Cohen's kappa), with the left-out items counted."""
+
+    facts = {f["question_id"]: f for f in features["leakage_per_question"]}
+    pools = {(r, p["question_id"]): p for r in READERS for p in features["readers"][r]["pools"]}
+    out, pairs, left_out = [], [], []
+    for item in plan["items"]:
+        by_use = [int(pools[(u["reader"], item["question_id"])]["masks"][int(u["mask"])]["u"]
+                      [JUDGE]) for u in item["uses"]]  # fmt: skip
+        if by_use != judge_labels_of(item):
+            raise Am5rError(f"{item['item_id']}: the plan's judge labels are not the features'")
+        differs = len(set(by_use)) > 1
+        hand = hand_labels.get(item["item_id"]) if hand_labels is not None else None
+        q = facts[item["question_id"]]
+        out.append({"item_id": item["item_id"], "question_id": item["question_id"],
+                    "question_type": q["question_type"], "uses": item["uses"],
+                    "judge": None if differs else by_use[0], "judge_by_use": by_use,
+                    "judge_labels_differ": differs, "hand": hand,
+                    "facts": {k: q[k] for k in a5.ITEM_FACTS}})  # fmt: skip
+        if hand is not None:
+            if differs:
+                left_out.append(item["item_id"])
+            else:
+                pairs.append((by_use[0], hand))
+    agreement = {"items": len(pairs), "agree": sum(a == b for a, b in pairs),
+                 "judge_yes_hand_no": sum(a == 1 and b == 0 for a, b in pairs),
+                 "judge_no_hand_yes": sum(a == 0 and b == 1 for a, b in pairs),
+                 "kappa": ms.cohen_kappa([a for a, _ in pairs], [b for _, b in pairs])
+                 if pairs else None,
+                 "left_out_judge_labels_differ": len(left_out)}  # fmt: skip
+    return out, agreement
+
+
 def hand_join(
     plan: dict[str, Any], labels: list[dict[str, Any]] | None, labels_sha256: str | None
 ) -> dict[str, Any]:
     """Join the labels to the plan: "joined" when every item has exactly one label of 0 or 1 and
     no other item is labelled; "missing" without labels; "incomplete" otherwise. Returns the
     status, the (question, digest) -> label map when joined, and hand-against-judge agreement per
-    role (descriptive)."""
+    role (descriptive). An item whose uses carry different judge labels (two readers' replies with
+    one normalized digest, judged differently) is left out of the agreement pairs and reported
+    under ``judge_labels_differ``."""
 
     out: dict[str, Any] = {
         "plan_sha256": plan["plan_sha256"],
@@ -1771,6 +1836,7 @@ def hand_join(
         "instructions_sha256": plan["instructions_sha256"],
         "uses_by_role": dict(sorted(Counter(u["role"] for i in plan["items"]
                                             for u in i["uses"]).items())),
+        "judge_labels_differ": judge_labels_differ(plan),
     }  # fmt: skip
     if labels is None:
         out["status"] = "missing"
@@ -1812,11 +1878,17 @@ def hand_join(
         "label_0_with_decline_note": sum(1 for i in plan["items"] if by_id[i["item_id"]] == 0
                                          and notes.get(i["item_id"], "").startswith(DECLINE_NOTE)),
     }  # fmt: skip
-    pairs = [(int(i["uses"][0]["judge_primary"]), hand_of[(i["question_id"], i["reply_digest"])])
-             for i in plan["items"]]  # fmt: skip
+    differ = set(out["judge_labels_differ"]["item_ids"])
+    out["judge_labels_differ"]["hand_label_1"] = sum(
+        1 for i in plan["items"] if i["item_id"] in differ and by_id[i["item_id"]] == 1
+    )
+    pairs = [(judge_labels_of(i)[0], hand_of[(i["question_id"], i["reply_digest"])])
+             for i in plan["items"] if i["item_id"] not in differ]  # fmt: skip
     out["agreement"] = g._agreement(pairs)
     by_role: dict[str, list[tuple[int, int]]] = {}
     for i in plan["items"]:
+        if i["item_id"] in differ:
+            continue
         h = hand_of[(i["question_id"], i["reply_digest"])]
         for role in sorted({u["role"] for u in i["uses"]}):
             judged = next(int(u["judge_primary"]) for u in i["uses"] if u["role"] == role)
@@ -2021,6 +2093,26 @@ def readings_block(
     return block
 
 
+def apply_precedence(
+    block: dict[str, Any], replay_ok: bool, gj1: dict[str, Any], hand: dict[str, Any]
+) -> None:
+    """Precedence, on every readings block (primary, secondary and the sensitivity blocks): VOID
+    (V3) over JUDGE_DEPENDENT (G-J1) over the hand check. A void run shows no directional label
+    anywhere; a failed G-J1 turns every directional label into JUDGE_DEPENDENT."""
+
+    if not replay_ok:
+        block["status"] = f"{VOID_REPLAY}: not read"
+        for e in block["readers"].values():
+            e["reading"] = "VOID"
+    elif not gj1["pass"]:
+        block["status"] = "JUDGE_DEPENDENT: G-J1 (the replay of AM1's validation items) failed"
+        for e in block["readers"].values():
+            e["reading"] = "JUDGE_DEPENDENT" if e["judge_reading"] in DIRECTIONAL else (
+                e["judge_reading"])  # fmt: skip
+    else:
+        block["status"] = "read" if hand["status"] == "joined" else f"hand check {hand['status']}"
+
+
 def analyze_population(
     features: dict[str, Any],
     config: dict[str, Any],
@@ -2056,21 +2148,8 @@ def analyze_population(
     }  # fmt: skip
     primary = readings_block(recs, gains, PRIMARY_CAP, hand, resamples, seed, alpha)
     secondary = readings_block(recs, gains, SECONDARY_CAP, hand, resamples, seed, alpha)
-    # Precedence: VOID (V3) over JUDGE_DEPENDENT (G-J1) over the hand check.
     for block in (primary, secondary):
-        if not replay_ok:
-            block["status"] = f"{VOID_REPLAY}: not read"
-            for e in block["readers"].values():
-                e["reading"] = "VOID"
-        elif not gj1["pass"]:
-            block["status"] = "JUDGE_DEPENDENT: G-J1 (the replay of AM1's validation items) failed"
-            for e in block["readers"].values():
-                e["reading"] = "JUDGE_DEPENDENT" if e["judge_reading"] in DIRECTIONAL else (
-                    e["judge_reading"])  # fmt: skip
-        else:
-            block["status"] = (
-                "read" if hand["status"] == "joined" else f"hand check {hand['status']}"
-            )
+        apply_precedence(block, replay_ok, gj1, hand)
     secondary["decides"] = False
     non_preference = {
         r["question_id"] for r in recs[READERS[0]] if r["question_type"] != PREFERENCE
@@ -2080,10 +2159,11 @@ def analyze_population(
     for cap in CAPS:
         sensitivity[str(cap)] = readings_block(recs, gains, cap, hand, resamples, seed, alpha,
                                                non_preference)  # fmt: skip
+        apply_precedence(sensitivity[str(cap)], replay_ok, gj1, hand)
     hand_public = {k: v for k, v in hand.items() if k not in ("hand_of", "decline_of")}
     labels_by_id = ({row["item_id"]: int(row["label"]) for row in hand_labels or []}
                     if hand["status"] == "joined" else None)  # fmt: skip
-    items, item_agreement = a5.labelled_items(features, plan, labels_by_id)
+    items, item_agreement = labelled_items(features, plan, labels_by_id)
     declined = set(hand.get("decline_items", []))
     for item in items:
         item["decline"] = item["item_id"] in declined if labels_by_id is not None else None
@@ -2137,6 +2217,8 @@ def analyze_population(
             "code_sha256": features["code_sha256"],
             "gain_per_table_sha256": population_spec(config, population)["gain"]["sha256"],
             "run": features["run"],
+            "job_id": features.get("job_id"),
+            "rerun_decision_sha256": features.get("rerun_decision_sha256"),
             "readers": {r: {k: features["readers"][r][k] for k in (
                 "step", "batch_invariant", "enforce_eager", "pass_sha256", "requests", "finish",
                 "missing_logprobs", "pools_complete_primary")} for r in READERS},
@@ -2684,7 +2766,8 @@ def cmd_power(args: argparse.Namespace) -> dict[str, Any]:
 def cmd_rerun_decision(args: argparse.Namespace) -> dict[str, Any]:
     """am3g's mechanical rerun rule (``memcredit_am3g.rerun_decision``; its essential steps are
     this registration's: the three readers and judge32) on the driver's summary.json and the
-    lane's termination.env."""
+    lane's termination.env. A summary.json that does not parse, or is not a JSON object, is a
+    named V2 error (section 8), never a missing summary."""
 
     job_dir = Path(args.job_dir)
     summary_path = job_dir / OUTPUT / "summary.json"
@@ -2692,9 +2775,10 @@ def cmd_rerun_decision(args: argparse.Namespace) -> dict[str, Any]:
     if summary_path.is_file():
         try:
             summary = json.loads(summary_path.read_text(encoding="utf-8"))
-        except ValueError:
-            summary = None
-        if summary is not None and not isinstance(summary, dict):
+        except (ValueError, UnicodeDecodeError) as exc:
+            raise Am5rError(f"{VOID_INCOMPLETE}: the driver's summary.json does not parse, so it "
+                            "is not a JSON object") from exc  # fmt: skip
+        if not isinstance(summary, dict):
             raise Am5rError(f"{VOID_INCOMPLETE}: the driver's summary.json is not a JSON object")
     decision = g.rerun_decision(summary, g.read_env_file(job_dir / "termination.env"),
                                 args.is_rerun)  # fmt: skip

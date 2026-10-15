@@ -133,8 +133,9 @@ answer judged right where BM25 top 4's is judged wrong)?**
 
 The comparison is what a deployer needs: if a share p of questions lack their evidence, and the
 rest resemble these answerable questions, the rule changes accuracy by (1 - p) x gain - p x cost
-per question. Cost below gain means the rule pays at least whenever no more than half the
-questions lack their evidence. The break-even share gain / (gain + cost) is estimated with it.
+per question, a lost correct abstention and a gained correct answer weighing the same. Cost
+below gain means the rule raises accuracy whenever no more than half the questions lack their
+evidence. The break-even share gain / (gain + cost) is estimated with it.
 
 ## 3. What it decides and what it does not
 
@@ -312,9 +313,15 @@ memories in the ablated pool, ablated-pool memories whose text equals an evidenc
 turn, pools with a memory containing the normalized reference answer and questions whose remaining
 user turns contain it (crude), and memories shared with the original pool
 (`memcredit_am5.pool_facts`). Reported, and listed beside each hand-labelled reply
-(`labelled_items`: AM5's `memcredit_am5.labelled_items`, which refuses one reply digest with two
-judge labels): its uses, the judge's and the hand label, whether the 1 was a decline, and its
-question's leakage facts.
+(`labelled_items`, a port of AM5's `memcredit_am5.labelled_items` that records the judge's label
+of every use instead of refusing one reply digest with two judge labels): its uses, the judge's
+label of each use, the hand label, whether the 1 was a decline, and its question's leakage facts.
+Items are keyed by (question, normalized-reply digest), so two readers' replies that normalize
+alike but differ in their stripped text, which the judge can label differently, form one item:
+such an item is flagged (`judge_labels_differ`), left out of every hand-against-judge agreement
+count and reported with its count and id (pre-freeze check 2 found 1 such key in 12,225 in
+am3g's held-out features).
+The hand label applies to every use of the item, as for any other item.
 
 ## 7. Hypotheses and decision rules
 
@@ -357,7 +364,8 @@ reversals; Qwen3-8B's held-out gains were not hand-labelled by am3g). The readin
 
 **Precedence.** VOID (V3) over JUDGE_DEPENDENT from G-J1 over the hand check: a void run reads VOID
 whatever else holds, and a G-J1 failure makes a directional reading JUDGE_DEPENDENT before the hand
-check is consulted (`analyze_population`).
+check is consulted (`apply_precedence`). It applies to every readings block, the primary, the
+secondary and both sensitivity blocks, so a void run shows no directional label anywhere.
 
 **What a reading licenses**, for that reader (AM1's prompt; BM25 user-turn pools, 4 of 8; AM1d's
 four patterns; the Qwen3-32B judge confirmed by blind agent labels; for Qwen3.5-9B, and for OLMo-2
@@ -365,12 +373,14 @@ if its pass comes from the default-mode fallback, in vLLM's default mode and thi
 batch schedule):
 - **COST_BELOW_GAIN**: "on AM1's 347 held-out LongMemEval-S questions, the rule capped at 8 reads
   loses fewer correct answers per question when the question's evidence sessions are removed than
-  it gains per question when they are present, by D with its intervals; so it pays whenever at
-  most half of such questions lack their evidence, and the break-even share s is estimated with
-  its interval." The gain side is post hoc (section 1.1) and is part of the statement.
+  it gains per question when they are present, by D with its intervals; so, with a lost correct
+  abstention and a gained correct answer weighted equally, it raises accuracy whenever at most half
+  of such questions lack their evidence, and the break-even share s is estimated with its
+  interval." The gain side is post hoc (section 1.1) and is part of the statement; for Qwen3-8B it
+  rests on the judge alone.
 - **COST_ABOVE_GAIN**: the reverse: the rule capped at 8 reads loses more per evidence-absent
-  question than it gains per answerable one; it costs accuracy whenever at least half of such
-  questions lack their evidence.
+  question than it gains per answerable one; with the same equal weights it lowers accuracy
+  whenever at least half of such questions lack their evidence.
 - **NOT_SEPARATED**, **JUDGE_DEPENDENT**: nothing directional. The estimates and the break-even
   share are reported.
 
@@ -390,6 +400,12 @@ batch schedule):
   cost and of the judged-correct switches sit in flagged pools.
 - *A read cost.* The capped rule calls the reader up to 8 times per pool, against BM25 top 4's
   once; the reads are reported (section 6.6).
+- *Equal weights.* "Raises accuracy" counts a lost correct abstention and a gained correct answer
+  as one each. A deployer who weighs a wrong answer to an unanswerable question more heavily than
+  a missed answer has a lower break-even share than s.
+- *A judge-only gain for Qwen3-8B.* Qwen3-8B's 31 gains at K = 8 rest on the Qwen3-32B judge alone:
+  am3g's blind hand check confirmed OLMo-2's and Qwen3.5-9B's gains, not Qwen3-8B's. This
+  registration's hand check confirms the cost side only.
 
 **Why this test.** D121 and the drafting brief ask for a paired, per-question comparison of cost
 and gain with one-sided 97.5% bounds and Holm across the three readers. The exact McNemar test
@@ -453,15 +469,18 @@ job's driver and workers record their own failures in `summary.json`).
   decides. It decides a job once, only after the job ended (its saved `scontrol` record,
   `R/ops/scontrol-JOB.txt`, and the lane's `termination.env` both exist; a repeat is refused), and
   writes the decision through a temporary file, so a failed run leaves none. A `summary.json` that
-  is not a JSON object is a named V2 error. A job that ended without the lane's termination record,
-  or whose summary is such an error, cannot be decided, and the run is VOID (V2, incomplete).
+  does not parse, or is not a JSON object, is a named V2 error (never read as a missing summary). A
+  job that ended without the lane's termination record, or whose summary is such an error, cannot
+  be decided, and the run is VOID (V2, incomplete).
   *The lost record.* Slurm forgets a job 300 s after it ends (MinJobAge) and accounting is off, so
   the operator polls `am5r-job-state.sh` at most every 120 s while a job runs. If scontrol has
   forgotten a job that was never recorded, `am5r-job-state.sh` saves a "forgotten" record instead
   (`JobState=FORGOTTEN`, with the lane's termination record copied into it and its digest) when the
   lane's `termination.env` of that job exists, which means the job's workload ended; the rerun rule
   accepts that record like any other and decides from the driver's summary and the lane's record,
-  as always. Without a termination record the job cannot be decided: VOID (V2, incomplete).
+  as always. Only a job that has ended (squeue no longer lists it) with neither a saved record nor
+  a termination record cannot be decided: VOID (V2, incomplete). While the job runs, job-state's
+  exit 2 (scontrol not answering) decides nothing, and the next poll recovers.
   *Extract reads only a decided job, once.* `am5r-extract.sh` and `extract` refuse a job whose
   rerun-rule record (`R/rerun-decision-POP-JOB.json`) does not say "complete" for that job and
   population, and refuse existing features; the features record the job id and the record's
@@ -647,7 +666,8 @@ job's driver and workers record their own failures in `summary.json`).
     of 34 items took the subagent 96 s; am3g's 278 items took 5 chunks. The first stage is expected
     to take under 15 minutes.
   - *Decision.* Section 7.1 (primary) and 7.2 (secondary). Hand-against-judge agreement (counts and
-    Cohen's kappa), overall and per role, is reported as a description.
+    Cohen's kappa), overall and per role, is reported as a description; an item whose uses carry
+    different judge labels is left out of it and reported (`judge_labels_differ`, section 6.7).
 - **Kill.** None beyond the void rules. A void is reported with its check and counts.
 
 ## 9. Operating characteristics
@@ -804,8 +824,8 @@ batch-invariant step is then followed by its declared default-mode fallback.
 - the same at K = 70 (secondary) and without single-session-preference questions (sensitivity);
 - the blind hand check: the plan's counts per role and reader, the distractor shortfall and the
   digest, the labels' digest, the receipts (labeller model and launch, prompt digest, transcript
-  audits, the repair stage's size), hand-against-judge agreement with kappa overall and per role,
-  the decline notes' counts, the labelled items with their leakage facts, and any correction found
+  audits, the repair stage's size), hand-against-judge agreement with kappa overall and per role
+  and the items left out of it because their uses' judge labels differ, the decline notes' counts, the labelled items with their leakage facts, and any correction found
   after the join, separately;
 - the replay control (R1, R2 for the anchor; the other readers' replay and the judge's item-level
   replay), G-J1 with the decoy count;
@@ -897,8 +917,11 @@ of am3, am3g, AM5 and this registration pass (221). The whole suite on the host 
 changes no existing code.
 
 **Round 1 corrections, rerun on the CPU** (code at `fc355d10`; no GPU, no model on held-out data).
-The GPU job's code is unchanged (the held-out job's limit changed in the config, which the
-development job does not use), so no development GPU job was needed.
+The GPU job's code changed only in `load_config` and `artifact_pin`, which `run` calls: they now
+refuse a "PENDING" held-out pin, and one error message is shorter. The development config holds no
+such pin and that message is not on the development job's path, so the job behaves the same and no
+new development GPU job was needed (section 17, step 3); the held-out job's limit changed in the
+config, which the development job does not use.
 - The registration root's `inputs/` directory on the host was made read-only (`chmod a-w`; its two
   files already were).
 - The CPU outputs of `c16437bc` were set aside (`round0-c16437bc/`). `extract` read job 1507 again
@@ -926,8 +949,8 @@ parses this table and refuses to run unless every file matches.
 
 | File | Role | SHA-256 |
 |---|---|---|
-| `scripts/memcredit_am5r.py` | this registration: gate and config binding, the held-out artifact, driver and workers, extract and the replay control, the cost and gain indicators, the paired test with Holm, the break-even share, the hand check's plan, sample and join, the confirmation rule, analyze, the dry-run comparison, power | `35bab9f9a8fa647542f25d1f608afe49121c29618e22c89118534cd983a646fb` |
-| `tests/test_memcredit_am5r.py` | its tests | `a9f0cd508d989534e14f74bb6dbfda9a8e1954668653d68f07ce89867577d9b7` |
+| `scripts/memcredit_am5r.py` | this registration: gate and config binding, the held-out artifact, driver and workers, extract and the replay control, the cost and gain indicators, the paired test with Holm, the break-even share, the hand check's plan, sample and join, the confirmation rule, analyze, the dry-run comparison, power | `ccbc9f62a09d94c4af780a6e1ad8e3372c49d83b5ed5b3221cddc313e6183f39` |
+| `tests/test_memcredit_am5r.py` | its tests | `b15f270c15c6c350bb65528052279778ca7d5d0bd2d06546e5c7e22d7e8f6b6d` |
 | `experiments/am5/am5-ablated-cost-v1.yaml` | this registration's config | `58ccc67373f74705e625f2908cfcb310ae2060aac3501dccdf85438f4b130df3` |
 | `scripts/memcredit_am5.py` | AM5's ablation, capped rule, per-pool records and blocks (imported) | `225e42e7d4f2e9a1ccfce1c4a826a04bcdb57511fea248f8009bf97467b6fa0b` |
 | `experiments/am5/am5-evidence-ablated-dev.yaml` | AM5's config (the dry run's comparison) | `0c49e157755a3a67e83eed9c07e1c37ba912e93aaf29416d9ac7fbc643ea88a9` |
@@ -971,10 +994,10 @@ parses this table and refuses to run unless every file matches.
 | `ops/am5r/am5r-preflight.sh` | operator: queue and GPU check (reports on stderr) | `2280dd2bcea713751edcebc7bccca1d7487c528aea1ad9168e80ec7a0fd297d5` |
 | `ops/am5r/am5r-build.sh` | operator: image build, and the one rebuild | `47ce8033d1a33c15aac9740556819a3ebfb7e1837c8bd8d7d2623d99238ed09e` |
 | `ops/am5r/am5r-image.sh` | operator: the built image id, after its provenance and receipt checks | `6a020d8614b90766d7597b1e0177325b64c91df6ddc9dfc8df5628b3b6fa748d` |
-| `ops/am5r/am5r-job-state.sh` | operator: a job's state, and its scontrol record when it ends | `ce58c082054aeaf37189a75cb695271184fd826144a8eb217eecd49be93e4467` |
+| `ops/am5r/am5r-job-state.sh` | operator: a job's state, and its scontrol record when it ends | `34b91be0213857b833d681a6ab4fa710ae723d7c20336ac3bf950d6a45af781b` |
 | `ops/am5r/am5r-selftest.sh` | operator: submits the CPU selftest | `2ea474db02bc7b0dc2247e57f35437fd293dc4c4db9b238ebef8380608761a9f` |
 | `ops/am5r/am5r-selftest-cpu.sbatch` | operator: CPU selftest in the image | `938d915d5fce6d0118ce92845db0a11d3c00acd7b1a7c33842fb4fc81e9d2783` |
-| `ops/am5r/am5r-submit.sh` | operator: lane manifest, dry run, test-only check, submit, the rerun the rule allows | `7a950119f0e60b6e8a29a0f85dbdb44ea0b23612127d3fbe251ed28209bd20d6` |
+| `ops/am5r/am5r-submit.sh` | operator: lane manifest, dry run, test-only check, submit, the rerun the rule allows | `bacc82f7813d9a738e15c14a8c384928345da56f6075940575ed6ef40372f5df` |
 | `ops/am5r/am5r-rerun-decision.sh` | operator: the mechanical rerun rule | `824a55829000dd20a14b04f30c741377be5ce1969a3fb635e8b0afd1a552f529` |
 | `ops/am5r/am5r-extract.sh` | operator: extract and the replay checks | `ffda29eda2b58d111e1fb1e2bd41d7c7f7165764ce3b0e6f1f1774a48018f7f0` |
 | `ops/am5r/am5r-hand-sample.sh` | operator: the blind hand-check sample, its chunks and prompts | `5190f220f5108d789bd733e69d5bdba88f5082e2eb04f79d2af997190b131b02` |
@@ -982,7 +1005,7 @@ parses this table and refuses to run unless every file matches.
 | `ops/am5r/am5r-hand-merge.sh` | operator: audits the transcripts and merges a labelling stage; writes the one repair stage | `6625a9846881f5a1c360bb6d11828f83c478fe06f2ecdbbec3197080e2ac198f` |
 | `ops/am5r/am5r-hand-receipt.sh` | operator: one stage's text-free receipt, committed before the join | `d07c17abc9f13a9ccaa0299210c08f8571183dbf02b56f2a330ecf752009ad99` |
 | `ops/am5r/am5r-analyze.sh` | operator: analyze twice, tests (dev: dryrun-compare and power) | `15683ba56d732cfe9a18736c827aeddef67934d27fc369447929cf59e9942dad` |
-| `ops/am5r/am5r-stage-evidence.sh` | operator: text-free staging and the text search | `463849acece15c1969a8d51b8d634fd48405c17b317d8cec5443bb7e13e33d65` |
+| `ops/am5r/am5r-stage-evidence.sh` | operator: text-free staging and the text search | `93054e829cc0a457afce58d1ebcd46e79b8d8a8e9c1842ff1de0e226f0b4487c` |
 
 Commands of the registered run, after the freeze. The names in capitals are values that exist only
 then: FREEZE, the freeze commit's full id, and FREEZE8, its first 8 characters (every script that
@@ -1002,8 +1025,15 @@ polled, **at most every 120 s while the job runs** (exit 1 in any state that is 
 when a job has ended it saves the whole `scontrol show job` record to `R/ops/scontrol-J.txt`,
 because Slurm accounting is disabled on the node and scontrol forgets a job 300 s after it ends;
 when scontrol has already forgotten a GPU job whose lane termination record exists, it saves a
-"forgotten" record instead (section 8). `am5r-rerun-decision.sh` refuses a job without either
-record, and `am5r-extract.sh` refuses a job whose rerun-rule record does not say "complete".
+"forgotten" record instead (section 8). Its exit 2 (scontrol does not know the job, no saved
+record, no termination record) is a verdict only once the job has ended: while a job runs it can
+be a transient scontrol failure, and the next poll recovers. Build and selftest jobs have no lane
+termination record: if job-state exits 2 for one that has ended (squeue no longer lists it), the
+operator proceeds from its own records, the build root (`am5r-image.sh` checks it) or the
+selftest's `exits.txt`. `am5r-rerun-decision.sh` refuses a job without either record, and
+`am5r-extract.sh` refuses a job whose rerun-rule record does not say "complete". The held-out
+`am5r-submit.sh` runs the freeze gate (`memcredit_am5r.gate`) before it writes the manifest or
+calls the submitter.
 
 ```bash
 # On the operator's Mac, in the repository (the branch that holds FREEZE):
@@ -1016,7 +1046,9 @@ cd ~/cotcodec-runs/stage0/am5-ablated-cost-v1/checkout   # every later host comm
 bash ops/am5r/am5r-capsule.sh reg FREEZE8
 bash ops/am5r/am5r-build.sh reg FREEZE8 build                   # prints JB (1 H100, 5 minutes)
 bash ops/am5r/am5r-job-state.sh reg JB                          # poll (at most every 120 s) until
-                                                                # it exits 0
+                                                                # it exits 0 (exit 2 once JB has
+                                                                # left squeue: go on from the build
+                                                                # root, which am5r-image.sh checks)
 IMAGE=$(bash ops/am5r/am5r-image.sh reg FREEZE8)                # one line, the image id, after
                                                                 # the provenance and receipt checks;
                                                                 # on a failed build:
@@ -1024,7 +1056,9 @@ IMAGE=$(bash ops/am5r/am5r-image.sh reg FREEZE8)                # one line, the 
 #   refused after a successful build), poll it, and capture IMAGE again; a second failure stops
 #   the run
 bash ops/am5r/am5r-selftest.sh reg FREEZE8 "$IMAGE" heldout     # prints JS (CPU, no GRES)
-bash ops/am5r/am5r-job-state.sh reg JS                          # poll until it exits 0
+bash ops/am5r/am5r-job-state.sh reg JS                          # poll until it exits 0 (exit 2
+                                                                # once JS has left squeue: go on
+                                                                # from exits.txt)
 cat R/selftest-heldout-FREEZE8/exits.txt                        # all exit 0
 bash ops/am5r/am5r-submit.sh reg FREEZE8 "$IMAGE" heldout check      # dry run and test-only check
 bash ops/am5r/am5r-submit.sh reg FREEZE8 "$IMAGE" heldout submit     # prints JOB (80 minutes); a

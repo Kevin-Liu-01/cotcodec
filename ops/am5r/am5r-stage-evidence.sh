@@ -11,6 +11,9 @@
 # to stage a later rerun's). The checkout may be at a later commit of the same branch.
 # Usage: am5r-stage-evidence.sh dev|reg <commit short id> <population>:<job id> [...]
 set -Eeuo pipefail
+# A job refused at its prolog (no am5r/ directory) or a worker that died before writing a pass
+# leaves globs unmatched and records missing: those are skipped, never an error (round 2).
+shopt -s nullglob
 source "$(dirname "$0")/am5r-env.sh" "${1:?mode}"
 SHORT="${2:?commit short id}"; shift 2
 TAG="${ANALYSIS_TAG:-$SHORT}"
@@ -24,14 +27,19 @@ for spec in "$@"; do
   mkdir -p "$dst/am5r/sessions"
   for f in job.env termination.env manifest.json command.json model-verification.txt \
     provenance-verification.txt gpu-prolog.env container-doctor.txt gpu-compute-apps-prolog.csv; do
-    [[ -f $src/$f ]] && cp "$src/$f" "$dst/"; done
-  sha256sum "$src/docker-research.sbatch" | cut -d" " -f1 > "$dst/docker-research.sbatch.sha256"
-  sha256sum "$src/study-artifact.json" | cut -d" " -f1 > "$dst/study-artifact.sha256"
+    if [[ -f $src/$f ]]; then cp "$src/$f" "$dst/"; fi; done
+  if [[ -f $src/docker-research.sbatch ]]; then
+    sha256sum "$src/docker-research.sbatch" | cut -d" " -f1 > "$dst/docker-research.sbatch.sha256"; fi
+  if [[ -f $src/study-artifact.json ]]; then
+    sha256sum "$src/study-artifact.json" | cut -d" " -f1 > "$dst/study-artifact.sha256"; fi
   scontrol show job "$JOB" 2>/dev/null | grep -E "JobState|RunTime" > "$dst/scontrol.txt" || \
     cp "$R/ops/scontrol-$JOB.txt" "$dst/scontrol.txt" 2>/dev/null || true
-  gzip -n -c "$R/runs/$POP/slurm-$JOB.out" > "$dst/slurm-$JOB.out.gz" 2>/dev/null || true
-  cp "$src/am5r/summary.json" "$src/am5r/environment.json" "$dst/am5r/"
-  gzip -n -c "$src/am5r/gpu-samples.csv" > "$dst/am5r/gpu-samples.csv.gz" 2>/dev/null || true
+  if [[ -f $R/runs/$POP/slurm-$JOB.out ]]; then
+    gzip -n -c "$R/runs/$POP/slurm-$JOB.out" > "$dst/slurm-$JOB.out.gz"; fi
+  for f in summary.json environment.json; do
+    if [[ -f $src/am5r/$f ]]; then cp "$src/am5r/$f" "$dst/am5r/"; fi; done
+  if [[ -f $src/am5r/gpu-samples.csv ]]; then
+    gzip -n -c "$src/am5r/gpu-samples.csv" > "$dst/am5r/gpu-samples.csv.gz"; fi
   for w in "$src"/am5r/sessions/*/; do
     wn=$(basename "$w"); mkdir -p "$dst/am5r/sessions/$wn"
     cp "$w"/{session.json,done.json,worker-progress.jsonl} "$dst/am5r/sessions/$wn/" 2>/dev/null || true

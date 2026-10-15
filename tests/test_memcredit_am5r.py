@@ -693,6 +693,32 @@ def test_a_replay_difference_fails_v3(tmp_path, monkeypatch):
     results, _ = r.analyze_population(features, ctx["config"], "heldout", None, None)
     assert results["primary"]["status"].startswith("VOID (V3")
     assert set(results["verdicts"]["primary_k8"].values()) >= {"VOID"}
+    # The precedence covers every readings block: a void run shows no directional label anywhere.
+    blocks = [results["primary"], results["secondary"]] + [
+        results["sensitivity_without_preference"][str(c)] for c in r.CAPS]  # fmt: skip
+    for block in blocks:
+        assert block["status"].startswith("VOID (V3")
+        assert {e["reading"] for e in block["readers"].values()} == {"VOID"}
+
+
+def test_the_precedence_applies_to_every_block():
+    def block():
+        return {"readers": {"a": {"judge_reading": r.COST_ABOVE, "reading": r.COST_ABOVE},
+                            "b": {"judge_reading": r.NOT_SEPARATED,
+                                  "reading": r.NOT_SEPARATED}}}  # fmt: skip
+
+    joined, ok, failed = {"status": "joined"}, {"pass": True}, {"pass": False}
+    b = block()
+    r.apply_precedence(b, False, failed, joined)
+    assert b["status"].startswith("VOID (V3") and {e["reading"] for e in b["readers"].values()} == {
+        "VOID"}  # fmt: skip
+    b = block()
+    r.apply_precedence(b, True, failed, joined)
+    assert b["status"].startswith("JUDGE_DEPENDENT: G-J1")
+    assert [b["readers"][k]["reading"] for k in "ab"] == ["JUDGE_DEPENDENT", r.NOT_SEPARATED]
+    b = block()
+    r.apply_precedence(b, True, ok, {"status": "missing"})
+    assert b["status"] == "hand check missing" and b["readers"]["a"]["reading"] == r.COST_ABOVE
 
 
 def test_the_replay_reference_files_are_checked(tmp_path, monkeypatch):
@@ -997,6 +1023,8 @@ def test_extract_hand_check_and_analyze_end_to_end_and_text_free(tmp_path, monke
         assert hand["switched_replies"]["unlabelled"] == 0
         assert hand["cost"] == jb["cost"] - hand["switched_replies"]["judge_no_hand_yes"]
     assert res["sensitivity_without_preference"]["questions"] == 20
+    assert res["inputs"]["job_id"] == "1600"
+    assert res["inputs"]["rerun_decision_sha256"] == r.sha256_file(ctx["decision"])
     # Declines are counted from the notes; labelled items carry the leakage facts and both labels.
     declines = [x for x in hc["rows"] if x["reply"].startswith("Sorry")]
     assert res["hand_check"]["decline_notes"]["items"] == len(declines) > 0
@@ -1156,6 +1184,50 @@ def test_hand_labels_that_reverse_the_judge_make_the_reading_judge_dependent(tmp
         assert e["reading"] == "JUDGE_DEPENDENT"
 
 
+def test_one_reply_digest_with_two_judge_labels_is_reported_not_refused(tmp_path, monkeypatch):
+    """Two readers' top-4 replies with one normalized digest but different stripped text, which
+    the judge labels differently: the item is kept, carries both labels, and is left out of the
+    hand-against-judge agreement (reported, not raised)."""
+
+    top4 = lf.bm25_top_mask([(i * 3 + 5) % 8 for i in range(8)])
+
+    def split(reader, qid, mask):
+        if qid == "h05" and mask == top4 and reader in ("a", "b"):
+            return "It is blue h05." if reader == "a" else "It is blue, h05."
+        return _reply(reader, qid, mask)
+
+    assert mc.normalize_answer(split("a", "h05", top4)) == mc.normalize_answer(
+        split("b", "h05", top4))  # fmt: skip
+    ctx = _pipeline(tmp_path, monkeypatch, replies=split)
+    hc = _hand_check(tmp_path, monkeypatch, ctx)
+    features = r.read_gz_json(ctx["features"])
+    r.int_masks(features)
+    plan = r.hand_plan(features, ctx["config"])
+    res = _analyze(tmp_path, ctx, hc)["results"]
+    flagged = [i for i in res["labelled_items"] if i["judge_labels_differ"]]
+    assert len(flagged) == 1
+    item = flagged[0]
+    assert item["question_id"] == "h05" and item["judge"] is None
+    assert sorted(item["judge_by_use"]) == [0, 1] and item["hand"] == 1
+    assert {u["role"] for u in item["uses"]} == {r.ROLE_TOP4}
+    assert all(not i["judge_labels_differ"] and i["judge"] in (0, 1)
+               for i in res["labelled_items"] if i is not item)  # fmt: skip
+    hand = res["hand_check"]
+    assert hand["judge_labels_differ"]["items"] == 1
+    assert hand["judge_labels_differ"]["item_ids"] == [item["item_id"]]
+    assert hand["judge_labels_differ"]["by_role"] == {r.ROLE_TOP4: 1}
+    assert hand["judge_labels_differ"]["hand_label_1"] == 1
+    n = len(plan["items"])
+    assert hand["agreement"]["items"] == n - 1
+    assert hand["agreement_items"]["items"] == n - 1
+    assert hand["agreement_items"]["left_out_judge_labels_differ"] == 1
+    top4_items = sum(1 for i in plan["items"] if any(u["role"] == r.ROLE_TOP4 for u in i["uses"]))
+    assert hand["agreement_by_role"][r.ROLE_TOP4]["items"] == top4_items - 1
+    # AM5's own labelled_items refuses this case; the port does not.
+    with pytest.raises(a5.Am5Error, match="two judge labels"):
+        a5.labelled_items(features, plan, None)
+
+
 # --------------------------------------------------------------------------- the rerun rule
 
 
@@ -1180,6 +1252,18 @@ def test_rerun_decision_reads_an_am5r_job_directory(tmp_path):
     (job / r.OUTPUT / "summary.json").write_text("[1]")
     with pytest.raises(r.Am5rError, match="V2.*not a JSON object"):
         r.cmd_rerun_decision(args)
+    # A summary that does not parse (a truncated write) is the same named V2 error, never "rerun"
+    # as if the summary were missing.
+    for text in ('{"steps": {"rd-qwen3-8b": ', "", b"\xff\xfe"):
+        path = job / r.OUTPUT / "summary.json"
+        if isinstance(text, bytes):
+            path.write_bytes(text)
+        else:
+            path.write_text(text)
+        with pytest.raises(r.Am5rError, match="V2.*does not parse.*not a JSON object"):
+            r.cmd_rerun_decision(args)
+    (job / r.OUTPUT / "summary.json").unlink()
+    assert r.cmd_rerun_decision(args)["decision"] == "rerun"  # only a missing one
     assert set(g.ESSENTIAL) == {*r.READERS, "judge32"}
 
 

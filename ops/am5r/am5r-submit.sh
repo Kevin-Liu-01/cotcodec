@@ -7,7 +7,8 @@
 # only when the rerun rule's record for the submitted job says "rerun" (am5r-rerun-decision.sh;
 # registration section 8). A failed dry run or test-only check stops the script; a submission's
 # output is kept as <...>.submit.txt only when the submitter exited 0 with a job id on its last
-# line, so a failure before sbatch does not use up the submission.
+# line, so a failure before sbatch does not use up the submission. The held-out population passes
+# the freeze gate (memcredit_am5r.gate) first, before the manifest and the dry run.
 # Usage: am5r-submit.sh dev|reg <commit short id> <image id> <population> [check|submit|rerun]
 set -Eeuo pipefail
 source "$(dirname "$0")/am5r-env.sh" "${1:?mode}"
@@ -16,6 +17,13 @@ allowed_population "$POP"
 check_image "$IMAGE"
 check_checkout "$SHORT"
 G=$(git rev-parse HEAD)
+# The held-out population runs only after the freeze: the checkout's freeze gate (the ledger row
+# with the registration file's SHA-256, every section 16 code pin) runs before anything else,
+# so a refused gate leaves no manifest and calls no submitter.
+if [[ "$POP" == heldout ]]; then
+  uv run --locked --offline python -c "import sys;sys.path[:0]=['.','scripts'];import memcredit_am5r as r;r.gate('heldout')" >&2 \
+    || { echo "the freeze gate refuses the held-out population; nothing written or submitted" >&2; exit 2; }
+fi
 ST="$R/selftest-${POP}-${SHORT}/exits.txt"
 grep -qx "image ${IMAGE} population ${POP}" "$ST" && grep -qx "am5r selftest exit 0" "$ST" \
   && grep -qx "am5r plan exit 0" "$ST" || { echo "no passing post-build selftest of ${POP} for ${IMAGE}" >&2; exit 2; }

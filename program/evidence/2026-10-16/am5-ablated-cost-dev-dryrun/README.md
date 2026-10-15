@@ -204,9 +204,11 @@ used, and no held-out output exists.
 
 ## 9. Round 1: pre-freeze check 1's fixes, and the CPU parts rerun at `fc355d10`
 
-No GPU time and no model on held-out data. The GPU job's code is unchanged (`run`, `worker` and what
-they call); the held-out job's limit changed in the config (80 minutes), which the development job
-does not use.
+No GPU time and no model on held-out data. The GPU job's code (`run`, `worker` and what they call)
+changed only in `load_config` and `artifact_pin`: they now refuse a "PENDING" held-out pin, and one
+error message is shorter. The development config holds no such pin and the message is not on the
+development job's path, so the job behaves the same and no new development GPU job was needed; the
+held-out job's limit changed in the config (80 minutes), which the development job does not use.
 - **The inputs directory.** `chmod a-w` on the host's
   `~/cotcodec-runs/stage0/am5-ablated-cost-v1/inputs` (it is now `dr-xr-xr-x`; its two files were
   already read-only; `ops/jobs.log`).

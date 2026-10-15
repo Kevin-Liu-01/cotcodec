@@ -4,7 +4,9 @@
 # Mac's labelling script, ssh and scp (to the fake HOME) and the claude CLI (its authentication
 # failure). am3g's rehearsal (its 56 cases), adapted to this registration's scripts, plus this
 # registration's cases (the held-out artifact's prepare, the held-out selftest before the freeze,
-# the GPU populations each mode may run). No job is submitted, no GPU is used, no model runs, and no
+# the GPU populations each mode may run), round 1's and round 2's (the held-out submit's freeze gate
+# in reg mode, an unparseable summary, staging a job refused at its prolog and a worker that died
+# before its pass). No job is submitted, no GPU is used, no model runs, and no
 # held-out output exists to open: the scripts run in dev mode against copies of AM5's development
 # artifact and the dry run's features, the dry run's job directory (linked, read only), and fake
 # build, selftest, job and labeller records (the "subagent" transcripts are written by this script).
@@ -210,6 +212,15 @@ check "prepare-heldout refuses to rebuild an existing artifact" "[[ $rc -eq 2 ]]
 jh=$(bash $O/am5r-selftest.sh dev "$SHORT" "$IMG" heldout 2>/dev/null)
 check "the held-out selftest (tokenizers only) submits in dev mode, before the freeze" "[[ '$jh' =~ ^[0-9]+\$ ]] && grep -q 'AM5R_POP=heldout' $FAKE/stub.log && grep -q 'am5r-selftest-cpu.sbatch' $FAKE/stub.log"
 rm -f "$HA/heldout-ablated-artifact.json"
+# Round 2 (minor 1): in reg mode, the held-out submit runs the checkout's freeze gate first; before
+# the freeze it refuses, writing no manifest and calling no submitter.
+RR=$FAKE/cotcodec-runs/stage0/am5-ablated-cost-v1
+mkdir -p "$RR/bundles"; cp "$BUNDLE" "$RR/bundles/am5r-$SHORT.bundle"
+bash $O/am5r-checkout.sh reg "$G" > "$BASE/checkout-reg.out" 2>&1
+n0=$(wc -l < "$FAKE/stub.log")
+bash $O/am5r-submit.sh reg "$SHORT" "$IMG" heldout check > "$BASE/submit-gate.out" 2>&1; rc=$?
+check "reg mode: the held-out submit is refused by the freeze gate before the freeze, with no manifest, no dry run and no sbatch call (round 2)" "[[ $rc -eq 2 && ! -e $RR/manifests/heldout-$SHORT.yaml && \$(wc -l < $FAKE/stub.log) -eq $n0 ]] && grep -q 'opens only after the freeze' $BASE/submit-gate.out && grep -q 'the freeze gate refuses the held-out population' $BASE/submit-gate.out && ! grep -q 'dry run ok' $BASE/submit-gate.out"
+cd "$R/checkout" || exit 2
 
 # --- the rerun rule on fake job records (major 3, minor 2)
 fake_job() {  # $1 job, $2 lane reason, $3 finished_at, $4 hard_stop_at, $5 python dict of the summary
@@ -255,6 +266,12 @@ for c in "9601 no-rerun a hard stop on an incomplete job, even with a failed ste
   bash $O/am5r-rerun-decision.sh dev "$SHORT" development "$j" > /dev/null 2>&1
   check "rerun rule: $why -> $want" "[[ \$(decision $j) == $want ]]"
 done
+
+# Round 2 (minor 3): a summary.json that does not parse is the named V2 error, not a missing summary.
+fake_job 9608 completed 2026-10-15T10:00:00Z 2026-10-15T11:00:00Z "{}"
+printf '{"steps": {"rd-qwen3-8b": ' > "$R/runs/development/9608/am5r/summary.json"
+bash $O/am5r-rerun-decision.sh dev "$SHORT" development 9608 > "$BASE/decision-9608.out" 2>&1; rc=$?
+check "a summary.json that does not parse is a named V2 error with no record, not a rerun (round 2)" "[[ $rc -ne 0 && ! -e $R/rerun-decision-development-9608.json ]] && grep -q 'V2, incomplete.*does not parse' $BASE/decision-9608.out"
 
 # --- round 1 (M1): a job that scontrol forgot, and extract's refusals
 fake_job 9700 completed 2026-10-15T10:00:00Z 2026-10-15T11:00:00Z "{'steps':{'rd-qwen3-8b':{'status':'complete'},'rd-olmo2':{'status':'complete'},'rd-qwen35-9b-default':{'status':'complete'},'judge32':{'status':'complete'}},'model_verification':{}}"
@@ -340,5 +357,17 @@ bash $O/am5r-hand-merge.sh dev "$SHORT" first > "$BASE/merge-2.out" 2>&1; rc=$?
 check "an extra transcript is visible (2 attempts for chunk 01) and voids the hand check: empty final labels, no repair" "[[ $rc -eq 0 && ! -s $R/hand/hand-labels.jsonl && ! -e $R/hand/hand-repair-sample.jsonl ]] && python3 -c \"import json,sys;d=json.load(open('$R/hand-merge-first-$SHORT.json'));sys.exit(not (d['void'] and d['labelling_attempts']==2))\""
 bash $O/am5r-hand-receipt.sh dev "$SHORT" first > /dev/null 2>&1; rc=$?
 check "the receipt of the void stage records it" "[[ $rc -eq 0 ]] && python3 -c \"import json,sys;d=json.load(open('$R/hand-check/hand-receipt-first.json'));sys.exit(not (d['void'] and d['labelling_attempts']=={'01':2} and d['matching_subagent_transcripts']==2))\""
+# Round 2 (minor 2): staging a job refused at its prolog (no am5r/ directory, no sbatch copy, no
+# study artifact) and a job whose worker died before writing a pass (no environment.json, no worker
+# log, no pass files) stages what exists and skips the rest.
+mkdir -p "$R/runs/development/9800"
+printf 'job_id=9800\nreason=gpu_prolog_unavailable\n' > "$R/runs/development/9800/termination.env"
+mkdir -p "$R/runs/development/9801/am5r/sessions/rd-qwen3-8b"
+printf 'job_id=9801\nreason=workload_failed\n' > "$R/runs/development/9801/termination.env"
+echo '{"steps": {}}' > "$R/runs/development/9801/am5r/summary.json"
+echo '{"event": "start"}' > "$R/runs/development/9801/am5r/sessions/rd-qwen3-8b/worker-progress.jsonl"
+bash $O/am5r-stage-evidence.sh dev "$SHORT" development:9800 development:9801 > "$BASE/stage.out" 2>&1; rc=$?
+ES=$R/evidence-stage/jobs
+check "staging a job refused at its prolog and a worker with no pass stages what exists (round 2)" "[[ $rc -eq 0 && -f $ES/9800-development/termination.env && ! -e $ES/9800-development/am5r/summary.json && ! -e $ES/9800-development/docker-research.sbatch.sha256 && -f $ES/9801-development/am5r/summary.json && ! -e $ES/9801-development/am5r/environment.json && -f $ES/9801-development/am5r/sessions/rd-qwen3-8b/worker-progress.jsonl && ! -s $ES/9801-development/am5r/sessions/rd-qwen3-8b/raw-sha256.txt ]] && grep -q 'staged files containing one: 0' $BASE/stage.out && grep -q 'evidence staged for $SHORT' $R/ops/jobs.log"
 rm -f "$A/ablated-artifact.json" "$R/private/features-development.json.gz"
 echo "rehearsal $SHORT: $pass passed, $fail failed"

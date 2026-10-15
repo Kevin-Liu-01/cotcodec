@@ -10,7 +10,11 @@
 # when ended (a terminal Slurm state: COMPLETED, FAILED, CANCELLED, TIMEOUT, OUT_OF_MEMORY,
 # NODE_FAIL, PREEMPTED, BOOT_FAIL or DEADLINE, or forgotten with a termination record), 1 in any
 # other state (running or unknown), 2 when scontrol does not know the job, it was never recorded
-# and no termination record exists (a GPU job in that state cannot be decided: VOID, V2).
+# and no termination record exists. Exit 2 is a verdict only once the job has ended (squeue no
+# longer lists it): while a job runs it can be a transient scontrol failure, and the next poll
+# recovers. A GPU job that has ended in that state cannot be decided (VOID, V2). Build and
+# selftest jobs have no lane termination record: for one that has ended, go on from its own
+# records (the build root, which am5r-image.sh checks, or the selftest's exits.txt).
 # Reads Slurm and records only; it runs no repository code.
 # Usage: am5r-job-state.sh dev|reg <job id>
 set -Eeuo pipefail
@@ -33,7 +37,7 @@ case "$state" in
       log_job "job $J forgotten by scontrol; recorded from the lane's termination record (${T[0]#"$R"/})"
       cat "$R/ops/scontrol-$J.txt"; exit 0
     fi
-    echo "job $J unknown to scontrol, never recorded, and no termination record" >&2; exit 2 ;;
+    echo "job $J unknown to scontrol, never recorded, and no termination record (while it runs, poll again; once it has left squeue, a GPU job is VOID (V2) and a build or selftest goes on from its own records)" >&2; exit 2 ;;
   *) echo "job $J $state (running or unknown)"; exit 1 ;;
 esac
 if [[ ! -f "$R/ops/scontrol-$J.txt" ]]; then
