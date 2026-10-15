@@ -11,7 +11,9 @@ made them. No GPU, no new model call.
   exact expectation by order statistics) against leave-one-out, SNIPW-64, MSR-Banzhaf-64,
   permutation Shapley-16 and greedy backward elimination with BM25 ties, at matched or fewer
   reader calls. Retrieved arm, keep 4 of 8, non-constant tables. Sampled rules average 200 seeds.
-* H-B: accuracy of BM25 top 4 against all 8, retrieved arm, every question; exact McNemar test.
+* H-B (descriptive only, D116; decides nothing): accuracy of BM25 top 4 against all 8, every
+  question, with the exact McNemar test and intervals. AM1's published figures fixed its sign
+  before the run.
 * H-C (label-free): ``nonabstain-BM25`` (the best-BM25-ranked 4-subset whose reply does not
   abstain, BM25 top 4 when every 4-subset abstains) against BM25 top 4; exact McNemar test.
 * Descriptive: oracle-search ceiling, direct-search curves, abstention rates, reads of the
@@ -24,7 +26,9 @@ Subcommands:
   that the joined labels reproduce every committed table, and writes AM1d's text-free per-request
   features (``memcredit_label_free.build_features``) to a host-only directory.
 * ``analyze`` (local or host CPU): the hypotheses and descriptive outputs from the committed
-  tables and the features; writes ``results.json``, ``per-table.json.gz`` and ``tables.md``.
+  tables and the features; writes ``results.json``, ``per-table.json.gz`` and ``tables.md``. With
+  ``--h-c-void REASON`` instead of ``--features`` it records H-C as VOID (registration section
+  8, V3 and V5) and computes H-A, H-B and the descriptive outputs from the tables alone.
 * ``selftest`` (development only): reproduces AM1b's and AM1d's committed numbers where they
   overlap with this code.
 * ``power`` (development only): operating characteristics from the development analysis.
@@ -43,9 +47,11 @@ import gzip
 import hashlib
 import json
 import math
+import os
 import re
 import statistics
 import sys
+import zipfile
 from collections import Counter, defaultdict
 from collections.abc import Sequence
 from dataclasses import dataclass
@@ -113,6 +119,13 @@ class Comparison:
     calls: int | None
     describe: str
 
+    @property
+    def matched(self) -> bool:
+        """Direct search reads as many subsets as the rule (A1, A2, A4, A7); otherwise it reads
+        26, fewer than the rule (A3, A5, A6)."""
+
+        return self.calls is None
+
 
 #: H-A's family (registration section 6).
 COMPARISONS: tuple[Comparison, ...] = (
@@ -131,6 +144,17 @@ COMPARISON_IDS = tuple(c.id for c in COMPARISONS)
 
 class KeepsetError(ValueError):
     """An input, a gate, a validation check or a void rule failed."""
+
+
+#: Prefixes of the named void errors (registration section 8).
+VOID_ALL = "VOID (V1/V2, nothing read)"
+VOID_HC = "VOID (H-C, V3)"
+VOID_HC_PROVENANCE = "VOID (H-C, V5)"
+#: Errors that reading an H-C input can raise; extract and analyze map them to the H-C void.
+READ_ERRORS = (
+    OSError, EOFError, ValueError, KeyError, IndexError, TypeError, zipfile.BadZipFile,
+    gzip.BadGzipFile, json.JSONDecodeError, UnicodeDecodeError,
+)  # fmt: skip
 
 
 # --------------------------------------------------------------------------- pinned inputs
@@ -226,9 +250,13 @@ HELDOUT_PARTS = ("am1-confirmatory", "am1-memory-credit-v1")
 #: The code whose SHA-256 the features record and ``analyze`` checks.
 FEATURE_CODE = (
     "scripts/memcredit_keepset_search.py",
+    "scripts/memcredit_cost_curve.py",
     "scripts/memcredit_label_free.py",
     "scripts/memcredit_analyze.py",
     "scripts/memcredit_study.py",
+    "scripts/memcredit_step0.py",
+    "harness/__init__.py",
+    "harness/g2_pilot.py",
     "harness/memcredit.py",
     "harness/memcredit_study.py",
 )
@@ -320,29 +348,40 @@ def check_code_pins(registration: Path | None = None, root: Path = PROJECT_ROOT)
     return {"files": len(pins), "all_match": True}
 
 
-def gate(split: str) -> dict[str, Any]:
-    """Run before any input of the split is opened. Held-out: frozen registration and every code
-    pin matching; development: nothing to check here (paths are checked as they are opened)."""
+def gate(
+    split: str, ledger: Path | None = None, registration: Path | None = None
+) -> dict[str, Any]:
+    """Run before any input of the split is opened. Held-out: frozen registration (a ledger row
+    for this experiment with the registration file's SHA-256) and every code pin of its section 16
+    matching; development: nothing to check here (paths are checked as they are opened). The
+    ledger and registration default to the repository's; tests pass scratch copies."""
 
     if split not in SPLITS:
         raise KeepsetError(f"unknown split {split}")
     if not SPLITS[split]["frozen_required"]:
         return {"split": split, "frozen_required": False}
-    if not registration_frozen():
+    if not registration_frozen(ledger, registration):
         raise KeepsetError(
             "held-out data is opened only after the freeze: no ledger row for "
             f"{EXPERIMENT} with this registration file's SHA-256"
         )
-    pins = check_code_pins()
+    pins = check_code_pins(registration)
     return {"split": split, "frozen_required": True, "registration_frozen": True, "pins": pins}
 
 
 def check_digests(run_dir: Path, pinned: dict[str, str]) -> dict[str, str]:
+    """The pinned H-C input files: a missing, unreadable or changed file is the H-C void (V3)."""
+
     out = {}
     for relative, expected in sorted(pinned.items()):
-        actual = sha256_file(run_dir / relative)
+        try:
+            actual = sha256_file(run_dir / relative)
+        except OSError as exc:
+            raise KeepsetError(f"{VOID_HC}: {relative} is missing or unreadable: {exc}") from exc
         if actual != expected:
-            raise KeepsetError(f"{relative}: SHA-256 {actual} is not the pinned {expected}")
+            raise KeepsetError(
+                f"{VOID_HC}: {relative}: SHA-256 {actual} is not the pinned {expected}"
+            )
         out[relative] = actual
     return out
 
@@ -365,10 +404,10 @@ def load_tables(split: str, path: Path | None = None) -> list[dict[str, Any]]:
         check_development_path(path)
     raw = Path(path).read_bytes()
     if sha256_bytes(raw) != spec["tables_sha256"]:
-        raise KeepsetError(f"{path}: SHA-256 is not the pinned {spec['tables_sha256']}")
+        raise KeepsetError(f"{VOID_ALL}: {path}: SHA-256 is not the pinned {spec['tables_sha256']}")
     data = gzip.decompress(raw)
     if spec["tables_json_sha256"] is not None and sha256_bytes(data) != spec["tables_json_sha256"]:
-        raise KeepsetError("the uncompressed tables differ from AM1's tables.json")
+        raise KeepsetError(f"{VOID_ALL}: the uncompressed tables differ from AM1's tables.json")
     tables = json.loads(data)
     for t in tables:
         for key in ("regret", "credits", "credits_seeded", "summary", "placebo"):
@@ -437,7 +476,9 @@ def validate_tables(tables: Sequence[dict[str, Any]], split: str) -> dict[str, A
         "passed": not failures,
     }
     if failures:
-        raise KeepsetError(f"VOID: the tables fail validation ({len(failures)}): {failures[:10]}")
+        raise KeepsetError(
+            f"{VOID_ALL}: the tables fail validation ({len(failures)}): {failures[:10]}"
+        )
     return report
 
 
@@ -550,13 +591,15 @@ def paired_reading(
     resamples: int,
     seed: int,
     alpha: float = ALPHA_PAIRED,
+    label_key: str = "reading",
 ) -> dict[str, Any]:
     """rule minus base in accuracy, paired by question: discordant counts b (rule right, base
     wrong) and c, the exact McNemar test, the paired difference with its exact conditional 95%
     interval ((b + c) / n times 2 pi - 1, pi's Clopper-Pearson interval for b of b + c; the
     inversion of the same exact test) and a question-cluster bootstrap 95% interval; and the
-    reading: labels[0] if p <= alpha and b > c, labels[1] if p <= alpha and b < c, else
-    labels[2]."""
+    label: labels[0] if p <= alpha and b > c, labels[1] if p <= alpha and b < c, else labels[2].
+    ``label_key`` is "reading" for a registered hypothesis (H-C) and "description" for a
+    descriptive comparison that decides nothing (H-B, D116)."""
 
     qids = sorted(rule)
     if sorted(base) != qids:
@@ -593,7 +636,7 @@ def paired_reading(
         "ci95_bootstrap": boot["ci"],
         "p_exact_mcnemar": p,
         "alpha": alpha,
-        "reading": reading,
+        label_key: reading,
     }
 
 
@@ -668,17 +711,71 @@ def nonabstain_choice(pool: dict[str, Any], values: Sequence[float]) -> dict[str
 
 
 def check_features(features: dict[str, Any], split: str, check_code: bool = True) -> None:
+    """V5: the features' recorded provenance must equal the pins; otherwise H-C is void."""
+
     spec = SPLITS[split]
+    problems = []
     if features.get("experiment") != EXPERIMENT or features.get("split") != split:
-        raise KeepsetError("the features belong to another experiment or split")
-    if features["pass"]["sha256"] != spec["pass"]["sha256"]:
-        raise KeepsetError("the features come from another pass")
-    if features["pass"]["study_artifact_sha256"] != spec["artifact_sha256"]:
-        raise KeepsetError("the features come from another study artifact")
+        problems.append("the features belong to another experiment or split")
+    if (features.get("pass") or {}).get("sha256") != spec["pass"]["sha256"]:
+        problems.append("the features come from another pass")
+    if (features.get("pass") or {}).get("study_artifact_sha256") != spec["artifact_sha256"]:
+        problems.append("the features come from another study artifact")
     if features.get("abstention_patterns_sha256") != lf.ABSTENTION_PATTERNS_SHA256:
-        raise KeepsetError("the features used another abstention pattern list")
+        problems.append("the features used another abstention pattern list")
     if check_code and features.get("code_sha256") != code_digests():
-        raise KeepsetError("the features were extracted by other code")
+        problems.append("the features were extracted by other code")
+    if problems:
+        raise KeepsetError(f"{VOID_HC_PROVENANCE}: " + "; ".join(problems))
+
+
+def load_features(path: Path, split: str) -> dict[str, Any]:
+    """Read and check the extracted features. An unreadable, truncated or malformed file is the
+    H-C void (V3); a provenance mismatch is the H-C void (V5). Both are named errors."""
+
+    try:
+        digest = sha256_file(path)
+        features = read_gz_json(path)
+        if not isinstance(features, dict) or not isinstance(features.get("pools"), list):
+            raise ValueError("no pools list")
+    except READ_ERRORS as exc:
+        raise KeepsetError(
+            f"{VOID_HC}: the features file is unreadable or incomplete: {type(exc).__name__}: {exc}"
+        ) from exc
+    features["_sha256"] = digest
+    check_features(features, split)
+    return features
+
+
+def match_features(features: dict[str, Any], tables: Sequence[dict[str, Any]]) -> dict:
+    """V3 on the features against the tables: one pool per table, each with the table's 256
+    utilities, BM25 ranks and question type and a 256-long abstention list. Named errors."""
+
+    problems = []
+    try:
+        pools = {(p["question_id"], p["arm"]): p for p in features["pools"]}
+        if len(pools) != len(features["pools"]) or set(pools) != {
+            (t["question_id"], t["arm"]) for t in tables
+        }:
+            problems.append(f"{len(pools)} feature pools do not match the {len(tables)} tables")
+        else:
+            for t in tables:
+                pool = pools[(t["question_id"], t["arm"])]
+                values = cc.decode_values(t["values_hex"])
+                tag = f"{t['question_id']}:{t['arm']}"
+                if [float(v) for v in pool["u"]] != [float(v) for v in values]:
+                    problems.append(f"{tag}: features differ from the table")
+                if list(pool["bm25_rank"]) != bm25_ranks(t):
+                    problems.append(f"{tag}: BM25 ranks differ")
+                if pool["question_type"] != t["question_type"]:
+                    problems.append(f"{tag}: question type differs")
+                if len(pool["abstain"]) != 1 << K:
+                    problems.append(f"{tag}: abstention flags incomplete")
+    except READ_ERRORS as exc:
+        problems.append(f"malformed features: {type(exc).__name__}: {exc}")
+    if problems:
+        raise KeepsetError(f"{VOID_HC}: " + "; ".join(problems[:10]))
+    return pools
 
 
 def table_record(
@@ -706,9 +803,9 @@ def table_record(
         diffs = ha["diffs"]
     if pool is not None:
         if [float(v) for v in pool["u"]] != [float(v) for v in values]:
-            raise KeepsetError(f"{t['question_id']}:{t['arm']}: features differ from the table")
+            raise KeepsetError(f"{VOID_HC}: {t['question_id']}:{t['arm']}: features differ")
         if list(pool["bm25_rank"]) != ranks or pool["question_type"] != t["question_type"]:
-            raise KeepsetError(f"{t['question_id']}:{t['arm']}: features' ranks or type differ")
+            raise KeepsetError(f"{VOID_HC}: {t['question_id']}:{t['arm']}: ranks or type differ")
         choice = nonabstain_choice(pool, values)
         abstain4 = [bool(pool["abstain"][m]) for m in FOUR_SETS]
         rec["hc"] = {
@@ -811,25 +908,37 @@ def classify(entry: dict[str, Any]) -> str:
 
 
 def ha_verdict(comps: dict[str, dict[str, Any]]) -> dict[str, Any]:
-    """H-A's rule: SEARCH_DOMINATES if every comparison is SEARCH_BETTER; RULE_BEATS_SEARCH if
-    any comparison is RULE_BETTER (naming them); INCONCLUSIVE otherwise."""
+    """H-A's rule (registration section 7.1):
+
+    * SEARCH_DOMINATES if all seven comparisons are SEARCH_BETTER;
+    * RULE_BEATS_SEARCH if a matched comparison (A1, A2, A4, A7: direct search reads as many
+      subsets as the rule) is RULE_BETTER, naming them;
+    * RULE_AT_MORE_CALLS_BETTER if no matched comparison is RULE_BETTER but a fewer-calls one
+      (A3, A5, A6: the rule read about 57-83 subsets, direct search 26) is; it blocks
+      SEARCH_DOMINATES and licenses nothing at equal calls;
+    * INCONCLUSIVE otherwise, naming the comparisons not separated."""
 
     classes = {cid: comps[cid]["classification"] for cid in COMPARISON_IDS}
+    matched = {c.id: c.matched for c in COMPARISONS}
     near = [
         cid for cid in COMPARISON_IDS
         if comps[cid].get("mc_se") and min(abs(comps[cid]["upper"]), abs(comps[cid]["lower"]))
         <= MC_SE_MARGIN * comps[cid]["mc_se"]
     ]  # fmt: skip
+    rule_better = [cid for cid, c in classes.items() if c == "RULE_BETTER"]
     if all(c == "SEARCH_BETTER" for c in classes.values()):
         verdict = "SEARCH_DOMINATES"
-    elif any(c == "RULE_BETTER" for c in classes.values()):
+    elif any(matched[cid] for cid in rule_better):
         verdict = "RULE_BEATS_SEARCH"
+    elif rule_better:
+        verdict = "RULE_AT_MORE_CALLS_BETTER"
     else:
         verdict = "INCONCLUSIVE"
     return {
         "verdict": verdict,
         "classifications": classes,
-        "rule_better": [cid for cid, c in classes.items() if c == "RULE_BETTER"],
+        "rule_better_at_equal_calls": [cid for cid in rule_better if matched[cid]],
+        "rule_better_at_more_calls": [cid for cid in rule_better if not matched[cid]],
         "not_separated": [cid for cid, c in classes.items() if c == "NOT_SEPARATED"],
         "bounds_within_mc_margin": near,
     }
@@ -922,14 +1031,17 @@ def analyze(
     resamples: int = BOOTSTRAP_RESAMPLES,
     bootstrap_seed: int = BOOTSTRAP_SEED,
     check_counts: bool = True,
+    h_c_void: str | None = None,
 ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    """H-A (decides), H-B (descriptive, D116), H-C (decides, or VOID with ``h_c_void``'s reason
+    when its inputs failed V3 or V5) and the descriptive outputs. Without features and without a
+    void reason (development only), H-C is not computed."""
+
+    if features is not None and h_c_void:
+        raise KeepsetError("H-C has features or a void reason, not both")
     seeds = [seed_base + j for j in range(n_seeds)]
     validation = validate_tables(tables, split) if check_counts else {"skipped": True}
-    pools = None
-    if features is not None:
-        pools = {(p["question_id"], p["arm"]): p for p in features["pools"]}
-        if len(pools) != len(tables):
-            raise KeepsetError(f"{len(pools)} feature pools against {len(tables)} tables")
+    pools = match_features(features, tables) if features is not None else None
     records, per_seed = [], {}
     for t in sorted(tables, key=lambda t: (t["arm"], t["question_id"])):
         pool = pools[(t["question_id"], t["arm"])] if pools is not None else None
@@ -938,14 +1050,19 @@ def analyze(
         if diffs is not None:
             per_seed[(t["question_id"], t["arm"])] = diffs
     h_a = {arm: ha_aggregate(records, per_seed, arm, resamples, bootstrap_seed) for arm in ARMS}
-    h_b, h_c = {}, {}
+    h_b: dict[str, Any] = {
+        "decides": False,
+        "basis": "D116: AM1's published figures fixed H-B's sign before the run (registration "
+        "section 1.2); the exact test and intervals are a description only",
+    }
+    h_c: dict[str, Any] = {}
     for arm in ARMS:
         rows = [r for r in records if r["arm"] == arm]
         top = {r["question_id"]: r["u_bm25_top4"] for r in rows}
         full = {r["question_id"]: r["u_all_8"] for r in rows}
         h_b[arm] = paired_reading(
             top, full, ("PRUNING_HELPS", "PRUNING_HURTS", "NO_DETECTED_DIFFERENCE"),
-            resamples, bootstrap_seed,
+            resamples, bootstrap_seed, label_key="description",
         )  # fmt: skip
         if pools is not None:
             rule = {r["question_id"]: r["hc"]["u"] for r in rows}
@@ -959,28 +1076,29 @@ def analyze(
             }
             h_c[arm]["nonabstain_minus_all_8"] = paired_reading(
                 rule, full, ("RULE_AHEAD", "RULE_BEHIND", "NO_DETECTED_DIFFERENCE"),
-                resamples, bootstrap_seed,
+                resamples, bootstrap_seed, label_key="description",
             )  # fmt: skip
+    if h_c_void:
+        h_c_record: dict[str, Any] | None = {"status": "VOID", "reason": h_c_void}
+        h_c_verdict: dict[str, Any] | None = {
+            "arm": PRIMARY_ARM, "reading": "VOID", "reason": h_c_void,
+        }  # fmt: skip
+    elif h_c:
+        h_c_record = {"status": "READ", **h_c}
+        h_c_verdict = {
+            "arm": PRIMARY_ARM,
+            "reading": h_c[PRIMARY_ARM]["reading"],
+            "gold_arm_descriptive": h_c["gold"]["reading"],
+        }
+    else:
+        h_c_record = h_c_verdict = None
     verdicts = {
         "H-A": {
             "arm": PRIMARY_ARM,
             **h_a[PRIMARY_ARM]["verdict"],
             "gold_arm_same_rule_descriptive": h_a["gold"]["verdict"]["verdict"],
         },
-        "H-B": {
-            "arm": PRIMARY_ARM,
-            "reading": h_b[PRIMARY_ARM]["reading"],
-            "gold_arm_descriptive": h_b["gold"]["reading"],
-        },  # fmt: skip
-        "H-C": (
-            {
-                "arm": PRIMARY_ARM,
-                "reading": h_c[PRIMARY_ARM]["reading"],
-                "gold_arm_descriptive": h_c["gold"]["reading"],
-            }  # fmt: skip
-            if h_c
-            else None
-        ),
+        "H-C": h_c_verdict,
     }
     results = {
         "experiment": EXPERIMENT,
@@ -1001,8 +1119,8 @@ def analyze(
         },  # fmt: skip
         "config": config_record(n_seeds, seed_base, resamples, bootstrap_seed),
         "h_a": h_a,
-        "h_b": h_b,
-        "h_c": h_c or None,
+        "h_b_descriptive": h_b,
+        "h_c": h_c_record,
         "reply_stats": lf.reply_stats(features["pools"]) if features is not None else None,
         "descriptive": descriptive(records, resamples, bootstrap_seed, features is not None),
         "verdicts": verdicts,
@@ -1123,16 +1241,23 @@ def render_markdown(results: dict[str, Any]) -> str:
         for m, d in sorted(ha["direct_search"].items(), key=lambda kv: int(kv[0])):
             lines.append(f"| {m} | {_f(d['mean'])} | {_ci(d['ci95'])} |")
         lines.append("")
-    for name, key in (("H-B: BM25 top 4 minus all 8", "h_b"), ("H-C: nonabstain-BM25 minus "
-                                                              "BM25 top 4", "h_c")):  # fmt: skip
+    blocks = (
+        ("H-B (descriptive, D116; no decision): BM25 top 4 minus all 8", "h_b_descriptive",
+         "description", "Description (not a decision)"),
+        ("H-C: nonabstain-BM25 minus BM25 top 4", "h_c", "reading", "Reading"),
+    )  # fmt: skip
+    for name, key, label_key, column in blocks:
         block = results.get(key)
         if not block:
+            continue
+        if block.get("status") == "VOID":
+            lines += [f"## {name}", "", f"**VOID**: {block['reason']}", ""]
             continue
         lines += [
             f"## {name}",
             "",
             "| Arm | Questions | Rule acc. | Base acc. | b | c | Difference | 95% exact cond. | "
-            "95% bootstrap | p (exact McNemar) | Reading |",
+            f"95% bootstrap | p (exact McNemar) | {column} |",
             "|---|---:|---:|---:|---:|---:|---:|---|---|---:|---|",
         ]
         for arm in ARMS:
@@ -1142,10 +1267,10 @@ def render_markdown(results: dict[str, Any]) -> str:
                 f"{_f(r['base_accuracy'])} | {r['rule_right_base_wrong']} | "
                 f"{r['rule_wrong_base_right']} | {_s(r['difference'])} | "
                 f"{_ci(r['ci95_exact_conditional'], True)} | {_ci(r['ci95_bootstrap'], True)} | "
-                f"{r['p_exact_mcnemar']:.4g} | {r['reading']} |"
+                f"{r['p_exact_mcnemar']:.4g} | {r[label_key]} |"
             )
         lines.append("")
-    if results.get("h_c"):
+    if (results.get("h_c") or {}).get("status") == "READ":
         lines += [
             "## H-C: reads of the BM25-ordered stop rule (the answering call included)",
             "",
@@ -1195,8 +1320,12 @@ def render_markdown(results: dict[str, Any]) -> str:
 
 
 def write_gz_json(path: Path, payload: Any) -> None:
+    """Deterministic gzip JSON, written atomically (a crash leaves no partial file)."""
+
     blob = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
-    path.write_bytes(gzip.compress(blob, mtime=0))
+    tmp = path.with_name(path.name + ".partial")
+    tmp.write_bytes(gzip.compress(blob, mtime=0))
+    os.replace(tmp, path)
 
 
 def read_gz_json(path: Path) -> Any:
@@ -1213,8 +1342,6 @@ def end_of_turn_id(path: Path) -> int:
 
 
 def cmd_extract(args: argparse.Namespace) -> dict[str, Any]:
-    import memcredit_analyze as ma
-
     split = args.split
     spec = SPLITS[split]
     gate_record = gate(split)
@@ -1227,33 +1354,65 @@ def cmd_extract(args: argparse.Namespace) -> dict[str, Any]:
     config = ms.load_config(spec["config"])
     if config["experiment_id"] != spec["config_id"]:
         raise KeepsetError("the config is not the split's")
-    digests = check_digests(run_dir, spec["pass"]["sha256"])
-    if sha256_file(evidence) != spec["artifact_sha256"]:
-        raise KeepsetError("the study artifact is not the pinned one")
-    artifact = ma.load_artifact(evidence, config, spec["artifact_sha256"])
-    if artifact.get("split") != spec["artifact_split"]:
-        raise KeepsetError("the study artifact belongs to another split")
+    # V1 and V2: the tables. A failure here voids everything and is not an H-C void.
     tables = load_tables(split)
     validate_tables(tables, split)
+    # V3: every H-C input. Any failure below is a named H-C void; H-A and H-B stand.
+    try:
+        payload = _extract_features(run_dir, evidence, tables, config, spec)
+    except KeepsetError:
+        raise
+    except (lf.LabelFreeError, ms.StudyError, *READ_ERRORS) as exc:
+        raise KeepsetError(f"{VOID_HC}: {type(exc).__name__}: {exc}") from exc
+    payload["gate"] = gate_record
+    payload["split"] = split
+    private.mkdir(parents=True, exist_ok=True)
+    out = private / f"features-{split}-{spec['pass']['job']}.json.gz"
+    write_gz_json(out, payload)
+    return {"features": str(out), "sha256": sha256_file(out), "pools": len(payload["pools"]),
+            "validation": payload["validation"]}  # fmt: skip
+
+
+def _extract_features(
+    run_dir: Path,
+    evidence: Path,
+    tables: Sequence[dict[str, Any]],
+    config: dict[str, Any],
+    spec: dict[str, Any],
+) -> dict[str, Any]:
+    import memcredit_analyze as ma
+
+    digests = check_digests(run_dir, spec["pass"]["sha256"])
+    try:
+        artifact_sha = sha256_file(evidence)
+    except OSError as exc:
+        raise KeepsetError(f"{VOID_HC}: the study artifact is missing or unreadable") from exc
+    if artifact_sha != spec["artifact_sha256"]:
+        raise KeepsetError(f"{VOID_HC}: the study artifact is not the pinned one")
+    artifact = ma.load_artifact(evidence, config, spec["artifact_sha256"])
+    if artifact.get("split") != spec["artifact_split"]:
+        raise KeepsetError(f"{VOID_HC}: the study artifact belongs to another split")
+    lacking = [f"{t['question_id']}:{t['arm']}" for t in tables if "distinct_replies" not in t]
+    if lacking:
+        raise KeepsetError(f"{VOID_HC}: tables without distinct_replies: {lacking[:5]}")
     question_index = {q["question_id"]: i for i, q in enumerate(artifact["questions"])}
     # The join that built AM1's tables, unchanged; then AM1d's join keeping tokens and log-probs.
     rows_ma, items, primary, _ = ma.join_rows(run_dir, config, artifact)
     views = ma.pool_views(rows_ma, artifact)
-    try:
-        validation = lf.validate_tables(views, tables, question_index)
-    except lf.LabelFreeError as exc:
-        raise KeepsetError(f"VOID (H-C): {exc}") from exc
+    validation = lf.validate_tables(views, tables, question_index)
+    if validation["distinct_replies_reproduced"] != len(tables):
+        raise KeepsetError(f"{VOID_HC}: distinct replies not reproduced on every table")
     requests = ms.request_table(artifact, config["pools"]["arms"])
     reader = ma.load_pass(run_dir, spec["pass"]["reader"])
     if reader is None or reader["meta"].get("missing_logprobs"):
-        raise KeepsetError("the reader pass is missing or lacks log-probs")
+        raise KeepsetError(f"{VOID_HC}: the reader pass is missing or lacks log-probs")
     rows = lf.join_requests(requests, reader["rows"], items, primary)
     mismatched = sum(
         1 for a, b in zip(rows, rows_ma, strict=True)
         if a["index"] != b["index"] or a["reply"] != b["reply"] or a["u"] != b["u"]
     )  # fmt: skip
     if mismatched or len(rows) != len(rows_ma):
-        raise KeepsetError(f"VOID (H-C): {mismatched} requests differ between the two joins")
+        raise KeepsetError(f"{VOID_HC}: {mismatched} requests differ between the two joins")
     table_requests = [r for r in rows if r["kind"] == "table"]
     validation.update(
         requests=len(rows),
@@ -1264,17 +1423,11 @@ def cmd_extract(args: argparse.Namespace) -> dict[str, Any]:
         reader_finish=dict(sorted(Counter(r["finish"] for r in table_requests).items())),
     )
     if validation["table_requests_labelled"] != validation["table_requests"]:
-        raise KeepsetError("VOID (H-C): a table request has no reply or no label")
+        raise KeepsetError(f"{VOID_HC}: a table request has no reply or no label")
     eot = end_of_turn_id(run_dir / "sessions" / spec["pass"]["reader"] / "worker-progress.jsonl")
-    try:
-        features = lf.build_features(rows, artifact, eot)
-    except lf.LabelFreeError as exc:
-        raise KeepsetError(f"VOID (H-C): {exc}") from exc
-    private.mkdir(parents=True, exist_ok=True)
-    payload = {
+    features = lf.build_features(rows, artifact, eot)
+    return {
         "experiment": EXPERIMENT,
-        "split": split,
-        "gate": gate_record,
         "pass": {
             "name": spec["pass"]["name"],
             "job": spec["pass"]["job"],
@@ -1287,30 +1440,28 @@ def cmd_extract(args: argparse.Namespace) -> dict[str, Any]:
         "validation": validation,
         "pools": features,
     }
-    out = private / f"features-{split}-{spec['pass']['job']}.json.gz"
-    write_gz_json(out, payload)
-    return {"features": str(out), "sha256": sha256_file(out), "pools": len(features),
-            "validation": validation}  # fmt: skip
 
 
 def cmd_analyze(args: argparse.Namespace) -> dict[str, Any]:
     split = args.split
     gate(split)
-    if split == "heldout" and not args.features:
-        raise KeepsetError("the registered analysis needs the extracted features")
+    if args.features and args.h_c_void:
+        raise KeepsetError("give --features or --h-c-void, not both")
+    if split == "heldout" and not (args.features or args.h_c_void):
+        raise KeepsetError(
+            "the registered analysis needs the extracted features, or --h-c-void with the named "
+            "error of the failed H-C input (section 8, V3 and V5)"
+        )
     if split == "development":
         for p in (args.features, args.output_dir):
             if p is not None:
                 check_development_path(p)
     tables = load_tables(split)
-    features = None
-    if args.features:
-        features = read_gz_json(Path(args.features))
-        features["_sha256"] = sha256_file(Path(args.features))
-        check_features(features, split)
+    features = load_features(Path(args.features), split) if args.features else None
     results, records = analyze(
-        tables, features, split, args.seeds, args.seed_base, args.resamples, args.bootstrap_seed
-    )
+        tables, features, split, args.seeds, args.seed_base, args.resamples, args.bootstrap_seed,
+        h_c_void=args.h_c_void,
+    )  # fmt: skip
     import numpy as np
 
     results["inputs"] = {
@@ -1582,7 +1733,7 @@ def selftest(
                 st_same += int(ok)
         _check(checks, "AM1d stop-rule reads (mean and max uncapped reads, first answers at "
                "position 1)", st_n, st_same)  # fmt: skip
-        hb = ours["h_b"]["retrieved"]
+        hb = ours["h_b_descriptive"]["retrieved"]
         hc = ours["h_c"]["retrieved"]
         quoted = [
             ("BM25 top 4 vs all 8, retrieved: 4 vs 0, exact p = 0.125",
@@ -1660,6 +1811,7 @@ def power(
     rows = [r for r in rows if r["arm"] == PRIMARY_ARM and r["nonconstant"]]
     d = np.array([[r["ha"]["comparisons"][c] for c in COMPARISON_IDS] for r in rows])
     rng = np.random.default_rng(seed)
+    matched = np.array([c.matched for c in COMPARISONS])
     alpha_one = ALPHA_A / len(COMPARISONS)
     lo_i = int(math.floor(alpha_one * (resamples - 1)))
     hi_i = int(math.ceil((1 - alpha_one) * (resamples - 1)))
@@ -1692,8 +1844,10 @@ def power(
             rule_better += rb
             if sb.all():
                 verdicts["SEARCH_DOMINATES"] += 1
-            elif rb.any():
+            elif (rb & matched).any():
                 verdicts["RULE_BEATS_SEARCH"] += 1
+            elif rb.any():
+                verdicts["RULE_AT_MORE_CALLS_BETTER"] += 1
             else:
                 verdicts["INCONCLUSIVE"] += 1
         out["h_a"][str(scale)] = {
@@ -1706,7 +1860,8 @@ def power(
             },
         }
     paired = {}
-    for key, name, src in (("h_b", "BM25 top 4 vs all 8", dev["h_b"]["retrieved"]),
+    for key, name, src in (("h_b", "BM25 top 4 vs all 8 (descriptive, D116)",
+                            dev["h_b_descriptive"]["retrieved"]),
                            ("h_c", "nonabstain-BM25 vs BM25 top 4",
                             (dev.get("h_c") or {}).get("retrieved"))):  # fmt: skip
         if not src:
@@ -1735,25 +1890,45 @@ def power(
     return out
 
 
-#: Integer counts that AM1's published held-out figures pin (RESULTS.md: retrieval-rank regret
-#: 0.343 over 251 non-constant retrieved tables; u(full pool) 0.524 over 347 questions; the gold
-#: arm's 0.278 over 288 and 0.579 over 347). Registration section 1.2.
+#: What AM1's published held-out figures pin (registration section 1.2). RESULTS.md: retrieval-rank
+#: regret 0.343 over 251 non-constant retrieved tables; u(full pool) 0.524 over 347 questions;
+#: the gold arm's 0.278 over 288 and 0.579 over 347; the random keep set's suboptimal share 0.976
+#: (retrieved) and the retrieved census (57 single, 12 and, 8 or, 7 monotone-mixed, 167
+#: non-monotone). The random keep set's exact retrieved regret, 10,975/17,570, was read from AM1's
+#: committed h2.json and headline.json by pre-freeze check 1 (the drafter did not open them);
+#: RESULTS.md's rounded 0.625 alone allows 10,973-10,990, and the bounds also use that range.
 AM1_PUBLISHED = {
     "retrieved": {"tables": 251, "top4_wrong": 86, "retrieval_rank_regret": 0.343,
                   "questions": 347, "all_8_right": 182, "u_full_pool": 0.524},
     "gold": {"tables": 288, "top4_wrong": 80, "retrieval_rank_regret": 0.278,
              "questions": 347, "all_8_right": 201, "u_full_pool": 0.579},
 }  # fmt: skip
+AM1_RETRIEVED_CENSUS = {
+    "random_regret_x70_check1": 10_975,
+    "random_regret": 0.625,
+    "random_suboptimal": 0.976,
+    "single": 57,
+    "and": 12,
+    "or": 8,
+    "free": 7 + 167,  # monotone-mixed and non-monotone
+}
 CONVERSION_RATES = (0.02, 0.05, 0.1, 0.2, 0.3)
+BOUND_CALLS = (9, 26, 57, 64)
+
+
+def _pinned(figure: float, total: int) -> list[int]:
+    return [k for k in range(total + 1) if round(k / total, 3) == figure]
 
 
 def am1_count_power() -> dict[str, Any]:
-    """What AM1's published counts imply for H-B and H-C (no held-out table is read). H-B: BM25
-    top 4 is right on at most tables - top4_wrong questions, so the difference is at most that
-    minus all_8_right, over the questions; and at that smallest net count the largest number of
-    discordant pairs at which the exact test still rejects. H-C: the rule can gain only on the
-    top4_wrong tables; with c = 0 and each of them converted with probability q, the power is
-    P(b >= the smallest b the test rejects at c = 0)."""
+    """What AM1's published counts imply for H-B, H-C and H-A (no held-out table is read).
+
+    H-B: BM25 top 4 is right on at most tables - top4_wrong questions, so the difference is at
+    most that minus all_8_right, over the questions; and at that smallest net count the largest
+    number of discordant pairs at which the exact test still rejects. H-C: the rule can gain only
+    on the top4_wrong tables; with c pairs against it (c = 0, 1, 2) and each of those tables
+    converted with probability q, the power is P(b >= the smallest b the test rejects at that c).
+    H-A: bounds on direct search's mean regret (``direct_search_bounds``)."""
 
     out: dict[str, Any] = {}
     for arm, n in AM1_PUBLISHED.items():
@@ -1761,8 +1936,7 @@ def am1_count_power() -> dict[str, Any]:
             (n["top4_wrong"], n["tables"], n["retrieval_rank_regret"]),
             (n["all_8_right"], n["questions"], n["u_full_pool"]),
         ):
-            pinned = [k for k in range(total + 1) if round(k / total, 3) == figure]
-            if pinned != [count]:
+            if _pinned(figure, total) != [count]:
                 raise KeepsetError(f"{figure} over {total} does not pin the count {count}")
         net = n["tables"] - n["top4_wrong"] - n["all_8_right"]
         entry: dict[str, Any] = {**n, "top4_right_at_most": n["tables"] - n["top4_wrong"],
@@ -1775,17 +1949,94 @@ def am1_count_power() -> dict[str, Any]:
                 "rejects_while_top4_right_all_8_wrong_at_most": last,
                 "rejects_while_discordant_at_most": 2 * last + d,
             }
-        b_min = min(b for b in range(1, 100) if mcnemar_exact(b, 0) <= ALPHA_PAIRED)
-        entry["h_c_power_c0"] = {
-            "smallest_b_rejecting_at_c0": b_min,
-            "by_conversion_rate": {
-                f"{q:.2f}": sum(
-                    _pmf(b, n["top4_wrong"], q) for b in range(b_min, n["top4_wrong"] + 1)
-                )
-                for q in CONVERSION_RATES
-            },
-        }
+        by_c = {}
+        for c in (0, 1, 2):
+            b_min = min(b for b in range(1, 100) if mcnemar_exact(b, c) <= ALPHA_PAIRED)
+            by_c[str(c)] = {
+                "smallest_b_rejecting": b_min,
+                "by_conversion_rate": {
+                    f"{q:.2f}": sum(
+                        _pmf(b, n["top4_wrong"], q) for b in range(b_min, n["top4_wrong"] + 1)
+                    )
+                    for q in CONVERSION_RATES
+                },
+            }
+        entry["h_c_power_by_c"] = by_c
         out[arm] = entry
+    out["retrieved"]["direct_search_bounds"] = direct_search_bounds()
+    return out
+
+
+def direct_search_bounds() -> dict[str, Any]:
+    """Bounds on direct search's mean regret over the 251 non-constant retrieved held-out tables at
+    9, 26, 57 and 64 calls, from AM1's published figures only. A 0/1 table whose best 4-subset is
+    right, with j of its 70 4-subsets wrong, has random-set regret j/70 and direct-search regret
+    C(j, m)/C(70, m) at m calls; a table with no right 4-subset has both 0 (counted as j = 0).
+    Constraints: sum of j = 70 x 251 x the random regret (10,973-10,990 from the rounded 0.625;
+    10,975 exactly per pre-freeze check 1); exactly 245 tables with j > 0 (suboptimal share 0.976
+    of 251); the census: 57 single tables have j = 35 (u is one memory's indicator), the 12 AND
+    tables j in {0, 55, 65, 69} (a minimal set of 2, 3, 4 or more memories), the 8 OR tables j in
+    {0, 1, 5, 15} (2, 3, 4 or more singletons), the other 174 tables j in 0..69. The bound is
+    exact under these constraints: the AND and OR counts are enumerated, and the free tables'
+    part is extreme (all mass at 69, the rest at 1) for the maximum and even for the minimum,
+    because C(j, m) is convex in j."""
+
+    cen = AM1_RETRIEVED_CENSUS
+    tables = AM1_PUBLISHED["retrieved"]["tables"]
+    nonzero = _pinned(cen["random_suboptimal"], tables)
+    sums = [
+        x for x in range(70 * tables + 1) if round(x / (70 * tables), 3) == cen["random_regret"]
+    ]
+    if nonzero != [245] or cen["random_regret_x70_check1"] not in sums:
+        raise KeepsetError("the published random-set figures do not pin the counts")
+    zeros_total = tables - nonzero[0]
+    out: dict[str, Any] = {"calls": {}, "random_regret_sum_range": [min(sums), max(sums)]}
+    and_opts, or_opts = (0, 55, 65, 69), (0, 1, 5, 15)
+
+    def compositions(n: int, parts: int):
+        if parts == 1:
+            yield (n,)
+            return
+        for first in range(n + 1):
+            for rest in compositions(n - first, parts - 1):
+                yield (first,) + rest
+
+    and_cfg = list(compositions(cen["and"], 4))
+    or_cfg = list(compositions(cen["or"], 4))
+    for m in BOUND_CALLS:
+        f = [math.comb(j, m) / math.comb(70, m) for j in range(70)]
+        # AND and OR configurations by (zero tables, mass): the least and the most sum of f.
+        fixed: dict[tuple[int, int], list[float]] = {}
+        for a in and_cfg:
+            a_mass = sum(k * v for k, v in zip(a, and_opts, strict=True))
+            a_f = sum(k * f[v] for k, v in zip(a, and_opts, strict=True))
+            for o in or_cfg:
+                key = (a[0] + o[0], a_mass + sum(k * v for k, v in zip(o, or_opts, strict=True)))
+                val = a_f + sum(k * f[v] for k, v in zip(o, or_opts, strict=True))
+                cur = fixed.setdefault(key, [val, val])
+                cur[0], cur[1] = min(cur[0], val), max(cur[1], val)
+        result: dict[str, Any] = {}
+        for label, total_sums in (("check_1_sum", [cen["random_regret_x70_check1"]]),
+                                  ("rounded_range", sums)):  # fmt: skip
+            lo, hi = math.inf, -math.inf
+            for total in total_sums:
+                base_mass = total - cen["single"] * 35
+                base_f = cen["single"] * f[35]
+                for (zeros_fixed, fixed_mass), (f_min, f_max) in fixed.items():
+                    zeros_free = zeros_total - zeros_fixed
+                    n_free = cen["free"] - zeros_free
+                    mass = base_mass - fixed_mass
+                    if zeros_free < 0 or n_free < 1 or not n_free <= mass <= 69 * n_free:
+                        continue
+                    x, r = divmod(mass - n_free, 68)  # x tables at 69, one at 1 + r, rest at 1
+                    top = x * f[69] + (f[1 + r] if x < n_free else 0.0) + max(
+                        0, n_free - x - 1) * f[1]  # fmt: skip
+                    q, rr = divmod(mass, n_free)
+                    bottom = rr * f[q + 1] + (n_free - rr) * f[q]
+                    hi = max(hi, (base_f + f_max + top) / tables)
+                    lo = min(lo, (base_f + f_min + bottom) / tables)
+            result[label] = [lo, hi]
+        out["calls"][str(m)] = result
     return out
 
 
@@ -1809,6 +2060,13 @@ def main(argv: Sequence[str] | None = None) -> int:
     an = sub.add_parser("analyze", help="hypotheses and descriptive outputs")
     an.add_argument("--split", choices=sorted(SPLITS), required=True)
     an.add_argument("--features", default=None)
+    an.add_argument(
+        "--h-c-void",
+        default=None,
+        metavar="REASON",
+        help="record H-C as VOID with this reason (the named V3 or V5 error) and run H-A, H-B "
+        "and the descriptive outputs from the tables alone",
+    )
     an.add_argument("--output-dir", required=True)
     an.add_argument("--seeds", type=int, default=N_SEEDS)
     an.add_argument("--seed-base", type=int, default=SEED_BASE)

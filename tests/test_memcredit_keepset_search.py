@@ -288,8 +288,24 @@ def test_classification_and_the_family_verdict():
     assert ks.ha_verdict(comps(["SB"] * 7))["verdict"] == "SEARCH_DOMINATES"
     v = ks.ha_verdict(comps(["SB"] * 6 + ["NS"]))
     assert v["verdict"] == "INCONCLUSIVE" and v["not_separated"] == ["A7"]
-    v = ks.ha_verdict(comps(["SB", "SB", "SB", "SB", "RB", "SB", "NS"]))
-    assert v["verdict"] == "RULE_BEATS_SEARCH" and v["rule_better"] == ["A5"]
+    # a rule beating search at equal calls (A1, A2, A4, A7)
+    for i, cid in ((0, "A1"), (1, "A2"), (3, "A4"), (6, "A7")):
+        classes = ["SB"] * 7
+        classes[i] = "RB"
+        v = ks.ha_verdict(comps(classes))
+        assert v["verdict"] == "RULE_BEATS_SEARCH" and v["rule_better_at_equal_calls"] == [cid]
+    # a rule beating search only where it read more calls (A3, A5, A6) is a separate label that
+    # blocks SEARCH_DOMINATES and licenses nothing at equal calls
+    for i, cid in ((2, "A3"), (4, "A5"), (5, "A6")):
+        classes = ["SB"] * 7
+        classes[i] = "RB"
+        v = ks.ha_verdict(comps(classes))
+        assert v["verdict"] == "RULE_AT_MORE_CALLS_BETTER"
+        assert v["rule_better_at_more_calls"] == [cid] and v["rule_better_at_equal_calls"] == []
+    v = ks.ha_verdict(comps(["RB", "SB", "NS", "SB", "RB", "SB", "NS"]))
+    assert v["verdict"] == "RULE_BEATS_SEARCH"
+    assert v["rule_better_at_equal_calls"] == ["A1"] and v["rule_better_at_more_calls"] == ["A5"]
+    assert [c.id for c in ks.COMPARISONS if c.matched] == ["A1", "A2", "A4", "A7"]
 
 
 # --------------------------------------------------------------------------- H-C
@@ -332,13 +348,66 @@ def test_reads_summary():
 # --------------------------------------------------------------------------- gates and pins
 
 
-def test_heldout_is_refused_before_the_freeze():
-    assert not ks.registration_frozen()
+def _scratch_freeze(tmp_path, frozen: bool):
+    """A scratch copy of the registration and a scratch ledger (with or without its row); the
+    real ledger is never read, so these tests hold before and after the real freeze."""
+
+    reg = tmp_path / "registration.md"
+    reg.write_bytes((ROOT / ks.REGISTRATION).read_bytes())
+    ledger = tmp_path / "ledger.jsonl"
+    row = {"experiment_id": ks.EXPERIMENT, "sha256": ks.sha256_file(reg)}
+    ledger.write_text(json.dumps(row) + "\n" if frozen else "")
+    return reg, ledger
+
+
+def test_heldout_is_refused_without_a_ledger_row(tmp_path, monkeypatch):
+    """With a scratch ledger that lacks the row, every held-out entry point refuses at the gate,
+    before any held-out file is opened. load_tables is given a scratch path, never the real held-out
+    tables, and Path.read_bytes is made to fail so a read would be caught."""
+
+    reg, ledger = _scratch_freeze(tmp_path, frozen=False)
+    monkeypatch.setattr(ks, "LEDGER", ledger)
+    monkeypatch.setattr(ks, "REGISTRATION", reg)
     with pytest.raises(ks.KeepsetError, match="after the freeze"):
         ks.gate("heldout")
     with pytest.raises(ks.KeepsetError, match="after the freeze"):
-        ks.load_tables("heldout")
-    assert ks.main(["analyze", "--split", "heldout", "--output-dir", "/nonexistent"]) == 1
+        ks.gate("heldout", ledger=ledger, registration=reg)
+
+    def no_read(self):
+        raise AssertionError(f"read before the gate: {self}")
+
+    dummy = tmp_path / "tables.json.gz"
+    dummy.write_bytes(b"")
+    monkeypatch.setattr(Path, "read_bytes", no_read)
+    with pytest.raises(ks.KeepsetError, match="after the freeze"):
+        ks.load_tables("heldout", dummy)
+    monkeypatch.undo()
+    monkeypatch.setattr(ks, "LEDGER", ledger)
+    monkeypatch.setattr(ks, "REGISTRATION", reg)
+    for argv in (
+        ["analyze", "--split", "heldout", "--h-c-void", "x", "--output-dir", str(tmp_path / "o")],
+        ["extract", "--split", "heldout", "--run-dir", str(tmp_path), "--evidence",
+         str(dummy), "--private-dir", str(tmp_path / "p")],
+    ):  # fmt: skip
+        assert ks.main(argv) == 1
+    assert not (tmp_path / "o").exists() and not (tmp_path / "p").exists()
+
+
+def test_the_gate_opens_with_a_ledger_row_and_matching_pins(tmp_path):
+    """With a scratch ledger row for a scratch copy of the registration, the gate passes (its
+    code pins match the working tree) and records it; no held-out file is touched."""
+
+    reg, ledger = _scratch_freeze(tmp_path, frozen=True)
+    assert ks.registration_frozen(ledger, reg)
+    record = ks.gate("heldout", ledger=ledger, registration=reg)
+    assert record["registration_frozen"] and record["pins"]["all_match"]
+    tampered = tmp_path / "tampered.md"
+    good = ks.code_pins(reg)["harness/memcredit.py"]
+    tampered.write_text(reg.read_text().replace(good, "0" * 64))
+    ledger.write_text(json.dumps({"experiment_id": ks.EXPERIMENT,
+                                  "sha256": ks.sha256_file(tampered)}) + "\n")  # fmt: skip
+    with pytest.raises(ks.KeepsetError, match="pins"):
+        ks.gate("heldout", ledger=ledger, registration=tampered)
 
 
 def test_registration_frozen_reads_a_scratch_ledger(tmp_path):
@@ -467,11 +536,13 @@ def test_hb_on_the_development_tables_reproduces_am1d(dev_tables):
     retrieved arm and 2 vs 3 on the gold arm, as AM1d's README states."""
 
     results, _ = ks.analyze(dev_tables, None, "development", n_seeds=1, resamples=500)
-    hb = results["h_b"]
+    hb = results["h_b_descriptive"]
+    assert hb["decides"] is False and "H-B" not in results["verdicts"]
+    assert hb["retrieved"]["description"] == "NO_DETECTED_DIFFERENCE"
+    assert "reading" not in hb["retrieved"]
     assert (hb["retrieved"]["rule_right_base_wrong"], hb["retrieved"]["rule_wrong_base_right"]) == (
         4, 0)  # fmt: skip
     assert hb["retrieved"]["p_exact_mcnemar"] == 0.125
-    assert hb["retrieved"]["reading"] == "NO_DETECTED_DIFFERENCE"
     assert (hb["gold"]["rule_right_base_wrong"], hb["gold"]["rule_wrong_base_right"]) == (2, 3)
     assert results["h_a"]["retrieved"]["tables"] == 38
     am1b = json.loads((ROOT / ks.AM1B_DIR / "results.json").read_text())
@@ -523,8 +594,12 @@ def test_analyze_end_to_end_is_deterministic():
         outs.append((ks.canonical(results), ks.canonical(records), ks.render_markdown(results)))
     assert outs[0] == outs[1]
     assert results["h_a"]["retrieved"]["tables"] == 5
-    assert set(results["verdicts"]) == {"H-A", "H-B", "H-C"}
+    assert set(results["verdicts"]) == {"H-A", "H-C"}
+    assert results["h_c"]["status"] == "READ" and results["h_b_descriptive"]["decides"] is False
+    assert "## H-B (descriptive, D116; no decision)" in outs[0][2]
+    assert "Description (not a decision)" in outs[0][2]
     assert results["verdicts"]["H-A"]["verdict"] in ("SEARCH_DOMINATES", "RULE_BEATS_SEARCH",
+                                                     "RULE_AT_MORE_CALLS_BETTER",
                                                      "INCONCLUSIVE")  # fmt: skip
     for cid in ks.COMPARISON_IDS:
         c = results["h_a"]["retrieved"]["comparisons"][cid]
@@ -559,28 +634,115 @@ def test_features_from_another_pass_split_or_code_are_refused():
     ):
         bad = copy.deepcopy(payload)
         mutate(bad)
-        with pytest.raises(ks.KeepsetError):
+        with pytest.raises(ks.KeepsetError, match=r"VOID \(H-C, V5\)"):
             ks.check_features(bad, "development")
 
 
-def test_what_am1s_published_counts_imply(monkeypatch):
-    """AM1's rounded figures pin integer counts (0.343 of 251 is 86; 0.524 of 347 is 182), so BM25
-    top 4 is at least 17 questions behind all 8 on the retrieved arm (registration section 1.2)."""
+# --------------------------------------------------------------------------- the H-C void path
 
-    out = ks.am1_count_power()
-    ret = out["retrieved"]
-    assert ret["top4_right_at_most"] == 165 and ret["difference_at_most"] == -17 / 347
-    hb = ret["h_b_at_smallest_net"]
-    assert hb["net_for_all_8"] == 17 and hb["rejects_while_discordant_at_most"] == 67
-    assert ks.mcnemar_exact(25, 42) <= 0.05 < ks.mcnemar_exact(26, 43)
-    assert "h_b_at_smallest_net" not in out["gold"]  # gold: at most +0.020, no direction
-    assert out["gold"]["difference_at_most"] == 7 / 347
-    assert ret["h_c_power_c0"]["smallest_b_rejecting_at_c0"] == 6
-    powers = list(ret["h_c_power_c0"]["by_conversion_rate"].values())
-    assert powers == sorted(powers)
-    assert ret["h_c_power_c0"]["by_conversion_rate"]["0.10"] > 0.8
-    bad = copy.deepcopy(ks.AM1_PUBLISHED)
-    bad["retrieved"]["top4_wrong"] = 87
-    monkeypatch.setattr(ks, "AM1_PUBLISHED", bad)
-    with pytest.raises(ks.KeepsetError, match="does not pin"):
-        ks.am1_count_power()
+
+def test_h_c_void_path_runs_h_a_and_h_b_from_the_tables(tmp_path):
+    """Registration section 8: when an H-C input fails (V3 or V5), analyze runs with --h-c-void
+    and the named error; H-A, H-B and the descriptive outputs come from the tables alone."""
+
+    out = tmp_path / "out"
+    reason = "VOID (H-C, V3): the features file is unreadable or incomplete: EOFError: test"
+    argv = ["analyze", "--split", "development", "--h-c-void", reason, "--output-dir", str(out),
+            "--seeds", "1", "--resamples", "200"]  # fmt: skip
+    assert ks.main(argv) == 0
+    results = json.loads((out / "results.json").read_text())
+    assert results["h_c"] == {"status": "VOID", "reason": reason}
+    assert results["verdicts"]["H-C"] == {"arm": "retrieved", "reading": "VOID", "reason": reason}
+    assert results["verdicts"]["H-A"]["verdict"] in ("SEARCH_DOMINATES", "INCONCLUSIVE",
+                                                     "RULE_BEATS_SEARCH",
+                                                     "RULE_AT_MORE_CALLS_BETTER")  # fmt: skip
+    assert results["h_a"]["retrieved"]["tables"] == 38
+    assert results["h_b_descriptive"]["retrieved"]["rule_right_base_wrong"] == 4
+    assert "abstention" not in results["descriptive"]["retrieved"]["all"]
+    assert f"**VOID**: {reason}" in (out / "tables.md").read_text()
+    both = ["analyze", "--split", "development", "--h-c-void", "x", "--features", "f",
+            "--output-dir", str(tmp_path / "o2")]  # fmt: skip
+    assert ks.main(both) == 1
+
+
+def test_unreadable_features_are_a_named_h_c_void(tmp_path, capsys):
+    whole = gzip.compress(json.dumps({"pools": [], "experiment": ks.EXPERIMENT}).encode(), mtime=0)
+    cases = {
+        "truncated.json.gz": whole[: len(whole) // 2],
+        "not-gzip.json.gz": b"plain text",
+        "no-pools.json.gz": gzip.compress(b"[1, 2]", mtime=0),
+    }
+    for name, blob in cases.items():
+        path = tmp_path / name
+        path.write_bytes(blob)
+        with pytest.raises(ks.KeepsetError, match=r"VOID \(H-C, V3\): the features file"):
+            ks.load_features(path, "development")
+        argv = ["analyze", "--split", "development", "--features", str(path), "--output-dir",
+                str(tmp_path / "o"), "--seeds", "1", "--resamples", "100"]  # fmt: skip
+        assert ks.main(argv) == 1
+        assert "VOID (H-C, V3)" in capsys.readouterr().err
+    with pytest.raises(ks.KeepsetError, match="unreadable or incomplete: FileNotFoundError"):
+        ks.load_features(tmp_path / "absent.json.gz", "development")
+    # readable, but from another pass: the V5 void
+    other = tmp_path / "other.json.gz"
+    ks.write_gz_json(other, {"experiment": ks.EXPERIMENT, "split": "development", "pools": [],
+                             "pass": {"sha256": {}, "study_artifact_sha256": "0"}})  # fmt: skip
+    with pytest.raises(ks.KeepsetError, match=r"VOID \(H-C, V5\)"):
+        ks.load_features(other, "development")
+    assert not list(tmp_path.glob("*.partial"))
+
+
+def test_a_missing_or_changed_pass_file_is_a_named_h_c_void(tmp_path, capsys):
+    with pytest.raises(ks.KeepsetError, match=r"VOID \(H-C, V3\): judge-items.json is missing"):
+        ks.check_digests(tmp_path, {"judge-items.json": "0" * 64})
+    (tmp_path / "judge-items.json").write_text("[]")
+    with pytest.raises(ks.KeepsetError, match=r"VOID \(H-C, V3\): judge-items.json: SHA-256"):
+        ks.check_digests(tmp_path, {"judge-items.json": "0" * 64})
+    # end to end on the development split: the tables pass V1 and V2, then the pass is missing
+    argv = ["extract", "--split", "development", "--run-dir", str(tmp_path / "run"),
+            "--evidence", str(tmp_path / "artifact.json"), "--private-dir",
+            str(tmp_path / "private")]  # fmt: skip
+    assert ks.main(argv) == 1
+    err = capsys.readouterr().err
+    assert "VOID (H-C, V3)" in err and "missing or unreadable" in err and "Traceback" not in err
+    assert not (tmp_path / "private").exists()
+
+
+def test_features_that_do_not_match_the_tables_are_a_named_h_c_void():
+    tables, features = _synthetic()
+    assert len(ks.match_features(features, tables)) == len(tables)
+    for mutate in (
+        lambda f: f["pools"].pop(),
+        lambda f: f["pools"][1]["u"].__setitem__(255, 1 - f["pools"][1]["u"][255]),
+        lambda f: f["pools"][2]["bm25_rank"].reverse(),
+        lambda f: f["pools"][3].update(question_type="other"),
+        lambda f: f["pools"][4]["abstain"].pop(),
+        lambda f: f["pools"][5].pop("u"),
+    ):
+        bad = copy.deepcopy(features)
+        mutate(bad)
+        with pytest.raises(ks.KeepsetError, match=r"VOID \(H-C, V3\)"):
+            ks.match_features(bad, tables)
+        with pytest.raises(ks.KeepsetError, match=r"VOID \(H-C, V3\)"):
+            ks.analyze(tables, bad, "development", n_seeds=1, resamples=50, check_counts=False)
+
+
+def test_the_feature_code_is_the_whole_import_closure():
+    """V5 records the SHA-256 of this script and every repository module extract imports (checked
+    in a fresh interpreter, so other tests' imports do not count)."""
+
+    import subprocess
+
+    code = (
+        "import sys, pathlib; root = pathlib.Path(sys.argv[1]).resolve(); "
+        "sys.path[:0] = [str(root), str(root / 'scripts')]; "
+        "import memcredit_keepset_search, memcredit_analyze, memcredit_study; "
+        "print('\\n'.join(sorted(str(pathlib.Path(m.__file__).resolve().relative_to(root)) "
+        "for m in list(sys.modules.values()) if getattr(m, '__file__', None) "
+        "and pathlib.Path(m.__file__).resolve().is_relative_to(root))))"
+    )
+    out = subprocess.run([sys.executable, "-I", "-c", code, str(ROOT)], capture_output=True,
+                         text=True, check=True, cwd=ROOT)  # fmt: skip
+    assert sorted(ks.FEATURE_CODE) == out.stdout.split()
+    pins = ks.code_pins()
+    assert all(path in pins for path in ks.FEATURE_CODE)
