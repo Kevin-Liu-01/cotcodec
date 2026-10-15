@@ -1,15 +1,19 @@
 #!/usr/bin/env python3
-"""AM1 study (CPU): analysis of the development-set pilot and the power simulation.
+"""AM1 study (CPU): analysis of the development-set pilot and of the registration
+am1-memory-credit-v1, the A/A report and the power simulation.
 
 Subcommands:
 
-* ``analyze --run-dir D --evidence A --output-dir O [--hand-labels H] [--private-dir P]``: reads
-  the job's passes (reader, judges, attention), joins every request to its judged label and
-  writes text-free JSON: the A/A identities, the judge's validation and agreement, every table's
-  set-function summary and structure class, every estimator's credits and keep-set regret
-  against the exact optimum, H1 and H2 aggregates with question-clustered bootstrap intervals,
-  AM2's placebo analysis, AM6's internal-signal analysis and the kill criteria. ``--private-dir``
-  (host only) receives the joined rows with reply texts.
+* ``analyze --run-dir D --evidence A --output-dir O [--hand-labels H --hand-labels-sha256 S]
+  [--private-dir P]``: reads the job's passes (reader, judges, attention), joins every request to
+  its judged label and writes text-free JSON: the A/A identities, the judge's validation and
+  agreement, every table's set-function summary and structure class, every estimator's credits
+  and keep-set regret against the exact optimum, H1 and H2 aggregates with question-clustered
+  bootstrap intervals, AM2's placebo analysis, AM6's internal-signal analysis, H2 under the second
+  judge, the kill criteria, and the registration's gates and verdicts (``headline.json``,
+  ``verdicts``: the void rule, G1, G2, K2-K4, H2 per primary rule, the program reading, AM2 and
+  AM6). Under the registration's config the hand labels must come with the SHA-256 committed
+  before the join. ``--private-dir`` (host only) receives the joined rows with reply texts.
 * ``hand-sample --run-dir D --evidence A --output F``: the seeded, blind hand-check sample of
   judged reader items (host only: it holds LongMemEval text and replies).
 * ``power --analysis-dir O --output F [--heldout N]``: simulates the registration's decision
@@ -86,15 +90,35 @@ SIGNALS = (
     "length",
 )
 
+#: The registration's decision rules (am1-memory-credit-v1, sections 7, 8 and 13).
+#: H2's primary family (retrieved arm, the headline budget) and its thresholds on the 99% interval.
+PRIMARY_FAMILY = ("loo", "perm_shapley_16", "snipw_64", "retrieval_rank", "attention_raw")
+HEADLINE_RULE = "loo"
+MATERIAL_REGRET = 0.05
+ADEQUATE_REGRET = 0.02
+#: G2: the primary judge's validation accuracies and the hand check's Cohen's kappa.
+G2_VALIDATION_MIN = 0.95
+G2_KAPPA_MIN = 0.80
+PREFERENCE_TYPE = "single-session-preference"
+#: K2 (constant questions), K4 (coverage) and the void rule (incomplete tables per arm).
+K2_CONSTANT_SHARE = 0.6
+K4_MIN_TABLES = 150
+VOID_INCOMPLETE_SHARE = 0.02
+#: AM6's readings (the dossier's): margin of the best cheap baseline, floor for every signal.
+AM6_MARGIN = 0.03
+AM6_FLOOR = 0.65
+
 
 # --------------------------------------------------------------------------- loading
 
 
 def load_artifact(path: Path, config: dict[str, Any] | None = None) -> dict[str, Any]:
+    config = config or ms.load_config()
     artifact = json.loads(path.read_bytes())
-    experiment, split = ms.artifact_rule(config or ms.load_config())
+    experiment, split = ms.artifact_rule(config)
     if artifact.get("experiment_id") != experiment or artifact.get("split") != split:
         raise ms.StudyError("the study artifact belongs to another experiment or split")
+    ms.check_artifact_questions(artifact, config)
     return artifact
 
 
@@ -430,6 +454,39 @@ def ci_mean(
     return ms.cluster_bootstrap(clusters, int(spec["resamples"]), int(spec["seed"]), alpha)
 
 
+def cluster_difference(
+    a: dict[str, list[float]],
+    b: dict[str, list[float]],
+    config: dict[str, Any],
+    alpha: float = 0.05,
+) -> dict[str, Any]:
+    """The mean of a's units minus the mean of b's units, with a percentile interval from
+    resampling questions with replacement (a question's units of both kinds move together;
+    numpy ``default_rng`` with the bootstrap seed)."""
+
+    import numpy as np
+
+    keys = sorted(k for k in set(a) | set(b) if a.get(k) or b.get(k))
+    sa = np.array([float(sum(a.get(k, []))) for k in keys])
+    na = np.array([len(a.get(k, [])) for k in keys], dtype=float)
+    sb = np.array([float(sum(b.get(k, []))) for k in keys])
+    nb = np.array([len(b.get(k, [])) for k in keys], dtype=float)
+    if not keys or na.sum() == 0 or nb.sum() == 0:
+        return {"mean": None, "ci": [None, None], "clusters": len(keys)}
+    spec = config["analysis"]["bootstrap"]
+    resamples = int(spec["resamples"])
+    rng = np.random.default_rng(int(spec["seed"]))
+    draws = rng.integers(0, len(keys), size=(resamples, len(keys)))
+    da, db = na[draws].sum(axis=1), nb[draws].sum(axis=1)
+    ok = (da > 0) & (db > 0)
+    stats = np.sort(sa[draws].sum(axis=1)[ok] / da[ok] - sb[draws].sum(axis=1)[ok] / db[ok])
+    lo = float(stats[int(math.floor(alpha / 2 * (len(stats) - 1)))])
+    hi = float(stats[int(math.ceil((1 - alpha / 2) * (len(stats) - 1)))])
+    return {"mean": float(sa.sum() / na.sum() - sb.sum() / nb.sum()), "ci": [lo, hi],
+            "clusters": len(keys), "units_a": int(na.sum()), "units_b": int(nb.sum()),
+            "resamples_used": int(ok.sum())}  # fmt: skip
+
+
 def h1_summary(tables: list[dict[str, Any]], config: dict[str, Any]) -> dict[str, Any]:
     out: dict[str, Any] = {}
     for arm in ("retrieved", "gold", "both"):
@@ -506,6 +563,7 @@ def h2_summary(tables: list[dict[str, Any]], config: dict[str, Any]) -> dict[str
                 if not clusters:
                     continue
                 rows[name] = {
+                    "tables": sum(len(v) for v in clusters.values()),
                     "mean_regret": ci_mean(clusters, config),
                     "mean_regret_99": ci_mean(clusters, config, 0.01),
                     "worst_tie_regret": ci_mean(worst, config) if worst else None,
@@ -549,6 +607,10 @@ def placebo_summary(tables: list[dict[str, Any]], config: dict[str, Any]) -> dic
                 "deletion_flip_rate": dele,
                 "swap_flip_rate": sw,
                 "swap_flip_rate_where_deletion_null": ci_mean(swap_when_null, config),
+                # AM2's registered reading: the deletion flip rate minus the swap-only flip rate
+                # (the rate at which a matched irrelevant swap flips the answer where deleting
+                # the memory does not), question-clustered, 95%.
+                "deletion_minus_swap_only": cluster_difference(deletion, swap_when_null, config),
                 "deletion_label_survival": ci_mean(survive, config),
                 "swap_to_deletion_ratio": ratio,
             }
@@ -595,17 +657,106 @@ def internal_summary(
     return out
 
 
+def replay_gate(identity_rows: dict[str, Any], expected: dict[str, int]) -> dict[str, Any]:
+    """G1 (the dossier's kill criterion 1): the GPU-1 replicates are complete and identical.
+
+    For the reader (GPU-0 canonical against GPU-1 shuffled) and the primary judge (the same), the
+    comparison counts the requests both passes finished (``n_common``). PASS needs ``n_common``
+    equal to every expected request (the whole request table; every judge item) and no request
+    whose tokens differ. FAIL: some finished request's tokens differ (kill criterion 1 fires; H2
+    is not read). INCOMPLETE: no difference, but a pass is missing or left a request unfinished;
+    an infrastructure failure (the run is rerun), never a pass."""
+
+    parts: dict[str, Any] = {}
+    for key, name in (("reader_cross_gpu", "reader"), ("judge_cross_gpu", "judge")):
+        row = identity_rows.get(key) or {}
+        missing = bool(row.get("missing", False)) or "n_common" not in row
+        n = int(row.get("n_common") or 0)
+        differing = int(row.get("differing_total") or 0)
+        parts[name] = {
+            "expected": int(expected[name]),
+            "n_common": n,
+            "differing": differing,
+            "missing": missing,
+            "complete": not missing and n == int(expected[name]),
+        }
+    if any(p["differing"] > 0 for p in parts.values()):
+        status = "FAIL"
+    elif all(p["complete"] for p in parts.values()):
+        status = "PASS"
+    else:
+        status = "INCOMPLETE"
+    return {"status": status, **parts}
+
+
+def judge_gate(judge: dict[str, Any]) -> dict[str, Any]:
+    """G2: the primary judge says yes to >= 95% of reference answers of non-preference questions
+    and no to >= 95% of "I don't know.", and the blind hand check (the labels file whose SHA-256
+    was committed before the join) gives Cohen's kappa >= 0.80. PENDING while the hand check is
+    not joined and the validation passes."""
+
+    validation = judge.get("validation", {})
+    reference = validation.get("validation:reference", {}).get("primary", {})
+    reference = reference.get("excluding_preference", {})
+    idk = validation.get("validation:idk", {}).get("primary", {})
+    hand = (judge.get("hand_check") or {}).get("primary")
+    reference_ok = (reference.get("accuracy") or 0.0) >= G2_VALIDATION_MIN
+    idk_ok = (idk.get("accuracy") or 0.0) >= G2_VALIDATION_MIN
+    kappa = None if hand is None else hand.get("kappa")
+    kappa_ok = None if hand is None else (kappa is not None and kappa >= G2_KAPPA_MIN)
+    if not (reference_ok and idk_ok) or kappa_ok is False:
+        status = "FAIL"
+    elif kappa_ok is None:
+        status = "PENDING"
+    else:
+        status = "PASS"
+    return {
+        "status": status,
+        "reference_non_preference_accuracy": reference.get("accuracy"),
+        "reference_non_preference_n": reference.get("n"),
+        "idk_accuracy": idk.get("accuracy"),
+        "idk_n": idk.get("n"),
+        "hand_check_kappa": kappa,
+        "hand_check_kappa_ci95": None if hand is None else hand.get("kappa_ci95"),
+        "hand_check_n": (judge.get("hand_check") or {}).get("n"),
+        "hand_labels_sha256": (judge.get("hand_check") or {}).get("labels_sha256"),
+    }
+
+
+def h2_verdict(row: dict[str, Any] | None) -> dict[str, Any]:
+    """Section 7's rule on one estimator's row: MISSPECIFIED if the 99% lower bound of the mean
+    regret exceeds 0.05, ADEQUATE if the 99% upper bound is below 0.02, else INCONCLUSIVE."""
+
+    if not row or row["mean_regret_99"]["ci"][0] is None:
+        return {"verdict": None}
+    lo, hi = row["mean_regret_99"]["ci"]
+    if lo > MATERIAL_REGRET:
+        verdict = "MISSPECIFIED"
+    elif hi < ADEQUATE_REGRET:
+        verdict = "ADEQUATE"
+    else:
+        verdict = "INCONCLUSIVE"
+    paired = row.get("minus_exact_shapley") or {}
+    return {
+        "verdict": verdict,
+        "tables": row.get("tables"),
+        "mean_regret": row["mean_regret"]["mean"],
+        "ci95": row["mean_regret"]["ci"],
+        "ci99": [lo, hi],
+        "minus_exact_shapley": paired.get("mean"),
+        "minus_exact_shapley_ci95": paired.get("ci"),
+    }
+
+
 def kill_criteria(
     tables: list[dict[str, Any]],
-    identity_rows: dict[str, Any],
+    g1: dict[str, Any],
     h2: dict[str, Any],
     placebo: dict[str, Any],
     internal: dict[str, Any],
     config: dict[str, Any],
 ) -> dict[str, Any]:
     b = str(config["analysis"]["headline_budget"])
-    reader = identity_rows["reader_cross_gpu"]
-    k1 = reader.get("differing_total", 1) > 0 or reader.get("missing", False)
     by_question: dict[str, list[bool]] = defaultdict(list)
     for t in tables:
         if t["complete"]:
@@ -642,13 +793,19 @@ def kill_criteria(
         (v for n, v in aucs.items() if not n.startswith("attention") and v is not None),
         default=None,
     )
+    retrieved_nonconstant = sum(1 for t in nonconst if t["arm"] == "retrieved")
     return {
-        "k1_aa_differs": k1,
+        "k1_replay": {"g1": g1["status"], "fires": g1["status"] == "FAIL"},
         "k2_constant_questions": {
             "constant": constant_q,
             "questions": len(by_question),
             "share": constant_q / len(by_question) if by_question else None,
-            "fires": bool(by_question) and constant_q / len(by_question) > 0.6,
+            "fires": bool(by_question) and constant_q / len(by_question) > K2_CONSTANT_SHARE,
+        },
+        "k4_coverage": {
+            "nonconstant_retrieved_tables": retrieved_nonconstant,
+            "minimum": K4_MIN_TABLES,
+            "underpowered": retrieved_nonconstant < K4_MIN_TABLES,
         },
         "k3_interactions_do_not_matter": {
             "share_nonconstant_order1_ge_0.9": frac_order1,
@@ -662,15 +819,166 @@ def kill_criteria(
             "best_cheap_auroc": cheap_best,
             "k1_cheap_within_0.03": None
             if internal_best is None or cheap_best is None
-            else cheap_best >= internal_best - 0.03,
+            else cheap_best >= internal_best - AM6_MARGIN,
             "k2_all_below_0.65": None
             if not [v for v in aucs.values() if v is not None]
-            else all(v < 0.65 for v in aucs.values() if v is not None),
+            else all(v < AM6_FLOOR for v in aucs.values() if v is not None),
         },
     }
 
 
+def verdicts(
+    tables: list[dict[str, Any]],
+    g1: dict[str, Any],
+    judge: dict[str, Any],
+    h2: dict[str, Any],
+    placebo: dict[str, Any],
+    kill: dict[str, Any],
+    config: dict[str, Any],
+    h2_second_judge: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """The registration's gates and decision rules, in its order: the void rule (section 13), G1,
+    K2, K3, K4 and G2 (section 8), then H2's verdicts (section 7), the program reading, and the
+    secondary readings (AM2, AM6, the second judge's H2). Under a pilot config the same rules are
+    applied for the record; nothing is confirmatory unless the config is the registration's."""
+
+    b = str(config["analysis"]["headline_budget"])
+    void: dict[str, Any] = {}
+    for arm in ("retrieved", "gold"):
+        chosen = [t for t in tables if t["arm"] == arm]
+        incomplete = sum(not t["complete"] for t in chosen)
+        void[arm] = {"tables": len(chosen), "incomplete": incomplete,
+                     "share": incomplete / len(chosen) if chosen else None}  # fmt: skip
+    is_void = any(v["share"] is not None and v["share"] > VOID_INCOMPLETE_SHARE
+                  for v in void.values())  # fmt: skip
+    g2 = judge_gate(judge)
+    blockers = []
+    if is_void:
+        blockers.append("VOID: more than 2% of an arm's tables are incomplete (rerun)")
+    if g1["status"] == "INCOMPLETE":
+        blockers.append("G1 INCOMPLETE: a replicate did not finish every request (rerun)")
+    if g1["status"] == "FAIL":
+        blockers.append("G1 FAIL: replay differs; kill criterion 1 fires (descriptive only)")
+    if kill["k2_constant_questions"]["fires"]:
+        blockers.append("K2: more than 60% of questions are constant in both arms")
+    if kill["k3_interactions_do_not_matter"]["fires"]:
+        blockers.append("K3: interactions do not matter (a short negative note)")
+    qualifiers = []
+    if g2["status"] == "FAIL":
+        qualifiers.append("G2 FAIL: the verdicts are judge-dependent; no program decision")
+    if g2["status"] == "PENDING":
+        qualifiers.append("G2 PENDING: the hand check is not joined; no program decision yet")
+    if kill["k4_coverage"]["underpowered"]:
+        qualifiers.append("K4: fewer than 150 non-constant retrieved tables (underpowered)")
+    family = {
+        arm: {
+            budget: {name: h2_verdict(h2.get(arm, {}).get(budget, {}).get(name))
+                     for name in PRIMARY_FAMILY}
+            for budget in (str(x) for x in config["analysis"]["keep_budgets"])
+        }
+        for arm in ("retrieved", "gold")
+    }  # fmt: skip
+    primary = family["retrieved"][b]
+    read = not blockers
+    decision = read and g2["status"] == "PASS"
+    headline = primary[HEADLINE_RULE]
+    reading = None
+    if decision and headline["verdict"] == "MISSPECIFIED":
+        reading = ("per-memory deletion credit is misspecified for keep/evict decisions on this "
+                   "benchmark (this reader, this judge, BM25 user-turn pools)")  # fmt: skip
+    elif decision and headline["verdict"] == "ADEQUATE":
+        reading = ("per-memory deletion credit is adequate for keep/evict decisions on this "
+                   "benchmark (this reader, this judge, BM25 user-turn pools)")  # fmt: skip
+    paired = headline.get("minus_exact_shapley_ci95") or [None, None]
+    if paired[0] is None:
+        against_shapley = None
+    elif paired[0] > 0:
+        against_shapley = "LOO_LOSES_MORE_THAN_EXACT_SHAPLEY"
+    elif paired[1] < 0:
+        against_shapley = "LOO_LOSES_LESS_THAN_EXACT_SHAPLEY"
+    else:
+        against_shapley = "NOT_SEPARATED_FROM_EXACT_SHAPLEY"
+    nongold = placebo.get("both", {}).get("nongold", {})
+    diff = nongold.get("deletion_minus_swap_only") or {}
+    lo = (diff.get("ci") or [None])[0]
+    am2 = {
+        "nongold": None if lo is None else (
+            "ABOVE_SWAP_FLOOR" if lo > 0 else "NOT_ABOVE_SWAP_FLOOR"),
+        "nongold_deletion_minus_swap_only": diff.get("mean"),
+        "nongold_deletion_minus_swap_only_ci95": diff.get("ci"),
+        "gold_label_survival": (placebo.get("both", {}).get("gold", {})
+                                .get("deletion_label_survival")),
+        "dossier_k2_flip_rates_below_1pct": kill["am2_k2_flip_rates_below_1pct"],
+    }  # fmt: skip
+    am6_k = kill["am6"]
+    am6 = {
+        "internal_signals_add_nothing": am6_k["k1_cheap_within_0.03"],
+        "none_predicts_necessity": am6_k["k2_all_below_0.65"],
+        "best_internal_auroc": am6_k["best_internal_auroc"],
+        "best_cheap_auroc": am6_k["best_cheap_auroc"],
+    }
+    second = None
+    if h2_second_judge is not None:
+        second = {name: h2_verdict(h2_second_judge.get("retrieved", {}).get(b, {}).get(name))
+                  for name in PRIMARY_FAMILY}  # fmt: skip
+    return {
+        "claim_level": config["claim_level"],
+        "void": {"fires": is_void, "by_arm": void},
+        "g1_replay": g1,
+        "g2_judge": g2,
+        "k2_fires": kill["k2_constant_questions"]["fires"],
+        "k3_fires": kill["k3_interactions_do_not_matter"]["fires"],
+        "k4_underpowered": kill["k4_coverage"]["underpowered"],
+        "h2_read": read,
+        "h2_blockers": blockers,
+        "h2_qualifiers": qualifiers,
+        "program_decision": decision,
+        "h2_primary": primary,
+        "headline": {
+            "rule": HEADLINE_RULE,
+            "budget": int(b),
+            "arm": "retrieved",
+            "verdict": headline["verdict"] if read else None,
+            "verdict_as_computed": headline["verdict"],
+            "program_reading": reading,
+            "loo_minus_exact_shapley": against_shapley,
+        },
+        "h2_secondary": {
+            arm: {bb: v for bb, v in by_b.items() if (arm, bb) != ("retrieved", b)}
+            for arm, by_b in family.items()
+        },
+        "h2_second_judge": second,
+        "am2": am2,
+        "am6": am6,
+    }
+
+
 # --------------------------------------------------------------------------- judge
+
+
+def kappa_interval(
+    pred: Sequence[int], labels: Sequence[int], resamples: int, seed: int
+) -> list[float | None]:
+    """95% percentile interval of Cohen's kappa from resampling the hand-check items."""
+
+    import numpy as np
+
+    p = np.asarray(pred, dtype=float)
+    y = np.asarray(labels, dtype=float)
+    if len(p) < 2:
+        return [None, None]
+    rng = np.random.default_rng(seed)
+    idx = rng.integers(0, len(p), size=(resamples, len(p)))
+    a, b = p[idx], y[idx]
+    observed = (a == b).mean(axis=1)
+    pa, pb = a.mean(axis=1), b.mean(axis=1)
+    expected = pa * pb + (1 - pa) * (1 - pb)
+    ok = expected < 1.0
+    if not ok.any():
+        return [None, None]
+    stats = np.sort((observed[ok] - expected[ok]) / (1 - expected[ok]))
+    return [float(stats[int(math.floor(0.025 * (len(stats) - 1)))]),
+            float(stats[int(math.ceil(0.975 * (len(stats) - 1)))])]  # fmt: skip
 
 
 def judge_summary(
@@ -680,7 +988,11 @@ def judge_summary(
     secondary: dict[int, Any],
     hand: list[dict[str, Any]] | None,
     artifact: dict[str, Any],
+    config: dict[str, Any] | None = None,
+    hand_sha256: str | None = None,
 ) -> dict[str, Any]:
+    spec = (config or ms.load_config())["analysis"]["bootstrap"]
+    resamples, seed = int(spec["resamples"]), int(spec["seed"])
     out: dict[str, Any] = {"items": len(items)}
     validation: dict[str, Any] = {}
     for source in ("validation:reference", "validation:idk", "validation:other-answer"):
@@ -695,12 +1007,24 @@ def judge_summary(
                     by_type[i["question_type"]].append(
                         int(labels[i["index"]]["label"] == i["expected"])
                     )
+            other = [
+                labels[i["index"]]["label"] == i["expected"]
+                for i in chosen
+                if i["index"] in labels and i["question_type"] != PREFERENCE_TYPE
+            ]
             validation.setdefault(source, {})[name] = {
                 "n": len(hits),
                 "correct": sum(hits),
                 "accuracy": sum(hits) / len(hits) if hits else None,
                 "ci95": list(mc.clopper_pearson(sum(hits), len(hits))) if hits else None,
                 "by_type": {t: f"{sum(v)}/{len(v)}" for t, v in sorted(by_type.items())},
+                # G2 reads the reference-answer control on non-preference questions only (a
+                # preference question's reference answer is a rubric, not a response).
+                "excluding_preference": {
+                    "n": len(other),
+                    "correct": sum(other),
+                    "accuracy": sum(other) / len(other) if other else None,
+                },
             }
     out["validation"] = validation
     reader_items = [i for i in items if i["source"] == "reader"]
@@ -745,7 +1069,8 @@ def judge_summary(
     if hand:
         joined = [h for h in hand if h["item_index"] in primary]
         labels = [int(h["label"]) for h in joined]
-        result: dict[str, Any] = {"n": len(joined)}
+        result: dict[str, Any] = {"n": len(joined), "labels_sha256": hand_sha256,
+                                  "rows_in_file": len(hand)}  # fmt: skip
         for name, source in (("primary", primary), ("secondary", secondary)):
             pred = [source[h["item_index"]]["label"] for h in joined if h["item_index"] in source]
             if len(pred) != len(labels):
@@ -756,6 +1081,7 @@ def judge_summary(
                 "accuracy": agree / len(labels),
                 "ci95": list(mc.clopper_pearson(agree, len(labels))),
                 "kappa": ms.cohen_kappa(pred, labels),
+                "kappa_ci95": kappa_interval(pred, labels, resamples, seed),
                 "false_yes": sum(p == 1 and y == 0 for p, y in zip(pred, labels, strict=True)),
                 "false_no": sum(p == 0 and y == 1 for p, y in zip(pred, labels, strict=True)),
             }
@@ -786,6 +1112,7 @@ def analyze(
     out_dir: Path,
     hand: list[dict[str, Any]] | None = None,
     private_dir: Path | None = None,
+    hand_sha256: str | None = None,
 ) -> dict[str, Any]:
     out_dir.mkdir(parents=True, exist_ok=True)
     identity_rows = {
@@ -844,8 +1171,12 @@ def analyze(
     h2 = h2_summary(tables, config)
     placebo = placebo_summary(tables, config)
     internal = internal_summary(tables, config, attention_meta)
-    judge = judge_summary(rows, items, primary, secondary, hand, artifact)
-    kill = kill_criteria(tables, identity_rows, h2, placebo, internal, config)
+    judge = judge_summary(rows, items, primary, secondary, hand, artifact, config, hand_sha256)
+    expected = {"reader": len(rows), "judge": len(items)}
+    g1 = replay_gate(identity_rows, expected)
+    kill = kill_criteria(tables, g1, h2, placebo, internal, config)
+    h2_second = h2_second_judge(rows, artifact, config, raw_attention)
+    decided = verdicts(tables, g1, judge, h2, placebo, kill, config, h2_second)
     census: dict[str, Any] = {}
     for arm in ("retrieved", "gold"):
         chosen = [t for t in tables if t["arm"] == arm and t["complete"]]
@@ -868,9 +1199,13 @@ def analyze(
         }
     headline = {
         "experiment_id": config["experiment_id"],
-        "claim_level": "exploratory",
+        "claim_level": config["claim_level"],
         "split": artifact["split"],
         "questions": len(artifact["questions"]),
+        "question_ids_sha256": mc.sha256_text(
+            "\n".join(q["question_id"] for q in artifact["questions"])
+        ),
+        "verdicts": decided,
         "identity": {
             k: {
                 x: v.get(x)
@@ -895,6 +1230,7 @@ def analyze(
         "tables.json": tables,
         "h1.json": h1,
         "h2.json": h2,
+        "h2-second-judge.json": h2_second,
         "placebo.json": placebo,
         "internal.json": internal,
         "xfit.json": {"folds": xfit_meta["folds"]},
@@ -911,6 +1247,33 @@ def analyze(
             for r in rows:
                 handle.write(json.dumps(r, ensure_ascii=False) + "\n")
     return {"headline": headline, "h2": h2}
+
+
+def h2_second_judge(
+    rows: list[dict[str, Any]],
+    artifact: dict[str, Any],
+    config: dict[str, Any],
+    raw_attention: dict[tuple[int, str], list[float]],
+) -> dict[str, Any]:
+    """H2's primary family (with exact Shapley and the random keep set) at the headline budget,
+    on the tables the second judge (Qwen3-8B) labels: a sensitivity reading, no decision."""
+
+    budget = int(config["analysis"]["headline_budget"])
+    views = pool_views(rows, artifact, key="u_secondary")
+    tables = []
+    for (q_index, arm), view in sorted(views.items()):
+        if not view["complete"] or len(set(view["values"])) < 2:
+            continue
+        question = artifact["questions"][q_index]
+        attention = None
+        if (q_index, arm) in raw_attention:
+            attention = {"attention_raw": raw_attention[(q_index, arm)]}
+        credits, _ = table_credits(view, question, arm, config, attention)
+        keep = {k: v for k, v in credits.items() if k in (*PRIMARY_FAMILY, "shapley_exact")}
+        tables.append({"question_id": question["question_id"], "arm": arm,
+                       "regret": regrets(view["values"], keep, [budget])})  # fmt: skip
+    narrow = dict(config, analysis=dict(config["analysis"], keep_budgets=[budget]))
+    return h2_summary(tables, narrow)
 
 
 def _fmt(value: Any, digits: int = 3) -> str:
@@ -938,7 +1301,11 @@ def render_markdown(
     judge: dict[str, Any],
     config: dict[str, Any],
 ) -> str:
-    lines = ["# AM1 development pilot (EXPLORATORY): tables", ""]
+    if config["claim_level"] == "confirmatory":
+        title = f"# {config['experiment_id']} (CONFIRMATORY): tables"
+    else:
+        title = "# AM1 development pilot (EXPLORATORY): tables"
+    lines = [title, ""]
     lines += [
         "## Census",
         "",
@@ -1024,6 +1391,8 @@ def render_markdown(
         "```",
     ]
     lines += ["", "## Kill criteria", "", "```", json.dumps(headline["kill"], indent=1), "```"]
+    lines += ["", "## Gates and verdicts", "", "```",
+              json.dumps(headline.get("verdicts"), indent=1), "```"]  # fmt: skip
     return "\n".join(lines) + "\n"
 
 
@@ -1069,11 +1438,18 @@ def hand_sample(
 # --------------------------------------------------------------------------- power
 
 
-#: The registration's primary H2 family (retrieved arm, B = 4) and its decision thresholds.
-PRIMARY_FAMILY = ("loo", "perm_shapley_16", "snipw_64", "retrieval_rank", "attention_raw")
-MATERIAL_REGRET = 0.05
-ADEQUATE_REGRET = 0.02
+#: Effect scales of the power simulation (the H2 family and thresholds are defined above).
 SCALES = (1.0, 0.5, 0.25)
+
+
+def thin(sample: Any, scale: float, rng: Any) -> Any:
+    """Bernoulli thinning: each value kept with probability ``scale``, else 0 (scale 1: as is)."""
+
+    import numpy as np
+
+    if scale >= 1.0:
+        return sample
+    return np.where(rng.random(len(sample)) < scale, sample, 0.0)
 
 
 def power(analysis_dir: Path, config: dict[str, Any], heldout: int) -> dict[str, Any]:
@@ -1081,11 +1457,14 @@ def power(analysis_dir: Path, config: dict[str, Any], heldout: int) -> dict[str,
 
     For every statistic (a per-question value: one table per question and arm), each simulation
     draws the held-out number of units (held-out questions times the development rate of
-    non-constant tables) with replacement from the development values, optionally scaled by
-    0.5 or 0.25 (a smaller true effect with the same shape), and computes the mean and its
-    question-bootstrap interval: 99% (Bonferroni over the five primary estimators) for H2 and
-    95% for H1. It reports how often H2's rules fire: MISSPECIFIED when the 99% lower bound
-    exceeds 0.05, ADEQUATE when the 99% upper bound is below 0.02, else INCONCLUSIVE.
+    non-constant tables) with replacement from the development values and computes the mean and
+    its question-bootstrap interval: 99% (Bonferroni over the five primary estimators) for H2 and
+    95% for H1. At a reduced effect (scale 0.5 or 0.25) each drawn unit is thinned: kept with
+    probability equal to the scale and otherwise set to 0, so fewer tables carry regret while the
+    nonzero regrets keep their development distribution (multiplying the values by the scale
+    would also shrink their spread and overstate the power). It reports how often H2's rules
+    fire: MISSPECIFIED when the 99% lower bound exceeds 0.05, ADEQUATE when the 99% upper bound is
+    below 0.02, else INCONCLUSIVE.
     """
 
     import numpy as np
@@ -1126,7 +1505,8 @@ def power(analysis_dir: Path, config: dict[str, Any], heldout: int) -> dict[str,
     result: dict[str, Any] = {
         "heldout_questions": heldout, "simulations": sims, "inner_bootstrap": inner,
         "development_questions": len(questions), "material_regret": MATERIAL_REGRET,
-        "adequate_regret": ADEQUATE_REGRET, "scales": list(SCALES), "statistics": {},
+        "adequate_regret": ADEQUATE_REGRET, "scales": list(SCALES),
+        "reduced_effect": "Bernoulli thinning of the drawn units", "statistics": {},
     }  # fmt: skip
     for key, (values, alpha, is_h2) in stats.items():
         present = np.array([v for v in values if v is not None], dtype=float)
@@ -1140,17 +1520,17 @@ def power(analysis_dir: Path, config: dict[str, Any], heldout: int) -> dict[str,
             "expected_heldout_units": n_units, "interval": 1 - alpha, "by_scale": {},
         }  # fmt: skip
         for scale in SCALES if is_h2 else (1.0,):
-            base = present * scale
             means = np.empty(sims)
             los = np.empty(sims)
             his = np.empty(sims)
             for s in range(sims):
-                sample = base[rng.integers(0, len(base), n_units)]
+                sample = thin(present[rng.integers(0, len(present), n_units)], scale, rng)
                 boot = sample[rng.integers(0, n_units, (inner, n_units))].mean(axis=1)
                 means[s] = sample.mean()
                 los[s], his[s] = np.quantile(boot, [alpha / 2, 1 - alpha / 2])
-            entry = {"true_mean": float(base.mean()), "median_halfwidth": float(np.median(
-                (his - los) / 2)), "p_lower_above_0": float(np.mean(los > 0))}  # fmt: skip
+            entry = {"true_mean": float(present.mean() * scale),
+                     "median_halfwidth": float(np.median((his - los) / 2)),
+                     "p_lower_above_0": float(np.mean(los > 0))}  # fmt: skip
             if is_h2:
                 material = los > MATERIAL_REGRET
                 adequate = his < ADEQUATE_REGRET
@@ -1257,6 +1637,25 @@ def aa_report(
 # --------------------------------------------------------------------------- main
 
 
+def read_hand_labels(
+    path: Path, expected_sha256: str | None, config: dict[str, Any]
+) -> tuple[list[dict[str, Any]], str]:
+    """The blind hand labels and their SHA-256. Under the registration's config the digest must
+    be given (as committed before the join) and must match: G2 counts that file only."""
+
+    raw = path.read_bytes()
+    digest = mc.sha256_bytes(raw)
+    if expected_sha256 is None and config["claim_level"] == "confirmatory":
+        raise ms.StudyError(
+            "the registration's analysis needs --hand-labels-sha256, the labels file's digest "
+            "as committed before the join"
+        )
+    if expected_sha256 is not None and digest != expected_sha256:
+        raise ms.StudyError("the hand labels differ from their committed SHA-256")
+    rows = [json.loads(line) for line in raw.decode("utf-8").splitlines() if line.strip()]
+    return rows, digest
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
     sub = parser.add_subparsers(dest="command", required=True)
@@ -1265,6 +1664,12 @@ def main() -> int:
     analyze_p.add_argument("--evidence", required=True)
     analyze_p.add_argument("--output-dir", required=True)
     analyze_p.add_argument("--hand-labels", default=None)
+    analyze_p.add_argument(
+        "--hand-labels-sha256",
+        default=None,
+        help="the labels file's SHA-256 as committed before the join (required by the "
+        "registration's config)",
+    )
     analyze_p.add_argument("--private-dir", default=None)
     sample_p = sub.add_parser("hand-sample", allow_abbrev=False)
     sample_p.add_argument("--run-dir", required=True)
@@ -1285,13 +1690,11 @@ def main() -> int:
     config = ms.load_config(Path(args.config))
     if args.command == "analyze":
         artifact = load_artifact(Path(args.evidence), config)
-        hand = None
+        hand, hand_sha256 = None, None
         if args.hand_labels:
-            hand = [
-                json.loads(line)
-                for line in Path(args.hand_labels).read_text().splitlines()
-                if line.strip()
-            ]
+            hand, hand_sha256 = read_hand_labels(
+                Path(args.hand_labels), args.hand_labels_sha256, config
+            )
         result = analyze(
             Path(args.run_dir),
             config,
@@ -1299,6 +1702,7 @@ def main() -> int:
             Path(args.output_dir),
             hand,
             Path(args.private_dir) if args.private_dir else None,
+            hand_sha256,
         )
         print(json.dumps(result["headline"], indent=2, sort_keys=True))
         return 0

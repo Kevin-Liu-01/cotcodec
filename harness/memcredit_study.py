@@ -4,7 +4,8 @@ The development-set pilot (EXPLORATORY) and the draft registration ``am1-memory-
 these definitions:
 
 * config loading (``experiments/am1/memcredit-study-v1.yaml``);
-* the usable set and the seeded development / held-out split;
+* the usable set and the seeded development / held-out split, and the registration's pinned
+  confirmatory set (the held-out ids minus Step 0's demo questions, which development ran);
 * the two pool arms (``harness.memcredit.build_pools``, Step 0's rules) and AM2's content-placebo
   arms (length- and rank-matched swaps, reorders);
 * the request table (subset table, swaps, reorders) and its reader messages;
@@ -134,7 +135,33 @@ def load_config(path: Path = CONFIG_PATH) -> dict[str, Any]:
                 raise StudyError(f"{worker['id']}: order must be canonical or shuffled")
     if len(set(worker_ids)) != len(worker_ids):
         raise StudyError("worker ids must be unique")
+    check_confirmatory_set_spec(config.get("confirmatory_set"), confirmatory)
     return config
+
+
+def check_confirmatory_set_spec(spec: Any, confirmatory: bool) -> None:
+    """The registration's config pins its confirmatory question set (the held-out ids minus the
+    questions development already ran: Step 0's demo); no other config has one."""
+
+    if not confirmatory:
+        if spec is not None:
+            raise StudyError("only the registration's config has a confirmatory question set")
+        return
+    if not isinstance(spec, dict):
+        raise StudyError("the registration's config pins its confirmatory question set")
+    excluded = spec.get("exclude_question_ids")
+    if (
+        not isinstance(excluded, list)
+        or not all(isinstance(x, str) for x in excluded)
+        or excluded != sorted(set(excluded))
+    ):
+        raise StudyError("confirmatory_set.exclude_question_ids: sorted, unique strings")
+    for key in ("split_file_sha256", "split_heldout_sha256", "question_ids_sha256"):
+        value = spec.get(key)
+        if not isinstance(value, str) or len(value) != 64 or set(value) - set("0123456789abcdef"):
+            raise StudyError(f"confirmatory_set.{key} must be a SHA-256 hex digest")
+    if not isinstance(spec.get("questions"), int) or spec["questions"] < 1:
+        raise StudyError("confirmatory_set.questions must be a positive integer")
 
 
 def artifact_rule(config: dict[str, Any]) -> tuple[str, str]:
@@ -252,6 +279,53 @@ def load_split(path: Path, config: dict[str, Any]) -> dict[str, Any]:
     if set(split["development"]) & set(split["heldout"]):
         raise StudyError("the split overlaps")
     return split
+
+
+def confirmatory_question_ids(split: dict[str, Any], config: dict[str, Any]) -> list[str]:
+    """The registration's confirmatory question set: the held-out ids, in the split's order,
+    minus the pinned exclusions, each checked against its pinned digest."""
+
+    spec = config["confirmatory_set"]
+    if split.get("heldout_sha256") != spec["split_heldout_sha256"]:
+        raise StudyError("the split's held-out ids differ from the pinned held-out list")
+    excluded = set(spec["exclude_question_ids"])
+    if not excluded <= set(split["development"]) | set(split["heldout"]):
+        raise StudyError("an excluded question id is not in the split")
+    ids = [q for q in split["heldout"] if q not in excluded]
+    if (
+        len(ids) != int(spec["questions"])
+        or mc.sha256_text("\n".join(ids)) != spec["question_ids_sha256"]
+    ):
+        raise StudyError("the confirmatory question set differs from its pin")
+    return ids
+
+
+def split_question_ids(split: dict[str, Any], config: dict[str, Any], name: str) -> list[str]:
+    """The question ids a config's artifact holds for one split: the registration's pinned
+    confirmatory set (held-out only), or the whole split for the pilot's configs."""
+
+    if config.get("confirmatory_set") is None:
+        return list(split[name])
+    if name != "heldout":
+        raise StudyError("the registration's config runs the held-out split only")
+    return confirmatory_question_ids(split, config)
+
+
+def check_artifact_questions(artifact: dict[str, Any], config: dict[str, Any]) -> None:
+    """Under the registration's config, the study artifact holds exactly the pinned confirmatory
+    question set and none of the excluded questions."""
+
+    spec = config.get("confirmatory_set")
+    if spec is None:
+        return
+    ids = [q["question_id"] for q in artifact["questions"]]
+    if set(ids) & set(spec["exclude_question_ids"]):
+        raise StudyError("the study artifact holds an excluded question")
+    if (
+        len(ids) != int(spec["questions"])
+        or mc.sha256_text("\n".join(ids)) != spec["question_ids_sha256"]
+    ):
+        raise StudyError("the study artifact's questions differ from the confirmatory set")
 
 
 def registration_frozen(ledger: Path, registration: Path) -> bool:

@@ -485,6 +485,123 @@ def test_analysis_on_a_synthetic_run(tmp_path: Path, artifact: dict, config: dic
         50,
     )
     assert pw["heldout_questions"] == 50 and pw["statistics"]
+    # The registration's gates and verdicts are computed and written to the headline.
+    headline = json.loads((out / "headline.json").read_text())
+    v = headline["verdicts"]
+    assert headline["claim_level"] == v["claim_level"] == config["claim_level"]
+    assert v["g1_replay"]["status"] == "PASS"
+    assert v["g1_replay"]["reader"]["n_common"] == v["g1_replay"]["reader"]["expected"]
+    assert v["g1_replay"]["judge"]["expected"] == len(items)
+    assert v["g2_judge"]["status"] == "PENDING"  # validation passes, no hand check joined
+    assert v["void"]["fires"] is False and not v["program_decision"]
+    assert set(v["h2_primary"]) == set(analysis.PRIMARY_FAMILY)
+    assert v["headline"]["rule"] == "loo" and v["headline"]["arm"] == "retrieved"
+    assert set(v["h2_second_judge"]) == set(analysis.PRIMARY_FAMILY)
+    placebo = json.loads((out / "placebo.json").read_text())
+    assert "deletion_minus_swap_only" in placebo["both"]["gold"]
+    assert v["am2"]["nongold"] in (None, "ABOVE_SWAP_FLOOR", "NOT_ABOVE_SWAP_FLOOR")
+    # With hand labels that agree with the judge, G2 passes and the decision follows the gates.
+    hand = [{"item_index": s["item_index"], "label": int("blue" in s["reply"])} for s in sample]
+    again = analysis.analyze(tmp_path, config, artifact, tmp_path / "a2", hand, None, "d" * 64)
+    v2 = again["headline"]["verdicts"]
+    assert v2["g2_judge"]["status"] == "PASS" and v2["g2_judge"]["hand_check_kappa"] == 1.0
+    assert v2["g2_judge"]["hand_labels_sha256"] == "d" * 64
+    assert v2["program_decision"] == v2["h2_read"]
+    # A replicate that leaves a request unfinished is an infrastructure failure, not a pass.
+    _save(tmp_path, analysis.READER_AA, replies[:-1])
+    cut = analysis.analyze(tmp_path, config, artifact, tmp_path / "a3")["headline"]["verdicts"]
+    assert cut["g1_replay"]["status"] == "INCOMPLETE" and not cut["h2_read"]
+    assert cut["headline"]["verdict"] is None and cut["k2_fires"] is False
+    # A differing reply fails G1 (kill criterion 1).
+    _save(tmp_path, analysis.READER_AA, replies[:-1] + ["Something else."])
+    bad = analysis.analyze(tmp_path, config, artifact, tmp_path / "a4")["headline"]["verdicts"]
+    assert bad["g1_replay"]["status"] == "FAIL" and not bad["h2_read"]
+
+
+def test_replay_gate_and_h2_verdict_rules() -> None:
+    expected = {"reader": 10, "judge": 4}
+
+    def rows(reader: dict, judge: dict) -> dict:
+        return {"reader_cross_gpu": reader, "judge_cross_gpu": judge}
+
+    full = {"n_common": 10, "differing_total": 0}
+    judge = {"n_common": 4, "differing_total": 0}
+    assert analysis.replay_gate(rows(full, judge), expected)["status"] == "PASS"
+    assert analysis.replay_gate(rows({"n_common": 9, "differing_total": 0}, judge),
+                                expected)["status"] == "INCOMPLETE"  # fmt: skip
+    assert analysis.replay_gate(rows({"missing": True}, judge), expected)["status"] == "INCOMPLETE"
+    assert analysis.replay_gate(rows({"n_common": 9, "differing_total": 1}, judge),
+                                expected)["status"] == "FAIL"  # fmt: skip
+    assert analysis.replay_gate(rows(full, {"n_common": 4, "differing_total": 2}),
+                                expected)["status"] == "FAIL"  # fmt: skip
+
+    def row(lo: float, hi: float) -> dict:
+        return {"tables": 5, "mean_regret": {"mean": (lo + hi) / 2, "ci": [lo, hi]},
+                "mean_regret_99": {"mean": (lo + hi) / 2, "ci": [lo, hi]},
+                "minus_exact_shapley": {"mean": 0.0, "ci": [-0.1, 0.1]}}  # fmt: skip
+
+    assert analysis.h2_verdict(row(0.051, 0.2))["verdict"] == "MISSPECIFIED"
+    assert analysis.h2_verdict(row(0.05, 0.2))["verdict"] == "INCONCLUSIVE"
+    assert analysis.h2_verdict(row(0.0, 0.019))["verdict"] == "ADEQUATE"
+    assert analysis.h2_verdict(row(0.0, 0.02))["verdict"] == "INCONCLUSIVE"
+    assert analysis.h2_verdict(None)["verdict"] is None
+
+
+def test_judge_gate_rules() -> None:
+    def judge(ref: float, idk: float, kappa: float | None) -> dict:
+        out = {"validation": {
+            "validation:reference": {"primary": {"excluding_preference": {"accuracy": ref,
+                                                                          "n": 100}}},
+            "validation:idk": {"primary": {"accuracy": idk, "n": 100}}}}  # fmt: skip
+        if kappa is not None:
+            out["hand_check"] = {"n": 120, "labels_sha256": "a" * 64,
+                                 "primary": {"kappa": kappa, "kappa_ci95": [0.7, 0.9]}}  # fmt: skip
+        return out
+
+    assert analysis.judge_gate(judge(0.96, 0.99, 0.85))["status"] == "PASS"
+    assert analysis.judge_gate(judge(0.96, 0.99, None))["status"] == "PENDING"
+    assert analysis.judge_gate(judge(0.94, 0.99, 0.85))["status"] == "FAIL"
+    assert analysis.judge_gate(judge(0.96, 0.94, None))["status"] == "FAIL"
+    assert analysis.judge_gate(judge(0.96, 0.99, 0.79))["status"] == "FAIL"
+
+
+def test_hand_labels_need_their_committed_digest(tmp_path: Path) -> None:
+    path = tmp_path / "labels.jsonl"
+    path.write_text('{"item_index": 3, "label": 1}\n')
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    reg = ms.load_config(ms.REGISTRATION_CONFIG_PATH)
+    with pytest.raises(ms.StudyError):
+        analysis.read_hand_labels(path, None, reg)  # the registration needs the digest
+    with pytest.raises(ms.StudyError):
+        analysis.read_hand_labels(path, "0" * 64, reg)
+    rows, sha = analysis.read_hand_labels(path, digest, reg)
+    assert rows == [{"item_index": 3, "label": 1}] and sha == digest
+    assert analysis.read_hand_labels(path, None, ms.load_config())[1] == digest  # the pilot's
+
+
+def test_power_thinning_keeps_the_nonzero_shape() -> None:
+    import numpy as np
+
+    rng = np.random.default_rng(43)
+    values = np.array([0.0, 0.25, 0.5, 1.0] * 2500)
+    same = analysis.thin(values, 1.0, rng)
+    assert same is values
+    half = analysis.thin(values, 0.5, rng)
+    assert set(np.unique(half)) <= {0.0, 0.25, 0.5, 1.0}
+    assert abs(half.mean() - values.mean() / 2) < 0.02
+    # the nonzero values keep their distribution (not shrunk towards 0)
+    assert abs(half[half > 0].mean() - values[values > 0].mean()) < 0.03
+
+
+def test_cluster_difference() -> None:
+    config = dict(ms.load_config())
+    config["analysis"] = dict(config["analysis"], bootstrap={"resamples": 500, "seed": 42})
+    a = {"q1": [1.0, 0.0], "q2": [1.0, 1.0], "q3": [0.0]}
+    b = {"q1": [0.0], "q2": [0.0, 0.0], "q3": [0.0, 1.0]}
+    out = analysis.cluster_difference(a, b, config)
+    assert out["mean"] == pytest.approx(3 / 5 - 1 / 5)
+    assert out["ci"][0] <= out["mean"] <= out["ci"][1]
+    assert analysis.cluster_difference({}, b, config)["mean"] is None
 
 
 # --------------------------------------------------------------------------- A/A diagnostic config
@@ -601,6 +718,17 @@ def test_heldout_artifact_needs_the_frozen_registration(
         driver.load_artifact(held, None, reg)
     ledger.write_text(json.dumps({"experiment_id": ms.REGISTRATION_ID,
                                   "sha256": ms.sha256_file(registration)}) + "\n")  # fmt: skip
+    with pytest.raises(ms.StudyError):
+        driver.load_artifact(held, None, reg)  # frozen, but not the pinned confirmatory set
+    ids = [q["question_id"] for q in artifact["questions"]]
+    reg = dict(
+        reg,
+        confirmatory_set=dict(
+            reg["confirmatory_set"],
+            questions=len(ids),
+            question_ids_sha256=mc.sha256_text("\n".join(ids)),
+        ),
+    )
     assert driver.load_artifact(held, None, reg)["split"] == "heldout"
     dev = tmp_path / "dev.json"
     dev.write_text(json.dumps(artifact))
@@ -615,3 +743,73 @@ def test_eager_check_config() -> None:
     assert all(w.get("enforce_eager") for w in workers)
     assert driver.worker_spec(eager, "rd-eager-gpu0")["passes"] == ["smoke", "all", "replicate"]
     assert ms.artifact_rule(eager) == (ms.EXPERIMENT_ID, "development")
+
+
+def test_confirmatory_set_excludes_step0_demo_questions() -> None:
+    reg = ms.load_config(ms.REGISTRATION_CONFIG_PATH)
+    spec = reg["confirmatory_set"]
+    split_path = ROOT / reg["split"]["path"]
+    assert ms.sha256_file(split_path) == spec["split_file_sha256"]
+    split = ms.load_split(split_path, reg)
+    step0 = json.loads((ROOT / "program" / "evidence" / "2026-10-15" / "am1-step0" / "prepare"
+                        / "pools-summary.json").read_text())  # fmt: skip
+    demo = sorted(q["question_id"] for q in step0["questions"])
+    assert spec["exclude_question_ids"] == demo and len(demo) == 8
+    assert len(set(demo) & set(split["heldout"])) == 6
+    ids = ms.confirmatory_question_ids(split, reg)
+    assert len(ids) == 347 == len(split["heldout"]) - 6 and not set(ids) & set(demo)
+    assert ms.split_question_ids(split, reg, "heldout") == ids
+    with pytest.raises(ms.StudyError):
+        ms.split_question_ids(split, reg, "development")
+    assert ms.split_question_ids(split, ms.load_config(), "development") == split["development"]
+    with pytest.raises(ms.StudyError):
+        ms.confirmatory_question_ids(dict(split, heldout_sha256="0" * 64), reg)
+    with pytest.raises(ms.StudyError):
+        ms.confirmatory_question_ids(split, dict(reg, confirmatory_set=dict(spec, questions=346)))
+
+
+def test_confirmatory_set_is_checked_in_the_config(tmp_path: Path) -> None:
+    text = ms.REGISTRATION_CONFIG_PATH.read_text()
+    for old, new in (('"09ba9854", "25e5aa4f"', '"25e5aa4f", "09ba9854"'),
+                     ("questions: 347", "questions: 0")):  # fmt: skip
+        bad = tmp_path / "reg.yaml"
+        bad.write_text(text.replace(old, new))
+        with pytest.raises(ms.StudyError):
+            ms.load_config(bad)
+    pilot = tmp_path / "pilot.yaml"
+    block = text[text.index("confirmatory_set:") : text.index("retriever:")]
+    pilot.write_text(ms.CONFIG_PATH.read_text().replace("retriever:", block + "retriever:", 1))
+    with pytest.raises(ms.StudyError):
+        ms.load_config(pilot)  # only the registration's config has a confirmatory set
+
+
+def test_build_artifact_applies_the_exclusion(config: dict) -> None:
+    records = _records()
+    split = ms.make_split(records, config)
+    reg = ms.load_config(ms.REGISTRATION_CONFIG_PATH)
+    dropped = split["heldout"][0]
+    ids = split["heldout"][1:]
+    reg = dict(reg, confirmatory_set=dict(
+        reg["confirmatory_set"], split_heldout_sha256=split["heldout_sha256"],
+        exclude_question_ids=[dropped], questions=len(ids),
+        question_ids_sha256=mc.sha256_text("\n".join(ids))))  # fmt: skip
+    built = prepare.build_artifact(records, reg, split, "heldout")
+    assert [q["question_id"] for q in built["questions"]] == ids
+    assert built["excluded_question_ids"] == [dropped]
+    ms.check_artifact_questions(built, reg)
+    with pytest.raises(ms.StudyError):
+        ms.check_artifact_questions(prepare.build_artifact(records, config, split, "heldout"), reg)
+    # the pilot's artifact keeps its fields (it rebuilds byte for byte)
+    dev = prepare.build_artifact(records, config, split, "development")
+    assert "excluded_question_ids" not in dev and "question_ids_sha256" not in dev
+
+
+def test_registration_freezes_on_a_scratch_ledger(tmp_path: Path) -> None:
+    """The freeze command of section 16 accepts the file (no TBD or <placeholder> text); run
+    against an empty scratch ledger, never the real one."""
+
+    prereg = _load("preregister")
+    ledger = tmp_path / "ledger.jsonl"
+    row = prereg.freeze(ms.REGISTRATION_PATH, ms.REGISTRATION_ID, ledger=ledger, root=ROOT)
+    assert row["sha256"] == ms.sha256_file(ms.REGISTRATION_PATH)
+    assert ms.registration_frozen(ledger, ms.REGISTRATION_PATH)

@@ -11,7 +11,10 @@ Subcommands, each reading the pinned ``longmemeval_s_cleaned.json`` (size and SH
   pool arms and AM2's placebo arms for every question of one split. The artifact holds
   LongMemEval text and stays on the host; the summary has no text (ids, coordinates, gold flags,
   BM25 ranks, length ratios, SHA-256). The held-out split is refused unless the registration
-  ``am1-memory-credit-v1`` is frozen in the ledger with this checkout's file.
+  ``am1-memory-credit-v1`` is frozen in the ledger with this checkout's file; under the
+  registration's config the split file must have the pinned SHA-256, and the artifact holds the
+  pinned confirmatory set (the held-out ids minus Step 0's demo questions,
+  ``confirmatory_set``), checked against its pinned digest.
 """
 
 from __future__ import annotations
@@ -47,7 +50,7 @@ def build_artifact(
 ) -> dict[str, Any]:
     by_id = {r["question_id"]: r for r in records}
     questions = []
-    for question_id in split[name]:
+    for question_id in ms.split_question_ids(split, config, name):
         record = by_id[question_id]
         if ms.usable_reason(record, config["usable"]) is not None:
             raise ms.StudyError(f"{question_id} is in the split but not usable")
@@ -66,7 +69,7 @@ def build_artifact(
                 "placebos": ms.build_placebos(record, pools, config),
             }
         )
-    return {
+    artifact = {
         "experiment_id": config["experiment_id"],
         "claim_level": config["claim_level"],
         "split": name,
@@ -77,6 +80,15 @@ def build_artifact(
         "placebo_config": config["placebo"],
         "questions": questions,
     }
+    if config.get("confirmatory_set") is not None:
+        # The registration's artifact: the pinned confirmatory set (the pilot's artifact keeps
+        # its fields, so it rebuilds byte for byte).
+        artifact["excluded_question_ids"] = list(config["confirmatory_set"]["exclude_question_ids"])
+        artifact["question_ids_sha256"] = mc.sha256_text(
+            "\n".join(q["question_id"] for q in questions)
+        )
+        ms.check_artifact_questions(artifact, config)
+    return artifact
 
 
 def public_summary(artifact: dict[str, Any], artifact_sha256: str) -> dict[str, Any]:
@@ -159,6 +171,9 @@ def split_main(args: argparse.Namespace) -> int:
 def artifact_main(args: argparse.Namespace) -> int:
     config = ms.load_config(Path(args.config))
     split = ms.load_split(Path(args.split_file), config)
+    pinned = (config.get("confirmatory_set") or {}).get("split_file_sha256")
+    if pinned is not None and ms.sha256_file(Path(args.split_file)) != pinned:
+        raise ms.StudyError("the split file differs from the registration's pinned SHA-256")
     if args.split != ms.artifact_rule(config)[1]:
         raise ms.StudyError(
             f"{config['experiment_id']} runs the {ms.artifact_rule(config)[1]} split"

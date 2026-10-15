@@ -353,32 +353,37 @@ freeze.
 | `scripts/build_vllm_overlay_on_h100.sh` | the overlay build | `aa43283e757695384e0548d060a18b98f07a3af06f583efdb2d709f677e1a96d` |
 | `scripts/create_source_archive.py`, `scripts/extract_discovery_source_archive.py` | the source capsule | `672670ca29d3254e9af90b810eef591e15dae6934612c5184a72e5d0c7e9948c`, `9b4d21a83beac8913dc06a946cf43ea31d77326e65d04957fad66d7b97d8c3cb` |
 
-Commands of the registered run (host, from a clean clone at the freeze commit):
+Commands of the registered run (host, from a clean clone at the freeze commit). The names in
+capitals stand for host paths and digests that exist only at run time: SOURCE_JSON, the pinned
+`longmemeval_s_cleaned.json`; HOST_DIR, `~/cotcodec-runs/stage0/am1-memory-credit-v1/`; RUN_DIR,
+the job's run directory; ANALYSIS_DIR, the analysis output; HAND_LABELS, the blind labels file;
+ARTIFACT_SHA256 and HAND_LABELS_SHA256, those files' digests as receipted and committed.
 
 ```bash
 uv run --locked --offline python scripts/memcredit_study_prepare.py artifact \
-  --config experiments/am1/am1-memory-credit-v1.yaml --source <longmemeval_s_cleaned.json> \
+  --config experiments/am1/am1-memory-credit-v1.yaml --source SOURCE_JSON \
   --split-file experiments/am1/memcredit-split-v1.json --split heldout \
-  --artifact <host>/study-artifact.json --summary <host>/pools-summary.json
-# the GPU job (lane manifest; image built from the freeze commit's capsule):
+  --artifact HOST_DIR/study-artifact.json --summary HOST_DIR/pools-summary.json
+# the GPU job (lane manifest, 90 minutes, 2 GPUs; image built from the freeze commit's capsule):
 python scripts/memcredit_study.py run --config experiments/am1/am1-memory-credit-v1.yaml \
-  --seeds 42 43 44 --output-dir /outputs/am1 --allocation-minutes 60 \
-  --evidence /inputs/study-artifact.json --expected-evidence-sha256 <artifact sha256>
+  --seeds 42 43 44 --output-dir /outputs/am1 --allocation-minutes 90 \
+  --evidence /inputs/study-artifact.json --expected-evidence-sha256 ARTIFACT_SHA256
 uv run --locked --offline python scripts/memcredit_analyze.py hand-sample \
-  --config experiments/am1/am1-memory-credit-v1.yaml --run-dir <run>/am1 \
-  --evidence <host>/study-artifact.json --output <host>/hand-check-sample.jsonl
-# (the sample is labelled blind here, then:)
+  --config experiments/am1/am1-memory-credit-v1.yaml --run-dir RUN_DIR/am1 \
+  --evidence HOST_DIR/study-artifact.json --output HOST_DIR/hand-check-sample.jsonl
+# (the sample is labelled blind; the labels file's SHA-256 is committed; then:)
 uv run --locked --offline python scripts/memcredit_analyze.py analyze \
-  --config experiments/am1/am1-memory-credit-v1.yaml --run-dir <run>/am1 \
-  --evidence <host>/study-artifact.json --output-dir <analysis> --hand-labels <labels>
+  --config experiments/am1/am1-memory-credit-v1.yaml --run-dir RUN_DIR/am1 \
+  --evidence HOST_DIR/study-artifact.json --output-dir ANALYSIS_DIR \
+  --hand-labels HAND_LABELS --hand-labels-sha256 HAND_LABELS_SHA256
 uv run --locked --offline python scripts/memcredit_analyze.py aa \
-  --config experiments/am1/am1-memory-credit-v1.yaml --run run=<run>/am1 \
+  --config experiments/am1/am1-memory-credit-v1.yaml --run run=RUN_DIR/am1 \
   --pair run:reader-gpu0,run:reader-gpu1 --pair run:judge32-gpu0,run:judge32-gpu1 \
-  --evidence <host>/study-artifact.json --output <analysis>/aa.json
+  --evidence HOST_DIR/study-artifact.json --output ANALYSIS_DIR/aa.json
 ```
 
 The hand-check sample is drawn and labelled before `analyze --hand-labels` joins it to the
-judges.
+judges, and `analyze` refuses labels whose SHA-256 differs from the committed one.
 
 ## 18. Priors (from the pilot; for the record, not tested)
 

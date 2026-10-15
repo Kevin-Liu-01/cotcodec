@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
-"""AM1 study, development-set pilot (EXPLORATORY): the GPU job.
+"""AM1 study: the GPU job of the development-set pilot (EXPLORATORY) and of the registration
+am1-memory-credit-v1.
 
-Config: experiments/am1/memcredit-study-v1.yaml. Runs inside the digest-pinned cotcodec-vllm cu129
-overlay (vLLM 0.31.0, transformers, torch) on the docker-research lane with 2 H100; the pools and
-placebos come from scripts/memcredit_study_prepare.py as the hash-bound study artifact (the
-development split only; this driver refuses any other split).
+Configs: experiments/am1/memcredit-study-v1.yaml (and its -aa and -eager diagnostics) run the
+development artifact only; experiments/am1/am1-memory-credit-v1.yaml runs only the held-out
+artifact of the pinned confirmatory set, and only while the registration is frozen. Runs inside the
+digest-pinned cotcodec-vllm cu129 overlay (vLLM 0.31.0, transformers, torch) on the
+docker-research lane with 2 H100; the pools and placebos come from
+scripts/memcredit_study_prepare.py as the hash-bound study artifact.
 
 Subcommands:
 
@@ -75,6 +78,7 @@ def load_artifact(
         raise ms.StudyError(f"this config runs the {split} split only")
     if split == "heldout" and not ms.registration_frozen(ms.LEDGER_PATH, ms.REGISTRATION_PATH):
         raise ms.StudyError("the held-out split runs only under a frozen registration")
+    ms.check_artifact_questions(artifact, config or ms.load_config())
     return artifact
 
 
@@ -650,7 +654,7 @@ def run_main(args: argparse.Namespace) -> int:
     requests = ms.request_table(artifact, config["pools"]["arms"])
     summary: dict[str, Any] = {
         "experiment_id": config["experiment_id"],
-        "claim_level": "exploratory",
+        "claim_level": config["claim_level"],
         "split": artifact["split"],
         "started_at": lane.utc_now(),
         "allocation_minutes": args.allocation_minutes,

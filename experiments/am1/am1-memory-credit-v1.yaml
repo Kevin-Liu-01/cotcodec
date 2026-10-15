@@ -4,8 +4,10 @@
 # CONFIRMATORY once the registration is frozen; until then nothing may run it on held-out data:
 # scripts/memcredit_study_prepare.py refuses to build the held-out artifact, and
 # scripts/memcredit_study.py refuses to load it, unless the registration file's SHA-256 is in a
-# ledger row for this id. Everything except the split, the claim level and the job is the
-# development pilot's config (experiments/am1/memcredit-study-v1.yaml), unchanged.
+# ledger row for this id. Everything except the experiment id, the claim level, the job and the
+# budget is the development pilot's config (experiments/am1/memcredit-study-v1.yaml), unchanged,
+# plus the pinned confirmatory question set (confirmatory_set, below), which runs instead of the
+# development split.
 schema_version: 1
 experiment_id: am1-memory-credit-v1
 claim_level: confirmatory
@@ -39,6 +41,23 @@ split:
   seed: 42
   development_fraction: 0.15
   path: experiments/am1/memcredit-split-v1.json
+
+# The confirmatory question set (registration, section 4): the split's 353 held-out ids minus
+# Step 0's eight demo questions (experiments/am1/memcredit-step0-v1.yaml; their ids are in
+# program/evidence/2026-10-15/am1-step0/prepare/pools-summary.json). Step 0 ran full 256-subset
+# tables on them with this reader, prompt and pool rules before the split was drawn, and six of
+# them are held-out ids, so all eight are excluded from every estimand, gate and kill criterion
+# (two are development ids, already outside the held-out list). 347 questions remain.
+# scripts/memcredit_study_prepare.py checks the split file's SHA-256, the held-out ids' digest
+# and the confirmatory ids' digest (SHA-256 of the newline-joined ids, in the split's order), and
+# the driver and the analysis refuse an artifact whose questions differ from this set.
+confirmatory_set:
+  split_file_sha256: "4fa1b774d4131080855d668ac8f00f5cb07d49cf741f2051d5f8d96577edb3e3"
+  split_heldout_sha256: "9305024fece35c357db9ca2d10fb06ee684a37c6b055ef3174914ce04e65dba8"
+  exclude_question_ids: ["09ba9854", "25e5aa4f", "3d86fd0a", "618f13b2", "6aeb4375", "6e984301",
+                         "e6041065", "gpt4_70e84552"]
+  questions: 347
+  question_ids_sha256: "d4f024fbcda5394984a46c421cd938f2b6db6067fef0f21a5c6e72359b27e50a"
 
 retriever:
   name: bm25-okapi-lucene-idf
@@ -130,10 +149,10 @@ judge:
       logprobs_mode: raw_logprobs
   sampling: {temperature: 0.0, max_tokens: 10, logprobs: 0}
   enable_thinking: false
-  # Validation items, per development question: the reference answer as the response (expected
-  # yes), "I don't know." (expected no) and the reference answer of another development question
-  # of the same type (a seeded derangement, seed 44; expected no; skipped for a type with one
-  # question).
+  # Validation items, per question of the confirmatory set: the reference answer as the response
+  # (expected yes), "I don't know." (expected no) and the reference answer of another question of
+  # the set of the same type (a seeded derangement, seed 44; expected no; skipped for a type with
+  # one question).
   validation:
     idk_response: "I don't know."
     derangement_seed: 44
@@ -171,15 +190,21 @@ analysis:
 # replicate, for the reader and the Qwen3-32B judge, at 1.06x the compiled reader pass's wall time
 # (program/evidence/2026-10-15/am1-dev-pilot/README.md, jobs 1435 and 1441). So every vLLM worker
 # runs eager: GPU 0 canonical (the tables), GPU 1 shuffled (the A/A replicate, gate G1).
+# Timing (registration, section 11): the shuffled pass loses most prefix-cache hits as pools grow
+# (53.6% at 32 pools, 39.5% at 126; an LRU simulation of the cache gives about 16-18% at 694), so
+# the eager shuffled pass is expected at about 2,400-2,700 s and the canonical one at about
+# 1,350 s. The reader workers get 3,600 s; the reader phase starts only with 4,620 s left (3,600
+# for the pass, about 60 for the engine and the smoke pass, 540 and 360 for the later phases).
+# An unfinished request in either reader pass is an infrastructure failure (gate G1), not a pass.
 job:
   gpus: 2
-  minutes: 60
+  minutes: 90
   phases:
     - id: reader
-      min_start_s: 2700
+      min_start_s: 4620
       workers:
-        - {id: reader-gpu0, kind: reader, gpu: 0, order: canonical, enforce_eager: true, max_s: 2400}
-        - {id: reader-gpu1, kind: reader, gpu: 1, order: shuffled, enforce_eager: true, max_s: 2400}
+        - {id: reader-gpu0, kind: reader, gpu: 0, order: canonical, enforce_eager: true, max_s: 3600}
+        - {id: reader-gpu1, kind: reader, gpu: 1, order: shuffled, enforce_eager: true, max_s: 3600}
     - id: judge
       min_start_s: 540
       workers:
@@ -193,5 +218,6 @@ job:
   shuffle_seed: 43
   replicate_seed: 44
 
+# 90 minutes on 2 GPUs (3.0 GPU-h) plus the image build (about 0.02).
 budget:
-  total_physical_gpu_hours: 2.1
+  total_physical_gpu_hours: 3.1
