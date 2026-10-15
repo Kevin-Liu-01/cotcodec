@@ -5920,7 +5920,7 @@ they say so.)
 - H2, retrieved, B = 4, 99%: leave-one-out 0.277 [0.223, 0.333], permutation Shapley-16 0.138
   [0.096, 0.187], SNIPW-64 0.094 [0.058, 0.133], retrieval rank 0.343 [0.271, 0.418], raw
   attention 0.311 [0.235, 0.382]: all MISSPECIFIED. Leave-one-out minus exact Shapley +0.233
-  [0.194, 0.273] (LOO_LOSES_MORE_THAN_EXACT_SHAPLEY); exact Shapley 0.044 [0.020, 0.072].
+  [0.194, 0.273] (LOO_LOSES_MORE_THAN_EXACT_SHAPLEY); exact Shapley 0.044 (95% [0.020, 0.072]; 99% [0.012, 0.080]).
   Program reading: per-memory deletion credit is misspecified for keep/evict decisions on this
   benchmark (this reader, this judge, BM25 user-turn pools, 4 of 8). The second judge gives the
   same five verdicts.
@@ -5929,6 +5929,10 @@ they say so.)
   effects); AM6 cross-fitted heads 0.890 vs best cheap baseline 0.830 (neither AM6 reading
   holds); reorders change 17.1% of answers.
 - Disclosures: no gauntlet score (D111); agent hand labels (7 of 8 disagreements on preference
-  items); not independently verified; no GPU used by the analysis (GPU-h unchanged, 1.5444 of
-  the 3.1 cap).
+  items); no GPU used by the analysis (GPU-h unchanged, 1.5444 of the 3.1 cap).
+- Verified afterwards by a fresh verifier: a new export's `analyze` gave 11 of 11 outputs
+  byte-identical, and its own implementation reproduced every H2 verdict, AM2 and the hand-check
+  join. Its three low-severity wording corrections are applied in RESULTS.md: claim 2 no longer
+  treats E3 paired differences as licensed; no claim about exact Shapley's adequacy; item 8942
+  was not among the flagged items, so 6 of 8 disagreements were.
 - Evidence: `program/evidence/2026-10-16/am1-confirmatory/RESULTS.md` and `analysis/`.

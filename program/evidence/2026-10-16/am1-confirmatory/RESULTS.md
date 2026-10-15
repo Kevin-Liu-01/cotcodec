@@ -10,9 +10,11 @@ row. Every artifact, image, job and analysis below comes from `9ad36b10`.
   not run.
 - **Agent hand labels, not Kevin's (D9, D111).** The G2 hand check was labelled blind by an
   isolated agent.
-- **Not independently verified.** No fresh verifier has re-run the analysis. The numbers are the
-  frozen code's outputs (`analysis/`). The analyst only recomputed the B = 4 regret means and
-  the hand-check kappa from the committed files, and both matched.
+- **Independently verified after the analysis.** A fresh verifier, separate from the analyst,
+  exported `9ad36b10` again on the host and reran `analyze`. All 11 outputs were byte-identical
+  to the analyst's. It also wrote its own implementation of H2, AM2 and the hand-check join from
+  the raw passes, and that implementation reproduced every verdict. Its wording corrections are
+  applied in this file (section "Verification").
 - **Development data.** The development pilot used only the 63-question development split.
   Step 0's eight demo questions are excluded (registration section 4).
 
@@ -46,10 +48,12 @@ exact optimum, with its 99% interval, is:
 | raw attention | 0.311 | [0.235, 0.382] |
 
 Leave-one-out loses **+0.233 [0.194, 0.273]** more than exact Shapley credit on the same tables
-(`LOO_LOSES_MORE_THAN_EXACT_SHAPLEY`). Exact Shapley itself loses 0.044 [0.020, 0.072]. The
+(`LOO_LOSES_MORE_THAN_EXACT_SHAPLEY`). Exact Shapley itself loses 0.044 (95% [0.020, 0.072]; 99% [0.012, 0.080]). The
 registered program reading therefore holds: "per-memory deletion credit is misspecified for
 keep/evict decisions on this benchmark (this reader, this judge, BM25 user-turn pools, 4 of
-8)". The loss is specific to deletion credit, and exact additive credit does not share it. The
+8)". Leave-one-out loses more than exact Shapley on the same tables, which is the registered
+sense in which the loss is specific to deletion credit. This says nothing about whether exact
+Shapley is adequate: its own regret is nonzero and its 99% interval spans both thresholds. The
 second judge's tables give the same five verdicts.
 
 Secondary readings:
@@ -398,8 +402,10 @@ sample is 60 items the primary judged yes and 60 judged no; the agent labelled 5
   bikes for a one-bike reference.
 - **Where the agent said yes and the judge no.** Items 2505, 3936 and 4516 are preference
   replies.
-- **Most disagreements are on items the agent had flagged.** All except item 3936 are among
-  the borderline calls the agent flagged before the join.
+- **Six of the eight disagreements are on items the agent had flagged.** The agent's notes
+  mark ten items as borderline (359, 370, 394, 1300, 2460, 2505, 3415, 4516, 5574, 6207). Six
+  of the eight disagreements are among them. Items 3936 and 8942 are not. An earlier draft of
+  this file said all but 3936; the verifier found that the notes do not flag 8942.
 - **The second judge said yes on all eight.**
 - **Joined file.** The text-free joined labels are `analysis/hand-check-joined-text-free.jsonl`:
   ids, types, reply SHA-256, the hand label and both judges' labels.
@@ -490,8 +496,10 @@ details below are ones the registration leaves open, or apply to the whole run.
 7. **Post-join descriptions (not registered).** The disagreement breakdown of the hand check
    and the B = 4 point estimates without preference tables are descriptions. Neither changes a
    gate or a verdict, and no label was corrected.
-8. **Not independently verified.** No fresh verifier re-ran or re-implemented the analysis. The
-   registration does not require one.
+8. **Independent verification (not required by the registration).** A fresh verifier reran
+   `analyze` from a new export of `9ad36b10`, and all 11 outputs were byte-identical. Its own
+   implementation of H2, AM2 and the hand-check join reproduced every verdict. It removed its
+   host scratch directory afterwards. Its findings are in section "Verification".
 9. **The development pilot used only development data.** It ran on the 63-question development
    split (D111). Step 0's eight demo questions, six of them held-out ids that development ran,
    are excluded from every estimand (section 4). 19 confirmatory ids appear in two legacy
@@ -526,10 +534,11 @@ Within that scope, the result licenses four claims:
    does, so the loss is specific to deletion credit.
 2. **The other four primary rules are MISSPECIFIED at this budget, each by its own registered
    rule.** These are permutation Shapley with 16 permutations, SNIPW with 64 exposures,
-   retrieval rank and raw attention mass. For the two sampled estimators, the loss beyond exact
-   Shapley is +0.094 and +0.050 (paired, 95% intervals above 0).
-3. **The tables replay exactly.** On this stack, every reader request and judge item of the run
-   replayed bit for bit across two GPUs, two processes and two orders (G1).
+   retrieval rank and raw attention mass. (Their paired differences against exact Shapley,
+   +0.094 and +0.050, are E3 secondary descriptions with no decision rule.)
+3. **The tables replay exactly.** On this stack, every reader request and every primary-judge
+   item replayed bit for bit across two GPUs, two processes and two orders (G1). The second
+   judge ran one pass, with no replicate.
 4. **The secondary readings stand as stated, with their caveats.**
    - H1's positive excess.
    - AM2 ABOVE THE SWAP FLOOR over both arms, driven by the gold arm, and not evidence of
@@ -552,6 +561,31 @@ Within that scope, the result licenses four claims:
   swap, and only 12.8% of non-gold deletion labels survive the placebo control.
 - **A deployable internal signal from AM6.** The cross-fitted heads are selected with exact
   tables of other questions, and raw attention does no better than the reply-overlap baseline.
+
+## Verification
+
+A fresh verifier checked the run after the analysis. It shared no context with the analyst.
+
+- **Reran the analysis.** It made a new `git archive` export of `9ad36b10` on the host and
+  reran section 17's `analyze` and `aa`. All 11 outputs were byte-identical to the analyst's:
+  `h1`, `h2`, `h2-second-judge`, `headline`, `identity`, `internal`, `judge`, `placebo`,
+  `tables.json`, `tables.md` and `xfit`.
+- **Reimplemented the analysis.** Its own code read the raw passes and reproduced every H2 cell's
+  regret and verdict, the AM2 floor and the hand-check join. For example, it got exact
+  Shapley's retrieved B = 4 regret as 0.0438 [0.012, 0.0797]. It got the paired differences of
+  permutation Shapley-16 and SNIPW-64 against exact Shapley as +0.0945 and +0.0498.
+- **Checked the labels.** The labels file is unchanged since it was written (04:20:36Z), and its
+  digest equals the receipt in `9e641945`. The hand-check sample carries no judge label.
+- **Corrections applied here.** It found three low-severity wording overstatements, now fixed:
+  - claim 2 had treated E3's paired differences as licensed;
+  - the outcome paragraph had said exact additive credit does not share the loss;
+  - the hand-check description had called item 8942 flagged.
+
+  It also noted two information-only issues, both now corrected: the disclosure had said the
+  run was not verified, and claim 3 had covered the second judge.
+- **Ordering rests on timestamps.** That the labels came before the join, and that the labeller
+  was blind, rests on timestamps and the sample's fields. There is no cryptographic ordering.
+  Every artifact the verifier checked is consistent with the claimed order.
 
 ## Files
 
