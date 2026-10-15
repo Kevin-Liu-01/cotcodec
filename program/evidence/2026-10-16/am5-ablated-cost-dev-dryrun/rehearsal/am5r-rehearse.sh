@@ -190,8 +190,9 @@ check "rerun is refused without the rerun rule's record (minor 2)" "[[ $rc -ne 0
 
 # --- this registration's cases: the GPU populations per mode, the held-out artifact's prepare and
 # --- its tokenizer-only selftest before the freeze
+n0=$(wc -l < "$FAKE/stub.log")
 bash $O/am5r-submit.sh dev "$SHORT" "$IMG" heldout check > "$BASE/submit-held.out" 2>&1; rc=$?
-check "dev mode refuses to run the held-out population on a GPU" "[[ $rc -eq 2 ]] && grep -q 'does not run population heldout' $BASE/submit-held.out && nosub"
+check "dev mode refuses to run the held-out population on a GPU (no sbatch call)" "[[ $rc -eq 2 && \$(wc -l < $FAKE/stub.log) -eq $n0 ]] && grep -q 'does not run population heldout' $BASE/submit-held.out"
 bash $O/am5r-extract.sh dev "$SHORT" heldout 9100 > "$BASE/extract-held.out" 2>&1; rc=$?
 check "dev mode refuses to extract the held-out population" "[[ $rc -eq 2 ]] && grep -q 'does not run population heldout' $BASE/extract-held.out"
 HA=$FAKE/cotcodec-runs/stage0/am5-ablated-cost-v1/inputs
