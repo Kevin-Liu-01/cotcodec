@@ -1,7 +1,7 @@
 # am1-memory-credit-v1: do per-memory credit rules pick the keep set that the exact subset table says is best? (LongMemEval-S, held-out confirmatory set)
 
-**Status: DRAFT. Not frozen; there is no row for this id in
-`program/preregistrations/ledger.jsonl`.** Drafted on 2026-10-15 by the single owner of AM1 on
+**Status: frozen in `program/preregistrations/ledger.jsonl`; see the ledger row for the freeze
+time and `git_head_at_freeze`.** Drafted on 2026-10-15 by the single owner of AM1 on
 branch `stage0/am1-study`, after AM1 Step 0 (D107) and the development-set pilot
 (`program/evidence/2026-10-15/am1-dev-pilot/README.md`; exploratory, 63 development questions),
 and revised after the first and the second independent checks (section 19).
