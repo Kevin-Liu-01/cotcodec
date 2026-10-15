@@ -503,18 +503,21 @@ development and held-out differ (section 1.4).
 
 **H-B.** The exact power of the exact test over 347 questions, at a discordance rate r (the share
 of questions where BM25 top 4 and all 8 disagree) and a share s of discordant pairs favouring BM25
-top 4 (`mcnemar_power`; symmetric in s and 1 - s). At the development rate (4 of 63, r = 0.0635):
-power 1.00 at s = 1 or 0, 0.98 at s = 0.9 or 0.1, 0.78 at s = 0.8 or 0.2, 0.39 at s = 0.7 or 0.3.
-Section 1.2 already fixes the sign (s below 1/2) and a net count of at least 17: the test then
-rejects unless there are more than 67 discordant pairs.
+top 4 (`mcnemar_power`; symmetric in s and 1 - s; `power.json`, `paired.h_b`). At the development
+rate (4 of 63, r = 0.0635): 1.00 at s = 0 or 1, 0.98 at s = 0.1 or 0.9, 0.78 at s = 0.2 or 0.8,
+0.39 at s = 0.3 or 0.7, and 0.03 at s = 0.5 (the size). Section 1.2 already fixes the sign (s
+below 1/2) and a net count of at least 17 for all 8; the test then rejects unless there are more
+than 67 discordant pairs (`power.json`, `conditional_on_am1_published_counts`).
 
-**H-C.** At the development rate (1 discordant pair of 63, r = 0.016) and every discordant pair
-favouring the rule, power is 0.47; at r = 0.03, 0.95; at r = 0.05, 1.00. Conditioning on AM1's
-published count instead (BM25 top 4 wrong on exactly 86 retrieved tables, the only tables where
-the rule can gain), with c = 0 and a share q of those 86 tables converted to right answers: power
-0.008 at q = 0.02, 0.26 at q = 0.05, 0.87 at q = 0.1 and 1.00 at q = 0.2. On development q was 1
-of 5. The design detects a conversion rate of about 1 in 10 of the tables BM25 top 4 gets wrong,
-and is unlikely to detect one of 1 in 20.
+**H-C.** At the development rate (1 discordant pair in 63, r = 0.016) with every discordant pair
+favouring the rule, power is 0.47; at r = 0.02, 0.69; at r = 0.04, 0.99 (`paired.h_c`).
+Conditioning instead on AM1's published count (BM25 top 4 wrong on exactly 86 retrieved tables,
+the only tables where the rule can gain), with c = 0 and each of those 86 tables converted to a
+right answer with probability q, the test rejects (b of 6 or more) with probability 0.008 at
+q = 0.02, 0.26 at q = 0.05, 0.87 at q = 0.1 and 1.00 at q = 0.2
+(`conditional_on_am1_published_counts.retrieved.h_c_power_c0`). On development q was 1 of 5. The
+design detects a conversion rate of about 1 in 10 of the tables BM25 top 4 gets wrong, and is
+unlikely to detect one of 1 in 20.
 
 ## 10. Seeds
 
@@ -588,8 +591,8 @@ mode the script parses this table and refuses to run unless every file matches.
 
 | File | Role | SHA-256 |
 |---|---|---|
-| `scripts/memcredit_keepset_search.py` | this registration's analysis: gate, extract, analyze, development selftest and power | `a80e10a41b461a9ed4d11743cd9ef7fb2545fd1289abe8c537dcc297eac7ac07` |
-| `tests/test_memcredit_keepset_search.py` | its tests: exact order-statistic expectation, exact McNemar test and its interval, H-A per table and verdict, H-C's stop rule, the gate and the pins | `50b1f748757c1196f1889ad4af905d4753b4d822eb4c61dda3f09167dd2ad0ce` |
+| `scripts/memcredit_keepset_search.py` | this registration's analysis: gate, extract, analyze, development selftest and power | `1f4c37c110d9d1b4a21eb01812f4036dd7fc6c9185735f798c94ac1e39dcfc75` |
+| `tests/test_memcredit_keepset_search.py` | its tests: exact order-statistic expectation, exact McNemar test and its interval, H-A per table and verdict, H-C's stop rule, the gate and the pins | `aab7baa49c98d617e706e5a3ea9fbe902f344ab5bf50a95df575dce275e4e3b3` |
 | `scripts/memcredit_cost_curve.py` | AM1b's decoding, memoized calls, rules, greedy search and exact direct-search curve | `431f4cb21ccd398e1433e29a5b40c1a697d48b9aecc5fc728956f819e28c9bab` |
 | `scripts/memcredit_label_free.py` | AM1d's abstention list, join, features, BM25 order and stop rule | `721015de434021a72ab3bbbab5e91d0de39a2fc359df7283068f83026dcb9d8f` |
 | `scripts/memcredit_analyze.py` | AM1's join (`join_rows`, `pool_views`) and artifact loader | `5444104d3c760b17f311656f4e0dbd50b2b154c89d806f1e4aa2ab6791fb0f34` |

@@ -561,3 +561,26 @@ def test_features_from_another_pass_split_or_code_are_refused():
         mutate(bad)
         with pytest.raises(ks.KeepsetError):
             ks.check_features(bad, "development")
+
+
+def test_what_am1s_published_counts_imply(monkeypatch):
+    """AM1's rounded figures pin integer counts (0.343 of 251 is 86; 0.524 of 347 is 182), so BM25
+    top 4 is at least 17 questions behind all 8 on the retrieved arm (registration section 1.2)."""
+
+    out = ks.am1_count_power()
+    ret = out["retrieved"]
+    assert ret["top4_right_at_most"] == 165 and ret["difference_at_most"] == -17 / 347
+    hb = ret["h_b_at_smallest_net"]
+    assert hb["net_for_all_8"] == 17 and hb["rejects_while_discordant_at_most"] == 67
+    assert ks.mcnemar_exact(25, 42) <= 0.05 < ks.mcnemar_exact(26, 43)
+    assert "h_b_at_smallest_net" not in out["gold"]  # gold: at most +0.020, no direction
+    assert out["gold"]["difference_at_most"] == 7 / 347
+    assert ret["h_c_power_c0"]["smallest_b_rejecting_at_c0"] == 6
+    powers = list(ret["h_c_power_c0"]["by_conversion_rate"].values())
+    assert powers == sorted(powers)
+    assert ret["h_c_power_c0"]["by_conversion_rate"]["0.10"] > 0.8
+    bad = copy.deepcopy(ks.AM1_PUBLISHED)
+    bad["retrieved"]["top4_wrong"] = 87
+    monkeypatch.setattr(ks, "AM1_PUBLISHED", bad)
+    with pytest.raises(ks.KeepsetError, match="does not pin"):
+        ks.am1_count_power()

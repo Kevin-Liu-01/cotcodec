@@ -903,7 +903,7 @@ def reads_summary(reads: Sequence[int]) -> dict[str, Any]:
     return {
         "pools": len(reads),
         "mean": _mean(reads),
-        "median": statistics.median(reads),
+        "median": float(statistics.median(reads)),
         "max": max(reads),
         "at_1": sum(x == 1 for x in reads),
         "at_most_8": sum(x <= 8 for x in reads),
@@ -1401,8 +1401,11 @@ def selftest(
         )
     _check(checks, "AM1b per-table direct-search curve, B = 4 (70 points each)", *curves)
     for name, (c, i) in sorted(per_rule.items()):
-        _check(checks, f"AM1b per-table {name}, B = 4 (regret, calls, matched direct; seeds "
-               "42-61 per seed)", c, i)  # fmt: skip
+        if name in HA_RULES:
+            what = "regret, calls and matched direct search; per seed, seeds 42-61, if sampled"
+        else:
+            what = "regret (0 calls)"
+        _check(checks, f"AM1b per-table {name}, B = 4 ({what})", c, i)
     # ---- AM1b aggregates (AM1b's convention: rule minus direct; 10,000 resamples, seed 42)
     agg_n = agg_same = 0
     mismatches = []
@@ -1728,6 +1731,61 @@ def power(
             "power_by_rate_and_share": grid,
         }
     out["paired"] = paired
+    out["conditional_on_am1_published_counts"] = am1_count_power()
+    return out
+
+
+#: Integer counts that AM1's published held-out figures pin (RESULTS.md: retrieval-rank regret
+#: 0.343 over 251 non-constant retrieved tables; u(full pool) 0.524 over 347 questions; the gold
+#: arm's 0.278 over 288 and 0.579 over 347). Registration section 1.2.
+AM1_PUBLISHED = {
+    "retrieved": {"tables": 251, "top4_wrong": 86, "retrieval_rank_regret": 0.343,
+                  "questions": 347, "all_8_right": 182, "u_full_pool": 0.524},
+    "gold": {"tables": 288, "top4_wrong": 80, "retrieval_rank_regret": 0.278,
+             "questions": 347, "all_8_right": 201, "u_full_pool": 0.579},
+}  # fmt: skip
+CONVERSION_RATES = (0.02, 0.05, 0.1, 0.2, 0.3)
+
+
+def am1_count_power() -> dict[str, Any]:
+    """What AM1's published counts imply for H-B and H-C (no held-out table is read). H-B: BM25
+    top 4 is right on at most tables - top4_wrong questions, so the difference is at most that
+    minus all_8_right, over the questions; and at that smallest net count the largest number of
+    discordant pairs at which the exact test still rejects. H-C: the rule can gain only on the
+    top4_wrong tables; with c = 0 and each of them converted with probability q, the power is
+    P(b >= the smallest b the test rejects at c = 0)."""
+
+    out: dict[str, Any] = {}
+    for arm, n in AM1_PUBLISHED.items():
+        for count, total, figure in (
+            (n["top4_wrong"], n["tables"], n["retrieval_rank_regret"]),
+            (n["all_8_right"], n["questions"], n["u_full_pool"]),
+        ):
+            pinned = [k for k in range(total + 1) if round(k / total, 3) == figure]
+            if pinned != [count]:
+                raise KeepsetError(f"{figure} over {total} does not pin the count {count}")
+        net = n["tables"] - n["top4_wrong"] - n["all_8_right"]
+        entry: dict[str, Any] = {**n, "top4_right_at_most": n["tables"] - n["top4_wrong"],
+                                 "difference_at_most": net / n["questions"]}  # fmt: skip
+        if net < 0:
+            d = -net
+            last = max(b for b in range(n["questions"]) if mcnemar_exact(b, b + d) <= ALPHA_PAIRED)
+            entry["h_b_at_smallest_net"] = {
+                "net_for_all_8": d,
+                "rejects_while_top4_right_all_8_wrong_at_most": last,
+                "rejects_while_discordant_at_most": 2 * last + d,
+            }
+        b_min = min(b for b in range(1, 100) if mcnemar_exact(b, 0) <= ALPHA_PAIRED)
+        entry["h_c_power_c0"] = {
+            "smallest_b_rejecting_at_c0": b_min,
+            "by_conversion_rate": {
+                f"{q:.2f}": sum(
+                    _pmf(b, n["top4_wrong"], q) for b in range(b_min, n["top4_wrong"] + 1)
+                )
+                for q in CONVERSION_RATES
+            },
+        }
+        out[arm] = entry
     return out
 
 
