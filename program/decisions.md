@@ -2644,3 +2644,39 @@ computed from the committed tables without a GPU.**
     used those tables for other estimands.
 - Scope replication (a second reader family or retriever, about 3 GPU-h each)
   stays a candidate. It is not started.
+
+**D113. AM1b (exploratory): on the development tables, direct search beats
+every query-based credit rule at equal reader calls. Next: label-free search
+on development data, then one registration on the held-out tables.**
+- AM1b. It ran CPU-only from the pilot's committed 256-outcome tables, on
+  development data only, with no confirmatory data opened
+  (`program/evidence/2026-10-15/am1b-cost-curve/README.md`). A fresh checker
+  reproduced it byte for byte, recomputed every headline figure independently
+  and found the comparison fair. Its wording corrections are applied.
+- Primary cell (retrieved, B = 4, 38 tables):
+  - direct search (m random 4-subsets, keep the best) loses 0.091 at 9 calls,
+    0.024 at 26 calls, and is exact at 70 calls;
+  - leave-one-out loses 0.214 at 9 calls; greedy backward 0.079 at 26 calls;
+  - SNIPW-64 loses 0.050 at about 57 calls (AM1's 3-seed figure of 0.070 was
+    seed noise);
+  - exact Banzhaf loses 0.031 and exact Shapley 0.079 at 256 calls;
+  - no credit rule's 99% upper bound reaches 0.05;
+  - retrieval rank (0 calls, 0.132) beats every rule below about 15 calls.
+- Reading. When the decision is "which k memories to keep for this question"
+  and the utility can be queried, per-memory credit is the wrong tool: search
+  over keep sets is cheaper and better. Credit's remaining case is one ranking
+  for every budget, or credits that transfer across questions. Neither is
+  shown here.
+- Limit. Every rule reads the judged utility, which needs the reference
+  answer, so none of this is a keep policy that runs without labels.
+- Next:
+  1. AM1d (exploratory, development data only, CPU). Can a label-free
+     utility, computed from the reader's own replies and log-probabilities
+     already recorded in the pilot's passes, choose keep sets by search?
+     Examples are the reply's confidence and agreement with the full-pool
+     reply. This is the deployable version of the question.
+  2. Then one registration on the 694 held-out tables (CPU only) with two
+     tests: search against credit at equal calls (oracle utility), and the
+     best label-free search from AM1d against retrieval rank. It must disclose
+     that AM1 used those tables for other estimands, and that their headline
+     results were known when it was designed.
