@@ -4,7 +4,8 @@
 # flags abstentions and runs the anchor checks (held-out: job 1458 and AM1's committed tables;
 # development: AM3's job 1466), and writes text-free features to the host-only private directory
 # $R/private. Reply texts never leave the host. The held-out and abstention populations refuse
-# before the freeze.
+# before the freeze. JOB is the job the rerun rule kept (am3g-rerun-decision.sh): the rerun's id
+# when a rerun ran.
 # Usage: am3g-extract.sh dev|reg <commit short id> <population> <job id>
 set -Eeuo pipefail
 source "$(dirname "$0")/am3g-env.sh" "${1:?mode}"
@@ -27,3 +28,4 @@ esac
   echo "end $(date -u +%FT%TZ)"
 } > "$R/extract-${POP}-${SHORT}.log" 2>&1 || true
 cat "$R/extract-${POP}-${SHORT}.log"
+log_job "extract ${POP} job ${JOB} at ${SHORT}: $(grep -m1 '^extract exit' "$R/extract-${POP}-${SHORT}.log")"

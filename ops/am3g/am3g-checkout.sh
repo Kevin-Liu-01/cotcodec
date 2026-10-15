@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # am3-nonabstain-generality-v1: a clean clone of commit $2 on the host from a git bundle copied
 # from the operator's Mac ($R/bundles/am3g-<short>.bundle), detached at that commit; prints the
-# SHA-256 of `git archive --format=tar <commit>` so it can be compared with the Mac's.
+# SHA-256 of `git archive --format=tar <commit>` so it can be compared with the Mac's. The first
+# checkout runs from the bootstrap copies am3g-mac-bundle.sh placed in $R/bootstrap; they must
+# equal the commit's own copies (checked below), which section 16 pins.
 # Usage: am3g-checkout.sh dev|reg <full commit id>
 set -Eeuo pipefail
 source "$(dirname "$0")/am3g-env.sh" "${1:?mode}"
@@ -16,5 +18,9 @@ else
 fi
 git -c advice.detachedHead=false checkout -q "$G"
 [[ "$(git rev-parse HEAD)" == "$G" && -z "$(git status --porcelain)" ]] || { echo "not clean at $G"; exit 2; }
+# The scripts running this (a bootstrap copy, or the checkout's own) must be the commit's.
+for f in am3g-checkout.sh am3g-env.sh; do
+  cmp -s "$(dirname "$0")/$f" "$C/ops/am3g/$f" || { echo "$(dirname "$0")/$f differs from $G's copy" >&2; exit 2; }
+done
 A=$(git archive --format=tar "$G" | sha256sum | cut -d" " -f1)
 log_job "clean checkout of $G (tree $(git rev-parse --short=8 "HEAD^{tree}")) from bundle $(sha256sum "$B" | cut -c1-8); git archive sha256 $A"

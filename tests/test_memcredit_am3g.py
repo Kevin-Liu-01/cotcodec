@@ -17,6 +17,7 @@ import json
 import random
 import subprocess
 import sys
+from collections import Counter
 from pathlib import Path
 
 import pytest
@@ -168,14 +169,61 @@ def test_verify_models_refuses_a_receipt_other_than_the_pin(monkeypatch):
         g.verify_models(bad, pilot)
 
 
-def test_step_budgets_fit_each_jobs_limit():
-    """On the normal path (no fallback) every step's max_s fits in the limit minus the lane's
-    210 s margin, and the registered caps are the limits' sum."""
+def _simulate(config: dict, population: str, path: str) -> dict:
+    """Worst case of one registered job under budget.overhead_model: every step takes its
+    overhead plus its full max_s. path: "normal"; "fallback" (OLMo-2's batch-invariant engine
+    fails to start, then its default-mode step runs); "capped-fallback" (OLMo-2's batch-invariant
+    pass is stopped by its max_s, then the fallback runs: the residual path of section 11)."""
+
+    job = config["jobs"][population]
+    over = config["budget"]["overhead_model"][population]
+    budgets = job["step_budgets"]
+    deadline = job["minutes"] * 60 - 210
+    t = over["job"]
+    started, skipped = {}, []
+    order = ["rd-qwen3-8b", "rd-olmo2"] + (["rd-olmo2-default"] if path != "normal" else [])
+    order += ["rd-qwen35-9b-default", "judge32", "judge8"]
+    for sid in order:
+        min_start, max_s = budgets[sid]
+        if deadline - t < min_start:
+            skipped.append(sid)
+            continue
+        started[sid] = deadline - t
+        kind = "judge32" if sid == "judge32" else "judge8" if sid == "judge8" else "reader"
+        if sid == "rd-olmo2" and path == "fallback":
+            t += over["failed_engine_step"]
+        else:
+            t += over[kind] + max_s
+    return {"started": started, "skipped": skipped, "end": t, "deadline": deadline}
+
+
+@pytest.mark.parametrize("population", ["heldout", "abstention"])
+@pytest.mark.parametrize("path", ["normal", "fallback"])
+def test_judges_start_and_fit_in_the_worst_case(population, path):
+    """M1 of check 1: with every reader at its cap and the overheads measured in job 1471, both
+    judges still start and finish before the deadline, on the normal and the fallback paths; and
+    every step's min_start_s covers its own overhead plus its max_s."""
 
     config = g.load_config()
-    for name, job in config["jobs"].items():
-        total = sum(v[1] for k, v in job["step_budgets"].items() if k != "rd-olmo2-default")
-        assert total <= job["minutes"] * 60 - 210, name
+    over = config["budget"]["overhead_model"][population]
+    for sid, (min_start, max_s) in config["jobs"][population]["step_budgets"].items():
+        kind = sid if sid.startswith("judge") else "reader"
+        assert min_start >= over[kind] + max_s, sid
+    run = _simulate(config, population, path)
+    assert run["skipped"] == [] and {"judge32", "judge8"} <= set(run["started"])
+    assert run["end"] <= run["deadline"]
+
+
+def test_the_residual_path_is_the_one_section_11_discloses():
+    """If OLMo-2's batch-invariant pass is time-capped and its fallback then runs, the held-out job
+    cannot reach judge32: a time-budget void with no rerun (section 11 says so)."""
+
+    run = _simulate(g.load_config(), "heldout", "capped-fallback")
+    assert "judge32" in run["skipped"]
+
+
+def test_registered_caps_are_the_limits():
+    config = g.load_config()
     caps = config["budget"]
     jobs = config["jobs"]
     assert caps["registered_cap_gpu_hours"] == round(
@@ -207,6 +255,20 @@ def test_abstention_template_is_the_archived_official_port():
         assert g.ABSTENTION_TEMPLATE.format(*args) == legacy(qtype, *args, abstention=True)
     assert g.abstention_template_sha256() == g.ABSTENTION_TEMPLATE_SHA256
     assert g.answer_templates_sha256() == g.ANSWER_TEMPLATES_SHA256
+
+
+def test_the_archived_port_has_its_section_4_digest():
+    """Host and Mac checkouts only: legacy/ is not in the image."""
+
+    port = ROOT / "legacy/harness/memory_trials/longmemeval_judge.py"
+    if not port.is_file():
+        pytest.skip("legacy/ is not in this tree (the image)")
+    assert g.sha256_file(port) == (
+        "77aed59acdf42f0848f59f73cc3f61f0d625300b16a18b35797bae139b8dfee1"
+    )
+    assert "77aed59acdf42f0848f59f73cc3f61f0d625300b16a18b35797bae139b8dfee1" in (
+        (ROOT / g.REGISTRATION).read_text()
+    )
 
 
 def _toy_memory(i: int, rank: int, gold: bool = False) -> dict:
@@ -734,10 +796,24 @@ def _relax_pins(monkeypatch, population_specs: dict) -> None:
     monkeypatch.setattr(g, "population_spec", spec)
 
 
+def _toy_committed_tables(artifact: dict, reader: str = "a") -> list[dict]:
+    tables = []
+    for q, question in enumerate(artifact["questions"]):
+        for arm in g.ARMS:
+            values = [1.0 if f"blue {q}" in _reply(reader, q, arm, m, False).lower() else 0.0
+                      for m in range(256)]  # fmt: skip
+            tables.append({"question_id": question["question_id"], "arm": arm,
+                           "values_hex": g.cc.encode_values(values)})  # fmt: skip
+    return tables
+
+
 def test_development_extract_and_analyze_end_to_end(tmp_path, monkeypatch):
     artifact = _toy_artifact(4)
     _relax_pins(monkeypatch, {"development": {"questions": 4}})
+    monkeypatch.setattr(g, "load_pinned_tables", lambda spec: _toy_committed_tables(artifact))
     features = _extract(tmp_path, monkeypatch, "development", artifact, "dev")
+    check = features["comparisons"]["anchor_vs_pilot_tables"]
+    assert check["cells"] == check["cells_same_label"] == 4 * 2 * 71
     config = g.load_config()
     results, per_table = g.analyze_development(copy.deepcopy(features), config)
     again, _ = g.analyze_development(copy.deepcopy(features), config)
@@ -760,12 +836,38 @@ def test_registered_analyze_end_to_end_and_text_free(tmp_path, monkeypatch):
     held = _extract(tmp_path, monkeypatch, "heldout", held_artifact, "held")
     absf = _extract(tmp_path, monkeypatch, "abstention", abs_artifact, "abs")
     config = g.load_config()
-    results, per_table = g.analyze_registered(copy.deepcopy(held), copy.deepcopy(absf), config)
-    again, per_again = g.analyze_registered(copy.deepcopy(held), copy.deepcopy(absf), config)
+    plan = g.hand_plan(copy.deepcopy(held))
+    labels = [{"item_id": i["item_id"], "label": int(i["uses"][0]["judge_primary"])}
+              for i in plan["items"]]  # fmt: skip
+
+    def run(h=held, a=absf, lab=labels):
+        return g.analyze_registered(copy.deepcopy(h), copy.deepcopy(a) if a else None, config,
+                                    None if a else "VOID (V2, incomplete): x",
+                                    lab, "f" * 64)  # fmt: skip
+
+    results, per_table = run()
+    again, per_again = run()
     assert json.dumps(results, sort_keys=True) == json.dumps(again, sort_keys=True)
     assert per_table == per_again
     assert results["validity"]["v3_anchor_replay"]["pass"] is True
-    assert results["h1"]["status"] in ("read", "JUDGE_DEPENDENT: G-J1 failed; no decision follows")
+    assert "g_j1_replay_of_am1_validation_items" in results["validity"]
+    assert results["h1_hand_check"]["status"] == "joined"
+    assert results["h1_hand_check"]["agreement"]["kappa"] in (1.0, None)
+    for e in results["h1"]["readers"].values():
+        assert e["reading"] == e["judge_reading"]  # hand labels equal the judge's: confirmed
+        assert e["scope"]
+    assert results["h1"]["readers"]["qwen3.5-9b"]["engine_mode"] == "default"
+    # Without labels a directional reading waits; with a missing label it is JUDGE_DEPENDENT.
+    pending, _ = run(lab=None)
+    assert pending["h1_hand_check"]["status"] == "missing"
+    assert all(e["reading"] in ("PENDING_HAND_CHECK", "NO_DETECTED_DIFFERENCE")
+               for e in pending["h1"]["readers"].values())  # fmt: skip
+    if labels:
+        short, _ = run(lab=labels[1:])
+        assert short["h1_hand_check"]["status"] == "incomplete"
+        assert all(e["reading"] in ("JUDGE_DEPENDENT", "NO_DETECTED_DIFFERENCE")
+                   for e in short["h1"]["readers"].values())  # fmt: skip
+    assert "natural_mix_linked_twins" in results["descriptive"]
     assert set(results["verdicts"]["H1"]) == set(g.H1_READERS) | {"status"}
     h2 = results["h2"]["readers"]
     # Reader a always abstains on the toy abstention questions: no switch, no cost. Readers b and
@@ -781,25 +883,25 @@ def test_registered_analyze_end_to_end_and_text_free(tmp_path, monkeypatch):
     blob = json.dumps(results) + json.dumps(per_table) + g.render_markdown(results)
     for text in ("blue 0", "green 1", "It is", "red 2", "memory 4", "question 1?"):
         assert text not in blob
-    # A failed anchor replay voids both hypotheses' readings.
+    # A failed anchor replay voids both hypotheses' readings (VOID before any other state).
     broken = copy.deepcopy(held)
     broken["comparisons"]["anchor"]["pass"] = False
-    void, _ = g.analyze_registered(broken, copy.deepcopy(absf), config)
+    void, _ = run(h=broken)
     assert void["h1"]["status"].startswith(g.VOID_REPLAY)
     assert {void["h1"]["readers"][r]["reading"] for r in g.H1_READERS} == {"VOID"}
     assert void["h2"]["status"].startswith(g.VOID_REPLAY)
     # The registered H2 void path keeps H1.
-    no_abs, _ = g.analyze_registered(copy.deepcopy(held), None, config, "VOID (V2, incomplete): x")
+    no_abs, _ = run(a=None)
     assert no_abs["h2"]["status"].startswith("VOID") and "natural_mix" not in no_abs["descriptive"]
     # A changed provenance field is the V1 void.
     other = copy.deepcopy(absf)
     other["abstention_template_sha256"] = "0" * 64
     with pytest.raises(g.Am3gError, match="V1"):
-        g.analyze_registered(copy.deepcopy(held), other, config)
+        run(a=other)
     incomplete = copy.deepcopy(held)
     incomplete["readers"].pop("qwen3.5-9b")
     with pytest.raises(g.Am3gError, match="V2"):
-        g.analyze_registered(incomplete, copy.deepcopy(absf), config)
+        run(h=incomplete)
 
 
 def test_gold_free_proxy_counts():
@@ -928,3 +1030,308 @@ def test_anchor_checks_refuse_a_changed_reference_file(tmp_path, monkeypatch):
     (ref / "judge-items.json").write_text("[]")
     with pytest.raises(g.Am3gError, match="V1"):
         g.anchor_checks_heldout(config, artifact, rows, pools, labels, item_of, items, ref)
+
+
+# --------------------------------------------------------------------------- H1's blind hand check
+
+
+def _hand_features(gains: dict[str, int], switched_concordant: int = 3, n: int = 12) -> dict:
+    """Toy held-out features: per H1 reader, ``gains[reader]`` questions where BM25 top 4 abstains
+    (judged wrong) and the next 4-subset answers right (discordant), ``switched_concordant`` where
+    the rule switches but both are wrong, the rest where top 4 answers (no switch)."""
+
+    ranks = [3, 0, 5, 1, 7, 2, 6, 4]
+    order = sorted(lf.FOUR_SETS, key=lambda m: lf.rank_key(m, ranks), reverse=True)
+    readers = {}
+    for reader in g.H2_READERS:
+        pools = []
+        for q in range(n):
+            masks = {}
+            for m in g.REQUEST_MASKS:
+                masks[str(m)] = {"abstain": False, "u": {"primary": 0, "secondary": 0},
+                                 "digest": f"{reader}-{q}-{m}", "finish": "stop"}  # fmt: skip
+            if q < gains.get(reader, 0):
+                masks[str(order[0])].update(abstain=True, digest="idk")
+                masks[str(order[1])]["u"] = {"primary": 1, "secondary": 1}
+            elif q < gains.get(reader, 0) + switched_concordant:
+                masks[str(order[0])].update(abstain=True, digest="idk")
+            else:
+                masks[str(order[0])]["u"] = {"primary": q % 2, "secondary": q % 2}
+            pools.append({"question_id": f"q{q:02d}", "question_type": "multi-session",
+                          "arm": "retrieved", "bm25_rank": ranks, "gold_mask": 1,
+                          "masks": masks})  # fmt: skip
+        readers[reader] = {"pools": pools, "batch_invariant": reader != "qwen3.5-9b"}
+    return {"readers": readers}
+
+
+def test_hand_plan_takes_every_discordant_pair_and_as_many_distractor_questions():
+    features = _hand_features({"olmo-2-1124-7b-instruct": 4, "qwen3.5-9b": 2})
+    plan = g.hand_plan(copy.deepcopy(features))
+    assert plan == g.hand_plan(copy.deepcopy(features))  # deterministic
+    assert plan["readers"]["olmo-2-1124-7b-instruct"] == {"discordant_questions": 4,
+                                                          "distractor_questions": 4}  # fmt: skip
+    assert plan["readers"]["qwen3.5-9b"] == {"discordant_questions": 2, "distractor_questions": 2}
+    roles = Counter(u["role"] for i in plan["items"] for u in i["uses"])
+    assert roles["discordant-rule"] == roles["discordant-top4"] == 6
+    assert roles["distractor"] == 12  # two replies per distractor question
+    # Distractor questions come first from those where the rule left BM25 top 4.
+    uses = [u for i in plan["items"] for u in i["uses"] if u["role"] == "distractor"]
+    assert all(u["mask"] for u in uses)
+    # The items are deduplicated by (question, reply digest): the shared "idk" top-4 reply of a
+    # question is one item, used by its roles.
+    keys = [(i["question_id"], i["reply_digest"]) for i in plan["items"]]
+    assert len(keys) == len(set(keys))
+    assert [i["item_id"] for i in plan["items"]] == [f"h{n:04d}" for n in range(len(keys))]
+
+
+def _labels(plan: dict, flip: set[str] = frozenset()) -> list[dict]:
+    out = []
+    for item in plan["items"]:
+        label = int(item["uses"][0]["judge_primary"])
+        if item["item_id"] in flip:
+            label = 1 - label
+        out.append({"item_id": item["item_id"], "label": label})
+    return out
+
+
+def test_hand_check_confirms_rejects_and_reports_agreement():
+    features = _hand_features({"olmo-2-1124-7b-instruct": 8, "qwen3.5-9b": 7})
+    plan = g.hand_plan(copy.deepcopy(features))
+    hand = g.hand_check(features, plan, _labels(plan), "a" * 64)
+    assert hand["status"] == "joined"
+    olmo, qwen = hand["readers"]["olmo-2-1124-7b-instruct"], hand["readers"]["qwen3.5-9b"]
+    assert (olmo["b_hand"], olmo["c_hand"], qwen["b_hand"], qwen["c_hand"]) == (8, 0, 7, 0)
+    assert olmo["hand_label"] == qwen["hand_label"] == "NONABSTAIN_HELPS"
+    assert hand["agreement"]["agree"] == hand["agreement"]["items"]
+    for reader in g.H1_READERS:
+        assert g.confirm_reading("NONABSTAIN_HELPS", hand, reader) == "NONABSTAIN_HELPS"
+        assert g.confirm_reading("NO_DETECTED_DIFFERENCE", hand, reader) == (
+            "NO_DETECTED_DIFFERENCE"
+        )
+        assert g.confirm_reading("NONABSTAIN_HURTS", hand, reader) == "JUDGE_DEPENDENT"
+    # The hand labeller calls two of Qwen3.5-9B's rule replies wrong: 5 against 0 cannot reject
+    # at Holm's step, so its reading becomes JUDGE_DEPENDENT; OLMo-2's stands.
+    flip = {i["item_id"] for i in plan["items"]
+            if any(u["reader"] == "qwen3.5-9b" and u["role"] == "discordant-rule"
+                   for u in i["uses"])}  # fmt: skip
+    hand2 = g.hand_check(features, plan, _labels(plan, set(sorted(flip)[:2])), "a" * 64)
+    assert hand2["readers"]["qwen3.5-9b"]["b_hand"] == 5
+    assert g.confirm_reading("NONABSTAIN_HELPS", hand2, "qwen3.5-9b") == "JUDGE_DEPENDENT"
+    assert g.confirm_reading("NONABSTAIN_HELPS", hand2, "olmo-2-1124-7b-instruct") == (
+        "NONABSTAIN_HELPS"
+    )
+    assert hand2["agreement"]["agree"] == hand2["agreement"]["items"] - 2
+
+
+def test_hand_check_status_without_or_with_bad_labels():
+    features = _hand_features({"olmo-2-1124-7b-instruct": 8, "qwen3.5-9b": 7})
+    plan = g.hand_plan(copy.deepcopy(features))
+    assert g.hand_check(features, plan, None, None)["status"] == "missing"
+    assert g.confirm_reading("NONABSTAIN_HELPS", {"status": "missing"}, "x") == (
+        "PENDING_HAND_CHECK"
+    )
+    labels = _labels(plan)
+    for bad in (labels[1:], labels + [labels[0]], labels + [{"item_id": "zzz", "label": 1}],
+                [dict(labels[0], label=2)] + labels[1:]):  # fmt: skip
+        hand = g.hand_check(features, plan, bad, "a" * 64)
+        assert hand["status"] == "incomplete"
+        assert g.confirm_reading("NONABSTAIN_HELPS", hand, "qwen3.5-9b") == "JUDGE_DEPENDENT"
+
+
+def test_hand_labels_must_match_the_committed_digest(tmp_path):
+    path = tmp_path / "hand-labels.jsonl"
+    path.write_text('{"item_id": "h0000", "label": 1}\n')
+    rows, digest = g.read_hand_labels(path, g.sha256_file(path))
+    assert rows == [{"item_id": "h0000", "label": 1}]
+    with pytest.raises(g.Am3gError, match="committed"):
+        g.read_hand_labels(path, "0" * 64)
+    with pytest.raises(g.Am3gError, match="committed"):
+        g.read_hand_labels(path, None)
+
+
+def test_hand_sample_is_blind_and_matches_the_plan(tmp_path, monkeypatch):
+    """The sample file carries only the question, its type and id, the reference answer and the
+    reply: no judge label, reader, role, mask or rule identity."""
+
+    artifact = _toy_artifact(6)
+    _relax_pins(monkeypatch, {"development": {"questions": 6}})
+    monkeypatch.setattr(g, "load_pinned_tables", lambda spec: _toy_committed_tables(artifact))
+    features = _extract(tmp_path, monkeypatch, "development", artifact, "dev")
+    features_path = tmp_path / "features.json.gz"
+    g.write_gz_json(features_path, features)
+    run = tmp_path / "dev" / "am3g"
+    args = g.argparse.Namespace(config=str(g.CONFIG_PATH), population="development",
+                                run_dir=str(run), evidence="x", features=str(features_path),
+                                private_dir=str(tmp_path / "private-hand"))  # fmt: skip
+    out = g.cmd_hand_sample(args)
+    sample = tmp_path / "private-hand" / "hand-check-sample.jsonl"
+    rows = [json.loads(line) for line in sample.read_text().splitlines()]
+    plan = g.hand_plan(copy.deepcopy(features))
+    assert out["items"] == len(rows) == len(plan["items"])
+    assert out["plan_sha256"] == plan["plan_sha256"]
+    assert [r["item_id"] for r in rows] == [i["item_id"] for i in plan["items"]]
+    allowed = {"item_id", "question_id", "question_type", "question", "reference_answer", "reply"}
+    assert all(set(r) == allowed for r in rows)
+    blob = json.dumps(rows)
+    for leak in ("judge", "discordant", "distractor", "olmo", "qwen", "mask", "rule"):
+        assert leak not in blob.lower()
+    assert (
+        "Blind hand check"
+        in (tmp_path / "private-hand" / "hand-check-instructions.txt").read_text()
+    )
+    with pytest.raises(g.Am3gError, match="overwrite"):
+        g.cmd_hand_sample(args)
+
+
+# --------------------------------------------------------------------------- the rerun rule
+
+
+def _summary(**steps) -> dict:
+    base = {sid: {"kind": "reader", "status": "complete"} for sid in
+            ("rd-qwen3-8b", "rd-olmo2", "rd-qwen35-9b-default")}  # fmt: skip
+    base |= {"rd-olmo2-default": {"status": "not-needed"}, "judge32": {"status": "complete"},
+             "judge8": {"status": "complete"}}  # fmt: skip
+    for sid, rec in steps.items():
+        base[sid] = rec
+    return {"steps": base, "model_verification": {}}
+
+
+@pytest.mark.parametrize(
+    ("summary", "termination", "decision"),
+    [
+        (_summary(), {"reason": "completed"}, "complete"),
+        (_summary(judge8={"status": "partial"}), {"reason": "completed"}, "complete"),
+        (None, {"reason": "gpu_prolog_unavailable"}, "rerun"),
+        (None, {"reason": "workload_failed"}, "rerun"),
+        (None, {"reason": "hard_stop"}, "no-rerun"),
+        ({"steps": {}, "model_verification": {"error": "x"}}, {"reason": "workload_failed"},
+         "void"),
+        (_summary(**{"rd-olmo2": {"status": "engine-failed"},
+                     "rd-olmo2-default": {"status": "complete"}}), {"reason": "completed"},
+         "complete"),
+        (_summary(**{"rd-olmo2": {"status": "engine-failed"},
+                     "rd-olmo2-default": {"status": "engine-failed"}}), {"reason": "completed"},
+         "rerun"),
+        (_summary(**{"rd-qwen3-8b": {"status": "smoke-failed"}}), {"reason": "completed"},
+         "rerun"),
+        (_summary(**{"rd-qwen3-8b": {"status": "failed"}}), {"reason": "completed"}, "rerun"),
+        (_summary(**{"rd-qwen3-8b": {"status": "failed", "worker_done": {"exit": 2}}}),
+         {"reason": "completed"}, "void"),
+        (_summary(**{"rd-qwen35-9b-default": {"status": "partial"}}), {"reason": "completed"},
+         "no-rerun"),
+        (_summary(judge32={"status": "skipped", "reason": "remaining 650 s"}),
+         {"reason": "completed"}, "no-rerun"),
+        (_summary(judge32={"status": "failed", "killed": "late"}), {"reason": "completed"},
+         "no-rerun"),
+        (_summary(judge32={"status": "skipped", "reason": "SIGTERM"}),
+         {"reason": "signal_TERM_checkpoint_confirmed", "finished_at": "2026-10-15T11:00:00Z",
+          "hard_stop_at": "2026-10-15T11:02:00Z"}, "no-rerun"),
+        (_summary(judge32={"status": "skipped", "reason": "SIGTERM"}),
+         {"reason": "signal_TERM_checkpoint_confirmed", "finished_at": "2026-10-15T10:00:00Z",
+          "hard_stop_at": "2026-10-15T11:02:00Z"}, "rerun"),
+    ],
+)  # fmt: skip
+def test_the_rerun_rule_is_mechanical(summary, termination, decision):
+    assert g.rerun_decision(summary, termination)["decision"] == decision
+
+
+def test_rerun_decision_reads_a_job_directory(tmp_path):
+    job = tmp_path / "1500"
+    (job / "am3g").mkdir(parents=True)
+    (job / "termination.env").write_text("job_id=1500\nreason=completed\n")
+    (job / "am3g" / "summary.json").write_text(json.dumps(_summary()))
+    out = g.cmd_rerun_decision(g.argparse.Namespace(population="heldout", job_dir=str(job)))
+    assert out["decision"] == "complete" and out["job_dir"] == "1500"
+
+
+# --------------------------------------------------------------------------- twins and tables
+
+
+def test_twin_membership_takes_the_split_first():
+    split = {"development": ["d1", "d2"], "heldout": ["h1", "h2"]}
+    by_id = {k: {} for k in ("d1", "d2", "h1", "h2", "x")}
+    excluded = {"d2", "h2"}
+    assert g.twin_membership("d2", by_id, split, excluded) == "development"
+    assert g.twin_membership("h2", by_id, split, excluded) == "heldout-step0-demo-excluded"
+    assert g.twin_membership("h1", by_id, split, excluded) == "heldout-confirmatory"
+    assert g.twin_membership("x", by_id, split, excluded) == "not-usable"
+    assert g.twin_membership("y", by_id, split, excluded) == "absent"
+
+
+def test_twin_text_overlap_is_counted_without_text():
+    config = g.load_config()
+    pilot = g.load_pilot_config(config)
+    records = _toy_dataset()
+    split = {"development": ["0000abcd", "0001abcd"], "heldout": ["0002abcd"]}
+    artifact, facts = g.build_abstention_artifact(records, pilot, split, config)
+    for f in facts["twins"]:
+        # The toy abstention record reuses its twin's first 20 turns, so every pool memory is
+        # among the twin's user turns.
+        assert f["pool_memories_in_twin_user_turns"] == 8
+        assert 0 <= f["pool_memories_in_twin_retrieved_pool"] <= 8
+    summary = g.abstention_summary(artifact, "0" * 64, facts, pilot)
+    assert summary["twin_text_overlap"]["memories"] == 24
+    assert summary["twin_text_overlap"]["memories_in_twin_user_turns"] == 24
+
+
+def test_natural_mix_can_resample_linked_twins_together():
+    answerable = [_rec(f"t{i}", "retrieved", 0, 1 if i < 5 else 0) for i in range(20)]
+    unanswerable = [_rec(f"t{i}_abs", "retrieved", 1, 0 if i < 3 else 1) for i in range(6)]
+    weights = {"answerable": 470, "abstention": 30}
+    plain = g.natural_mix(answerable, unanswerable, weights, 400, 42)
+    linked = g.natural_mix(answerable, unanswerable, weights, 400, 42, link_twins=True)
+    assert linked["bootstrap"]["linked_pairs"] == 6 and plain["bootstrap"]["linked_pairs"] == 0
+    for key in ("net_count", "gain_per_answerable", "loss_per_unanswerable", "mix_rate"):
+        assert linked[key] == plain[key]
+    assert linked["mix_rate_ci95"][0] <= linked["mix_rate"] <= linked["mix_rate_ci95"][1]
+    assert linked == g.natural_mix(answerable, unanswerable, weights, 400, 42, link_twins=True)
+
+
+def test_pinned_tables_are_checked_before_use(tmp_path):
+    tables = [{"question_id": "q0", "arm": "retrieved", "values_hex": "0" * 64}]
+    data = json.dumps(tables).encode()
+    gz = gzip.compress(data, mtime=0)
+    (tmp_path / "t.json.gz").write_bytes(gz)
+    spec = {"path": "t.json.gz", "sha256": g.sha256_bytes(gz), "json_sha256": g.sha256_bytes(data)}
+    assert g.load_pinned_tables(spec, tmp_path) == tables
+    for bad in ({"sha256": "0" * 64}, {"json_sha256": "0" * 64}, {"path": "missing.gz"}):
+        with pytest.raises(g.Am3gError, match="V1"):
+            g.load_pinned_tables(spec | bad, tmp_path)
+    keyless = json.dumps([{"question_id": "q0"}]).encode()
+    (tmp_path / "k.json.gz").write_bytes(gzip.compress(keyless, mtime=0))
+    with pytest.raises(g.Am3gError, match="not a list of tables"):
+        g.load_pinned_tables({"path": "k.json.gz",
+                              "sha256": g.sha256_file(tmp_path / "k.json.gz"),
+                              "json_sha256": g.sha256_bytes(keyless)}, tmp_path)  # fmt: skip
+    pool = {"question_id": "q9", "arm": "gold", "masks": {}}
+    with pytest.raises(g.Am3gError, match="lack 1 pools"):
+        g.labels_vs_tables([pool], tables)
+
+
+def test_the_configs_tables_pins_are_the_committed_files():
+    """Both tables files are hashed, and the development one is opened (the pilot's, not
+    held-out); the held-out one's entries are not decoded here."""
+
+    config = g.load_config()
+    held = config["populations"]["heldout"]["tables"]
+    assert g.sha256_file(ROOT / held["path"]) == held["sha256"]
+    dev = g.load_pinned_tables(config["populations"]["development"]["tables"])
+    assert len(dev) == 126
+
+
+def test_missing_judge_items_is_a_named_void_not_a_traceback(tmp_path, monkeypatch, capsys):
+    artifact = _toy_artifact(2)
+    _relax_pins(monkeypatch, {"development": {"questions": 2}})
+    run = _toy_run(tmp_path, "development", artifact, "dev")
+    (run / "judge-items.json").unlink()
+    monkeypatch.setattr(g, "gate", lambda *a, **k: {})
+    monkeypatch.setattr(g, "load_artifact", lambda *a, **k: artifact)
+    monkeypatch.setattr(g, "check_dev_path", lambda *a, **k: None)
+    code = g.main(["extract", "--population", "development", "--run-dir", str(run),
+                   "--evidence", "x", "--private-dir", str(tmp_path / "p")])  # fmt: skip
+    err = capsys.readouterr().err
+    assert code == 2 and "VOID (V2, incomplete)" in err and "judge32 was skipped" in err
+    code = g.main(["analyze", "--development-features", str(tmp_path / "none.json.gz"),
+                   "--output-dir", str(tmp_path / "o")])  # fmt: skip
+    err = capsys.readouterr().err
+    assert code == 2 and "VOID (V2, incomplete)" in err and "Traceback" not in err

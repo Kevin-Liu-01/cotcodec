@@ -66,6 +66,7 @@ import subprocess
 import sys
 import threading
 import time
+import zipfile
 from collections import Counter
 from collections.abc import Sequence
 from pathlib import Path
@@ -503,15 +504,26 @@ def read_source(path: Path, pilot: dict[str, Any]) -> list[dict[str, Any]]:
 
 
 def twin_membership(twin: str, by_id: dict[str, Any], split: dict[str, Any], excluded: set) -> str:
+    """Where an abstention question's twin sits. The split comes first: a development twin is
+    "development" even when it was also one of Step 0's demo questions (``09ba9854``); a held-out
+    twin is "heldout-confirmatory" unless it is one of the demo questions AM1 excluded from its
+    347 ("heldout-step0-demo-excluded")."""
+
     if twin not in by_id:
         return "absent"
-    if twin in excluded:
-        return "step0-demo-excluded"
     if twin in split["development"]:
         return "development"
     if twin in split["heldout"]:
-        return "heldout-confirmatory"
+        return "heldout-step0-demo-excluded" if twin in excluded else "heldout-confirmatory"
     return "not-usable"
+
+
+def memory_texts(record: dict[str, Any], pool_config: dict[str, Any]) -> list[dict[str, Any]]:
+    """Every user turn of a record as AM1's memory entries (BM25 order, the same truncation)."""
+
+    max_chars = int(pool_config["pools"]["max_memory_chars"])
+    ranked = mc.rank_user_turns(record, pool_config["retriever"])
+    return [mc.memory_entry(t, r, sc, max_chars) for r, (t, sc) in enumerate(ranked)]
 
 
 def build_abstention_artifact(
@@ -557,13 +569,23 @@ def build_abstention_artifact(
         twin = qid[: -len("_abs")]
         twin_sessions = set(by_id[twin]["haystack_session_ids"]) if twin in by_id else set()
         sessions = set(record["haystack_session_ids"])
+        # Text-free overlap: the abstention pool's memory texts (by SHA-256) against every user
+        # turn of the twin and against the twin's own retrieved pool, both cut as AM1 cuts them.
+        twin_entries = memory_texts(by_id[twin], pool_config) if twin in by_id else []
+        twin_all = {e["text_sha256"] for e in twin_entries}
+        twin_pool = {e["text_sha256"] for e in twin_entries[: len(pool)]}
         facts.append({
             "question_id": qid,
             "twin_question_id": twin,
             "twin_membership": twin_membership(twin, by_id, split, excluded),
+            "twin_is_step0_demo": twin in excluded,
             "sessions": len(sessions),
             "twin_sessions": len(twin_sessions),
             "shared_sessions": len(sessions & twin_sessions),
+            "pool_memories_in_twin_user_turns": sum(m["text_sha256"] in twin_all for m in pool),
+            "pool_memories_in_twin_retrieved_pool": sum(
+                m["text_sha256"] in twin_pool for m in pool
+            ),
         })  # fmt: skip
     ids = [q["question_id"] for q in questions]
     artifact = {
@@ -616,6 +638,18 @@ def abstention_summary(
         })  # fmt: skip
     by_type = Counter(q["question_type"] for q in artifact["questions"])
     membership = Counter(f["twin_membership"] for f in facts["twins"])
+    overlap = {
+        "pools_with_a_memory_in_twin_user_turns": sum(
+            f["pool_memories_in_twin_user_turns"] > 0 for f in facts["twins"]
+        ),
+        "memories_in_twin_user_turns": sum(
+            f["pool_memories_in_twin_user_turns"] for f in facts["twins"]
+        ),
+        "memories_in_twin_retrieved_pool": sum(
+            f["pool_memories_in_twin_retrieved_pool"] for f in facts["twins"]
+        ),
+        "memories": sum(len(q["pools"]["retrieved"]) for q in artifact["questions"]),
+    }
     return {
         "experiment_id": artifact["experiment_id"],
         "split": artifact["split"],
@@ -625,6 +659,8 @@ def abstention_summary(
         "question_ids": [q["question_id"] for q in artifact["questions"]],
         "by_type": dict(sorted(by_type.items())),
         "twin_membership": dict(sorted(membership.items())),
+        "twins_that_are_step0_demo": sum(f["twin_is_step0_demo"] for f in facts["twins"]),
+        "twin_text_overlap": overlap,
         "max_full_pool_prompt_chars": max(q["full_pool_prompt_chars"] for q in questions),
         "source": artifact["source"],
         "retriever": artifact["retriever"],
@@ -684,6 +720,31 @@ def cmd_prepare_abstention(args: argparse.Namespace) -> dict[str, Any]:
         "dev_retrieved_pool_check": summary.get("dev_retrieved_pool_check"),
         "summary_sha256": sha256_file(Path(args.summary)),
     }
+
+
+def cmd_abstention_facts(args: argparse.Namespace) -> dict[str, Any]:
+    """Rebuild the abstention artifact in memory, check it is byte for byte the pinned one, and
+    write its text-free summary with the twin facts (membership, Step 0, session and memory-text
+    overlap). It never writes the artifact."""
+
+    config = load_config(Path(args.config))
+    pilot = load_pilot_config(config)
+    if Path(args.output).exists():
+        raise Am3gError(f"refusing to overwrite {args.output}")
+    split = ms.load_split(Path(args.split_file), pilot)
+    if sha256_file(Path(args.split_file)) != config["split_file_sha256"]:
+        raise Am3gError("the split file differs from its pin")
+    records = read_source(Path(args.source), pilot)
+    artifact, facts = build_abstention_artifact(records, pilot, split, config)
+    data = mc.canonical_json(artifact)
+    spec = population_spec(config, "abstention")
+    if sha256_bytes(data) != spec["artifact_sha256"] or Path(args.evidence).read_bytes() != data:
+        raise Am3gError(f"{VOID_DIGEST}: the rebuilt abstention artifact is not the pinned one")
+    summary = abstention_summary(artifact, sha256_bytes(data), facts, pilot)
+    Path(args.output).write_bytes(mc.canonical_json(summary))
+    return {k: summary[k] for k in ("artifact_sha256", "questions", "twin_membership",
+                                    "twins_that_are_step0_demo", "twin_text_overlap")} | {
+        "summary_sha256": sha256_file(Path(args.output))}  # fmt: skip
 
 
 # --------------------------------------------------------------------------- requests
@@ -1367,17 +1428,33 @@ def compare_with_reference(
     return out
 
 
+def load_pinned_tables(spec: dict[str, Any], root: Path = PROJECT_ROOT) -> list[dict[str, Any]]:
+    """Committed AM1-style tables (``tables.json.gz``), checked against the gz digest and the
+    uncompressed digest; every entry must carry ``question_id``, ``arm`` and ``values_hex``."""
+
+    path = root / spec["path"]
+    try:
+        raw = path.read_bytes()
+    except OSError as exc:
+        raise Am3gError(f"{VOID_DIGEST}: {spec['path']} is missing or unreadable: {exc}") from exc
+    if sha256_bytes(raw) != spec["sha256"]:
+        raise Am3gError(f"{VOID_DIGEST}: {spec['path']}: the gz differs from its pin")
+    data = gzip.decompress(raw)
+    if sha256_bytes(data) != spec["json_sha256"]:
+        raise Am3gError(f"{VOID_DIGEST}: {spec['path']}: the tables differ from their pin")
+    tables = json.loads(data)
+    if not isinstance(tables, list) or any(
+        not isinstance(t, dict) or not {"question_id", "arm", "values_hex"} <= set(t)
+        for t in tables
+    ):
+        raise Am3gError(f"{VOID_DIGEST}: {spec['path']}: not a list of tables")
+    return tables
+
+
 def load_heldout_tables(config: dict[str, Any]) -> list[dict[str, Any]]:
     """AM1's committed held-out tables (after the gate), checked against both pinned digests."""
 
-    spec = population_spec(config, "heldout")["tables"]
-    raw = (PROJECT_ROOT / spec["path"]).read_bytes()
-    if sha256_bytes(raw) != spec["sha256"]:
-        raise Am3gError(f"{VOID_DIGEST}: the held-out tables' gz differs from its pin")
-    data = gzip.decompress(raw)
-    if sha256_bytes(data) != spec["json_sha256"]:
-        raise Am3gError(f"{VOID_DIGEST}: the held-out tables differ from AM1's tables.json")
-    return json.loads(data)
+    return load_pinned_tables(population_spec(config, "heldout")["tables"])
 
 
 def labels_vs_tables(pools: Sequence[dict[str, Any]], tables: Sequence[dict[str, Any]]) -> dict:
@@ -1385,6 +1462,11 @@ def labels_vs_tables(pools: Sequence[dict[str, Any]], tables: Sequence[dict[str,
     u(mask m)) at the 71 requested masks of every pool."""
 
     by_key = {(t["question_id"], t["arm"]): cc.decode_values(t["values_hex"]) for t in tables}
+    missing = [(p["question_id"], p["arm"]) for p in pools
+               if (p["question_id"], p["arm"]) not in by_key]  # fmt: skip
+    if missing:
+        raise Am3gError(f"{VOID_DIGEST}: the committed tables lack {len(missing)} pools, e.g. "
+                        f"{missing[:3]}")  # fmt: skip
     cells = same = 0
     differing: list[dict[str, Any]] = []
     for p in pools:
@@ -1521,10 +1603,12 @@ def cmd_extract(args: argparse.Namespace) -> dict[str, Any]:
     artifact = load_artifact(config, population, args.evidence)
     arms = population_arms(config, population)
     run_dir = Path(args.run_dir)
-    summary = json.loads((run_dir / "summary.json").read_text(encoding="utf-8"))
+    summary = read_run_json(run_dir / "summary.json", "the driver's summary")
     if summary.get("population") != population or summary.get("experiment_id") != EXPERIMENT:
-        raise Am3gError("the run directory is not this population's run")
-    items = json.loads((run_dir / "judge-items.json").read_text(encoding="utf-8"))
+        raise Am3gError(f"{VOID_DIGEST}: the run directory is not this population's run")
+    items = read_run_json(
+        run_dir / "judge-items.json", "the judge items (no judge step ran: judge32 was skipped)"
+    )
     labels = {
         j: am3.labels_from_pass(load_pass(run_dir / "sessions" / JUDGE_STEP[j]))
         if (run_dir / "sessions" / JUDGE_STEP[j] / "all.npz").is_file() else {}
@@ -1537,7 +1621,11 @@ def cmd_extract(args: argparse.Namespace) -> dict[str, Any]:
         reader_id = summary["steps"][sid]["reader"]
         if reader_id in readers:
             raise Am3gError(f"two completed passes of {reader_id}")
-        passed = load_pass(run_dir / "sessions" / sid)
+        try:
+            passed = load_pass(run_dir / "sessions" / sid)
+        except (OSError, ValueError, KeyError, EOFError) as exc:
+            raise Am3gError(f"{VOID_INCOMPLETE}: {sid}'s pass is missing or unreadable: "
+                            f"{exc!r}") from exc  # fmt: skip
         rows_of[reader_id] = passed["rows"]
         pools = pool_records(artifact, arms, passed["rows"], item_of, labels)
         finish = Counter(c["finish"] for p in pools for c in p["masks"].values())
@@ -1584,6 +1672,13 @@ def cmd_extract(args: argparse.Namespace) -> dict[str, Any]:
         comparisons["am3_job_1466"] = reference_checks_development(
             config, artifact, rows_of, labels, item_of, items, Path(args.reference_run_dir)
         )
+    if population == "development" and ANCHOR in readers:
+        # The R2 code on a real committed tables file: the pilot's development tables come from
+        # job 1411's compiled pass, so AM3's 8,913 of 8,946 cells are expected, not all.
+        pilot_tables = load_pinned_tables(population_spec(config, "development")["tables"])
+        check = labels_vs_tables(readers[ANCHOR]["pools"], pilot_tables)
+        comparisons["anchor_vs_pilot_tables"] = {k: v for k, v in check.items()
+                                                 if k != "differing_cells"}  # fmt: skip
     if lf.patterns_sha256() != lf.ABSTENTION_PATTERNS_SHA256:
         raise Am3gError(f"{VOID_DIGEST}: the abstention patterns differ from AM1d's")
     spec = population_spec(config, population)
@@ -1646,6 +1741,16 @@ def cmd_extract(args: argparse.Namespace) -> dict[str, Any]:
         "features_sha256": sha256_file(target),
     }
     return brief
+
+
+def read_run_json(path: Path, what: str) -> Any:
+    """A JSON file of a run directory; a missing or unreadable one is the V2 void."""
+
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        raise Am3gError(f"{VOID_INCOMPLETE}: {what} ({path.name}) is missing or unreadable: "
+                        f"{exc!r}") from exc  # fmt: skip
 
 
 def _brief_comparisons(comparisons: dict[str, Any]) -> dict[str, Any]:
@@ -1856,26 +1961,51 @@ def natural_mix(
     resamples: int,
     seed: int,
     judge: str = "primary",
+    link_twins: bool = False,
 ) -> dict[str, Any]:
     """The rule minus BM25 top 4, over answerable plus unanswerable questions: the raw count over
     the questions run, the rate at LongMemEval-S's mix (weights: answerable, abstention), and the
     break-even unanswerable share, with percentile intervals from a bootstrap that resamples each
-    population's questions separately (numpy default_rng(seed))."""
+    population's questions separately (numpy default_rng(seed)). With ``link_twins`` an
+    abstention question whose twin (its id without ``_abs``) is among the answerable questions is
+    resampled together with it, as one unit; the other questions of each population are resampled
+    within their population. The break-even interval uses only the resamples where it is defined
+    and reports how many are not. Percentiles: the sorted values at floor(0.025 (n - 1)) and
+    ceil(0.975 (n - 1))."""
 
     import numpy as np
 
+    rows_a = [r for r in answerable if r["arm"] == "retrieved"]
+    rows_b = [r for r in unanswerable if r["arm"] == "retrieved"]
     d1 = np.array([float(r["u"][judge]["nonabstain_bm25"] - r["u"][judge]["bm25_top4"])
-                   for r in answerable if r["arm"] == "retrieved"])  # fmt: skip
+                   for r in rows_a])  # fmt: skip
     d2 = np.array([float(r["u"][judge]["nonabstain_bm25"] - r["u"][judge]["bm25_top4"])
-                   for r in unanswerable if r["arm"] == "retrieved"])  # fmt: skip
+                   for r in rows_b])  # fmt: skip
     total = weights["answerable"] + weights["abstention"]
     wa, wb = weights["answerable"] / total, weights["abstention"] / total
     gain, loss = float(d1.mean()), float(-d2.mean())
     rng = np.random.default_rng(seed)
-    ia = rng.integers(0, len(d1), size=(resamples, len(d1)))
-    ib = rng.integers(0, len(d2), size=(resamples, len(d2)))
-    g = d1[ia].mean(axis=1)
-    lo_ = -d2[ib].mean(axis=1)
+    linked = 0
+    if not link_twins:
+        ia = rng.integers(0, len(d1), size=(resamples, len(d1)))
+        ib = rng.integers(0, len(d2), size=(resamples, len(d2)))
+        g = d1[ia].mean(axis=1)
+        lo_ = -d2[ib].mean(axis=1)
+    else:
+        position = {r["question_id"]: i for i, r in enumerate(rows_a)}
+        pairs = [(position[r["question_id"][: -len("_abs")]], j) for j, r in enumerate(rows_b)
+                 if r["question_id"].endswith("_abs")
+                 and r["question_id"][: -len("_abs")] in position]  # fmt: skip
+        linked = len(pairs)
+        pa = np.array([a for a, _ in pairs], dtype=int)
+        pb = np.array([b for _, b in pairs], dtype=int)
+        ua = np.array(sorted(set(range(len(d1))) - set(pa.tolist())), dtype=int)
+        ub = np.array(sorted(set(range(len(d2))) - set(pb.tolist())), dtype=int)
+        iu = rng.integers(0, len(ua), size=(resamples, len(ua)))
+        ju = rng.integers(0, max(len(ub), 1), size=(resamples, len(ub)))
+        ip = rng.integers(0, max(len(pairs), 1), size=(resamples, len(pairs)))
+        g = (d1[ua][iu].sum(axis=1) + d1[pa][ip].sum(axis=1)) / len(d1)
+        lo_ = -(d2[ub][ju].sum(axis=1) + d2[pb][ip].sum(axis=1)) / len(d2)
     mix = np.sort(wa * g - wb * lo_)
     pis = [break_even(float(a), float(b)) for a, b in zip(g, lo_, strict=True)]
     defined = sorted(p for p in pis if p is not None)
@@ -1897,8 +2027,10 @@ def natural_mix(
         "break_even_unanswerable_share": break_even(gain, loss),
         "break_even_ci95": [pct(defined, 0.025), pct(defined, 0.975)],
         "break_even_undefined_resamples": len(pis) - len(defined),
-        "bootstrap": {"resamples": resamples, "seed": seed},
-    }
+        "bootstrap": {"resamples": resamples, "seed": seed,
+                      "resampling": "linked twins as units" if link_twins else
+                      "each population separately", "linked_pairs": linked},
+    }  # fmt: skip
 
 
 def cells_of(
@@ -1951,7 +2083,9 @@ def check_features(features: dict[str, Any], config: dict[str, Any], population:
 
 
 def judge_gate_answerable(validation: dict[str, Any]) -> dict[str, Any]:
-    """G-J1 (AM1's G2 rule on its validation items): the primary judge says yes to at least 95%
+    """G-J1, a replay of AM1's validation items under AM1's G2 rule (it cannot catch errors the
+    judge makes on the new readers' replies; the blind hand check does that): the primary judge
+    says yes to at least 95%
     of reference answers (preference questions left out) and no to at least 95% of "I don't
     know."."""
 
@@ -2048,11 +2182,275 @@ def analysis_config(resamples: int, seed: int, alpha: float, weights: dict[str, 
     }
 
 
+# --------------------------------------------------------------------------- H1's blind hand check
+
+HAND_SEED = 44
+#: What the isolated labeller is told (written next to the sample; registration section 8).
+HAND_INSTRUCTIONS = """Blind hand check, am3-nonabstain-generality-v1 (D9: agent labels).
+
+Each line of the sample is one item: a LongMemEval-S question, its question type, its reference
+answer (for single-session-preference, a rubric) and a reply written by a language model that
+was given some of the user's past messages. Label every item, independently of the others:
+
+- 1 if the reply is correct: it contains the reference answer, or is equivalent to it, or
+  contains all the intermediate steps to reach it. A reply that gives only part of the
+  information the answer needs is 0.
+- temporal-reasoning: do not penalise an off-by-one error in a number of days, weeks or months.
+- knowledge-update: a reply that mentions earlier information along with the updated answer is
+  correct as long as the updated answer is the one required.
+- single-session-preference: 1 if the reply satisfies the rubric, recalling and using the
+  user's personal information correctly; it need not cover every point.
+- A reply that declines to answer ("I don't know", "the memories do not say") is 0: every
+  question here has an answer.
+
+Use only the question, the reference answer and the reply. Do not look for, open or infer any
+other file, label or result. Write one JSON object per line, in the sample's order:
+{"item_id": "...", "label": 1 or 0, "note": "optional, short"}.
+"""
+
+
+def _norm_masks(pool: dict[str, Any]) -> dict[int, dict[str, Any]]:
+    return {int(m): c for m, c in pool["masks"].items()}
+
+
+def hand_plan(features: dict[str, Any], readers: Sequence[str] = H1_READERS) -> dict[str, Any]:
+    """The blind hand check's items, from text-free features alone (so ``analyze`` can recompute
+    them). Per H1 reader, retrieved arm, primary judge: every discordant question (the rule's
+    choice and BM25 top 4 judged differently) gives both replies; as many concordant questions,
+    drawn with ``random.Random(f"44:hand:{reader}")`` (first from those where the rule left BM25
+    top 4, then from the others), give BM25 top 4's reply and the rule's (or, where the rule kept
+    top 4, a seeded other 4-subset's reply that differs). Items are deduplicated by (question,
+    normalized-reply SHA-256) and put in one seeded order across readers
+    (``random.Random("44:hand:order")``); item ids follow that order."""
+
+    uses: dict[tuple[str, str], list[dict[str, Any]]] = {}
+    per_reader: dict[str, Any] = {}
+    for reader in readers:
+        pools = sorted((p for p in features["readers"][reader]["pools"]
+                        if p["arm"] == "retrieved"), key=lambda p: p["question_id"])  # fmt: skip
+        discordant, switched, kept = [], [], []
+        for p in pools:
+            masks = _norm_masks(p)
+            top = lf.bm25_top_mask(p["bm25_rank"])
+            rule = am3.nonabstain_bm25({"bm25_rank": p["bm25_rank"], "masks": masks})["mask"]
+            entry = (p, masks, top, rule)
+            if masks[top]["u"]["primary"] != masks[rule]["u"]["primary"]:
+                discordant.append(entry)
+            elif rule != top:
+                switched.append(entry)
+            else:
+                kept.append(entry)
+        rng = random.Random(f"{HAND_SEED}:hand:{reader}")
+        need = len(discordant)
+        chosen = rng.sample(switched, min(need, len(switched)))
+        chosen += rng.sample(kept, min(need - len(chosen), len(kept)))
+
+        def add(
+            p: dict[str, Any], masks: dict[int, Any], mask: int, role: str, who: str = reader
+        ) -> None:
+            key = (p["question_id"], masks[mask]["digest"])
+            uses.setdefault(key, []).append(
+                {"reader": who, "role": role, "mask": mask,
+                 "judge_primary": masks[mask]["u"]["primary"]}
+            )  # fmt: skip
+
+        for p, masks, top, rule in discordant:
+            add(p, masks, rule, "discordant-rule")
+            add(p, masks, top, "discordant-top4")
+        for p, masks, top, rule in chosen:
+            add(p, masks, top, "distractor")
+            second = rule if rule != top else None
+            if second is None:
+                others = [m for m in sorted(FOUR_SETS) if m != top]
+                for m in rng.sample(others, len(others)):
+                    if masks[m]["digest"] != masks[top]["digest"]:
+                        second = m
+                        break
+            if second is not None and masks[second]["digest"] != masks[top]["digest"]:
+                add(p, masks, second, "distractor")
+        per_reader[reader] = {"discordant_questions": len(discordant),
+                              "distractor_questions": len(chosen)}  # fmt: skip
+    keys = sorted(uses)
+    random.Random(f"{HAND_SEED}:hand:order").shuffle(keys)
+    items = [{"item_id": f"h{n:04d}", "question_id": q, "reply_digest": d, "uses": uses[(q, d)]}
+             for n, (q, d) in enumerate(keys)]  # fmt: skip
+    plan = {"seed": HAND_SEED, "readers": per_reader, "items": items}
+    plan["plan_sha256"] = sha256_bytes(json.dumps(items, sort_keys=True).encode())
+    return plan
+
+
+def read_hand_labels(path: Path, expected_sha256: str | None) -> tuple[list[dict[str, Any]], str]:
+    """The blind hand labels and their SHA-256, which must equal the digest committed before the
+    join."""
+
+    try:
+        raw = path.read_bytes()
+    except OSError as exc:
+        raise Am3gError(f"the hand labels {path} are missing or unreadable: {exc}") from exc
+    digest = sha256_bytes(raw)
+    if expected_sha256 is None or digest != expected_sha256:
+        raise Am3gError("the hand labels differ from the SHA-256 committed before the join")
+    try:
+        rows = [json.loads(line) for line in raw.decode("utf-8").splitlines() if line.strip()]
+    except ValueError as exc:
+        raise Am3gError(f"the hand labels are not JSON lines: {exc}") from exc
+    return rows, digest
+
+
+def hand_check(
+    features: dict[str, Any],
+    plan: dict[str, Any],
+    labels: list[dict[str, Any]] | None,
+    labels_sha256: str | None,
+    alpha: float = ALPHA,
+    readers: Sequence[str] = H1_READERS,
+) -> dict[str, Any]:
+    """Join the blind hand labels to the plan. Status: "joined" when every item has exactly one
+    label of 0 or 1 and no other item is labelled; "missing" without labels; "incomplete"
+    otherwise. Per reader, over its discordant questions: b_hand (rule's reply hand-labelled 1,
+    top 4's 0), c_hand (the reverse), the exact McNemar p and Holm across the readers. Hand
+    against judge: agreement and Cohen's kappa over every labelled item (descriptive)."""
+
+    out: dict[str, Any] = {
+        "plan_sha256": plan["plan_sha256"],
+        "items": len(plan["items"]),
+        "readers_plan": plan["readers"],
+        "labels_sha256": labels_sha256,
+        "labeller": "an isolated agent, blind (D9: agent labels, not human)",
+    }
+    if labels is None:
+        out["status"] = "missing"
+        return out
+    by_id: dict[str, Any] = {}
+    bad = []
+    for row in labels:
+        item_id, label = row.get("item_id"), row.get("label")
+        if item_id in by_id or label not in (0, 1):
+            bad.append(item_id)
+        by_id[item_id] = label
+    wanted = {i["item_id"] for i in plan["items"]}
+    missing, extra = sorted(wanted - set(by_id)), sorted(set(by_id) - wanted)
+    if bad or missing or extra:
+        out.update(status="incomplete", missing=missing[:50], extra=extra[:50],
+                   invalid_or_repeated=[b for b in bad if b is not None][:50])  # fmt: skip
+        return out
+    out["status"] = "joined"
+    hand_of: dict[tuple[str, str, str], int] = {}
+    judge, hand = [], []
+    for item in plan["items"]:
+        h = int(by_id[item["item_id"]])
+        judge.append(int(item["uses"][0]["judge_primary"]))
+        hand.append(h)
+        for use in item["uses"]:
+            hand_of[(use["reader"], use["role"], item["question_id"])] = h
+    per: dict[str, Any] = {}
+    for reader in readers:
+        qids = sorted({q for (r, role, q) in hand_of if r == reader and role == "discordant-rule"})
+        b = sum(1 for q in qids if hand_of[(reader, "discordant-rule", q)] == 1
+                and hand_of[(reader, "discordant-top4", q)] == 0)  # fmt: skip
+        c = sum(1 for q in qids if hand_of[(reader, "discordant-rule", q)] == 0
+                and hand_of[(reader, "discordant-top4", q)] == 1)  # fmt: skip
+        per[reader] = {"discordant_questions": len(qids), "b_hand": b, "c_hand": c,
+                       "p_exact_mcnemar": ks.mcnemar_exact(b, c)}  # fmt: skip
+    adjusted = holm({r: per[r]["p_exact_mcnemar"] for r in readers}, alpha)
+    for reader in readers:
+        e = per[reader]
+        e["holm"] = adjusted[reader]
+        e["hand_label"] = label_of(adjusted[reader]["reject"], e["b_hand"], e["c_hand"], H1_LABELS)
+    agree = sum(1 for a, b in zip(judge, hand, strict=True) if a == b)
+    out["readers"] = per
+    out["agreement"] = {
+        "items": len(hand), "agree": agree,
+        "kappa": ms.cohen_kappa(judge, hand),
+        "judge_yes_hand_yes": sum(1 for a, b in zip(judge, hand, strict=True) if a and b),
+        "judge_yes_hand_no": sum(1 for a, b in zip(judge, hand, strict=True) if a and not b),
+        "judge_no_hand_yes": sum(1 for a, b in zip(judge, hand, strict=True) if not a and b),
+        "judge_no_hand_no": sum(1 for a, b in zip(judge, hand, strict=True) if not a and not b),
+        "decides": False,
+    }  # fmt: skip
+    return out
+
+
+def confirm_reading(judge_reading: str, hand: dict[str, Any], reader: str) -> str:
+    """H1's reading after the hand check (registration section 7.1): NONABSTAIN_HELPS or
+    NONABSTAIN_HURTS stands only if the hand-label test, with Holm across the two readers, rejects
+    in the same direction; otherwise JUDGE_DEPENDENT. NO_DETECTED_DIFFERENCE stands. Without a
+    complete join a directional reading is PENDING_HAND_CHECK (no labels) or JUDGE_DEPENDENT
+    (labels that do not cover the sample)."""
+
+    if judge_reading not in H1_LABELS[:2]:
+        return judge_reading
+    if hand["status"] == "missing":
+        return "PENDING_HAND_CHECK"
+    if hand["status"] != "joined":
+        return "JUDGE_DEPENDENT"
+    return (
+        judge_reading
+        if hand["readers"][reader]["hand_label"] == judge_reading
+        else "JUDGE_DEPENDENT"
+    )
+
+
+def cmd_hand_sample(args: argparse.Namespace) -> dict[str, Any]:
+    """Host only (reads reply texts): the blind hand-check sample of the held-out job (or, for the
+    dry run, the development job): one JSON line per plan item with the question, its type, the
+    reference answer and the reply, and nothing else, in the plan's order; and the labeller's
+    instructions. Prints counts and digests only."""
+
+    population = args.population
+    if population not in ("development", "heldout"):
+        raise Am3gError("the hand check samples the held-out job (or the development dry run)")
+    if population == "development":
+        for path in (args.run_dir, args.evidence, args.features, args.private_dir):
+            check_dev_path(path)
+    gate(population)
+    refuse_inside_repo(args.private_dir)
+    config = load_config(Path(args.config))
+    artifact = load_artifact(config, population, args.evidence)
+    features = read_gz_json(Path(args.features))
+    check_features(features, config, population)
+    plan = hand_plan(features)
+    private = Path(args.private_dir)
+    sample_path = private / "hand-check-sample.jsonl"
+    if sample_path.exists():
+        raise Am3gError(f"refusing to overwrite {sample_path}")
+    run_dir = Path(args.run_dir)
+    index = {(r["question_id"], r["arm"], r["mask"]): r["index"]
+             for r in request_table(artifact, population_arms(config, population))}  # fmt: skip
+    questions = {q["question_id"]: q for q in artifact["questions"]}
+    rows_of: dict[str, dict[int, Any]] = {}
+    lines = []
+    for item in plan["items"]:
+        use = item["uses"][0]
+        reader = use["reader"]
+        if reader not in rows_of:
+            step = features["readers"][reader]["step"]
+            rows_of[reader] = load_pass(run_dir / "sessions" / step)["rows"]
+        text = rows_of[reader][index[(item["question_id"], "retrieved", use["mask"])]]["text"]
+        if sha256_text(mc.normalize_answer(text.strip())) != item["reply_digest"]:
+            raise Am3gError(f"{VOID_DIGEST}: a reply differs from the features' digest")
+        q = questions[item["question_id"]]
+        lines.append(json.dumps({"item_id": item["item_id"], "question_id": q["question_id"],
+                                 "question_type": q["question_type"], "question": q["question"],
+                                 "reference_answer": str(q["answer"]),
+                                 "reply": text.strip()}, ensure_ascii=False))  # fmt: skip
+    private.mkdir(parents=True, exist_ok=True)
+    sample_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    instructions = private / "hand-check-instructions.txt"
+    instructions.write_text(HAND_INSTRUCTIONS, encoding="utf-8")
+    return {"population": population, "items": len(lines), "readers": plan["readers"],
+            "plan_sha256": plan["plan_sha256"], "sample_sha256": sha256_file(sample_path),
+            "instructions_sha256": sha256_file(instructions),
+            "features_sha256": sha256_file(Path(args.features))}  # fmt: skip
+
+
 def analyze_registered(
     heldout: dict[str, Any],
     abstention: dict[str, Any] | None,
     config: dict[str, Any],
     abstention_void: str | None = None,
+    hand_labels: list[dict[str, Any]] | None = None,
+    hand_labels_sha256: str | None = None,
 ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     spec = config["analysis"]
     resamples, seed = int(spec["bootstrap"]["resamples"]), int(spec["bootstrap"]["seed"])
@@ -2077,20 +2475,31 @@ def analyze_registered(
         "v3_anchor_replay": {"pass": replay_ok,
                              "r1": anchor.get("r1_replies", {}).get("pass"),
                              "r2": anchor.get("r2_labels_vs_tables", {}).get("pass")},
-        "g_j1_answerable_judge": gj1,
+        "g_j1_replay_of_am1_validation_items": gj1,
         "g_j2_abstention_judge": gj2,
     }  # fmt: skip
     h1 = h1_block(rec_h, resamples, seed, alpha)
+    for reader_id, e in h1["readers"].items():
+        bi = heldout["readers"][reader_id]["batch_invariant"]
+        e["engine_mode"] = "batch-invariant" if bi else "default"
+        e["scope"] = ("eager batch-invariant replies" if bi else
+                      "vLLM default mode and this registration's batch schedule")  # fmt: skip
+        e["judge_reading"] = e["reading"]
+    plan = hand_plan(heldout)
+    hand = hand_check(heldout, plan, hand_labels, hand_labels_sha256, alpha)
+    # Precedence: VOID (V3) over JUDGE_DEPENDENT (G-J1) over the hand check.
     if not replay_ok:
         h1["status"] = f"{VOID_REPLAY}: H1 is not read"
         for e in h1["readers"].values():
             e["reading"] = "VOID"
     elif not gj1["pass"]:
-        h1["status"] = "JUDGE_DEPENDENT: G-J1 failed; no decision follows"
+        h1["status"] = "JUDGE_DEPENDENT: G-J1 (the replay of AM1's validation items) failed"
         for e in h1["readers"].values():
             e["reading"] = "JUDGE_DEPENDENT"
     else:
-        h1["status"] = "read"
+        h1["status"] = "read" if hand["status"] == "joined" else f"hand check {hand['status']}"
+        for reader_id, e in h1["readers"].items():
+            e["reading"] = confirm_reading(e["judge_reading"], hand, reader_id)
     if rec_a is not None:
         h2 = h2_block(rec_a, resamples, seed, alpha)
         if not replay_ok:
@@ -2120,6 +2529,13 @@ def analyze_registered(
         descriptive["cells_abstention"] = cells_of(rec_a, ("retrieved",), resamples, seed, alpha)
         descriptive["natural_mix"] = {
             j: {r: natural_mix(rec_h[r], rec_a[r], weights, resamples, seed, judge=j)
+                for r in H2_READERS
+                if all(x["u"][j] is not None for x in rec_h[r] + rec_a[r])}
+            for j in JUDGES
+        }  # fmt: skip
+        descriptive["natural_mix_linked_twins"] = {
+            j: {r: natural_mix(rec_h[r], rec_a[r], weights, resamples, seed, judge=j,
+                               link_twins=True)
                 for r in H2_READERS
                 if all(x["u"][j] is not None for x in rec_h[r] + rec_a[r])}
             for j in JUDGES
@@ -2173,6 +2589,7 @@ def analyze_registered(
         "comparisons": _brief_comparisons(heldout["comparisons"]),
         "validity": validity,
         "h1": h1,
+        "h1_hand_check": hand,
         "h2": h2,
         "descriptive": descriptive,
         "verdicts": {
@@ -2183,9 +2600,15 @@ def analyze_registered(
     return results, per_table
 
 
-def analyze_development(features: dict[str, Any], config: dict[str, Any]) -> tuple[dict, list]:
+def analyze_development(
+    features: dict[str, Any],
+    config: dict[str, Any],
+    hand_labels: list[dict[str, Any]] | None = None,
+    hand_labels_sha256: str | None = None,
+) -> tuple[dict, list]:
     """The dry run on the development split: every cell as AM3 reported it, plus H1's and H2's
-    machinery run on development data (labelled; it decides nothing)."""
+    machinery, and H1's hand check when labels are given, run on development data (labelled; it
+    decides nothing)."""
 
     spec = config["analysis"]
     resamples, seed = int(spec["bootstrap"]["resamples"]), int(spec["bootstrap"]["seed"])
@@ -2212,6 +2635,14 @@ def analyze_development(features: dict[str, Any], config: dict[str, Any]) -> tup
             "by_type": {r: {j: by_type(records[r], j) for j in JUDGES} for r in records},
         },
     }
+    if hand_labels is not None:
+        mech = results["mechanics"]
+        hand = hand_check(features, hand_plan(features), hand_labels, hand_labels_sha256, alpha)
+        mech["h1_hand_check"] = hand
+        mech["h1_readings_after_hand_check"] = {
+            r: confirm_reading(e["reading"], hand, r)
+            for r, e in mech["h1_block"]["readers"].items()
+        }
     return results, per_table
 
 
@@ -2249,7 +2680,8 @@ def render_markdown(results: dict[str, Any]) -> str:
     v = results["validity"]
     lines += ["## Validity", "",
               f"- V3 anchor replay: {v['v3_anchor_replay']}",
-              f"- G-J1 (answerable judge validation): {v['g_j1_answerable_judge']}",
+              "- G-J1 (a replay of AM1's validation items; it cannot catch reader-specific "
+              f"judge errors): {v['g_j1_replay_of_am1_validation_items']}",
               f"- G-J2 (abstention judge validation): {v['g_j2_abstention_judge']}",
               f"- V2 completeness: {v['v2_complete']}", ""]  # fmt: skip
     h1 = results["h1"]
@@ -2263,6 +2695,24 @@ def render_markdown(results: dict[str, Any]) -> str:
                      f"{e['difference']:+.3f} | {_ci(e['ci95_bootstrap'], True)} | "
                      f"{_p(e['p_exact_mcnemar'])} | {_p(e['holm']['p_holm'])} | "
                      f"{e['reading']} |")  # fmt: skip
+    hand = results.get("h1_hand_check", {})
+    lines += ["", f"## H1's blind hand check ({hand.get('status')}; agent labels, D9)", ""]
+    if hand.get("status") == "joined":
+        lines += [
+            "| Reader | discordant questions | b (hand) | c (hand) | p | p (Holm) | hand label | "
+            "judge reading | reading |",
+            "|---|---:|---:|---:|---:|---:|---|---|---|",
+        ]
+        for r, e in hand["readers"].items():
+            h = results["h1"]["readers"][r]
+            lines.append(
+                f"| {r} | {e['discordant_questions']} | {e['b_hand']} | {e['c_hand']} | "
+                f"{_p(e['p_exact_mcnemar'])} | {_p(e['holm']['p_holm'])} | "
+                f"{e['hand_label']} | {h['judge_reading']} | {h['reading']} |"
+            )
+        a = hand["agreement"]
+        lines += ["", f"Hand against judge (descriptive): {a['agree']} of {a['items']} items "
+                  f"agree, kappa {_f(a['kappa'])}.", ""]  # fmt: skip
     h2 = results["h2"]
     lines += ["", f"## H2 (descriptive): abstention questions, retrieved arm, Qwen3-32B with the "
               f"abstention prompt ({h2['status']})", ""]  # fmt: skip
@@ -2344,20 +2794,30 @@ def cmd_analyze(args: argparse.Namespace) -> dict[str, Any]:
             check_dev_path(p)
         gate("development")
         features = read_gz_json(Path(args.development_features))
-        results, per_table = analyze_development(features, config)
+        labels, digest = (read_hand_labels(Path(args.hand_labels), args.hand_labels_sha256)
+                          if args.hand_labels else (None, None))  # fmt: skip
+        results, per_table = analyze_development(features, config, labels, digest)
         results["features_sha256"] = {"development": sha256_file(Path(args.development_features))}
     else:
         if not args.heldout_features:
             raise Am3gError("the registered analysis needs --heldout-features")
         if bool(args.abstention_features) == bool(args.abstention_void):
             raise Am3gError("give exactly one of --abstention-features and --abstention-void")
+        if not (args.hand_labels and args.hand_labels_sha256):
+            raise Am3gError(
+                "the registered analysis needs --hand-labels and --hand-labels-sha256 (the blind "
+                "hand check's labels and their digest as committed before the join)"
+            )
         gate("heldout")
         gate("abstention")
         heldout = read_gz_json(Path(args.heldout_features))
         abstention = (
             read_gz_json(Path(args.abstention_features)) if args.abstention_features else None
         )
-        results, per_table = analyze_registered(heldout, abstention, config, args.abstention_void)
+        labels, digest = read_hand_labels(Path(args.hand_labels), args.hand_labels_sha256)
+        results, per_table = analyze_registered(
+            heldout, abstention, config, args.abstention_void, labels, digest
+        )
         results["features_sha256"] = {"heldout": sha256_file(Path(args.heldout_features))}
         if args.abstention_features:
             results["features_sha256"]["abstention"] = sha256_file(Path(args.abstention_features))
@@ -2564,6 +3024,122 @@ def cmd_power(args: argparse.Namespace) -> dict[str, Any]:
     return {"sha256": sha256_file(Path(args.output))}
 
 
+# --------------------------------------------------------------------------- the rerun rule
+
+#: The steps every population needs: a complete pass of each reader (OLMo-2 from either of its
+#: steps) and of the primary judge. The second judge is descriptive only.
+ESSENTIAL = {
+    "qwen3-8b": ("rd-qwen3-8b",),
+    "olmo-2-1124-7b-instruct": ("rd-olmo2", "rd-olmo2-default"),
+    "qwen3.5-9b": ("rd-qwen35-9b-default",),
+    "judge32": ("judge32",),
+}
+#: Lane termination reasons (infra/slurm/host-single-node/docker-research.sbatch) of a job that
+#: never started its workload: always an infrastructure failure.
+NEVER_STARTED = ("gpu_prolog_unavailable", "foreign_gpu_process", "hard_stop_before_start")
+#: A signal this close to the lane's hard stop is the time limit's, not an outside event.
+SIGNAL_AT_LIMIT_S = 300
+
+
+def read_env_file(path: Path) -> dict[str, str]:
+    out: dict[str, str] = {}
+    with contextlib.suppress(OSError):
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if "=" in line:
+                key, value = line.split("=", 1)
+                out[key.strip()] = value.strip()
+    return out
+
+
+def _utc(value: str | None) -> float | None:
+    if not value or value == "none":
+        return None
+    try:
+        return time.mktime(time.strptime(value, "%Y-%m-%dT%H:%M:%SZ"))
+    except ValueError:
+        return None
+
+
+def rerun_decision(summary: dict[str, Any] | None, termination: dict[str, str]) -> dict:
+    """The registration's rerun rule (section 8), mechanically, from the driver's summary and the
+    lane's termination record, before extract reads the job:
+
+    - "complete": every essential step completed; extract reads this job.
+    - "rerun" (once per population): an infrastructure failure: the workload never started
+      (``NEVER_STARTED``), no driver summary, a worker that crashed without its done record, an
+      engine that failed to start (OLMo-2's batch-invariant step excepted, whose fallback runs),
+      a failed smoke check, or a signal that came more than ``SIGNAL_AT_LIMIT_S`` before the
+      lane's hard stop (a cancellation or node event).
+    - "no-rerun" (VOID, V2, time budget): a step skipped for lack of time, a pass stopped by its
+      max_s or the deadline, a worker killed as late, the lane's hard stop, or a signal within
+      ``SIGNAL_AT_LIMIT_S`` of the hard stop.
+    - "void" (V1): the model verification failed, or a worker found its engine mode other than
+      the pinned one (worker exit 2)."""
+
+    reason = termination.get("reason", "")
+    if reason in NEVER_STARTED:
+        return {"decision": "rerun", "why": f"lane: {reason} (the workload never started)"}
+    if summary is None:
+        if reason == "hard_stop":
+            return {"decision": "no-rerun", "why": "lane hard stop before the driver's summary"}
+        return {"decision": "rerun", "why": f"no driver summary (lane reason {reason or 'none'})"}
+    verification = summary.get("model_verification")
+    if isinstance(verification, dict) and "error" in verification:
+        return {"decision": "void", "rule": "V1", "why": "model verification failed"}
+    steps = summary.get("steps", {})
+    statuses = {sid: rec.get("status") for sid, rec in steps.items()}
+    out: dict[str, Any] = {"steps": statuses, "lane_reason": reason}
+    hard_stop, finished = (
+        _utc(termination.get("hard_stop_at")),
+        _utc(termination.get("finished_at")),
+    )
+    signal_at_limit = (
+        hard_stop is not None and finished is not None and hard_stop - finished <= SIGNAL_AT_LIMIT_S
+    )
+    for unit, step_ids in ESSENTIAL.items():
+        records = [steps.get(sid, {}) for sid in step_ids]
+        if any(r.get("status") == "complete" for r in records):
+            continue
+        for sid, rec in zip(step_ids, records, strict=True):
+            status, why = rec.get("status"), str(rec.get("reason", ""))
+            done = rec.get("worker_done") or {}
+            if done.get("exit") == 2:
+                return out | {"decision": "void", "rule": "V1",
+                              "why": f"{sid}: the engine mode differs from the pin"}  # fmt: skip
+            if sid == "rd-olmo2" and status in ("engine-failed", "smoke-failed"):
+                continue  # its fallback decides
+            if status is None or (status == "skipped" and why.startswith("no reader")):
+                continue
+            if status == "skipped" and why.startswith("remaining"):
+                return out | {"decision": "no-rerun", "why": f"{sid}: skipped for lack of time"}
+            if status == "partial" or rec.get("killed") == "late":
+                return out | {"decision": "no-rerun", "why": f"{sid}: stopped by a time budget"}
+            if status in ("skipped", "failed") and (
+                rec.get("killed") == "signal" or why.startswith("SIG") or summary.get("signal")
+            ):
+                if signal_at_limit or reason == "hard_stop":
+                    return out | {"decision": "no-rerun", "why": f"{sid}: the limit's signal"}
+                return out | {"decision": "rerun", "why": f"{sid}: a signal before the limit"}
+            if status in ("engine-failed", "smoke-failed", "failed"):
+                return out | {"decision": "rerun", "why": f"{sid}: {status}"}
+        return out | {"decision": "rerun", "why": f"{unit}: no complete pass ({statuses})"}
+    return out | {"decision": "complete", "why": "every essential step completed",
+                  "second_judge": statuses.get("judge8")}  # fmt: skip
+
+
+def cmd_rerun_decision(args: argparse.Namespace) -> dict[str, Any]:
+    job_dir = Path(args.job_dir)
+    summary_path = job_dir / "am3g" / "summary.json"
+    summary = None
+    if summary_path.is_file():
+        try:
+            summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        except ValueError:
+            summary = None
+    decision = rerun_decision(summary, read_env_file(job_dir / "termination.env"))
+    return {"population": args.population, "job_dir": job_dir.name} | decision
+
+
 # --------------------------------------------------------------------------- main
 
 
@@ -2609,6 +3185,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     analyze_p.add_argument("--abstention-features", default=None)
     analyze_p.add_argument("--abstention-void", default=None)
     analyze_p.add_argument("--development-features", default=None)
+    analyze_p.add_argument("--hand-labels", default=None)
+    analyze_p.add_argument("--hand-labels-sha256", default=None)
     analyze_p.add_argument("--output-dir", required=True)
     compare = sub.add_parser("dryrun-compare", allow_abbrev=False)
     compare.add_argument("--development-features", required=True)
@@ -2617,6 +3195,20 @@ def main(argv: Sequence[str] | None = None) -> int:
     power_p.add_argument("--am3-features", required=True)
     power_p.add_argument("--am3-features-sha256", required=True)
     power_p.add_argument("--output", required=True)
+    facts = sub.add_parser("abstention-facts", allow_abbrev=False)
+    facts.add_argument("--source", required=True)
+    facts.add_argument("--split-file", required=True)
+    facts.add_argument("--evidence", required=True)
+    facts.add_argument("--output", required=True)
+    hand = sub.add_parser("hand-sample", allow_abbrev=False)
+    hand.add_argument("--population", required=True, choices=("development", "heldout"))
+    hand.add_argument("--run-dir", required=True)
+    hand.add_argument("--evidence", required=True)
+    hand.add_argument("--features", required=True)
+    hand.add_argument("--private-dir", required=True)
+    rerun = sub.add_parser("rerun-decision", allow_abbrev=False)
+    rerun.add_argument("--population", required=True, choices=POPULATIONS)
+    rerun.add_argument("--job-dir", required=True)
     for sp in sub.choices.values():
         sp.add_argument("--config", default=str(CONFIG_PATH))
     args = parser.parse_args(argv)
@@ -2643,13 +3235,25 @@ def main(argv: Sequence[str] | None = None) -> int:
         if args.command == "analyze":
             print(json.dumps(cmd_analyze(args), indent=2, sort_keys=True))
             return 0
-        if args.command == "dryrun-compare":
-            print(json.dumps(cmd_dryrun_compare(args), indent=2, sort_keys=True))
-            return 0
-        print(json.dumps(cmd_power(args), indent=2, sort_keys=True))
+        commands = {
+            "dryrun-compare": cmd_dryrun_compare,
+            "power": cmd_power,
+            "abstention-facts": cmd_abstention_facts,
+            "hand-sample": cmd_hand_sample,
+            "rerun-decision": cmd_rerun_decision,
+        }
+        print(json.dumps(commands[args.command](args), indent=2, sort_keys=True))
         return 0
     except (Am3gError, am3.Am3Error, ks.KeepsetError, ms.StudyError) as exc:
         print(f"error: {exc}", file=sys.stderr)
+        return 2
+    except (OSError, ValueError, KeyError, EOFError, zipfile.BadZipFile) as exc:
+        if args.command in ("run", "worker"):
+            raise  # the GPU job's driver and workers record their own failures
+        # Section 8: no failure surfaces as a traceback; an input that is missing or unreadable
+        # where no named check caught it is reported as the V2 void with its cause.
+        print(f"error: {VOID_INCOMPLETE}: an input is missing or unreadable: {exc!r}",
+              file=sys.stderr)  # fmt: skip
         return 2
 
 

@@ -71,7 +71,12 @@ fi
 cp "$R"/ops/slurm-vllm-overlay-*.out "$E/builds/" 2>/dev/null || true
 [[ -f $R/capsule/source-receipt-$SHORT.json ]] && python3 -c "import json,sys;d=json.load(open(sys.argv[1]));d.pop('file_manifest',None);json.dump(d,open(sys.argv[2],'w'),indent=1,sort_keys=True)" \
   "$R/capsule/source-receipt-$SHORT.json" "$E/builds/source-receipt-$SHORT.json"
-cp "$R"/ops/jobs.log "$R"/ops/preflight.log "$E/ops/" 2>/dev/null || true
+cp "$R"/ops/jobs.log "$R"/ops/preflight.log "$R"/ops/scontrol-*.txt "$E/ops/" 2>/dev/null || true
+cp "$R"/rerun-decision-*.json "$E/ops/" 2>/dev/null || true
+if [[ -d $R/hand-check ]]; then
+  mkdir -p "$E/hand-check"; cp "$R"/hand-check/* "$E/hand-check/"
+  cp "$R"/hand-sample-*.json "$E/hand-check/" 2>/dev/null || true
+fi
 cp "$R"/ops/slurm-selftest-*.out "$E/selftests/" 2>/dev/null || true
 cp "$R"/prepare/* "$E/prepare/" 2>/dev/null || true
 if [[ -d $R/out-$SHORT-a ]]; then
@@ -125,3 +130,4 @@ for h in hits[:20]:
 sys.exit(1 if hits else 0)
 PY
 echo staged: $(find "$E" -type f | wc -l) files, $(du -sh "$E" | cut -f1)
+log_job "evidence staged for ${SHORT} ($*): $(find "$E" -type f | wc -l) files, no text found"

@@ -573,9 +573,9 @@ parses this table and refuses to run unless every file matches.
 
 | File | Role | SHA-256 |
 |---|---|---|
-| `scripts/memcredit_am3g.py` | this registration: gate, abstention pools, driver and workers, extract, analyze, dry-run comparison, power | `614bafd5e1b624a4b5ada48c9c734c9880f8842b014be058efc9e12235f9d62a` |
-| `tests/test_memcredit_am3g.py` | its tests: config and pins, the gate, the pins inside the image, the abstention template against the archived port, pools, requests, judge items, the anchor replay checks R1 and R2, Holm and H1's readings, H2's estimand, the natural mix, end to end on toy runs | `dd9d76863e4840f7710379a28e46df5e10f7017a049460f453e33d6978a60677` |
-| `experiments/am3/am3-nonabstain-generality-v1.yaml` | this registration's config | `d38efce48ee64e63c0845af0baf75c6ab1e846fb199c50379be6a286b228257a` |
+| `scripts/memcredit_am3g.py` | this registration: gate, abstention pools, driver and workers, extract, analyze, dry-run comparison, power | `00c7141e53882148aaa9f18a239b5e94539c6be73473bad67f74343d352b945d` |
+| `tests/test_memcredit_am3g.py` | its tests: config and pins, the gate, the pins inside the image, the abstention template against the archived port, pools, requests, judge items, the anchor replay checks R1 and R2, Holm and H1's readings, H2's estimand, the natural mix, end to end on toy runs | `21f0b906f5c915d6475672f66aa3be9913d0b2bc4481f1cd838ac9a9e6c47c79` |
+| `experiments/am3/am3-nonabstain-generality-v1.yaml` | this registration's config | `96fcd2186c43d6bdad7b1eb90e843aed39f0d56bad349799f8f1db6efb67d60e` |
 | `scripts/memcredit_am3.py` | AM3's engine helpers, rule, per-pool record and cell summary (imported) | `25f634edd29a23f2fdee12b0825013d624aa5305d49cf512f74fdf1827ea130f` |
 | `tests/test_memcredit_am3.py` | AM3's tests (also supply a pass writer to these tests) | `1ab5196ca553f8cc92deda0a728ec98987853ec81d3f75041561661659d848b3` |
 | `experiments/am3/am3-reader-replication-v1.yaml` | AM3's config (the reader blocks) | `525ebf29e80941ef02e646e04c66fdaa40aba67f6bb0dbb9d5926c68befa07c4` |
@@ -601,7 +601,7 @@ parses this table and refuses to run unless every file matches.
 | `scripts/extract_discovery_source_archive.py` | the capsule extractor | `9b4d21a83beac8913dc06a946cf43ea31d77326e65d04957fad66d7b97d8c3cb` |
 | `scripts/preregister.py` | the ledger | `21fc3ef0ed0958b1600ce742c3b4f8d557d0a298635acb20342710eb814b2c0d` |
 | `ops/am3g/am3g-env.sh` | operator: shared host paths | `d622456b5902f3ccc636a8e310a9fa56ae0c662d7de1685532cb108a51dc54b9` |
-| `ops/am3g/am3g-checkout.sh` | operator: clean clone from a bundle | `e0fa0e3a113422dca0849bc055d400193230106c193b28bcfdd91beb3155ebe1` |
+| `ops/am3g/am3g-checkout.sh` | operator: clean clone from a bundle | `fef6cba73c929da5f4af7147ff7edc1fb27c2f5afc4cbf6731b5da24a0df27dd` |
 | `ops/am3g/am3g-prepare-abstention.sh` | operator: the abstention artifact (before the freeze) | `bc93c751efcec2f25a35bc046beea3f212757c09ed8dc5c17a849a483d895425` |
 | `ops/am3g/am3g-capsule.sh` | operator: source capsule | `73b19889a335c204e754f3565c30ca51c239297b63c4ef9d3cf282a1f5caa579` |
 | `ops/am3g/am3g-preflight.sh` | operator: queue and GPU check | `3cdbea426fa31f3e29bf9b64131dc81480e103f1bc3f3e4693a6c1aec89b3594` |
@@ -609,9 +609,20 @@ parses this table and refuses to run unless every file matches.
 | `ops/am3g/am3g-selftest-cpu.sbatch` | operator: CPU selftest in the image | `7fbbe82d36e6c86efb3c4cba19ef799783fa3033fa0f97f803e6b40edd2e7919` |
 | `ops/am3g/am3g-selftest.sh` | operator: submits the CPU selftest | `eea0bb6a3a93db2213affefe8661917205b9919c7a9fc540758121ca1db28ca3` |
 | `ops/am3g/am3g-submit.sh` | operator: lane manifest, dry run, submit, rerun | `d166590236aa9abe6f4a917ceccb62271c725874e533e25ff8b8088173c22fdd` |
-| `ops/am3g/am3g-extract.sh` | operator: extract | `721ad622375b9f33fbcef70332e0be3367f895ef29f858fc4050d1449a85fc5f` |
-| `ops/am3g/am3g-analyze.sh` | operator: analyze twice, tests | `ba9cfc3ac62948a8b04af37caab20419ece47142ef959a9ffd61c29d97ad78a9` |
-| `ops/am3g/am3g-stage-evidence.sh` | operator: text-free staging and the text search | `d022a68182ac6c2675c3c4701004c2288ef4d26bc3743108e338a2b29a03a926` |
+| `ops/am3g/am3g-extract.sh` | operator: extract | `ef96744ab8f7b254bdbb95dc18d5b1ee776ff111dc23c8de73f60afcd5fe05ea` |
+| `ops/am3g/am3g-analyze.sh` | operator: analyze twice, tests | `383a443ce6216a7ddd3e015a5fb540c7f80fa0149c746cc830ef5550d2daa71f` |
+| `ops/am3g/am3g-stage-evidence.sh` | operator: text-free staging and the text search | `ecb03e2eed7e25a5710bee7a84dc5c9d1e5d76b82619a64f2a72c92e6357d0e8` |
+| `ops/am3g/am3g-mac-bundle.sh` | operator, on the Mac: the bundle and the bootstrap copies | `15524e2fc8f467328505314e0a4d8e3c5edf4c09d481d72d2cbfc52b99199721` |
+| `ops/am3g/am3g-job-state.sh` | operator: a job's state, and its scontrol record when it ends | `1c8c0ab44cadac44ce2ba97175407f9398588a907cc2f745ba1e5bc26ddd11d4` |
+| `ops/am3g/am3g-image.sh` | operator: the built image id, after its provenance and receipt checks | `3b47a709ef27b72d966535737b00a08421c3039de50cfe5c7c2a4d52a49b665b` |
+| `ops/am3g/am3g-rerun-decision.sh` | operator: the mechanical rerun rule | `9cffe80e5e083fb2f58a66319170224d69dda5bb6053e5dbc142b169afaacb25` |
+| `ops/am3g/am3g-hand-sample.sh` | operator: H1's blind hand-check sample | `cb1695ad255240c7b9e36f8a899ab5db11db2c4fdfcb4e58e0db43f3c9b756b6` |
+| `ops/am3g/am3g-hand-receipt.sh` | operator: the hand labels' receipt, committed before the join | `6b93fc29fa69ecebae3b831be949f92a2425f361f2fa7f935018e3be8fdbb0a5` |
+| `scripts/verify_compute_provenance.py` | the lane, inside the container: image provenance | `ca62d62ae5c0e820a08574d5c5b1227c4495a24f3abcf342a1ae3ff1958d54ba` |
+| `scripts/check_compute_env.sh` | the lane, inside the container: environment doctor | `76fc5d64f7e84fd1e93340688b6be845d97f01c4791981c31ac8e70d66ff08ff` |
+| `scripts/exec_research_workload.py` | the lane, inside the container: runs the workload | `bb3abd1dd11e8ec9336fc181ac1999b1deea00e08e05d0fff3227111eaa6e4c1` |
+| `infra/research/Dockerfile.vllm-overlay` | the overlay image's Dockerfile | `437ff4f6d95d564a5065cc4383e79b34f166417358edcee34b82e5d05574852e` |
+| `uv.lock` | the Python environment of every host step | `4721104d055ec9d7488f82831c24b7e080124f27e9b850abd51c91024629b60f` |
 
 Commands of the registered run, on the host, after the freeze. The names in capitals are values
 that exist only then: FREEZE, the freeze commit (full id; its first 8 characters where the

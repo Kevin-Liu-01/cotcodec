@@ -138,6 +138,12 @@ populations:
     questions: 63
     question_ids_sha256: "183ee4d3406786be721c4c846fa9f72f0fc2ae8c905dcb198eaaff17d78846fc"
     arms: [retrieved, gold]
+    # The pilot's committed development tables (job 1411's compiled pass): the dry run reads them
+    # with the R2 code (AM3 found 8,913 of 8,946 cells equal; the rest is compiled against eager).
+    tables:
+      path: program/evidence/2026-10-15/am1-dev-pilot/analysis/tables.json.gz
+      sha256: "839542c65332b908e1c80e9b5e9c09d9c23088e2dec4a54bf2e37dde4f0105d3"
+      json_sha256: "b8fd58cc3adf8b01a644f0f7e248da132fd108f2c8857f88b1152fe75b648f80"
     # The dry run's reference: AM3's job 1466 (development, the same 8,946 requests per reader).
     reference:
       name: "job 1466 (AM3): rd-qwen3-8b, rd-olmo2, rd-qwen35-9b-default; judge32, judge8"
@@ -215,7 +221,10 @@ steps:
   - {id: judge8, kind: judge, judge: secondary, batch_invariant: true, enforce_eager: true}
 
 # Per job: the Slurm limit and, per step, [min_start_s, max_s]: a step starts only with min_start_s
-# left before the deadline (the limit minus 210 s), and its passes stop at max_s.
+# left before the deadline (the limit minus 210 s), and its passes stop at max_s. The registered
+# jobs' budgets are sized with budget.overhead_model (registration section 11; a test checks
+# that judge32 and judge8 both start and fit on the normal and the fallback paths). The
+# development job's budgets are the dry run's, as it ran (job 1471, 10:18 of 25 minutes).
 jobs:
   development:
     gpus: 1
@@ -231,28 +240,39 @@ jobs:
     gpus: 1
     minutes: 90
     step_budgets:
-      rd-qwen3-8b: [1300, 1200]
-      rd-olmo2: [1300, 1200]
-      rd-olmo2-default: [1300, 1200]
-      rd-qwen35-9b-default: [1900, 1800]
-      judge32: [700, 600]
-      judge8: [400, 300]
+      rd-qwen3-8b: [1150, 1000]
+      rd-olmo2: [1150, 1000]
+      rd-olmo2-default: [1150, 1000]
+      rd-qwen35-9b-default: [1650, 1500]
+      judge32: [700, 500]
+      judge8: [350, 250]
   abstention:
     gpus: 1
     minutes: 30
     step_budgets:
-      rd-qwen3-8b: [400, 300]
-      rd-olmo2: [400, 300]
-      rd-olmo2-default: [400, 300]
-      rd-qwen35-9b-default: [400, 300]
-      judge32: [300, 240]
-      judge8: [200, 150]
+      rd-qwen3-8b: [280, 200]
+      rd-olmo2: [280, 200]
+      rd-olmo2-default: [280, 200]
+      rd-qwen35-9b-default: [330, 250]
+      judge32: [240, 150]
+      judge8: [170, 100]
 
 # Physical GPU-hours: the image build (5 min on 1 H100) plus the heldout (90 min) and abstention
 # (30 min) jobs' limits, 2.08 GPU-h; with the one rerun the registration allows per job after an
 # infrastructure failure, 4.08 GPU-h. The development dry run: 25 min plus a 5 min build, 0.5.
 budget:
   build_minutes: 5
+  # Seconds outside the passes' max_s, measured in job 1471 (development: 8,946 requests per
+  # reader, 2,869 judge items) and scaled to each population, with margin. job: the lane's prolog
+  # (46 s) plus the driver's model verification (36 s). Per step: the worker's prompt rendering
+  # before the engine (readers 11-12 s, judges 7 s, scaling with the requests; for judge32 also
+  # the driver building the judge items from three passes), the engine start (28-41 s), the
+  # smoke pass (1-6 s) and the shutdown and GPU hand-off (3-4 s). failed_engine_step: a
+  # batch-invariant step whose engine refuses to start (AM3's 44 s), before the fallback runs.
+  overhead_model:
+    source: "job 1471 (scontrol RunTime 00:10:18), summary.json and worker-progress.jsonl"
+    heldout: {job: 100, reader: 135, failed_engine_step: 125, judge32: 155, judge8: 90}
+    abstention: {job: 100, reader: 70, failed_engine_step: 70, judge32: 80, judge8: 65}
   registered_cap_gpu_hours: 2.08
   registered_cap_with_reruns_gpu_hours: 4.08
   dry_run_cap_gpu_hours: 0.5
