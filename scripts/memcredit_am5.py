@@ -1499,6 +1499,9 @@ def analyze(
                        "uses_by_role": dict(sorted(Counter(
                            u["role"] for i in plan["items"] for u in i["uses"]).items()))},
     }  # fmt: skip
+    items, agreement = labelled_items(features, plan, hand_labels)
+    results["hand_check"]["agreement_with_the_judge"] = agreement
+    results["labelled_items"] = items
     per_table: list[dict[str, Any]] = []
     for reader_id in READERS:
         rows = recs[reader_id]
@@ -1546,6 +1549,48 @@ def analyze(
                               "caps": {k: {kk: vv for kk, vv in v.items() if kk != "digest"}
                                        for k, v in r["caps"].items()}})  # fmt: skip
     return results, per_table
+
+
+#: The per-question leakage facts reported beside each labelled reply.
+ITEM_FACTS = (
+    "pool_memories_containing_the_answer",
+    "remaining_user_turns_containing_the_answer",
+    "answer_normalized_tokens",
+    "memories_shared_with_the_original_pool",
+    "original_pool_has_answer_memories",
+)
+
+
+def labelled_items(
+    features: dict[str, Any], plan: dict[str, Any], hand_labels: dict[str, int] | None
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    """Per hand-plan item (text-free): its question, uses (reader, role, mask, first answering
+    position), the primary judge's label of the reply, the hand label, and the question's leakage
+    facts; and hand-against-judge agreement over the labelled items (counts and Cohen's kappa)."""
+
+    facts = {f["question_id"]: f for f in features["leakage_per_question"]}
+    pools = {(r, p["question_id"]): p for r in READERS for p in features["readers"][r]["pools"]}
+    out, pairs = [], []
+    for item in plan["items"]:
+        judged = sorted({int(pools[(u["reader"], item["question_id"])]["masks"][int(u["mask"])]
+                             ["u"][JUDGE]) for u in item["uses"]})  # fmt: skip
+        if len(judged) != 1:
+            raise Am5Error(f"{item['item_id']}: one reply digest with two judge labels")
+        hand = hand_labels.get(item["item_id"]) if hand_labels is not None else None
+        q = facts[item["question_id"]]
+        out.append({"item_id": item["item_id"], "question_id": item["question_id"],
+                    "question_type": q["question_type"], "uses": item["uses"],
+                    "judge": judged[0], "hand": hand,
+                    "facts": {k: q[k] for k in ITEM_FACTS}})  # fmt: skip
+        if hand is not None:
+            pairs.append((judged[0], hand))
+    agree = sum(a == b for a, b in pairs)
+    agreement = {"items": len(pairs), "agree": agree,
+                 "judge_yes_hand_no": sum(a == 1 and b == 0 for a, b in pairs),
+                 "judge_no_hand_yes": sum(a == 0 and b == 1 for a, b in pairs),
+                 "kappa": ms.cohen_kappa([a for a, _ in pairs], [b for _, b in pairs])
+                 if pairs else None}  # fmt: skip
+    return out, agreement
 
 
 def _leakage_by_type(facts: Sequence[dict[str, Any]]) -> dict[str, Any]:
@@ -1703,10 +1748,32 @@ def render_markdown(results: dict[str, Any]) -> str:
         "|---|---:|---:|",
     ]
     lines += [f"| {k} | {x['items']} | {x['yes']} |" for k, x in sorted(v.items())]
-    lines += ["", "## Hand check", "", f"Status: {results['hand_check']['status']}; "
-              f"{results['hand_check']['labelled']} of {results['hand_check']['items']} items "
-              f"labelled, {results['hand_check']['ones']} labelled correct; plan "
-              f"`{results['hand_check']['plan_sha256'][:16]}...`.", ""]  # fmt: skip
+    hc = results["hand_check"]
+    ag = hc["agreement_with_the_judge"]
+    kappa = "n/a" if ag["kappa"] is None else f"{ag['kappa']:.2f}"
+    lines += ["", "## Hand check", "", f"Status: {hc['status']}; {hc['labelled']} of "
+              f"{hc['items']} items labelled, {hc['ones']} labelled correct; plan "
+              f"`{hc['plan_sha256'][:16]}...`. Hand against judge: {ag['agree']} of {ag['items']} "
+              f"agree (judge yes, hand no {ag['judge_yes_hand_no']}; judge no, hand yes "
+              f"{ag['judge_no_hand_yes']}; kappa {kappa}).", "",
+              "Replies judged or hand-labelled correct, with their question's leakage facts "
+              "(answer in a pool memory; answer in a remaining user turn; answer tokens; memories "
+              "shared with the original pool; has_answer memories in the original pool):", "",
+              "| Item | question | type | uses | judge | hand | answer in pool | answer in "
+              "remaining turns | answer tokens | shared memories | original has_answer |",
+              "|---|---|---|---|---:|---:|---:|---:|---:|---:|---:|"]  # fmt: skip
+    for it in results["labelled_items"]:
+        if not (it["judge"] or it["hand"]):
+            continue
+        uses = "; ".join(f"{u['reader']} {u['role']}" for u in it["uses"])
+        f = it["facts"]
+        lines.append(f"| {it['item_id']} | {it['question_id']} | {it['question_type']} | {uses} | "
+                     f"{it['judge']} | {it['hand']} | {f['pool_memories_containing_the_answer']} | "
+                     f"{f['remaining_user_turns_containing_the_answer']} | "
+                     f"{f['answer_normalized_tokens']} | "
+                     f"{f['memories_shared_with_the_original_pool']} | "
+                     f"{f['original_pool_has_answer_memories']} |")  # fmt: skip
+    lines.append("")
     return "\n".join(lines)
 
 

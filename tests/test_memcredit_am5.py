@@ -470,6 +470,9 @@ def _pipeline(tmp_path, monkeypatch):
         "pool_has_answer_memories": 0,
         "pool_memories_containing_the_answer": 0,
         "remaining_user_turns_containing_the_answer": 0,
+        "answer_normalized_tokens": 2,
+        "memories_shared_with_the_original_pool": 3,
+        "original_pool_has_answer_memories": 1,
     }
     facts = [
         {"facts": {"question_id": q["question_id"], "question_type": q["question_type"], **zero}}
@@ -564,6 +567,12 @@ def test_extract_hand_check_and_analyze_end_to_end_and_text_free(tmp_path, monke
     )
     results = json.loads((outdir / "results.json").read_text())
     assert results["hand_check"]["status"] == "complete"
+    agreement = results["hand_check"]["agreement_with_the_judge"]
+    assert agreement["items"] == agreement["agree"] == len(lines)
+    items = results["labelled_items"]
+    assert [i["item_id"] for i in items] == manifest["items"]
+    assert all(i["hand"] == i["judge"] and set(i["facts"]) == set(a5.ITEM_FACTS) for i in items)
+    assert sum(i["judge"] for i in items) == merged["ones"] > 0
     for d in results["readers"].values():
         for cap in ("8", "70"):
             c = d["ablated"]["caps"][cap]
