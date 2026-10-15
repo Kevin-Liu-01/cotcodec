@@ -1,0 +1,3 @@
+image sha256:abcd2b56eddd61ea7cc9243122ffa615bfcfdec4cc83e0bf257aa06e626ed0ee src ~/cotcodec-runs/stage0/am3-reader-replication/checkout
+am3 selftest exit 0
+am3 plan exit 0

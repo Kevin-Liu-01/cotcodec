@@ -1,0 +1,80 @@
+{
+  "artifact_root_sha256": "ec7f69552c8917a97fc28cea3862d07f49148413226f6ebb01465ac69bcc5f4c",
+  "backend": "huggingface",
+  "files": [
+    {
+      "bytes": 1519,
+      "path": ".gitattributes",
+      "sha256": "11ad7efa24975ee4b0c3c3a38ed18737f0658a5f75a0a96787b576a78a023361"
+    },
+    {
+      "bytes": 9345,
+      "path": "README.md",
+      "sha256": "1c64f5f2cb6158d24a2fa1241687cd93854154bc6cce6c2b86f6dc3e69cc87de"
+    },
+    {
+      "bytes": 679,
+      "path": "config.json",
+      "sha256": "ff8cc8709a229515676797ab6f343a09391041c9a8fbbc78bfec5be4c2e3664e"
+    },
+    {
+      "bytes": 126,
+      "path": "generation_config.json",
+      "sha256": "73e7f06e4ea172c6edeb1a44cab4a603e76962a85ea7ef3245769ba46ca23a30"
+    },
+    {
+      "bytes": 916646,
+      "path": "merges.txt",
+      "sha256": "b6fe424e334903f7fb84d3a106d9730455f4744b9fe3c21ee136d97a00e72502"
+    },
+    {
+      "bytes": 4970591184,
+      "path": "model-00001-of-00003.safetensors",
+      "sha256": "05ae91e1171f1f1753b23df3a5a6740d89da377932b33a1661bb7485d6ec530e"
+    },
+    {
+      "bytes": 4981161496,
+      "path": "model-00002-of-00003.safetensors",
+      "sha256": "0d41b81fe0d7e4c1d673a77beded5ee77080e39d6a6940b523e82f61eaa1dcbd"
+    },
+    {
+      "bytes": 4645523448,
+      "path": "model-00003-of-00003.safetensors",
+      "sha256": "51d701cc400703094ae4b6434b067ee8810056170ce4703e93b2f5b2cb93a51d"
+    },
+    {
+      "bytes": 29594,
+      "path": "model.safetensors.index.json",
+      "sha256": "e3ade1329e38dc608cf6588a7a5d52df2d4d0eb0042d8cdc690a5e349c0963fd"
+    },
+    {
+      "bytes": 581,
+      "path": "special_tokens_map.json",
+      "sha256": "78afb564e81264029b25f9caf24bda2521d5bdaeff5cd3fdbc01d3da2e8ce2f2"
+    },
+    {
+      "bytes": 7137177,
+      "path": "tokenizer.json",
+      "sha256": "73fd5254624f39a88e3faac6a8e11300fc3c735ed37880d4f4f08db898eaecca"
+    },
+    {
+      "bytes": 4884,
+      "path": "tokenizer_config.json",
+      "sha256": "50c412c57d832057a3d5db42064c741f751e570f7c8788f037bfb0d2dd6e5f49"
+    },
+    {
+      "bytes": 1611056,
+      "path": "vocab.json",
+      "sha256": "9e14712c91b37c7aab74b1306baa46ac342d620637a4b44523cdc3aec7d24195"
+    }
+  ],
+  "mode": "full",
+  "model_id": "olmo-2-1124-7b-instruct",
+  "publication_eligible": true,
+  "registry_sha256": "f414b2584e2bb5c1df60bf68d7988e3c787a6d2d4db1cebcddd3507bdd3a7e4c",
+  "repo_id": "allenai/OLMo-2-1124-7B-Instruct",
+  "revision": "470b1fba1ae01581f270116362ee4aa1b97f4c84",
+  "schema_version": 1,
+  "total_bytes": 14606987735,
+  "trust_remote_code": false
+}

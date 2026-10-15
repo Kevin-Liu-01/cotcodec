@@ -1,0 +1,155 @@
+{
+  "architectures": {
+    "Olmo2ForCausalLM": {
+      "in_transformers": true,
+      "reader": "olmo-2-1124-7b-instruct",
+      "supported": true,
+      "transformers_backend": true
+    },
+    "Qwen3ForCausalLM": {
+      "in_transformers": true,
+      "reader": "qwen3-8b",
+      "supported": true,
+      "transformers_backend": false
+    },
+    "Qwen3_5ForConditionalGeneration": {
+      "in_transformers": true,
+      "reader": "qwen3.5-9b",
+      "supported": true,
+      "transformers_backend": false
+    }
+  },
+  "judges": {
+    "primary": {
+      "fits": true,
+      "items": 251,
+      "len_max": 302,
+      "model_id": "qwen3-32b"
+    },
+    "secondary": {
+      "fits": true,
+      "items": 251,
+      "len_max": 302,
+      "model_id": "qwen3-8b"
+    }
+  },
+  "ok": true,
+  "plan": {
+    "experiment_id": "am3-reader-replication-v1",
+    "pools": 126,
+    "questions": 63,
+    "readers": [
+      "qwen3-8b",
+      "olmo-2-1124-7b-instruct",
+      "qwen3.5-9b"
+    ],
+    "requests_per_pool": 71,
+    "requests_per_reader": 8946,
+    "split": "development",
+    "steps": [
+      "rd-qwen3-8b",
+      "rd-olmo2",
+      "rd-olmo2-default",
+      "rd-qwen35-9b",
+      "rd-qwen35-9b-default",
+      "judge32",
+      "judge8"
+    ]
+  },
+  "readers": {
+    "olmo-2-1124-7b-instruct": {
+      "architectures": [
+        "Olmo2ForCausalLM"
+      ],
+      "fits": true,
+      "len_max": 1099,
+      "len_mean": 388.7676056338028,
+      "len_min": 210,
+      "no_think_tag_when_unmarked": true,
+      "ok": true,
+      "probe_prefix_tokens": [
+        100257,
+        27,
+        91,
+        882,
+        91,
+        397,
+        39314,
+        527
+      ],
+      "prompt_ids_sha256": "627be9702e4201987f3388bbc5b6107d5546f8e998e98b1dde4bd14220be5eab",
+      "requests": 8946,
+      "stop_token_error": null,
+      "stop_token_id": 100257,
+      "thinking_marker_ok": true,
+      "tokens_total": 3477915
+    },
+    "qwen3-8b": {
+      "architectures": [
+        "Qwen3ForCausalLM"
+      ],
+      "fits": true,
+      "len_max": 1169,
+      "len_mean": 422.1490051419629,
+      "len_min": 241,
+      "no_think_tag_when_unmarked": true,
+      "ok": true,
+      "probe_prefix_tokens": [
+        151644,
+        872,
+        198,
+        38214,
+        525,
+        18923,
+        504,
+        697
+      ],
+      "prompt_ids_sha256": "0eb00ab5df3d6d30fb560e273676a8044627d05645837552d6cbc11707da6166",
+      "requests": 8946,
+      "stop_token_error": null,
+      "stop_token_id": 151645,
+      "thinking_marker_ok": true,
+      "tokens_total": 3776545
+    },
+    "qwen3.5-9b": {
+      "architectures": [
+        "Qwen3_5ForConditionalGeneration"
+      ],
+      "fits": true,
+      "len_max": 1190,
+      "len_mean": 429.07668231611893,
+      "len_min": 245,
+      "no_think_tag_when_unmarked": true,
+      "ok": true,
+      "probe_prefix_tokens": [
+        248045,
+        846,
+        198,
+        36948,
+        513,
+        18352,
+        494,
+        678
+      ],
+      "prompt_ids_sha256": "8907352cb175b7f211055272e8edc0bd32bf4214b6e0b90f9298ea28132a88bd",
+      "requests": 8946,
+      "stop_token_error": null,
+      "stop_token_id": 248046,
+      "thinking_marker_ok": true,
+      "tokens_total": 3838520
+    }
+  },
+  "transformers_version": "5.17.0",
+  "vllm_cited_files_sha256": {
+    "config/vllm.py": "057b0a7f80db28522ee46b41f9ae5bd7a0c1998a08e111c5a6ddcb8c08f07f8d",
+    "engine/arg_utils.py": "95be1adb96f55933f6a52260c8cb2181d04707401ca21d97c33108c5ab58f3ac",
+    "envs.py": "1d7101800f67b803a700fbf7489292cf1f0022b570085166ad407e6b1513dc15",
+    "model_executor/determinism/batch_invariant.py": "fd39330e48f8b209def7378b1b83fa009534617e8fc41230dc4f40a528309993",
+    "model_executor/determinism/batch_invariant_configs.py": "9fef5b173374b7fe01f199332bea7477fde6384f63d62bc5662722e55f0bdaa4",
+    "model_executor/layers/attention/attention.py": "bde77677fd0e95ea09c6a580dfaf09b57741e8183e00cb106e2d1cc64d8e03f2",
+    "sampling_params.py": "3c37c655a0a60851e3d96d946eb10d1cbb347dee6cd143f38a7fc18c6f66dd8b",
+    "v1/attention/backends/flash_attn.py": "ea53fb41165323f13094604051c73d44a579994fe5a427243aa9faafc280b1c2",
+    "v1/worker/gpu_worker.py": "43bd01925cd84f7d8a1d4a2ec30e289014a485fe4492a5343cbc893e8ed2f518"
+  },
+  "vllm_version": "0.31.0"
+}

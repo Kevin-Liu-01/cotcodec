@@ -468,7 +468,7 @@
     "Gauntleted packages that ended at honest exits and can advance only by your ruling (D24, D70, D76). S2 v3 (65) continues as S2 v4 under your delegation (D80 (iv)); its images are built and its registration is in a repair round before the freeze (D84). C5 Phase 1 (70-97 GPU-h) stays yours; its identification defect stands",
     "Shelved by Kevin (D101), not to be raised unless he asks: the outward items (disclosures, licence requests, host-admin request, publication, the GitHub Support request), key rotation and account items. Drafts are in the private archive."
   ],
-  "gpu_hours_spent_this_program": 27.1294,
+  "gpu_hours_spent_this_program": 27.3311,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -1458,6 +1458,24 @@
       "jobs": [],
       "outcome": "review NOT RUN: the lane request (request-g2rl-w1-r2, 855231ee...) and prompt (587098e8..., about 105K tokens) were prepared but never dry-run, tested or submitted, because the host rule allows this gauntlet's lane job only on an empty queue and the D110 hosting jobs (1450 and 1452 running with 1-day limits, 1451 and 1453 pending on them) held it at every check (05:24-05:32 UTC by the operator, 05:40 UTC by the recorder); the queue cannot empty before about 2026-10-17T02:22Z, past the 720-minute wall budget. Wave score 63 (reviewer 1 only; an upper bound on the lower of two totals), best 63; honest exit on the declared query budget under the program convention (298 of 150; 191 without the paused first frontier attempt; 123 under the orx-plus-web reading) with the triad stop (3/3 refuted). Tokens 4.25M of 10M, $93.75 of $150, 234.3 of 720 minutes. Audit row 1 of program/gauntlet/2026-10-15-g2rl-state-precision-rl.jsonl (hash dc36ee24...)",
       "basis": "physical: no GPU job ran for this gauntlet (no Slurm job submitted); recorder's read-only check at 05:40:25 UTC: 1450 and 1452 running, 1451 and 1453 pending, GPUs 2-7 at 0 MiB, no reviewer container"
+    },
+    {
+      "experiment": "AM3 image build (EXPLORATORY, development split only; D117): cotcodec-vllm cu129 overlay from the source capsule of commit 18e8f125",
+      "gpu_hours": 0.0189,
+      "jobs": [
+        "1462 vLLM overlay build 18e8f125 (1 H100; COMPLETED 0:0, 00:01:08)"
+      ],
+      "outcome": "image sha256:a763bbbc from capsule b7ea3454; pre-image (1461) and post-build (1463) CPU selftests pass: 8,946 prompts per reader fit for Qwen3-8B, OLMo-2-1124-7B-Instruct and Qwen3.5-9B, thinking off for both Qwen readers, vLLM 0.31.0 resolves Olmo2ForCausalLM through its Transformers backend; OLMo-2 fetched by the CPU lane (1460, no GRES, anonymous, receipt 4120a5c9) (program/evidence/2026-10-16/am3-reader-replication/README.md)",
+      "basis": "physical (scontrol RunTime 00:01:08 on 1 H100); submitted with no other GPU job of this program queued or running (D110's jobs on GPUs 0-1)"
+    },
+    {
+      "experiment": "AM3 GPU job (EXPLORATORY, development split only; D117): readers Qwen3-8B (anchor, eager batch-invariant), OLMo-2-1124-7B-Instruct (eager batch-invariant, Transformers backend) and Qwen3.5-9B (eager, default mode after vLLM refused batch-invariant mode for GDN) on the pilot's 126 pools x 71 requests (70 4-subsets and all 8), then the Qwen3-32B and Qwen3-8B judges (eager batch-invariant) on 2,743 items",
+      "gpu_hours": 0.1828,
+      "jobs": [
+        "1466 steps rd-qwen3-8b, rd-olmo2, rd-qwen35-9b (engine refused), rd-qwen35-9b-default, judge32, judge8 (1 H100; COMPLETED 0:0, 00:10:58)"
+      ],
+      "outcome": "anchor bit-exact against the pilot's eager pass 1441 (2,272 of 2,272) and 8,913 of 8,946 cells against the committed tables (99.63%); nonabstain-BM25 vs BM25 top 4, retrieved arm, Qwen3-32B: anchor 1 vs 0, OLMo-2 4 vs 0 (p 0.125), Qwen3.5-9B 3 vs 0 (p 0.25), c = 0 in all six Qwen3-32B cells; under the Qwen3-8B judge 20 gained vs 6 lost, every loss an abstaining top 4 judged correct (exploratory; program/evidence/2026-10-16/am3-reader-replication/README.md)",
+      "basis": "physical (scontrol RunTime 00:10:58 on 1 H100); Slurm limit 55 min (0.92 GPU-h cap); AM3 total 0.2017 of the 2.0 cap; submitted with no other GPU job of this program queued or running and 6 of 8 H100 free (D110's jobs on GPUs 0-1)"
     }
   ],
   "results": [

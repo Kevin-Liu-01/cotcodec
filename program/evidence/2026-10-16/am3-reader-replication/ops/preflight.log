@@ -1,0 +1,38 @@
+== build 18e8f125 at 2026-10-15T09:48:25Z
+-- squeue
+1451 transcreate-lama PENDING 0:00 gres:gpu:h100:1
+1453 transcreate-rose PENDING 0:00 gres:gpu:h100:1
+1450 transcreate-lama RUNNING 7:43:39 gres:gpu:h100:1
+1452 transcreate-rose RUNNING 7:26:13 gres:gpu:h100:1
+-- slurm gres
+   Gres=gpu:h100:8
+   GresUsed=gpu:h100:2(IDX:0-1)
+-- gpus
+0, 6507 MiB, 0 %
+1, 17473 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+no GPU job of this program; 6 of 8 H100 free in Slurm (need 1)
+== main 18e8f125 at 2026-10-15T09:50:41Z
+-- squeue
+1451 transcreate-lama PENDING 0:00 gres:gpu:h100:1
+1453 transcreate-rose PENDING 0:00 gres:gpu:h100:1
+1450 transcreate-lama RUNNING 7:45:55 gres:gpu:h100:1
+1452 transcreate-rose RUNNING 7:28:29 gres:gpu:h100:1
+-- slurm gres
+   Gres=gpu:h100:8
+   GresUsed=gpu:h100:2(IDX:0-1)
+-- gpus
+0, 6507 MiB, 0 %
+1, 17473 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+no GPU job of this program; 6 of 8 H100 free in Slurm (need 1)
