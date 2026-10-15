@@ -40,10 +40,10 @@ their original pools (the evidence present):
   K = 8).
 - **So the gain side of the comparison is a known number.** The registered test pairs a known
   gain indicator per question with a new cost indicator per question. K = 8 is the primary cap
-  because AM4 found that it keeps 77-84% of K = 70's gains at about a fifth of its reads on
-  answerable pools and a ninth on unanswerable ones: that choice was made after AM4 looked at
-  these very questions, so the gain at K = 8 is a post hoc selection, not an estimate free of
-  selection. K = 70 (the registered rule without a cap) is reported as the secondary cap.
+  because AM4 found that it keeps 77-84% of K = 70's gains at under a quarter of its mean reads
+  on answerable pools and about a seventh on unanswerable ones: that choice was made after AM4
+  looked at these very questions, so the gain at K = 8 is a post hoc selection, not an estimate
+  free of selection. K = 70 (the registered rule without a cap) is reported as the secondary cap.
 - **What no one has.** No model has seen the ablated held-out pools (section 1.2). Every cost
   figure of this registration is new.
 
@@ -66,8 +66,7 @@ their original pools (the evidence present):
   with each reader's tokenizer and the judge items (one placeholder reply per pool) with the
   judge's, and recorded only their lengths (section 15). No reader or judge ran on an ablated
   held-out pool, and no model output of them exists.
-- **The questions' answers are known to be recoverable from the removed sessions only by
-  LongMemEval's own annotations.** The leakage facts (section 6.7) count LongMemEval's `has_answer`
+- **The evidence's absence rests on LongMemEval's own annotations.** The leakage facts (section 6.7) count LongMemEval's `has_answer`
   turns left in each ablated haystack and pool, pool memories whose text equals an evidence-session
   user turn, and memories or remaining turns that contain the normalized reference answer (crude:
   short answers match by chance). They cannot rule out an answer that can be guessed, or one stated
@@ -362,8 +361,8 @@ batch schedule):
 - *A read cost.* The capped rule calls the reader up to 8 times per pool, against BM25 top 4's
   once; the reads are reported (section 6.6).
 
-**Why this test.** The user's specification (D121) asks for a paired, per-question comparison of
-cost and gain with one-sided 97.5% bounds and Holm across the three readers. The exact McNemar test
+**Why this test.** D121 and the drafting brief ask for a paired, per-question comparison of cost
+and gain with one-sided 97.5% bounds and Holm across the three readers. The exact McNemar test
 is the exact paired test of P(cost only) = P(gain only), which is D = 0; it is the test of
 `am1-keepset-search-v1` and am3g, so its operating characteristics are known in this program, and
 its exact conditional interval is the one-sided bound pair. Holm controls the familywise error at
@@ -596,8 +595,9 @@ job's driver and workers record their own failures in `summary.json`).
   - *Size and time.* No cap on items. At AM5's development rates (switches at K = 8 / 70 of 1 / 2,
     6 / 10 and 3 / 3 per 63 pools; answering top 4s 1, 4 and 0) the held-out pools give about 100
     targets and as many distractors: about 200 items, 4 chunks. The maximum, every pool switching
-    within 8 reads for every reader, is 3 x 694 = 2,082 items (35 chunks). A chunk of 60 should
-    take about a minute (am3g's 278 items took 5 chunks).
+    within 8 reads for every reader, is 3 x 694 = 2,082 items (35 chunks). The dry run's one chunk
+    of 34 items took the subagent 96 s; am3g's 278 items took 5 chunks. The first stage is expected
+    to take under 15 minutes.
   - *Decision.* Section 7.1 (primary) and 7.2 (secondary). Hand-against-judge agreement (counts and
     Cohen's kappa), overall and per role, is reported as a description.
 - **Kill.** None beyond the void rules. A void is reported with its check and counts.
@@ -638,8 +638,8 @@ Qwen3-8B's COST_ABOVE_GAIN probability is 0.46-0.70 at q = 0.15 and 0.99-1.00 at
   NOT_SEPARATED is the expected outcome. At its upper bound (0.176) COST_ABOVE_GAIN has 0.97-0.99.
 - Qwen3.5-9B: COST_BELOW_GAIN 0.07-0.20; at its upper bound (0.133) COST_ABOVE_GAIN 0.48-0.72.
 
-**Readings.** The test separates cost from gain only when the cost rate is at least about 0.03
-below or 0.05-0.07 above the gain rate. Near AM5's development rates it is likely to read
+**Readings.** The power reaches about 0.8 only when the cost rate is about 0.045 below the gain
+rate, or about 0.07 above it. Near AM5's development rates it is likely to read
 COST_BELOW_GAIN for Qwen3-8B and NOT_SEPARATED for the other two, and the break-even share
 (section 6.4) with its interval is then the informative output. The development rates rest on 63
 questions; held-out rates may differ (on LongMemEval's edited `_abs` questions the K = 8 costs
@@ -753,8 +753,89 @@ batch-invariant step is then followed by its declared default-mode fallback.
 
 ## 15. What development fixed in this design: the development dry run
 
-The dry run is recorded here once it has run on the development population (AM5's 63 ablated
-development pools), with the operator scripts of section 16 in their `dev` mode, within 0.3 GPU-h.
+Before the freeze the whole pipeline ran on the development population (AM5's 63 ablated
+development pools, AM5's artifact unchanged) in a new host directory
+(`~/cotcodec-runs/stage0/am5r-dev-dryrun/`), with the operator scripts of section 16 in their `dev`
+mode, from commit `c16437bc` (the code of `ca661cd9` with the held-out artifact pinned). Record:
+`program/evidence/2026-10-16/am5-ablated-cost-dev-dryrun/README.md`.
+
+- **The held-out ablated artifact** (host CPU, no model): `am5r-prepare-heldout.sh dev ca661cd9`
+  built `68a75dcf...` (2,493,448 bytes) and its summary `c68b1da9...` (`prepare/`). The builder
+  reproduces AM1's held-out retrieved pools, 347 of 347, and the ablation rebuilds AM5's 63
+  development ablated pools exactly. 700 evidence sessions removed; LongMemEval's 691 `has_answer`
+  turns all lay inside them and none is left in any ablated haystack or pool; no pool memory equals
+  an evidence-session user turn; by the crude string check 27 of 347 ablated pools hold a memory
+  containing the reference answer and 91 questions have it in a remaining user turn (AM5's
+  development figures: 4 and 10 of 63).
+- **A CPU precheck** at `ca661cd9`, before any GPU time: `extract`, `analyze` and `dryrun-compare`
+  on a scratch copy of AM5's job 1487 (its passes, the summary relabelled) passed all 24 checks.
+- **Build** (job 1502, 1 H100, 00:01:11, 0.0197 GPU-h): image
+  `sha256:a16f70c1bc732961f1c9dd44bc13767a8ec292df2000206cdaafaafa8a328ab8` from capsule
+  `003eb3c1...`, provenance PASS. The first submission was refused by the preflight while two GPU
+  jobs of another workstream of this program ran; it was submitted when they had ended.
+- **Post-build CPU selftests** (no GRES): development (job 1503) and held-out (job 1504,
+  tokenizers only, no model output). Every prompt fits: development at most 1,148 (Qwen3-8B),
+  1,077 (OLMo-2) and 1,164 (Qwen3.5-9B) tokens; held-out with the control 29,110 requests per
+  reader, at most 1,778, 1,699 and 1,803 tokens, and placeholder judge items of at most 349.
+- **GPU job** (job 1507, 1 H100, 00:06:46, 0.1128 GPU-h; limit 13 minutes): every step complete
+  (OLMo-2's fallback not needed); reader passes 32.4, 34.3 and 58.6 s after engine starts of
+  27.8-41.2 s; the judge 3.5 s on 460 items. The rerun rule: complete.
+- **Total 0.1325 GPU-h** of the 0.3 allowed (`program/state.json`, `gpu_hours_ledger`).
+
+**It reproduced AM5 exactly** (`dryrun-compare.json`, 24 of 24 checks):
+- every reader's 4,473 replies equal job 1487's in tokens, finish reasons and log-prob bits, for
+  Qwen3-8B, OLMo-2 and Qwen3.5-9B (the same request list and order), and the primary labels at every
+  cell; the judge-item list is byte-identical (`4bbb7f5c...`) and its 460 labels equal job 1487's;
+- the features' per-pool cells equal AM5's features (`16bbd385...`) for all three readers;
+- AM5's own analysis (`memcredit_am5.analyze`), run on these features with AM5's receipted hand
+  labels and plan, reproduces AM5's committed `per-table.json.gz` byte for byte (`58bec838...`) and
+  its reader blocks, leakage, judge validation, labelled items and hand check;
+- this registration's ablated blocks equal AM5's in every judge-based field at K = 8 and 70
+  (switches 1, 6 and 3 / 2, 10 and 3; costs 0, 5 and 3 / 1, 9 and 3), and its development gain
+  side equals AM5's original-pool gains (1, 4 and 3 at both caps).
+
+**The blind hand check under the registered protocol.** `hand-sample` drew 34 items in one chunk
+(plan `2bcd07af...`): 2 switched replies judged correct, every switched reply at K = 8 judged wrong
+(8 uses, 7 items), the seeded half of the 5 judged-wrong switches beyond K = 8 (3), the 5 answering
+top-4 replies and 18 distractors. The CLI launch could not authenticate (an error result, at
+18:41:11Z) and exited 3; one fresh subagent, model `claude-opus-5-5`, with the absolute-path pinned
+prompt labelled the chunk; `push subagent` found its one transcript among 45, which passed the
+audit (three tool calls, one agent id, every line after the CLI's failure; context files
+`CLAUDE.md` (user and project) and `MEMORY.md`); 34 valid rows, so no repair stage. The receipt was
+committed at `351dc062` before the join. Hand against judge: 34 of 34 (kappa 1.00), 6 labelled
+correct, no switched reply labelled a decline outside the patterns; against AM5's own receipted
+labels, 16 of AM5's 18 items are in this plan and all 16 agree (the other 2 are judged-wrong
+switches beyond K = 8 that the seeded half left out). The hand-based costs equal the judge's at
+K = 8; at K = 70 the two unlabelled OLMo-2 switches give 7 or 9 under the two assignments of
+section 7.2.
+
+**Analyze** (development mechanics, deciding nothing) ran twice at `c16437bc` with byte-identical
+outputs; `power` wrote section 9's tables; the memcredit tests passed on the host (221). At K = 8
+the development data give D = -0.016 (Qwen3-8B), +0.016 (OLMo-2) and 0.000 (Qwen3.5-9B), all
+NOT_SEPARATED, judge and hand alike, with break-even shares 1.00, 0.44 and 0.50; V3 (all 4,473
+cells) and G-J1 (58 of 58, 63 of 63; decoys 4 of 62 yes) pass.
+
+**The runbook rehearsal** (`rehearsal/am5r-rehearse.sh` and its log): section 16's host scripts
+under a fake HOME on the host, with `sbatch`, `scontrol`, `squeue`, `nvidia-smi`, `ssh`, `scp` and
+`claude` stubbed; no job submitted, no GPU and no model used. It runs am3g's 56 cases adapted to
+these scripts and 5 of this registration's own (dev mode refusing to submit or extract the
+held-out population; `prepare-heldout` refusing reg mode and an existing artifact; the held-out
+tokenizer-only selftest submitting in dev mode). Its first run, at `cf9f9ebb`, stopped on an error
+in the rehearsal script itself (an apostrophe inside a parameter expansion); its second, at
+`943348f4`, failed one case, again the rehearsal's own (it reused the "no sbatch call" check after
+an earlier case had legitimately submitted; the refusal itself was right); with the script of
+`8128800a`, against the operator scripts of `943348f4` (unchanged since `c16437bc`), all 61 cases
+pass.
+
+**Tests.** `tests/test_memcredit_am5r.py` (62 tests) passes locally; on the host the memcredit tests
+of am3, am3g, AM5 and this registration pass (221). The whole suite on the host at `943348f4`:
+3,770 passed, 64 skipped and 2 failed in another experiment's tests (`test_r04_evidence.py`,
+`test_r04_nuisance.py`), the same two that am3g's dry run found failing on `main`; this branch
+changes no existing code.
+
+Development also set: the construction and the outcome definition (AM5), the readers and engines
+(am3g), the 71 requests per pool, the development job's 13-minute limit and budgets (job 1487's
+timeline), and the held-out budgets (am3g's overhead model, section 11).
 
 ## 16. Code of record (at the draft revision; re-pinned at the freeze)
 

@@ -1,0 +1,45 @@
+{
+  "artifact_bytes": 2493448,
+  "artifact_sha256": "68a75dcf1bc37ebe54fde61ec288d9c393adc1d0197b88168d7c153be34c1ce6",
+  "by_type": {
+    "knowledge-update": 59,
+    "multi-session": 101,
+    "single-session-assistant": 4,
+    "single-session-preference": 25,
+    "single-session-user": 52,
+    "temporal-reasoning": 106
+  },
+  "control_rebuild_check": {
+    "questions": 63,
+    "rebuilt_identical": 63
+  },
+  "heldout_retrieved_pool_check": {
+    "questions": 347,
+    "retrieved_pools_identical": 347
+  },
+  "leakage": {
+    "evidence_session_ids": 700,
+    "has_answer_memories_in_the_ablated_pools": 0,
+    "has_answer_turns_before": 691,
+    "has_answer_turns_in_evidence_sessions": 691,
+    "has_answer_turns_left_in_the_haystack": 0,
+    "memories": 2776,
+    "memories_shared_with_the_original_pools": 1493,
+    "original_pools_with_a_has_answer_memory": 304,
+    "pool_memories_equal_to_an_evidence_turn": 0,
+    "pools_with_a_has_answer_memory": 0,
+    "pools_with_a_memory_containing_the_answer": 27,
+    "pools_with_a_memory_equal_to_an_evidence_turn": 0,
+    "questions": 347,
+    "questions_whose_remaining_user_turns_contain_the_answer": 91,
+    "questions_with_a_repeated_evidence_session_id": 0,
+    "questions_with_has_answer_turns_left": 0,
+    "sessions_removed": 700
+  },
+  "matches_config_pin": false,
+  "max_full_pool_prompt_chars": 7518,
+  "max_full_pool_prompt_chars_with_control": 7518,
+  "question_ids_sha256": "d4f024fbcda5394984a46c421cd938f2b6db6067fef0f21a5c6e72359b27e50a",
+  "questions": 347,
+  "summary_sha256": "c68b1da9e0e456c8bf7e06741df298cfbd622b6e3fd44602a812c137069a8355"
+}

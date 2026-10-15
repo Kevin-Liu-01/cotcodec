@@ -1,0 +1,19 @@
+[
+  "python",
+  "scripts/memcredit_am5r.py",
+  "run",
+  "--population",
+  "development",
+  "--seeds",
+  "42",
+  "43",
+  "44",
+  "--output-dir",
+  "/outputs/am5r",
+  "--allocation-minutes",
+  "13",
+  "--evidence",
+  "/inputs/study-artifact.json",
+  "--expected-evidence-sha256",
+  "f6d27d4cf2f3cf62789466cdfe80bab2cdc007c449411e1ad9b53aab76558b23"
+]

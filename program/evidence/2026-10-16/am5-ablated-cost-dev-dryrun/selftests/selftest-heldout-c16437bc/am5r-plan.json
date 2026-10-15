@@ -1,0 +1,34 @@
+{
+  "experiment_id": "am5-ablated-cost-v1",
+  "population": "heldout",
+  "questions": 410,
+  "parts": {
+    "main": [
+      0,
+      347
+    ],
+    "control": [
+      347,
+      410
+    ]
+  },
+  "arms": [
+    "retrieved"
+  ],
+  "requests_per_pool": 71,
+  "requests_per_reader": 29110,
+  "readers": [
+    "qwen3-8b",
+    "olmo-2-1124-7b-instruct",
+    "qwen3.5-9b"
+  ],
+  "steps": [
+    "rd-qwen3-8b",
+    "rd-olmo2",
+    "rd-olmo2-default",
+    "rd-qwen35-9b-default",
+    "judge32"
+  ],
+  "job_minutes": 70,
+  "gpus": 1
+}
