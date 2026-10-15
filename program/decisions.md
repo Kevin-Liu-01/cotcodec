@@ -2972,3 +2972,30 @@ for G2 on the H100 host.**
   - G3 (conditional on G1).
 - G2 exceeds 8 GPU-h and is a new direction, so a research-gauntlet wave runs
   first (`.claude/rules/research-gauntlet-loop.md`).
+
+**D123. `am5-ablated-cost-v1` (ledger row 26) is void before running, because
+of a freeze error. The same design is re-frozen as `am5-ablated-cost-v2`.**
+- What happened:
+  - The orchestrator merged main into the branch just before the fill. Main
+    had changed `models/registry.yaml`, which section 16 pins, by adding
+    D122's Kimi-K2.6 entry.
+  - The fill commit's test run reported "1 failed, 69 passed", but a shell
+    pipe hid the exit code. The freeze went ahead, and the fill commit's
+    message wrongly says "70 tests pass".
+  - The failing test was the registration's own gate test:
+    `VOID (V1, a pinned input differs; nothing read): code differs from the
+    registration's pins: ['models/registry.yaml']`.
+- Consequence:
+  - v1, frozen from `ea4a7206`, can never open its gate. No GPU job was
+    submitted, and no held-out output exists or was read.
+  - Row 26 stays in the ledger as a recorded attempt.
+- Fix:
+  - `am5-ablated-cost-v2` is the same design. It changes only the experiment
+    id and file paths, re-pins section 16 (including `models/registry.yaml`)
+    against the merged tree, and reruns the development CPU checks.
+  - It is frozen as the next ledger row after its tests pass, with the exit
+    code checked directly.
+  - Its section 1 discloses this decision.
+- Process change: before any freeze, the orchestrator runs the registration's
+  tests and checks pytest's own exit code, with no pipe, and re-pins after
+  any merge.
