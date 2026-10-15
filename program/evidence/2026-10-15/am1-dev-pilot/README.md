@@ -4,8 +4,10 @@
 `program/evidence/2026-10-14/question-sweep-memory-gpu/dossier.md`, with AM2's placebo arms and
 AM6's internal signals folded in), after Step 0 (D107; `program/evidence/2026-10-15/am1-step0/`).
 It ran on the development split only: 63 of LongMemEval-S's 416 usable questions, drawn with seed
-42 and stratified by type. The other 353 are held out for the confirmatory run drafted as
-`program/preregistrations/am1-memory-credit-v1.md` (DRAFT, not frozen, not in the ledger). No
+42 and stratified by type. The other 353 are held out; the confirmatory run drafted as
+`program/preregistrations/am1-memory-credit-v1.md` (DRAFT, not frozen, not in the ledger) uses 347
+of them, leaving out the six that Step 0 had already run as demo questions before the split was
+drawn (the registration's section 4). No
 decision rule applies to anything below; every number describes these 63 questions, this reader
 and judge, on two H100s of this node.
 
@@ -64,24 +66,30 @@ and judge, on two H100s of this node.
    16 permutations (MeClear) 0.097 [0.030, 0.177]; SNIPW over 64 random exposures (CMP) 0.070
    [0.018, 0.140]; retrieval rank 0.132 [0.026, 0.237]; raw attention mass 0.263 [0.132, 0.395];
    exact Shapley 0.079 [0, 0.184]; a random keep set 0.576. The gold-augmented pool agrees
-   (0.200, 0.124, 0.078, 0.235, 0.255, 0.078, 0.654). Exact Shapley's own regret is the
-   additive-credit floor: no per-memory score reaches the optimum on the non-monotone tables.
+   (0.200, 0.124, 0.078, 0.235, 0.255, 0.078, 0.654). Exact Shapley is not a floor for additive
+   credit: exact Banzhaf (0.031) and SNIPW-64 (0.070) lost less here, and any keep set is the top 4
+   of some score. (Corrected after the registration's first independent check; this sentence first
+   called exact Shapley's regret the additive-credit floor.)
 6. **AM2's placebo arms.** Deleting a gold memory flips judged correctness in 40.5% of cases and
    swapping its text for a length- and rank-matched irrelevant turn in 39.8%; 70.8% [56.0%,
    83.9%] of the gold deletion labels survive the placebo control (both swaps reproduce the label
    and neither reorder of the pool flips the outcome). Non-gold deletion labels are rare (4.6% of
-   non-gold memories) and mostly do not survive (16.7% [3.0%, 34.1%]). A content-free reorder of
-   the full pool flips judged correctness in 13.1% [7.9%, 18.7%] of pools.
+   non-gold memories) and mostly do not survive (16.7% [3.0%, 34.1%]); they are 2.4 points [0.2,
+   4.7] above the swap-only floor (how often a matched swap flips the answer where deletion does
+   not, 2.1%; `analysis/recheck-de721578/placebo.json`). A content-free reorder of the full pool
+   flips judged correctness in 13.1% [7.9%, 18.7%] of pools.
 7. **AM6's attention signal.** At predicting which memories are necessary in the full pool
    (leave-one-out > 0, pools answered correctly), raw attention mass from the reply tokens has
    AUROC 0.868 [0.819, 0.917] against retrieval rank 0.852, question overlap 0.830 and the
    overlap with the reader's own reply 0.888 [0.846, 0.926]. Heads chosen on the other fold of
    questions (cross-fitted against exact Shapley) reach 0.935 [0.897, 0.973].
-8. **Power for the held-out run** (353 questions, about 213 non-constant retrieved tables), by
+8. **Power for the confirmatory run** (347 questions, about 209 non-constant retrieved tables), by
    resampling the development questions: at the development effects, the draft's rule
    (MISSPECIFIED when the 99% lower bound of the B = 4 regret exceeds 0.05) fires for leave-one-out
-   with probability 1.00 (0.999 at half the effect), raw attention 1.00, retrieval rank 0.93,
-   permutation Shapley-16 0.77 and SNIPW-64 0.13; 99% half-widths are 0.035-0.077.
+   with probability 1.00 (0.91 at half the effect), raw attention 1.00, retrieval rank 0.91,
+   permutation Shapley-16 0.77 and SNIPW-64 0.12; 99% half-widths are 0.035-0.077. (Rerun after
+   the registration's first independent check with Bernoulli thinning at reduced effects; the
+   first run scaled the values, which overstated the power at 1/2 and 1/4.)
 
 ## What ran
 
@@ -336,7 +344,13 @@ swap of a gold memory is a length- and position-controlled deletion, and it agre
 deletion (ratio 0.98); for non-gold memories it is a content placebo, and its flip rate equals the
 deletion flip rate (ratio 0.99). The dossier's AM2 robustness rule (placebo-to-deletion ratio at
 most 0.1 in both classes, fewer than 2% of labels changed) does not hold: per-memory deletion
-labels on non-gold memories are mostly not content effects.
+labels on non-gold memories are mostly not reproduced by a matched swap. That rule cannot hold by
+construction unless non-gold labels are nearly absent (a label survives only when both swaps
+reproduce it, so the swap-to-deletion ratio is at least the survival share), and the registration
+replaces it with the deletion flip rate against the swap-only floor (its section 7). On these
+pools the non-gold deletion flip rate exceeds the swap-only rate by 0.024 [0.002, 0.047] over both
+arms (retrieved 0.021 [-0.010, 0.056], gold 0.029 [0.002, 0.061];
+`analysis/recheck-de721578/placebo.json`).
 
 ### AM6: internal signals against exact labels (`analysis/internal.json`)
 
@@ -354,23 +368,29 @@ below the cross-fitted heads (the dossier's AM6 kill criterion 1 is 0.03) and ab
 The chosen heads differ by fold (`analysis/xfit.json`); with 63 questions the head choice is
 noisy.
 
-### Power for the held-out run (`analysis/power.json`)
+### Power for the confirmatory run (`analysis/power.json`)
 
-2,000 simulations per statistic; each draws the held-out number of units (353 questions times
-the development rate of non-constant tables: 213 retrieved, 286 gold) with replacement from the
+2,000 simulations per statistic; each draws the confirmatory number of units (347 questions times
+the development rate of non-constant tables: 209 retrieved, 281 gold) with replacement from the
 development values, at the observed effect and at one half and one quarter of it, with a
-1,000-resample question bootstrap inside.
+1,000-resample question bootstrap inside. A reduced effect is Bernoulli thinning: each drawn table
+keeps its regret with probability 1/2 or 1/4 and otherwise has none, so the nonzero regrets keep
+their distribution. `power.json` was regenerated this way at `de721578` on the host CPU (2 minutes)
+after the registration's first independent check; the first version (353 questions, at
+`9ecc914c`) multiplied the values by the scale, which shrank their spread and overstated the power
+at reduced effects (for leave-one-out at half the effect, 1.00 there against 0.91 here).
 
-| Statistic (retrieved, B = 4) | Development | 99% half-width | P(MISSPECIFIED) at 1, 1/2, 1/4 of the effect | P(ADEQUATE) |
+| Statistic (retrieved, B = 4) | Development | 99% half-width | P(MISSPECIFIED) at 1, 1/2, 1/4 of the effect | P(ADEQUATE) at 1/4 |
 |---|---:|---:|---|---:|
-| leave-one-out | 0.214 | 0.053 | 1.00, 1.00, 0.03 | 0 |
-| permutation Shapley-16 | 0.097 | 0.040 | 0.77, 0.00, 0.00 | 0 |
-| SNIPW-64 | 0.070 | 0.035 | 0.13, 0.00, 0.00 | 0 at 1; 0.06 at 1/4 |
-| retrieval rank | 0.132 | 0.059 | 0.93, 0.10, 0.00 | 0 |
-| attention, raw | 0.263 | 0.077 | 1.00, 1.00, 0.36 | 0 |
-| exact Shapley (reference, not in the family) | 0.079 | 0.047 | 0.17, 0, 0 | 0 |
+| leave-one-out | 0.214 | 0.054 | 1.00, 0.91, 0.01 | 0 |
+| permutation Shapley-16 | 0.097 | 0.040 | 0.77, 0.00, 0 | 0.01 |
+| SNIPW-64 | 0.070 | 0.035 | 0.12, 0, 0 | 0.08 |
+| retrieval rank | 0.132 | 0.060 | 0.91, 0.04, 0 | 0.005 |
+| attention, raw | 0.263 | 0.077 | 1.00, 0.93, 0.04 | 0 |
+| exact Shapley (reference, not in the family) | 0.079 | 0.048 | 0.16, 0, 0 | 0.075 |
 
-H1's excess over the gold-count baseline has a 95% half-width of 0.036 at the held-out size.
+H1's excess over the gold-count baseline has a 95% half-width of 0.036 (retrieved) and 0.037
+(gold) at the confirmatory size.
 
 ## What the pilot says and does not say
 
@@ -378,12 +398,13 @@ It says, for these 63 development questions, this reader, this judge and this no
 
 1. A per-memory credit rule that keep-sets by leave-one-out loses about a fifth of the answers the
    exact optimal 4-of-8 set keeps, on both pool arms, and about a seventh more than exact Shapley;
-   exact Shapley itself loses about 8%, which no additive score can avoid on these tables.
+   exact Shapley itself loses about 8% (exact Banzhaf about 3%).
 2. The exact tables are dominated by non-monotone structure: memories, gold and not, help on some
    subsets and hurt on others. The dossier's O5 premise that pure AND/OR structures would make H2
    unable to fire does not describe this reader's tables.
-3. Under this reader, deletion labels on non-gold memories are mostly not content effects, and a
-   content-free reorder of the pool changes about one answer in eight.
+3. Under this reader, deletion labels on non-gold memories are rare and mostly not reproduced by
+   a matched swap of the memory's text, though they occur somewhat more often than a matched swap's
+   own flips; a content-free reorder of the pool changes about one answer in eight.
 4. The Qwen3-32B judge with the official prompt agrees with a blind check on 117 of 120 replies.
 5. Compiled batch-invariant replay is exact for the same compiled kernels (Step 0's setting, and
    a copied compile cache across GPUs), not across independent compiles, because inductor's
@@ -392,8 +413,9 @@ It says, for these 63 development questions, this reader, this judge and this no
 
 It does not say:
 
-- Anything confirmatory: 63 questions, one job, no registration in force. The held-out split was
-  not opened.
+- Anything confirmatory: 63 questions, one job, no registration in force. The pilot ran no
+  held-out question; Step 0 had run six held-out questions as demo questions before the split was
+  drawn, and the registration excludes them.
 - Which estimator is best: the intervals overlap for SNIPW, permutation Shapley-16, Banzhaf and
   exact Shapley.
 - Why the tables are non-monotone: the reader's own errors (Step 0 found it wrong on temporal
@@ -433,6 +455,23 @@ It does not say:
 - **CPU work on the login node** (split, artifact, analysis) ran outside Slurm, single-threaded,
   for seconds to a minute each, partly while G2c's GPU jobs ran.
 - The host's `uv` environment uses CPython 3.14.6 for the CPU steps; the image runs 3.12.3.
+- **Corrections after the registration's first independent check** (code `de721578`; development
+  data only):
+  - `analysis/power.json` was regenerated with Bernoulli thinning at reduced effects and at the
+    confirmatory size, 347 questions (above).
+  - Takeaway 5 called exact Shapley's regret the additive-credit floor; that was wrong (exact
+    Banzhaf and SNIPW-64 lost less, and any keep set is the top B of some score).
+  - The analysis at `de721578` was rerun on the host from job 1411's raw passes with the
+    committed hand labels (6 s): `tables.json`, `h1.json`, `internal.json`, `xfit.json` and
+    `identity.json` are byte-identical to the `9ecc914c` analysis. Its new outputs are in
+    `analysis/recheck-de721578/`: the registration's gates and verdicts on the pilot
+    (`headline.json`, `verdicts`: G1 FAIL from the compiled replicate's 1,061 differing replies,
+    G2 PASS with kappa 0.95 [0.88, 1.00], K4 underpowered at 38 tables, leave-one-out
+    MISSPECIFIED as computed but not read), the deletion-minus-swap-only difference
+    (`placebo.json`), the judge's non-preference counts and kappa interval (`judge.json`), table
+    counts per H2 row (`h2.json`), and H2 on the second judge's tables (`h2-second-judge.json`: on
+    40 retrieved tables, leave-one-out 0.215 [0.122, 0.315], permutation Shapley-16 0.113, SNIPW-64
+    0.058, retrieval rank 0.200, raw attention 0.300, exact Shapley 0.050, random 0.530).
 
 ## Files
 
@@ -454,7 +493,9 @@ It does not say:
   summary, credits, placebo record and regrets), `h1.json`, `h2.json`, `placebo.json`,
   `internal.json`, `xfit.json`, `power.json`, `aa-1411.json`, `tables.md`; the A/A reports
   `aa-1435.json` and `aa-1441.json`; the hand labels (`hand-labels.jsonl`, used, and
-  `hand-labels-transcription-error.jsonl`; no text) and the hand-check sample's SHA-256.
+  `hand-labels-transcription-error.jsonl`; no text) and the hand-check sample's SHA-256;
+  `power.json` regenerated at `de721578`, and `recheck-de721578/`, the re-analysis at that commit
+  with the registration's gates and verdicts (above).
 - `ops/`: the scripts and sbatch files run on the host, `jobs.log` and `preflight.log`.
 
 Raw outputs stay on the host under `~/cotcodec-runs/stage0/am1-study/` (`runs/main/1411/`,

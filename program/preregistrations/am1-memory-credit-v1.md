@@ -1,10 +1,19 @@
-# am1-memory-credit-v1: do per-memory credit rules pick the keep set that the exact subset table says is best? (LongMemEval-S, held-out split)
+# am1-memory-credit-v1: do per-memory credit rules pick the keep set that the exact subset table says is best? (LongMemEval-S, held-out confirmatory set)
 
 **Status: DRAFT. Not frozen; there is no row for this id in
-`program/preregistrations/ledger.jsonl`, and nothing in this file is a result of the held-out
-split, which has not been opened.** Drafted on 2026-10-15 by the single owner of AM1 on branch
-`stage0/am1-study`, after AM1 Step 0 (D107) and the development-set pilot
-(`program/evidence/2026-10-15/am1-dev-pilot/README.md`; exploratory, 63 development questions).
+`program/preregistrations/ledger.jsonl`.** Drafted on 2026-10-15 by the single owner of AM1 on
+branch `stage0/am1-study`, after AM1 Step 0 (D107) and the development-set pilot
+(`program/evidence/2026-10-15/am1-dev-pilot/README.md`; exploratory, 63 development questions),
+and revised after the first independent check (section 19).
+
+**What development has seen of the held-out split.** AM1 Step 0 ran full 256-subset tables, with
+this reader, prompt and pool rules, on eight demo questions drawn before the split, and six of
+them are held-out ids. Those eight are excluded from every estimand, gate and kill criterion
+(section 4); the confirmatory set is the 347 held-out questions that remain. No reader, judge or
+attention output exists for any of the 347. Step 0's CPU census recorded counts and the BM25 ranks
+of gold turns for every LongMemEval-S question, and the split file lists the held-out ids; apart
+from these, development produced no output about the held-out questions.
+
 Origin: the D103 question sweep's memory lead, AM1, with AM2's placebo arms and AM6's internal
 signals folded in (D104; `program/evidence/2026-10-14/question-sweep-memory-gpu/dossier.md`,
 entries 3, 5 and 6, owner check O5; `ranking.json`). The freeze is the orchestrator's, after the
@@ -61,7 +70,8 @@ about training a memory learner on these credits.
 |---|---|
 | Experiment id | `am1-memory-credit-v1` (this file; the confirmatory config `experiments/am1/am1-memory-credit-v1.yaml`) |
 | Data | LongMemEval-S cleaned, `xiaowu0162/longmemeval-cleaned` @ `98d7416c24c778c2fee6e6f3006e7a073259d48f`, `longmemeval_s_cleaned.json`, 277,383,467 bytes, SHA-256 `d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442`, MIT; on the host only (D1, Step 0's fetch receipt) |
-| Split | `experiments/am1/memcredit-split-v1.json`, SHA-256 `4fa1b774d4131080855d668ac8f00f5cb07d49cf741f2051d5f8d96577edb3e3`; the **held-out** list: 353 ids, SHA-256 of the newline-joined ids `9305024fece35c357db9ca2d10fb06ee684a37c6b055ef3174914ce04e65dba8` (knowledge-update 61, multi-session 102, single-session-assistant 4, single-session-preference 25, single-session-user 53, temporal-reasoning 108) |
+| Split | `experiments/am1/memcredit-split-v1.json`, SHA-256 `4fa1b774d4131080855d668ac8f00f5cb07d49cf741f2051d5f8d96577edb3e3` (checked by `scripts/memcredit_study_prepare.py` under this config); its held-out list: 353 ids, SHA-256 of the newline-joined ids `9305024fece35c357db9ca2d10fb06ee684a37c6b055ef3174914ce04e65dba8` |
+| Confirmatory set | the held-out list minus Step 0's eight demo questions (section 4; the config's `confirmatory_set`): **347 ids**, SHA-256 of the newline-joined ids in the split's order `d4f024fbcda5394984a46c421cd938f2b6db6067fef0f21a5c6e72359b27e50a` (knowledge-update 59, multi-session 101, single-session-assistant 4, single-session-preference 25, single-session-user 52, temporal-reasoning 106) |
 | Reader | `Qwen/Qwen3-8B` @ `b968826d9c46dd6066d109eabc6255188de91218` (Apache-2.0), full receipt in `cotcodec-receipts-cpu-lane` |
 | Judge | `Qwen/Qwen3-32B` @ `9216db5781bf21249d130ec9da846c4624c16137` (Apache-2.0), full receipt in `cotcodec-receipts`; second judge Qwen3-8B as above |
 | Judge prompt | LongMemEval's `get_anscheck_prompt` (src/evaluation/evaluate_qa.py at [`9e0b455f`](https://github.com/xiaowu0162/LongMemEval/blob/9e0b455f4ef0e2ab8f2e582289761153549043fc/src/evaluation/evaluate_qa.py), MIT), ported word for word as `harness.memcredit_study.JUDGE_TEMPLATES`; SHA-256 of `json.dumps(JUDGE_TEMPLATES, sort_keys=True, ensure_ascii=False)` = `2e27234d4c7d50a1fd99da3e8d3c97704a1f10cc9d52185924b6d8ece3ef71d4` (a test pins it, another checks it against the archived port `legacy/harness/memory_trials/longmemeval_judge.py`) |
@@ -71,7 +81,28 @@ about training a memory learner on these credits.
 
 ## 4. Units, pools and requests
 
-- **Questions**: the 353 held-out ids. A question is the unit of resampling.
+- **Questions**: the 347 ids of the confirmatory set. A question is the unit of resampling.
+- **Excluded before any run: the questions development already ran.** AM1 Step 0 (D107, commit
+  `8feb5a60`, before the split's commit `b94672f4`) drew eight demo questions (seed 42, two each
+  of temporal-reasoning, multi-session, knowledge-update and single-session-user) and ran all 256
+  subsets of both pool arms on them with this reader and prompt and Step 0's pool rules, which are
+  this study's (BM25 k1 1.5, b 0.75, 8 memories, 1,500 characters, distractor seed 42), so the
+  same pools. Every cell's reply is public (`program/evidence/2026-10-15/am1-step0/analysis/
+  demo-table-rows.jsonl.gz`, 4,096 rows; also `demo-tables.json`, `tables.md` and the README), and
+  Step 0's observations on them shaped this design: the reader wrong on the temporal questions
+  `6e984301` and `gpt4_70e84552` even with the full pool, and the containment utility unusable
+  (hence the judge and G2). The split was drawn without excluding them, and six are held-out ids:
+  `3d86fd0a`, `618f13b2`, `6aeb4375`, `6e984301`, `e6041065`, `gpt4_70e84552`. The other two,
+  `09ba9854` and `25e5aa4f`, are development ids and were in the pilot. All eight are excluded
+  from every estimand, gate and kill criterion, because development ran them, not for any
+  outcome. The exclusion is in code: the config's `confirmatory_set` pins the split file, the
+  held-out digest, the eight ids, and the count and digest of the 347 that remain;
+  `scripts/memcredit_study_prepare.py artifact` builds only those 347 and checks every pin, and
+  the GPU driver and the analysis refuse an artifact with any other question set
+  (`harness.memcredit_study.check_artifact_questions`). The first independent check found the
+  overlap (section 19, B2); a scan of the pilot's evidence finds no held-out id, and Step 0's
+  census (`program/evidence/2026-10-15/am1-step0/census/census-e87a6c1a.json`) holds counts and
+  gold-turn BM25 ranks for all 500 questions, with no reader output.
 - **Memory unit**: one user turn with its session date, at most 1,500 characters (longer turns cut
   with " [...]"), as in Step 0 and the pilot.
 - **Pool arms** (k = 8, chronological; bit i of a mask keeps memory i):
@@ -84,7 +115,7 @@ about training a memory learner on these credits.
   pool, matched first on length (|ln chars ratio| <= ln 1.25, else ln 1.5, else ln 2, else none)
   then on BM25 rank, ties by length gap, session and turn; and 2 reorders of the full pool
   (reversed; `random.Random(f"43:{question_id}:{arm}")`).
-- **Requests**: per pool 256 subsets + 16 swaps + 2 reorders = 274; 353 x 2 x 274 = 193,444
+- **Requests**: per pool 256 subsets + 16 swaps + 2 reorders = 274; 347 x 2 x 274 = 190,156
   reader requests per pass.
 
 ## 5. Reader, judge, internal signals
@@ -93,12 +124,12 @@ about training a memory learner on these credits.
   returned, thinking off, Step 0's prompt.
 - **Judge**: every distinct (question, stripped reply) of the primary reader pass, plus the
   validation items (per question: the reference answer as the response, "I don't know.", and the
-  reference answer of another held-out question of the same type by a seeded derangement, seed
-  44), scored by Qwen3-32B in batch-invariant mode, greedy, 10 tokens, thinking off, with the
-  type's template; label = "yes" occurs in the case-folded reply (the official rule). A cell's
-  utility u(S) is that label for its reply. Qwen3-8B scores the same items as a second judge.
-  The pilot validated the judge in compiled mode; on the 573 items that both the compiled
-  (job 1435) and the eager (job 1441) judge scored, no label differs.
+  reference answer of another question of the confirmatory set of the same type by a seeded
+  derangement, seed 44), scored by Qwen3-32B in batch-invariant mode, greedy, 10 tokens, thinking
+  off, with the type's template; label = "yes" occurs in the case-folded reply (the official
+  rule). A cell's utility u(S) is that label for its reply. Qwen3-8B scores the same items as a
+  second judge. The pilot validated the judge in compiled mode; on the 573 items that both the
+  compiled (job 1435) and the eager (job 1441) judge scored, no label differs.
 - **Internal signals**: Qwen3-8B in transformers (the image's), eager attention, one
   teacher-forced forward per pool of the full-pool prompt plus the primary pass's greedy reply;
   per layer and head, the mean attention mass from the positions that predict the reply tokens
@@ -112,11 +143,11 @@ about training a memory learner on these credits.
   compiles of the reader, which changed 3.1% of replies and 0.25% of judged cells against the
   other three. Eager passes were bit-exact in every comparison made (two GPUs, separate processes,
   two jobs, canonical against shuffled order, an in-engine replicate: 8,768 of 8,768 requests each
-  for the reader, 573 of 573 for the judge), at 1.06x the compiled reader pass's wall time
-  (`program/evidence/2026-10-15/am1-dev-pilot/README.md`, jobs 1435 and 1441). Eager mode is the
-  dossier's "one configuration repair" (kill criterion 1). The tables come from the GPU-0 reader
-  pass (canonical order); the GPU-1 pass (another process, shuffled order) is the A/A replicate,
-  and the judge runs the same way.
+  for the reader, 573 of 573 for the judge), at 1.06x the compiled reader pass's wall time on 32
+  pools (`program/evidence/2026-10-15/am1-dev-pilot/README.md`, jobs 1435 and 1441). Eager mode is
+  the dossier's "one configuration repair" (kill criterion 1). The tables come from the GPU-0
+  reader pass (canonical order); the GPU-1 pass (another process, shuffled order) is the A/A
+  replicate, and the judge runs the same way.
 
 ## 6. Estimands
 
@@ -132,16 +163,20 @@ scores tie (`harness.memcredit.keep_set_regret_range`, `mean`). For rules with r
   with m = 0 have no baseline and are left out of E1); averaged over tables, per arm.
 - **E2 (H2, primary)**: for each primary rule r in {leave-one-out, permutation Shapley-16,
   SNIPW-64, retrieval rank, raw attention}, R_r = mean regret at B = 4 over the non-constant
-  tables of the retrieved arm.
+  tables of the retrieved arm (for raw attention, over those whose attention forward succeeded;
+  section 13).
 - **E3 (secondary)**: the same at B = 1, 2, 3 and on the gold arm; the share of tables with any
-  regret; R_r minus exact Shapley's regret, paired by table; and the other rules of the pilot
+  regret; R_r minus exact Shapley's regret, paired by table; the other rules of the pilot
   (exact Shapley and Banzhaf, leave-one-in, permutation Shapley-4, the placebo-filtered deletion
   label, the swap effect, cross-fitted attention, question overlap, overlap with the full-pool
-  reply, length, a random keep set).
+  reply, length, a random keep set); and E2 on the tables the second judge labels.
 - **E4 (AM2)**: per memory class (gold, non-gold), over all pools: the deletion flip rate
-  (u(full) differs from u(full minus i)), the swap flip rate, the swap flip rate where deletion
-  does not flip, and the share of nonzero deletion labels that survive (both swaps reproduce the
-  label and neither reorder changes u(full)); and the reorder flip rate per pool.
+  (u(full) differs from u(full minus i)), the swap flip rate, the swap-only flip rate (swap flips
+  where deletion does not flip), the deletion flip rate minus the swap-only flip rate (both kinds
+  of unit resampled together by question; `cluster_difference` in
+  `scripts/memcredit_analyze.py`), and the share of nonzero deletion labels that survive (both
+  swaps reproduce the label and neither reorder changes u(full)); and the reorder flip rate per
+  pool.
 - **E5 (AM6)**: the AUROC of each signal at predicting necessity (leave-one-out > 0) over the
   memories of pools with u(full) = 1, and its mean per-table Spearman correlation with exact
   Shapley.
@@ -166,23 +201,49 @@ rules, family-wise 95%):
 - **ADEQUATE** if the upper bound is below 0.02;
 - **INCONCLUSIVE** otherwise.
 
-The headline is leave-one-out's verdict; the program reading is "per-memory deletion credit is
-misspecified for keep/evict decisions on this benchmark" if it is MISSPECIFIED and "adequate" if
-ADEQUATE. Why these thresholds: 0.05 is below exact Shapley's regret in the pilot (0.079, the
-best any per-memory score achieved there) and about a tenth of a random keep set's (0.576); a
-rule above it gives up more than one answer in twenty that the exact table shows a better keep
-set would keep. 0.02 is about ten times the share of table cells whose judged outcome changes
-when only the kernels' numerics change (0.18-0.25% in the pilot, between compiled variants and
-between compiled and eager mode), the smallest regret the tables resolve with a margin. The
-verdicts on the gold arm and at B = 1, 2, 3 are reported with the same rules as secondary
-readings.
+The headline is leave-one-out's verdict. The program reading, which names its scope (this
+reader, this judge, BM25 user-turn pools, 4 of 8), is "per-memory deletion credit is misspecified
+for keep/evict decisions on this benchmark" if it is MISSPECIFIED and "adequate" if ADEQUATE; it
+needs G1 to pass, G2 to pass and no K2 or K3 (section 8). It is read together with the paired
+difference R_LOO minus exact Shapley's regret on the same tables (95% interval, E3): if its lower
+bound exceeds 0, leave-one-out loses more than exact Shapley credit, so the loss is specific to
+deletion credit; if its upper bound is below 0, it loses less; otherwise the loss is not separated
+from what exact Shapley credit loses. That distinction matters because exact Shapley credit itself
+lost 0.079 on the pilot's retrieved tables, above 0.05: a MISSPECIFIED verdict for leave-one-out
+alone does not show that deletion credit is worse than exact additive credit.
+
+Why these thresholds. 0.05 is about a tenth of a random keep set's regret in the pilot (0.576) and
+within the range the pilot's better additive scores reached (exact Banzhaf 0.031, SNIPW-64 0.070,
+exact Shapley 0.079 on the retrieved arm); a rule above it gives up more than one answer in twenty
+that the exact table shows a better keep set would keep. (Any keep set is the top B of some score,
+so no threshold here is a floor that additive credit cannot reach.) 0.02, one answer in fifty, is
+a regret small enough to call a cheap rule adequate. It is a chosen tolerance, not a measured
+resolution: the pilot's 0.18-0.25% of table cells whose judged outcome changed between kernel
+variants is a per-cell rate, while regret is per table, and those kernel differences touched 41 of
+126 tables in job 1411; how much a table's regret moves under kernel numerics was not measured.
+Under G1 the confirmatory tables come from one engine that replays exactly. With about 209
+non-constant retrieved tables, ADEQUATE needs a true regret below about 0.01 (section 9), so it is
+nearly out of reach; it is kept so that a near-zero regret has a name. The verdicts on the gold
+arm and at B = 1, 2, 3, and on the second judge's tables, are reported with the same rules as
+secondary readings.
 
 **Secondary readings (no program decision).**
 
-- AM2 (E4), the dossier's rule: the labels are ROBUST if the swap-to-deletion flip ratio is at
-  most 0.1 for non-gold memories and fewer than 2% of nonzero deletion labels fail the placebo
-  control; otherwise NOT ROBUST. (For gold memories the swap removes the content, so its ratio to
-  deletion is expected near 1 and is reported, not judged.)
+- AM2 (E4). For non-gold memories, the deletion labels are ABOVE THE SWAP FLOOR if the 95% lower
+  bound of the deletion flip rate minus the swap-only flip rate exceeds 0, and NOT ABOVE THE SWAP
+  FLOOR otherwise. The swap-only flip rate is how often a length- and rank-matched irrelevant
+  swap flips judged correctness where deleting the memory does not: the flip rate of an
+  irrelevant edit at that slot. Deletion is a larger edit than a matched swap (it also shortens
+  the prompt and moves the later memories), so ABOVE does not by itself show content effects. For
+  gold memories the swap removes the content as deletion does, so their survival share (nonzero
+  deletion labels that both swaps reproduce, in pools that no reorder flips) is reported with its
+  interval and not judged; the non-gold survival share is reported the same way. The dossier's
+  ROBUST rule (a swap-to-deletion flip ratio of at most 0.1 for non-gold memories and fewer than
+  2% of nonzero labels failing the placebo control) is not applied: a label survives only when
+  both swaps reproduce it, so the ratio is at least the non-gold survival share, and the two
+  conditions hold together only when non-gold deletion labels are nearly absent. Its verdict
+  would be fixed by the design (section 19, B5). The dossier's AM2 kill criterion 2 (non-gold
+  deletion and swap flip rates both below 1%) is reported.
 - AM6 (E5), the dossier's rules: INTERNAL SIGNALS ADD NOTHING if the best cheap baseline (retrieval
   rank, question overlap, overlap with the reply, length) is within 0.03 AUROC of the best
   attention signal; NONE PREDICTS NECESSITY if every signal is below 0.65.
@@ -190,73 +251,115 @@ readings.
 ## 8. Validity gates and kill criteria
 
 Each gate is evaluated before H2 is read; a failed gate is reported with its numbers and the
-decision it suspends.
+decision it suspends. `scripts/memcredit_analyze.py analyze` computes every gate and verdict and
+writes them to `headline.json` (`verdicts`): the void rule (section 13), G1, K2, K3, K4, G2, H2 per
+primary rule and arm and budget, the program reading, AM2, AM6 and H2 on the second judge's
+tables. The report quotes them.
 
-- **G1, replay** (dossier kill criterion 1): the GPU-1 reader replicate must give the same
-  tokens as the GPU-0 pass for every one of the 193,444 requests, and the GPU-1 judge replicate the same tokens for
-  every judge item (log-prob bits are reported, not gated). Any differing reply means the repair
-  did not hold: the dossier's kill criterion 1 fires, H2 is not read, and the run is reported as
-  descriptive with the differences at the token, log-prob-bit and judged-utility levels.
-- **G2, judge**: on the held-out validation items the primary judge says yes to at least 95% of
-  reference answers of non-preference questions and no to at least 95% of "I don't know."; and a
-  fresh blind hand check of 120 judged held-out reader items (60 judged yes, 60 no, seed 44;
-  `scripts/memcredit_analyze.py hand-sample`), labelled from question, reference answer and reply
-  alone before any join, gives Cohen's kappa >= 0.80 with the primary judge, with its 95% interval
-  reported. A human labeller is preferred (D9); if the agent labels, the report says so. If G2
-  fails, H2's verdicts are reported as judge-dependent and no program decision follows.
+- **G1, replay** (dossier kill criterion 1): the GPU-0 reader pass and the GPU-1 reader replicate
+  (another process, shuffled order) must both finish all 190,156 requests and give the same
+  tokens for every one, and the two primary-judge passes must both finish every judge item with
+  the same tokens (log-prob bits are reported, not gated). Three outcomes (`replay_gate`):
+  - PASS;
+  - FAIL, any finished request whose tokens differ: the repair did not hold, the dossier's kill
+    criterion 1 fires, H2 is not read, and the run is reported as descriptive with the
+    differences at the token, log-prob-bit and judged-utility levels;
+  - INCOMPLETE, no difference but a pass missing or a request unfinished (a time cap, a crash):
+    an infrastructure failure. The run is rerun as a new job of this registration with the same
+    seeds, and the incomplete run's records are kept. An incomplete replicate is never a pass.
+
+  The gate is all or nothing over about 200,000 comparisons. The eager evidence is four
+  comparisons of 8,768 requests each with no difference, which bounds the per-request difference
+  rate at about 3.4e-4 per comparison (95%); a rarer nondeterminism, undetected there, would fail
+  G1 here and leave H2 unread. That risk is accepted: it is the dossier's kill criterion 1.
+- **G2, judge**: on the validation items the primary judge says yes to at least 95% of reference
+  answers of non-preference questions and no to at least 95% of "I don't know."; and a fresh
+  blind hand check of 120 judged reader items of the confirmatory set (60 judged yes, 60 no, seed
+  44; `scripts/memcredit_analyze.py hand-sample`), labelled from question, reference answer and
+  reply alone before any join, gives Cohen's kappa >= 0.80 with the primary judge (the point
+  estimate; its 95% interval from 4,000 resamples of the items, seed 42, is reported). The labels
+  file's SHA-256 is committed to the repository before the join, and `analyze` refuses labels
+  with another digest (`--hand-labels-sha256`); only that file counts toward G2. A correction
+  found after the join (as with the pilot's transcription error) is reported separately with its
+  effect and does not change G2. A human labeller is preferred (D9); if the agent labels, the
+  report says so. If G2 fails, H2's verdicts are reported as judge-dependent and no program
+  decision follows. Until the hand check is joined G2 is PENDING, and no program decision follows.
 - **K2, constant tables** (dossier kill criterion 2): if u is constant on all 256 subsets of both
-  arms for more than 60% of held-out questions, H2 is not read (pilot: 15.9% of development
-  questions).
+  arms for more than 60% of the confirmatory questions, H2 is not read (pilot: 15.9% of
+  development questions).
 - **K3, interactions do not matter** (dossier kill criterion 3): if at least 90% of non-constant
   tables have order-1 Fourier share >= 0.9 and both leave-one-out and exact Shapley pick an
   optimal B = 4 set in at least 95% of non-constant tables, the study ends with a short negative
-  note (pilot: 27%; 57% and 92%).
+  note and H2 is not read (pilot: 27%; 57% and 92%).
 - **K4, coverage**: if fewer than 150 non-constant retrieved tables remain (the power of section 9
-  assumes about 213), H2 is reported as underpowered; its rules still apply.
+  assumes about 209), H2 is reported as underpowered; its rules still apply.
 
 ## 9. Operating characteristics (simulated from the development pilot)
 
-`scripts/memcredit_analyze.py power` (`program/evidence/2026-10-15/am1-dev-pilot/analysis/power.json`):
-2,000 simulations per statistic, each drawing the held-out number of units (353 questions times
-the development rate of non-constant tables, 0.603 retrieved and 0.810 gold: 213 and 286) with
-replacement from the 63 development questions' values, at the development effect and at 1/2 and
-1/4 of it, with a 1,000-resample bootstrap inside, applying the rules of section 7.
+`scripts/memcredit_analyze.py power` at the round-1 code (`de721578`), on the host CPU, from the
+pilot's per-table analysis (`program/evidence/2026-10-15/am1-dev-pilot/analysis/power.json`):
+2,000 simulations per statistic, each drawing the confirmatory number of units (347 questions
+times the development rate of non-constant tables, 0.603 retrieved and 0.810 gold: 209 and 281)
+with replacement from the 63 development questions' values, with a 1,000-resample bootstrap
+inside, applying the rules of section 7. A reduced effect (1/2, 1/4) is simulated by Bernoulli
+thinning: each drawn table keeps its regret with probability 1/2 or 1/4 and otherwise has none,
+so the nonzero regrets keep their development distribution. (The first draft multiplied the
+values by the scale instead, which also shrank their spread and overstated the power at reduced
+effects; section 19, N2.)
 
-| Rule (retrieved, B = 4) | Development R | 99% half-width | P(MISSPECIFIED) at 1, 1/2, 1/4 | P(ADEQUATE) at 1/4 |
-|---|---:|---:|---|---:|
-| leave-one-out | 0.214 | 0.053 | 1.00, 1.00, 0.03 | 0 |
-| permutation Shapley-16 | 0.097 | 0.040 | 0.77, 0.00, 0.00 | 0.00 |
-| SNIPW-64 | 0.070 | 0.035 | 0.13, 0.00, 0.00 | 0.06 |
-| retrieval rank | 0.132 | 0.059 | 0.93, 0.10, 0.00 | 0 |
-| attention, raw | 0.263 | 0.077 | 1.00, 1.00, 0.36 | 0 |
+| Rule (retrieved, B = 4) | Development R | 99% half-width at 1, 1/2 | P(MISSPECIFIED) at 1, 1/2, 1/4 | P(ADEQUATE) at 1/4 |
+|---|---:|---|---|---:|
+| leave-one-out | 0.214 | 0.054, 0.042 | 1.00, 0.91, 0.01 | 0 |
+| permutation Shapley-16 | 0.097 | 0.040, 0.030 | 0.77, 0.00, 0 | 0.01 |
+| SNIPW-64 | 0.070 | 0.035, 0.025 | 0.12, 0, 0 | 0.08 |
+| retrieval rank | 0.132 | 0.060, 0.043 | 0.91, 0.04, 0 | 0.005 |
+| attention, raw | 0.263 | 0.077, 0.060 | 1.00, 0.93, 0.04 | 0 |
+| exact Shapley (reference, not in the family) | 0.079 | 0.048, 0.033 | 0.16, 0, 0 | 0.075 |
 
-Readings: the design is near-certain to call leave-one-out MISSPECIFIED if its true regret is
-half the development estimate or more, and cannot call any rule ADEQUATE unless its true regret is
-below about 0.01; a rule whose regret lies between 0.02 and about 0.09 will usually be
-INCONCLUSIVE. The development values come from 63 questions (38 non-constant retrieved tables),
-so the effects themselves are uncertain (leave-one-out 0.214, 95% [0.121, 0.316]). H1's excess has
-a simulated 95% half-width of 0.036.
+Readings: the design calls leave-one-out MISSPECIFIED with probability about 0.9 if its true
+regret is half the development estimate (0.107), and rarely at a quarter (0.053, at the
+threshold); it cannot call any rule ADEQUATE unless its true regret is below about 0.01 (at true
+regrets near 0.02, P(ADEQUATE) is at most 0.08); a rule whose regret lies between 0.02 and about
+0.09 will usually be INCONCLUSIVE. The development values come from 63 questions (38 non-constant
+retrieved tables), so the effects themselves are uncertain (leave-one-out 0.214, 95% [0.121,
+0.316]). H1's excess has a simulated 95% half-width of 0.036 (retrieved) and 0.037 (gold).
 
 ## 10. Seeds
 
 Declared in the config: `[42, 43, 44]`. 42: the split (already drawn), the gold arm's
-distractors, the engine seed, the bootstrap; 43: the reorder placebo, shuffled pass orders, the
-cross-fitting folds, the power simulation; 44: the validation derangement and the hand-check
-sample. Permutation Shapley and SNIPW use all three (averaged). No unseeded randomness.
+distractors, the engine seed, the bootstrap (including the hand check's kappa interval); 43: the
+reorder placebo, shuffled pass orders, the cross-fitting folds, the power simulation; 44: the
+validation derangement and the hand-check sample. Permutation Shapley and SNIPW use all three
+(averaged). No unseeded randomness.
 
 ## 11. Compute plan and caps
 
-- One image build from the freeze commit's source capsule (about 1 minute on 1 H100), then
-  one job on 2 H100 (`experiments/am1/am1-memory-credit-v1.yaml`, `job`): the reader phase about
-  25 minutes (193,444 eager requests per pass at the pilot's eager rates, 152 requests/s canonical
-  and 132 shuffled), the judge phase about 3 minutes (about 9,800 items), the extra phase about 2
-  minutes. Expected about 1.1 physical GPU-h.
-- Caps: the job's Slurm limit is 60 minutes on 2 GPUs (2.0 GPU-h); with the build, 2.1 physical
-  GPU-h in all. Under D24's 8 GPU-h line. A phase starts only with its `min_start_s` left before
-  the deadline; a skipped phase is an infrastructure failure (section 13).
+- One image build from the freeze commit's source capsule (about 1 minute on 1 H100), then one
+  job on 2 H100 (`experiments/am1/am1-memory-credit-v1.yaml`, `job`), 90 minutes:
+  - the reader phase, about 40-45 minutes. 190,156 eager requests per pass. The pilot's eager
+    rates (152 requests/s canonical, 132 shuffled) were measured on 16 questions (32 pools) and
+    do not carry to 694 pools: the shuffled pass's prefix-cache hit rate falls as pools grow
+    (53.6% at 32 pools, eager job 1441; 39.5% at 126, compiled job 1411), while the canonical
+    order keeps about 60%. The independent check simulated vLLM's prefix cache (an LRU over
+    blocks, text-free, from the pilot's `prepare/pools-summary-b94672f4.json.gz` and the
+    363-371K-token KV cache in the logs), calibrated on those two points, and found a hit rate of
+    about 16-18% at about 700 pools. With the pilot's time per uncached token, that puts the
+    canonical pass at about 1,350 s and the shuffled one at about 2,400-2,700 s. Each reader
+    worker may run 3,600 s (`max_s`), and the phase starts only with 4,620 s left before the
+    deadline (3,600 for the pass, about 60 for the engine start and the smoke pass, 540 and 360
+    for the later phases, and a minute to spare);
+  - the judge phase, about 3 minutes (about 9,600 items; eager Qwen3-32B scored 126 items/s after
+    a 37 s start in job 1441);
+  - the extra phase, about 2 minutes (the second judge; 694 attention forwards).
+  Expected about 50 minutes, about 1.7 physical GPU-h.
+- Caps: the job's Slurm limit is 90 minutes on 2 GPUs (3.0 GPU-h); with the build, 3.1 physical
+  GPU-h in all (the config's `budget`). Under D24's 8 GPU-h line. A phase starts only with its
+  `min_start_s` left before the deadline; a skipped phase or an unfinished pass is an
+  infrastructure failure (sections 8 and 13).
 - The job is submitted only when no other study's GPU job that could share the node's GPUs at
   the same time is queued or running, and the preflight log records the queue.
-- CPU: the analysis, the A/A report and the hand-check sample on the host CPU (minutes).
+- CPU: the analysis, the A/A report and the hand-check sample on the host CPU (minutes; the
+  analysis of the pilot's 126 tables took 6 s at the round-1 code).
 
 ## 12. Data handling
 
@@ -266,26 +369,35 @@ hand-check sample and the joined rows stay on the host under
 without text, the per-table analysis (values as 256-bit hex strings, credits, regrets), and short
 quotes in the report where needed. The held-out split is opened only by
 `scripts/memcredit_study_prepare.py artifact --split heldout`, which refuses unless this file's
-SHA-256 equals its ledger row's.
+SHA-256 equals its ledger row's, and then builds only the 347 questions of the confirmatory set.
 
 ## 13. Infrastructure failures and exclusions
 
 - A reader or judge request that does not finish (`finish_reason` not stop or length) leaves its
   table incomplete; an incomplete table is excluded from every estimand and counted. More than 2%
   of tables incomplete in either arm voids the run (a rerun is a new job of the same registration
-  with the same seeds; the void run's records are kept).
+  with the same seeds; the void run's records are kept). G1 already needs both reader passes and
+  both primary-judge passes to finish every request, so any unfinished reader or primary-judge
+  request makes the run an infrastructure failure (G1 INCOMPLETE, rerun) before the 2% rule
+  applies. A second-judge request that does not finish only drops its table from the second
+  judge's reading.
 - A smoke-check failure (16 requests at the start of every pass) stops the job before data.
-- A pool whose attention forward fails is excluded from E5 only, and counted.
-- No question is excluded for its outcome; constant tables stay in the census and in K2 and are
-  outside E1-E3 by definition (no keep decision to score).
+- A pool whose attention forward fails is counted. It has no attention credit, so it drops out of
+  E5 and out of attention's rows of E2 and E3: raw attention's R_r is its mean regret over the
+  non-constant tables that have attention, and the number of tables behind every H2 verdict is
+  reported beside it (`tables`). The other rules' R_r use every non-constant table.
+- No question is excluded for its outcome. Step 0's eight demo questions are excluded before any
+  run because development ran them (section 4). Constant tables stay in the census and in K2 and
+  are outside E1-E3 by definition (no keep decision to score).
 
 ## 14. Reported regardless of outcome
 
-Every gate's numbers; the census; E1 per arm; R_r with 95% and 99% intervals for every rule, arm
-and budget; the suboptimal shares; the paired differences against exact Shapley; E4 and E5 with
-their readings; the judge validation, agreement with the second judge and with containment, and
-the hand check; the A/A identities at the token, log-prob-bit and judged-utility levels; GPU-h;
-every deviation.
+Every gate's numbers and the `verdicts` record; the census; E1 per arm; R_r with 95% and 99%
+intervals for every rule, arm and budget; the suboptimal shares; the paired differences against
+exact Shapley; E2 on the second judge's tables; E4 and E5 with their readings; the judge
+validation, agreement with the second judge and with containment, and the hand check (with any
+post-join correction separately); the A/A identities at the token, log-prob-bit and
+judged-utility levels; GPU-h; every deviation.
 
 ## 15. What the development pilot fixed in this design
 
@@ -298,8 +410,8 @@ From `program/evidence/2026-10-15/am1-dev-pilot/README.md` (exploratory):
   questions only.
 - H2 can fire: 53 of 89 non-constant development tables are non-monotone, against O5's worry that
   pure AND/OR tables would make it silent. The thresholds of section 7 were set from the pilot's
-  scale (random 0.58, exact Shapley 0.08, cell flips between kernel variants 0.18-0.25%), before
-  any held-out data.
+  scale (random 0.58; exact Banzhaf 0.03, SNIPW-64 0.07, exact Shapley 0.08; cell flips between
+  kernel variants 0.18-0.25%), before any run on the confirmatory set.
 - Compiled batch-invariant replay, Step 0's setting, is exact only for the same compiled
   kernels (one of four fresh reader compiles autotuned a different reduction block); every vLLM
   worker now runs eager, which replayed bit-exactly in every comparison (jobs 1435 and 1441). The
@@ -307,51 +419,62 @@ From `program/evidence/2026-10-15/am1-dev-pilot/README.md` (exploratory):
   other compiles', and 0.18-0.23% from eager mode's.
 - `load_pass` read passes quadratically (fixed in `9c3d0db8`); the confirmatory job has no idle
   phase from it.
+- The round-1 analysis code, run on the pilot's raw passes on the host
+  (`program/evidence/2026-10-15/am1-dev-pilot/analysis/recheck-de721578/`), reproduces the pilot's
+  tables, H1, AM6 and identity outputs byte for byte and evaluates the gates on real data: G1
+  FAIL (the compiled replicate differs in 1,061 replies), G2 PASS (kappa 0.95, 95% [0.88, 1.00]),
+  K4 underpowered (38 tables), leave-one-out MISSPECIFIED as computed (not read, since G1
+  failed).
 
 ## 16. Freeze checklist
 
 Before the freeze, by the orchestrator:
 
 1. An independent check of this file and the code of section 17 (a fresh reviewer that did not
-   draft them), and the corrections it requires.
-2. The gauntlet question: the run is under 8 GPU-h and comes out of the D103 sweep (judged and
+   draft them), and the corrections it requires. Round 1 and its dispositions are in section 19;
+   whether a fresh reviewer re-checks those corrections is the orchestrator's call.
+2. The gauntlet question, still open: D103 sends the top candidates through the research
+   gauntlet. The run is under 8 GPU-h (cap 3.1) and comes out of the D103 sweep (judged and
    verified there) and a pilot; whether `.claude/rules/research-gauntlet-loop.md` applies to it is
-   the program's ruling.
+   the program's ruling, and it must be made before the freeze.
 3. Re-pin section 17 in a fill commit, and run the tests on the host checkout.
 4. The ledger row by `uv run python scripts/preregister.py freeze am1-memory-credit-v1
    program/preregistrations/am1-memory-credit-v1.md`, in a commit that adds only that row (the
-   freeze commit).
+   freeze commit). `tests/test_memcredit_study.py` freezes this file into a scratch ledger, so the
+   command's text checks (no to-be-decided marker, no placeholder in angle brackets) pass.
 
-After the freeze and before the GPU job: build the held-out artifact from a clean clone at the
-freeze commit (refused before the freeze), build the image from the freeze commit's source
-capsule (it carries the ledger row the driver checks), and pass the CPU selftest on that image
-with the held-out artifact mounted (it renders every request, checks every memory span and runs
-the attention code on CPU). A failure there is fixed by a new registration id, not by an edit.
+After the freeze and before the GPU job: build the held-out artifact (the 347 questions of the
+confirmatory set) from a clean clone at the freeze commit (refused before the freeze), build the
+image from the freeze commit's source capsule (it carries the ledger row the driver checks), and
+pass the CPU selftest on that image with the held-out artifact mounted (it renders every request,
+checks every memory span and runs the attention code on CPU). A failure there is fixed by a new
+registration id, not by an edit.
 
-## 17. Code of record (at the draft commit; re-pinned at the freeze)
+## 17. Code of record (at the round-1 revision; re-pinned at the freeze)
 
-At the commit that adds this file (its code is `6f39ae3c`'s plus a comment in the
-registration's config). The fill commit re-pins every row; a row that changes is reviewed before the
-freeze.
+At the commit that revises this file after the first independent check: the code is `de721578`'s
+(section 19) and this file's own text. The fill commit re-pins every row; a row that changes is
+reviewed before the freeze.
 
 | File | Role | SHA-256 |
 |---|---|---|
 | `harness/memcredit.py` | Step 0's pools, BM25, prompts, set functions (Fourier, Moebius, Shapley, leave-one-out, keep-set regret) | `ad0964d0caab382b5541b64d56a30105bc306d2286f6e62137b1eff9121dd607` |
-| `harness/memcredit_study.py` | configs, split, placebo arms, request table, judge prompt and label, estimators, structure census, statistics, the held-out gate | `6381783a1fcb100d50f80328238796580c6e69332c1ba268400568aa0912789d` |
+| `harness/memcredit_study.py` | configs, split, the confirmatory set, placebo arms, request table, judge prompt and label, estimators, structure census, statistics, the held-out gate | `14a97d826ba619e23ea9686e2d2d57149d9f0119df3f80240843178953cf301b` |
 | `harness/g2_pilot.py` | lane helpers the driver uses (deadline, checkpoint marker, model verification) | `8c685425522377de9fbab92fac02aea321bb2b3bd69d82d2118c4ecea49f6599` |
 | `scripts/memcredit_step0.py` | the request loop, pass files and identity comparison the driver imports | `57f2e4bbbd11bf750ff224852ba5dd19923ecb3decfde74d23a6913a7f9a7227` |
-| `scripts/memcredit_study.py` | the GPU job: phases, workers (reader, judge, attention), A/A summaries | `4db1d611892403051009bf5cb9b2fa273268a36747114afe79cdac57c22579ab` |
-| `scripts/memcredit_study_prepare.py` | the split and the per-split artifact (refuses held-out data unless frozen) | `fe5734a5567832d0acd531635e9d2185394f601700c51b8dc1d51422e8edb86b` |
-| `scripts/memcredit_analyze.py` | the analysis, hand-check sample, A/A report and power simulation | `c3e2d3237175043eb148d1ed2f167e6243dc5a70ac647e4c7d6f5ab239f08944` |
+| `scripts/memcredit_study.py` | the GPU job: phases, workers (reader, judge, attention), A/A summaries | `f27ecd21e769655cddc1e9b06ee8f4c7c4ee8494348b4fc73dba7c68fdb66bb3` |
+| `scripts/memcredit_study_prepare.py` | the split and the per-split artifact (refuses held-out data unless frozen; builds only the confirmatory set) | `3d7826ac7a48d0154212edb44aa67472be8d3c45d4780957a79914262f99b1d1` |
+| `scripts/memcredit_analyze.py` | the analysis with the gates and verdicts, hand-check sample, A/A report and power simulation | `e6c0f5f2d854c82ec2b1f505714388fb2610e080edbe7b8efa0fd8153652fcbe` |
 | `scripts/fetch_open_model.py` | the reader's snapshot verification | `d995b59ece3c809edd70d6c60a78628ae5cb1ccc0ce8350cc455084d3787d29f` |
-| `experiments/am1/am1-memory-credit-v1.yaml` | this registration's config | `991976bfe349d43d45bb1d83bfd891f9d4882a22017d35b683fa37da86923122` |
+| `experiments/am1/am1-memory-credit-v1.yaml` | this registration's config | `c2f9fd74e8a90db65f69a61ab85c72b7ca650a77cd9ecc3f8979c26900e195c3` |
 | `experiments/am1/memcredit-split-v1.json` | the split | `4fa1b774d4131080855d668ac8f00f5cb07d49cf741f2051d5f8d96577edb3e3` |
-| `tests/test_memcredit_study.py` | 35 tests: config and seeds, split, placebo matching, requests, the judge prompt against the archived port and its digest, estimators and structure classes, statistics, driver helpers, the held-out gate, the analysis, A/A report and power on a synthetic run, the lane's admission of the commands | `7ada0955a406a5d3eaf5cda48aaadc1fc658f9c56500a53b2d640b93d5c4533f` |
+| `tests/test_memcredit_study.py` | 44 tests: config and seeds, split, the confirmatory set and its exclusion, placebo matching, requests, the judge prompt against the archived port and its digest, estimators and structure classes, statistics, driver helpers, the held-out gate, the analysis with its gates and verdicts, A/A report and power on a synthetic run, the gate rules, the hand labels' digest, power thinning, the lane's admission of the commands, the freeze on a scratch ledger | `d4b36e1f8e7c9032687b86a74983095992b5c50fa443a3a65b4d34874969e34f` |
 | `tests/test_memcredit.py` | Step 0's 30 tests | `7d31909428c3301df905ebed13da91fb018f7b476d2f0214635477bf6c210f0f` |
 | `scripts/submit_docker_research_job.py` | the lane's submitter | `660271655aa22ebd387a023e25d21e6a809c22699ec6314d9d535be74e17a994` |
 | `infra/slurm/host-single-node/docker-research.sbatch` | the lane | `2a10c9c72c22ab6dd5135061ff1b9b50977a468687180353d8cd7273acbaf1ec` |
 | `scripts/build_vllm_overlay_on_h100.sh` | the overlay build | `aa43283e757695384e0548d060a18b98f07a3af06f583efdb2d709f677e1a96d` |
 | `scripts/create_source_archive.py`, `scripts/extract_discovery_source_archive.py` | the source capsule | `672670ca29d3254e9af90b810eef591e15dae6934612c5184a72e5d0c7e9948c`, `9b4d21a83beac8913dc06a946cf43ea31d77326e65d04957fad66d7b97d8c3cb` |
+| `scripts/preregister.py` | the ledger (freeze, verify, check-chain) | `21fc3ef0ed0958b1600ce742c3b4f8d557d0a298635acb20342710eb814b2c0d` |
 
 Commands of the registered run (host, from a clean clone at the freeze commit). The names in
 capitals stand for host paths and digests that exist only at run time: SOURCE_JSON, the pinned
@@ -387,8 +510,43 @@ judges, and `analyze` refuses labels whose SHA-256 differs from the committed on
 
 ## 18. Priors (from the pilot; for the record, not tested)
 
-The pilot expects leave-one-out MISSPECIFIED (R about 0.2), raw attention and retrieval rank
-MISSPECIFIED, permutation Shapley-16 likely MISSPECIFIED, SNIPW-64 INCONCLUSIVE; H1's excess near
-+0.1; AM2 NOT ROBUST (non-gold deletion labels mostly fail the placebo control; a reorder flips
-about one answer in eight); AM6 with cross-fitted heads ahead of the best cheap baseline by about
-0.05 AUROC and raw attention behind it.
+The pilot expects leave-one-out MISSPECIFIED (R about 0.2) and losing more than exact Shapley
+(paired difference 0.135, 95% [0.051, 0.227]), raw attention and retrieval rank MISSPECIFIED,
+permutation Shapley-16 likely MISSPECIFIED, SNIPW-64 INCONCLUSIVE; H1's excess near +0.1;
+AM2's non-gold deletion labels narrowly ABOVE THE SWAP FLOOR (pilot, both arms: deletion flip
+rate 0.046 against a swap-only flip rate of 0.021, difference 0.024, 95% [0.002, 0.047]; retrieved
+arm alone 0.021 [-0.010, 0.056]), with low non-gold survival (0.17) and gold survival about 0.7,
+and a reorder flipping about one answer in eight; AM6 with cross-fitted heads ahead of the best
+cheap baseline by about 0.05 AUROC and raw attention behind it. On the pilot's tables the second
+judge gives the same H2 verdicts as the primary one
+(`program/evidence/2026-10-15/am1-dev-pilot/analysis/recheck-de721578/`).
+
+## 19. Review log: the first independent check (round 1)
+
+The check ran on `f535136a` (the draft commit) and found the file not ready to freeze: five
+blocking items and ten others. It verified, and this revision keeps: the 17 SHA-256 pins of
+section 17 at that commit, the judge-template, reader-template and held-out digests, a registration
+config that differs from the pilot's only in experiment id, claim level, job and budget, eager
+mode on every vLLM worker, the tests passing locally and on a host scratch clone (65), the seeds,
+the ledger chain (22 rows), and a source capsule that includes `program/preregistrations`. The
+code corrections are commit `de721578`; the text and evidence corrections are the commit that
+carries this section. Everything used the development set only; nothing of the confirmatory set
+was opened.
+
+| Item | Finding | Disposition |
+|---|---|---|
+| B1 | The freeze command of section 16 fails: `scripts/preregister.py` refuses any placeholder in angle brackets, and section 17's commands had ten. | Fixed: plain names in capitals (section 17). `tests/test_memcredit_study.py::test_registration_freezes_on_a_scratch_ledger` freezes this file into an empty scratch ledger and passes. |
+| B2 | Development already touched the held-out split: six of Step 0's eight demo questions are held-out ids, with full exact tables, the same reader, prompt and pools, and every reply public; the file said the split "has not been opened". | Fixed: all eight demo ids are excluded before any run; the confirmatory set is 347 ids with a pinned list and digest (sections 3 and 4), enforced in code (config `confirmatory_set`; `split_question_ids`, `check_artifact_questions`; prepare, driver and analysis; tests). The status paragraph and section 4 disclose what development saw. Unit counts updated (190,156 requests, 209 and 281 tables). |
+| B3 | Not runnable within its caps: at 353 questions the shuffled pass loses most prefix-cache hits and would exceed `max_s` 2,400 s; a cut pass would pass G1 silently on the completed subset. | Fixed: reader `max_s` 3,600 s, job 90 minutes, reader `min_start_s` 4,620 s, budget 3.1 physical GPU-h (config and section 11, with the check's cache simulation). G1 needs both replicates to finish every request and judge item (`replay_gate`: PASS, FAIL, INCOMPLETE), and an incomplete replicate is an infrastructure failure (sections 8 and 13). |
+| B4 | The code did not implement the decision rules: no H2 verdicts, no G1 judge gate, no G2, K4, void rule or AM2 rule, and a hardcoded "exploratory" claim level. | Fixed: `verdicts` in `scripts/memcredit_analyze.py` writes the void rule, G1, G2, K2-K4, H2 per rule from the 99% interval, the program reading with the paired difference, AM2, AM6 and the second judge's H2 into `headline.json`; tests on the synthetic run (G1 PASS, INCOMPLETE, FAIL; G2 PENDING and PASS) and unit tests of the rules. Both summaries take `claim_level` from the config. Run on the pilot's raw passes as a check (section 15). |
+| B5 | The AM2 rule was fixed by its design: survival requires both swaps to reproduce a label, so the swap-to-deletion ratio is at least the survival share, and ROBUST could hold only with nearly no non-gold labels. | Fixed (text and code): one consistent rule on non-gold labels, the deletion flip rate against the swap-only floor, with gold and non-gold survival reported (section 7); the dossier's ROBUST rule is not applied, and why is stated. Prior updated from the pilot's tables (section 18). |
+| N1 | The threshold rationale was wrong: exact Shapley's 0.079 was not the best per-memory score (exact Banzhaf 0.031, SNIPW-64 0.070), and the pilot README's "additive-credit floor" claim is false, since any keep set is the top B of some score. | Fixed: section 7 reworded; the pilot README corrected. |
+| N2 | `power()` multiplied regrets by the scale, which shrinks their variance and overstated the power at 1/2 and 1/4. | Fixed: Bernoulli thinning (`thin`), rerun at 347 questions on the host CPU (`de721578`, 2 minutes); section 9 and `power.json` replaced. Leave-one-out at half the effect: 0.91 (was 1.00). |
+| N3 | The ADEQUATE rationale treated a per-cell flip rate as a regret resolution. | Text: 0.02 is stated as a chosen tolerance, the per-table regret's sensitivity to kernel numerics as unmeasured, and ADEQUATE as nearly out of reach (section 7). Not measured: that needs every cell of job 1411's GPU-1 tables judged. |
+| N4 | The judge's validity rests on an LLM labeller; two hand labels were corrected after the join. | Fixed: the labels file's SHA-256 is committed before the join and enforced (`--hand-labels-sha256`, required by this config); only that file counts toward G2, and a later correction is reported separately (section 8). H2 on the second judge's tables is now a registered sensitivity reading (E3, `h2-second-judge.json`). |
+| N5 | `memcredit_study_prepare.py` did not check the split file's SHA-256 against its pin. | Fixed: under this config it checks the split file's SHA-256, the held-out digest and the confirmatory digest. |
+| N6 | Section 13 said a failed attention forward affects E5 only, but raw attention is in the H2 family. | Fixed: section 13 and E2 state that attention's R_r uses the tables with attention; every H2 row reports its table count. |
+| N7 | G1 is all or nothing over about 190,000 requests, against eager evidence with a 95% bound of about 3.4e-4 per request. | Stated in section 8, and accepted as the dossier's kill criterion 1. |
+| N8 | Process: the gauntlet ruling of D103 is open; the merge will conflict with G2c in `program/state.json` and `program/log.md`; the config's validation comment said "per development question". | The gauntlet ruling is left to the program and flagged in section 16 (item 2). The merge conflicts are for the merge, not this branch. The config comment is fixed. |
+| N9 | BM25 for MiniLM, thinking off, the 13.1% reorder sensitivity and unseparated causes of non-monotonicity limit the program reading; lead it with the paired leave-one-out minus exact Shapley difference, since exact Shapley was 0.079 in the pilot. | Fixed: the program reading names its scope and is read with the paired difference (section 7; `verdicts.headline.loo_minus_exact_shapley`). |
+| N10 | Checked and passing (pins, digests, config diff, eager mode, tests, seeds, ledger chain, capsule). | Kept; the pins of section 17 are refreshed for this revision. |
