@@ -15,7 +15,7 @@
     ],
     "cost_indicator": "BM25 top 4 correct and the capped rule wrong: the rule switched (top 4 abstained, a 4-subset within K reads answered) and the judge rejects the switched reply",
     "gain_indicator": "on the same question's original pool (am3g's committed records), the capped rule's reply judged correct and BM25 top 4's wrong (AM4's reading)",
-    "hand_instructions_sha256": "ee50ff258129e6cee2b7b89b6cebec0857dd3678e88312274417e3b84d30c760",
+    "hand_instructions_sha256": "1745340a5e05ebb149aaffee4beba23d2c13dc42b33d1872731defd09359a5c5",
     "outcome": "on an ablated pool a reply is correct when it abstains (AM1d's patterns) or, when it does not, when Qwen3-32B's answer check against the reference says yes",
     "primary_cap": 8,
     "requests_per_pool": 71,
@@ -265,6 +265,64 @@
           "not_in_memories": 1
         },
         "batch_invariant": true,
+        "by_leak_flag": {
+          "answer_in_a_pool_memory": {
+            "flag": {
+              "70": {
+                "cost": 0,
+                "switched": 0,
+                "switched_judged_correct": 0
+              },
+              "8": {
+                "cost": 0,
+                "switched": 0,
+                "switched_judged_correct": 0
+              },
+              "questions": 4
+            },
+            "no_flag": {
+              "70": {
+                "cost": 9,
+                "switched": 10,
+                "switched_judged_correct": 1
+              },
+              "8": {
+                "cost": 5,
+                "switched": 6,
+                "switched_judged_correct": 1
+              },
+              "questions": 59
+            }
+          },
+          "answer_in_a_remaining_user_turn": {
+            "flag": {
+              "70": {
+                "cost": 0,
+                "switched": 0,
+                "switched_judged_correct": 0
+              },
+              "8": {
+                "cost": 0,
+                "switched": 0,
+                "switched_judged_correct": 0
+              },
+              "questions": 10
+            },
+            "no_flag": {
+              "70": {
+                "cost": 9,
+                "switched": 10,
+                "switched_judged_correct": 1
+              },
+              "8": {
+                "cost": 5,
+                "switched": 6,
+                "switched_judged_correct": 1
+              },
+              "questions": 53
+            }
+          }
+        },
         "by_type": {
           "knowledge-update": {
             "70": {
@@ -352,7 +410,11 @@
           "70": 4,
           "8": 4
         },
-        "step": "rd-olmo2"
+        "step": "rd-olmo2",
+        "switched_replies_hand_labelled_declines": {
+          "70": 0,
+          "8": 0
+        }
       },
       "qwen3-8b": {
         "ablated": {
@@ -590,6 +652,64 @@
           "i_dont_know": 4400
         },
         "batch_invariant": true,
+        "by_leak_flag": {
+          "answer_in_a_pool_memory": {
+            "flag": {
+              "70": {
+                "cost": 0,
+                "switched": 0,
+                "switched_judged_correct": 0
+              },
+              "8": {
+                "cost": 0,
+                "switched": 0,
+                "switched_judged_correct": 0
+              },
+              "questions": 4
+            },
+            "no_flag": {
+              "70": {
+                "cost": 1,
+                "switched": 2,
+                "switched_judged_correct": 1
+              },
+              "8": {
+                "cost": 0,
+                "switched": 1,
+                "switched_judged_correct": 1
+              },
+              "questions": 59
+            }
+          },
+          "answer_in_a_remaining_user_turn": {
+            "flag": {
+              "70": {
+                "cost": 0,
+                "switched": 0,
+                "switched_judged_correct": 0
+              },
+              "8": {
+                "cost": 0,
+                "switched": 0,
+                "switched_judged_correct": 0
+              },
+              "questions": 10
+            },
+            "no_flag": {
+              "70": {
+                "cost": 1,
+                "switched": 2,
+                "switched_judged_correct": 1
+              },
+              "8": {
+                "cost": 0,
+                "switched": 1,
+                "switched_judged_correct": 1
+              },
+              "questions": 53
+            }
+          }
+        },
         "by_type": {
           "knowledge-update": {
             "70": {
@@ -677,7 +797,11 @@
           "70": 1,
           "8": 1
         },
-        "step": "rd-qwen3-8b"
+        "step": "rd-qwen3-8b",
+        "switched_replies_hand_labelled_declines": {
+          "70": 0,
+          "8": 0
+        }
       },
       "qwen3.5-9b": {
         "ablated": {
@@ -916,6 +1040,64 @@
           "i_dont_know": 4382
         },
         "batch_invariant": false,
+        "by_leak_flag": {
+          "answer_in_a_pool_memory": {
+            "flag": {
+              "70": {
+                "cost": 0,
+                "switched": 0,
+                "switched_judged_correct": 0
+              },
+              "8": {
+                "cost": 0,
+                "switched": 0,
+                "switched_judged_correct": 0
+              },
+              "questions": 4
+            },
+            "no_flag": {
+              "70": {
+                "cost": 3,
+                "switched": 3,
+                "switched_judged_correct": 0
+              },
+              "8": {
+                "cost": 3,
+                "switched": 3,
+                "switched_judged_correct": 0
+              },
+              "questions": 59
+            }
+          },
+          "answer_in_a_remaining_user_turn": {
+            "flag": {
+              "70": {
+                "cost": 0,
+                "switched": 0,
+                "switched_judged_correct": 0
+              },
+              "8": {
+                "cost": 0,
+                "switched": 0,
+                "switched_judged_correct": 0
+              },
+              "questions": 10
+            },
+            "no_flag": {
+              "70": {
+                "cost": 3,
+                "switched": 3,
+                "switched_judged_correct": 0
+              },
+              "8": {
+                "cost": 3,
+                "switched": 3,
+                "switched_judged_correct": 0
+              },
+              "questions": 53
+            }
+          }
+        },
         "by_type": {
           "knowledge-update": {
             "70": {
@@ -1003,7 +1185,11 @@
           "70": 3,
           "8": 3
         },
-        "step": "rd-qwen35-9b-default"
+        "step": "rd-qwen35-9b-default",
+        "switched_replies_hand_labelled_declines": {
+          "70": 0,
+          "8": 0
+        }
       }
     }
   },
@@ -1071,11 +1257,25 @@
         "kappa": 1.0
       }
     },
-    "instructions_sha256": "ee50ff258129e6cee2b7b89b6cebec0857dd3678e88312274417e3b84d30c760",
+    "agreement_items": {
+      "agree": 34,
+      "items": 34,
+      "judge_no_hand_yes": 0,
+      "judge_yes_hand_no": 0,
+      "kappa": 1.0
+    },
+    "decline_items": [],
+    "decline_notes": {
+      "by_role": {},
+      "items": 0,
+      "label_0_with_decline_note": 0,
+      "rule": "a label 1 whose note starts with \"decline:\" (case-folded): the reply declines to answer; counts only, no text"
+    },
+    "instructions_sha256": "1745340a5e05ebb149aaffee4beba23d2c13dc42b33d1872731defd09359a5c5",
     "items": 34,
     "labeller": "an isolated agent (claude-opus-5-5), blind (D9: agent labels, not human)",
     "labeller_prompt_sha256": "98c35ceac9710033b095f01abe4a5fc98f6ed3a597b461e12a98ac213a7ae096",
-    "labels_sha256": "36f3e23d22a87b8f1c7f074482955233bdd94615561c377eb6a3e3afaa91adf2",
+    "labels_sha256": "d21c25b990241e987afab89bbcc93a6ffe62809f936e4db1ccff284b5bee3910",
     "plan_sha256": "2bcd07af44ae049a6d145de9c506373edaa6a1aa5f988e8050c5895121e64126",
     "readers_plan": {
       "olmo-2-1124-7b-instruct": {
@@ -1129,7 +1329,7 @@
       "scripts/memcredit_am3.py": "25f634edd29a23f2fdee12b0825013d624aa5305d49cf512f74fdf1827ea130f",
       "scripts/memcredit_am3g.py": "4bb0d42c09f9fca6e728a2487966bc13c08715672dce33316db195f6e7573e26",
       "scripts/memcredit_am5.py": "225e42e7d4f2e9a1ccfce1c4a826a04bcdb57511fea248f8009bf97467b6fa0b",
-      "scripts/memcredit_am5r.py": "b24766ddb8f90b268fa7660d5c09dec98009827b5a799a87767c92bb039e2006",
+      "scripts/memcredit_am5r.py": "35bab9f9a8fa647542f25d1f608afe49121c29618e22c89118534cd983a646fb",
       "scripts/memcredit_analyze.py": "5444104d3c760b17f311656f4e0dbd50b2b154c89d806f1e4aa2ab6791fb0f34",
       "scripts/memcredit_cost_curve.py": "431f4cb21ccd398e1433e29a5b40c1a697d48b9aecc5fc728956f819e28c9bab",
       "scripts/memcredit_keepset_search.py": "3fbb804328bd310a6c8626f408d0d1b44a4624f06829a0762e3afc6134add584",
@@ -1137,7 +1337,7 @@
       "scripts/memcredit_step0.py": "57f2e4bbbd11bf750ff224852ba5dd19923ecb3decfde74d23a6913a7f9a7227",
       "scripts/memcredit_study.py": "f27ecd21e769655cddc1e9b06ee8f4c7c4ee8494348b4fc73dba7c68fdb66bb3"
     },
-    "features_sha256": "753ea702ce4ef66203f26524a984e1de46da21e288f86c0408a99cc2e233d64c",
+    "features_sha256": "0f6984d4452103275da3f6a96f126a6374dc9b9e19ae5235c7ea6a86e5e9f249",
     "gain_per_table_sha256": "0fc5635bad037588e521980536e4548eb51a6a3d9573e703b0f92010be72701e",
     "question_ids_sha256": "183ee4d3406786be721c4c846fa9f72f0fc2ae8c905dcb198eaaff17d78846fc",
     "readers": {
@@ -1285,6 +1485,828 @@
       }
     }
   },
+  "labelled_items": [
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 8,
+        "memories_shared_with_the_original_pool": 7,
+        "original_pool_has_answer_memories": 0,
+        "pool_memories_containing_the_answer": 0,
+        "remaining_user_turns_containing_the_answer": 0
+      },
+      "hand": 0,
+      "item_id": "r0000",
+      "judge": 0,
+      "question_id": "gpt4_68e94288",
+      "question_type": "temporal-reasoning",
+      "uses": [
+        {
+          "judge_primary": 0,
+          "mask": 23,
+          "reader": "olmo-2-1124-7b-instruct",
+          "role": "distractor"
+        }
+      ]
+    },
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 48,
+        "memories_shared_with_the_original_pool": 1,
+        "original_pool_has_answer_memories": 2,
+        "pool_memories_containing_the_answer": 0,
+        "remaining_user_turns_containing_the_answer": 0
+      },
+      "hand": 0,
+      "item_id": "r0001",
+      "judge": 0,
+      "question_id": "caf03d32",
+      "question_type": "single-session-preference",
+      "uses": [
+        {
+          "judge_primary": 0,
+          "mask": 156,
+          "reader": "olmo-2-1124-7b-instruct",
+          "role": "distractor"
+        }
+      ]
+    },
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 11,
+        "memories_shared_with_the_original_pool": 7,
+        "original_pool_has_answer_memories": 1,
+        "pool_memories_containing_the_answer": 0,
+        "remaining_user_turns_containing_the_answer": 0
+      },
+      "hand": 1,
+      "item_id": "r0002",
+      "judge": 1,
+      "question_id": "gpt4_b0863698",
+      "question_type": "temporal-reasoning",
+      "uses": [
+        {
+          "judge_primary": 1,
+          "mask": 53,
+          "reader": "olmo-2-1124-7b-instruct",
+          "role": "distractor"
+        }
+      ]
+    },
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 2,
+        "memories_shared_with_the_original_pool": 6,
+        "original_pool_has_answer_memories": 1,
+        "pool_memories_containing_the_answer": 0,
+        "remaining_user_turns_containing_the_answer": 0
+      },
+      "hand": 0,
+      "item_id": "r0003",
+      "judge": 0,
+      "question_id": "8ebdbe50",
+      "question_type": "single-session-user",
+      "uses": [
+        {
+          "judge_primary": 0,
+          "mask": 149,
+          "position": 63,
+          "reader": "qwen3-8b",
+          "role": "switched-judged-wrong-secondary",
+          "within_primary_cap": false
+        },
+        {
+          "judge_primary": 0,
+          "mask": 216,
+          "position": 4,
+          "reader": "olmo-2-1124-7b-instruct",
+          "role": "switched-judged-wrong-primary",
+          "within_primary_cap": true
+        },
+        {
+          "judge_primary": 0,
+          "mask": 106,
+          "position": 8,
+          "reader": "qwen3.5-9b",
+          "role": "switched-judged-wrong-primary",
+          "within_primary_cap": true
+        }
+      ]
+    },
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 48,
+        "memories_shared_with_the_original_pool": 1,
+        "original_pool_has_answer_memories": 2,
+        "pool_memories_containing_the_answer": 0,
+        "remaining_user_turns_containing_the_answer": 0
+      },
+      "hand": 0,
+      "item_id": "r0004",
+      "judge": 0,
+      "question_id": "caf03d32",
+      "question_type": "single-session-preference",
+      "uses": [
+        {
+          "judge_primary": 0,
+          "mask": 198,
+          "reader": "olmo-2-1124-7b-instruct",
+          "role": "distractor"
+        }
+      ]
+    },
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 48,
+        "memories_shared_with_the_original_pool": 1,
+        "original_pool_has_answer_memories": 2,
+        "pool_memories_containing_the_answer": 0,
+        "remaining_user_turns_containing_the_answer": 0
+      },
+      "hand": 0,
+      "item_id": "r0005",
+      "judge": 0,
+      "question_id": "caf03d32",
+      "question_type": "single-session-preference",
+      "uses": [
+        {
+          "judge_primary": 0,
+          "mask": 240,
+          "reader": "olmo-2-1124-7b-instruct",
+          "role": "top4-answers"
+        }
+      ]
+    },
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 8,
+        "memories_shared_with_the_original_pool": 7,
+        "original_pool_has_answer_memories": 0,
+        "pool_memories_containing_the_answer": 0,
+        "remaining_user_turns_containing_the_answer": 0
+      },
+      "hand": 0,
+      "item_id": "r0006",
+      "judge": 0,
+      "question_id": "gpt4_68e94288",
+      "question_type": "temporal-reasoning",
+      "uses": [
+        {
+          "judge_primary": 0,
+          "mask": 150,
+          "reader": "olmo-2-1124-7b-instruct",
+          "role": "top4-answers"
+        }
+      ]
+    },
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 11,
+        "memories_shared_with_the_original_pool": 7,
+        "original_pool_has_answer_memories": 1,
+        "pool_memories_containing_the_answer": 0,
+        "remaining_user_turns_containing_the_answer": 0
+      },
+      "hand": 0,
+      "item_id": "r0007",
+      "judge": 0,
+      "question_id": "gpt4_b0863698",
+      "question_type": "temporal-reasoning",
+      "uses": [
+        {
+          "judge_primary": 0,
+          "mask": 153,
+          "position": 3,
+          "reader": "qwen3.5-9b",
+          "role": "switched-judged-wrong-primary",
+          "within_primary_cap": true
+        }
+      ]
+    },
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 72,
+        "memories_shared_with_the_original_pool": 5,
+        "original_pool_has_answer_memories": 1,
+        "pool_memories_containing_the_answer": 0,
+        "remaining_user_turns_containing_the_answer": 0
+      },
+      "hand": 0,
+      "item_id": "r0008",
+      "judge": 0,
+      "question_id": "b6025781",
+      "question_type": "single-session-preference",
+      "uses": [
+        {
+          "judge_primary": 0,
+          "mask": 212,
+          "position": 3,
+          "reader": "qwen3.5-9b",
+          "role": "switched-judged-wrong-primary",
+          "within_primary_cap": true
+        }
+      ]
+    },
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 10,
+        "memories_shared_with_the_original_pool": 0,
+        "original_pool_has_answer_memories": 2,
+        "pool_memories_containing_the_answer": 0,
+        "remaining_user_turns_containing_the_answer": 0
+      },
+      "hand": 0,
+      "item_id": "r0009",
+      "judge": 0,
+      "question_id": "0bb5a684",
+      "question_type": "temporal-reasoning",
+      "uses": [
+        {
+          "judge_primary": 0,
+          "mask": 166,
+          "position": 3,
+          "reader": "olmo-2-1124-7b-instruct",
+          "role": "switched-judged-wrong-primary",
+          "within_primary_cap": true
+        }
+      ]
+    },
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 48,
+        "memories_shared_with_the_original_pool": 1,
+        "original_pool_has_answer_memories": 2,
+        "pool_memories_containing_the_answer": 0,
+        "remaining_user_turns_containing_the_answer": 0
+      },
+      "hand": 0,
+      "item_id": "r0010",
+      "judge": 0,
+      "question_id": "caf03d32",
+      "question_type": "single-session-preference",
+      "uses": [
+        {
+          "judge_primary": 0,
+          "mask": 169,
+          "reader": "olmo-2-1124-7b-instruct",
+          "role": "distractor"
+        }
+      ]
+    },
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 11,
+        "memories_shared_with_the_original_pool": 7,
+        "original_pool_has_answer_memories": 1,
+        "pool_memories_containing_the_answer": 0,
+        "remaining_user_turns_containing_the_answer": 0
+      },
+      "hand": 1,
+      "item_id": "r0011",
+      "judge": 1,
+      "question_id": "gpt4_b0863698",
+      "question_type": "temporal-reasoning",
+      "uses": [
+        {
+          "judge_primary": 1,
+          "mask": 216,
+          "reader": "olmo-2-1124-7b-instruct",
+          "role": "top4-answers"
+        }
+      ]
+    },
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 2,
+        "memories_shared_with_the_original_pool": 3,
+        "original_pool_has_answer_memories": 1,
+        "pool_memories_containing_the_answer": 0,
+        "remaining_user_turns_containing_the_answer": 0
+      },
+      "hand": 0,
+      "item_id": "r0012",
+      "judge": 0,
+      "question_id": "f523d9fe",
+      "question_type": "single-session-assistant",
+      "uses": [
+        {
+          "judge_primary": 0,
+          "mask": 101,
+          "reader": "olmo-2-1124-7b-instruct",
+          "role": "distractor"
+        }
+      ]
+    },
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 72,
+        "memories_shared_with_the_original_pool": 5,
+        "original_pool_has_answer_memories": 1,
+        "pool_memories_containing_the_answer": 0,
+        "remaining_user_turns_containing_the_answer": 0
+      },
+      "hand": 0,
+      "item_id": "r0013",
+      "judge": 0,
+      "question_id": "b6025781",
+      "question_type": "single-session-preference",
+      "uses": [
+        {
+          "judge_primary": 0,
+          "mask": 83,
+          "reader": "olmo-2-1124-7b-instruct",
+          "role": "distractor"
+        }
+      ]
+    },
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 72,
+        "memories_shared_with_the_original_pool": 5,
+        "original_pool_has_answer_memories": 1,
+        "pool_memories_containing_the_answer": 0,
+        "remaining_user_turns_containing_the_answer": 0
+      },
+      "hand": 0,
+      "item_id": "r0014",
+      "judge": 0,
+      "question_id": "b6025781",
+      "question_type": "single-session-preference",
+      "uses": [
+        {
+          "judge_primary": 0,
+          "mask": 75,
+          "reader": "qwen3-8b",
+          "role": "distractor"
+        }
+      ]
+    },
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 2,
+        "memories_shared_with_the_original_pool": 6,
+        "original_pool_has_answer_memories": 1,
+        "pool_memories_containing_the_answer": 0,
+        "remaining_user_turns_containing_the_answer": 0
+      },
+      "hand": 1,
+      "item_id": "r0015",
+      "judge": 1,
+      "question_id": "a06e4cfe",
+      "question_type": "single-session-user",
+      "uses": [
+        {
+          "judge_primary": 1,
+          "mask": 228,
+          "position": 3,
+          "reader": "olmo-2-1124-7b-instruct",
+          "role": "switched-judged-correct",
+          "within_primary_cap": true
+        }
+      ]
+    },
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 72,
+        "memories_shared_with_the_original_pool": 5,
+        "original_pool_has_answer_memories": 1,
+        "pool_memories_containing_the_answer": 0,
+        "remaining_user_turns_containing_the_answer": 0
+      },
+      "hand": 0,
+      "item_id": "r0016",
+      "judge": 0,
+      "question_id": "b6025781",
+      "question_type": "single-session-preference",
+      "uses": [
+        {
+          "judge_primary": 0,
+          "mask": 177,
+          "reader": "qwen3.5-9b",
+          "role": "distractor"
+        }
+      ]
+    },
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 11,
+        "memories_shared_with_the_original_pool": 7,
+        "original_pool_has_answer_memories": 1,
+        "pool_memories_containing_the_answer": 0,
+        "remaining_user_turns_containing_the_answer": 0
+      },
+      "hand": 0,
+      "item_id": "r0017",
+      "judge": 0,
+      "question_id": "gpt4_b0863698",
+      "question_type": "temporal-reasoning",
+      "uses": [
+        {
+          "judge_primary": 0,
+          "mask": 216,
+          "reader": "qwen3-8b",
+          "role": "top4-answers"
+        }
+      ]
+    },
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 72,
+        "memories_shared_with_the_original_pool": 5,
+        "original_pool_has_answer_memories": 1,
+        "pool_memories_containing_the_answer": 0,
+        "remaining_user_turns_containing_the_answer": 0
+      },
+      "hand": 1,
+      "item_id": "r0018",
+      "judge": 1,
+      "question_id": "b6025781",
+      "question_type": "single-session-preference",
+      "uses": [
+        {
+          "judge_primary": 1,
+          "mask": 60,
+          "reader": "qwen3-8b",
+          "role": "distractor"
+        }
+      ]
+    },
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 48,
+        "memories_shared_with_the_original_pool": 1,
+        "original_pool_has_answer_memories": 2,
+        "pool_memories_containing_the_answer": 0,
+        "remaining_user_turns_containing_the_answer": 0
+      },
+      "hand": 0,
+      "item_id": "r0019",
+      "judge": 0,
+      "question_id": "caf03d32",
+      "question_type": "single-session-preference",
+      "uses": [
+        {
+          "judge_primary": 0,
+          "mask": 89,
+          "reader": "olmo-2-1124-7b-instruct",
+          "role": "distractor"
+        }
+      ]
+    },
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 72,
+        "memories_shared_with_the_original_pool": 5,
+        "original_pool_has_answer_memories": 1,
+        "pool_memories_containing_the_answer": 0,
+        "remaining_user_turns_containing_the_answer": 0
+      },
+      "hand": 0,
+      "item_id": "r0020",
+      "judge": 0,
+      "question_id": "b6025781",
+      "question_type": "single-session-preference",
+      "uses": [
+        {
+          "judge_primary": 0,
+          "mask": 46,
+          "reader": "olmo-2-1124-7b-instruct",
+          "role": "distractor"
+        }
+      ]
+    },
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 11,
+        "memories_shared_with_the_original_pool": 7,
+        "original_pool_has_answer_memories": 1,
+        "pool_memories_containing_the_answer": 0,
+        "remaining_user_turns_containing_the_answer": 0
+      },
+      "hand": 0,
+      "item_id": "r0021",
+      "judge": 0,
+      "question_id": "gpt4_b0863698",
+      "question_type": "temporal-reasoning",
+      "uses": [
+        {
+          "judge_primary": 0,
+          "mask": 57,
+          "reader": "qwen3.5-9b",
+          "role": "distractor"
+        }
+      ]
+    },
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 3,
+        "memories_shared_with_the_original_pool": 4,
+        "original_pool_has_answer_memories": 1,
+        "pool_memories_containing_the_answer": 0,
+        "remaining_user_turns_containing_the_answer": 0
+      },
+      "hand": 0,
+      "item_id": "r0022",
+      "judge": 0,
+      "question_id": "8a137a7f",
+      "question_type": "single-session-user",
+      "uses": [
+        {
+          "judge_primary": 0,
+          "mask": 114,
+          "position": 38,
+          "reader": "olmo-2-1124-7b-instruct",
+          "role": "switched-judged-wrong-secondary",
+          "within_primary_cap": false
+        }
+      ]
+    },
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 72,
+        "memories_shared_with_the_original_pool": 5,
+        "original_pool_has_answer_memories": 1,
+        "pool_memories_containing_the_answer": 0,
+        "remaining_user_turns_containing_the_answer": 0
+      },
+      "hand": 0,
+      "item_id": "r0023",
+      "judge": 0,
+      "question_id": "b6025781",
+      "question_type": "single-session-preference",
+      "uses": [
+        {
+          "judge_primary": 0,
+          "mask": 105,
+          "reader": "qwen3.5-9b",
+          "role": "distractor"
+        }
+      ]
+    },
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 2,
+        "memories_shared_with_the_original_pool": 3,
+        "original_pool_has_answer_memories": 1,
+        "pool_memories_containing_the_answer": 0,
+        "remaining_user_turns_containing_the_answer": 0
+      },
+      "hand": 0,
+      "item_id": "r0024",
+      "judge": 0,
+      "question_id": "f523d9fe",
+      "question_type": "single-session-assistant",
+      "uses": [
+        {
+          "judge_primary": 0,
+          "mask": 27,
+          "position": 2,
+          "reader": "olmo-2-1124-7b-instruct",
+          "role": "switched-judged-wrong-primary",
+          "within_primary_cap": true
+        }
+      ]
+    },
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 7,
+        "memories_shared_with_the_original_pool": 2,
+        "original_pool_has_answer_memories": 1,
+        "pool_memories_containing_the_answer": 0,
+        "remaining_user_turns_containing_the_answer": 0
+      },
+      "hand": 0,
+      "item_id": "r0025",
+      "judge": 0,
+      "question_id": "0bc8ad93",
+      "question_type": "temporal-reasoning",
+      "uses": [
+        {
+          "judge_primary": 0,
+          "mask": 53,
+          "position": 3,
+          "reader": "olmo-2-1124-7b-instruct",
+          "role": "switched-judged-wrong-primary",
+          "within_primary_cap": true
+        }
+      ]
+    },
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 72,
+        "memories_shared_with_the_original_pool": 5,
+        "original_pool_has_answer_memories": 1,
+        "pool_memories_containing_the_answer": 0,
+        "remaining_user_turns_containing_the_answer": 0
+      },
+      "hand": 1,
+      "item_id": "r0026",
+      "judge": 1,
+      "question_id": "b6025781",
+      "question_type": "single-session-preference",
+      "uses": [
+        {
+          "judge_primary": 1,
+          "mask": 149,
+          "position": 5,
+          "reader": "qwen3-8b",
+          "role": "switched-judged-correct",
+          "within_primary_cap": true
+        }
+      ]
+    },
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 72,
+        "memories_shared_with_the_original_pool": 5,
+        "original_pool_has_answer_memories": 1,
+        "pool_memories_containing_the_answer": 0,
+        "remaining_user_turns_containing_the_answer": 0
+      },
+      "hand": 0,
+      "item_id": "r0027",
+      "judge": 0,
+      "question_id": "b6025781",
+      "question_type": "single-session-preference",
+      "uses": [
+        {
+          "judge_primary": 0,
+          "mask": 150,
+          "position": 2,
+          "reader": "olmo-2-1124-7b-instruct",
+          "role": "switched-judged-wrong-primary",
+          "within_primary_cap": true
+        }
+      ]
+    },
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 1,
+        "memories_shared_with_the_original_pool": 6,
+        "original_pool_has_answer_memories": 1,
+        "pool_memories_containing_the_answer": 1,
+        "remaining_user_turns_containing_the_answer": 3
+      },
+      "hand": 0,
+      "item_id": "r0028",
+      "judge": 0,
+      "question_id": "a346bb18",
+      "question_type": "multi-session",
+      "uses": [
+        {
+          "judge_primary": 0,
+          "mask": 156,
+          "reader": "olmo-2-1124-7b-instruct",
+          "role": "top4-answers"
+        }
+      ]
+    },
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 72,
+        "memories_shared_with_the_original_pool": 5,
+        "original_pool_has_answer_memories": 1,
+        "pool_memories_containing_the_answer": 0,
+        "remaining_user_turns_containing_the_answer": 0
+      },
+      "hand": 1,
+      "item_id": "r0029",
+      "judge": 1,
+      "question_id": "b6025781",
+      "question_type": "single-session-preference",
+      "uses": [
+        {
+          "judge_primary": 1,
+          "mask": 89,
+          "reader": "qwen3-8b",
+          "role": "distractor"
+        }
+      ]
+    },
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 3,
+        "memories_shared_with_the_original_pool": 6,
+        "original_pool_has_answer_memories": 2,
+        "pool_memories_containing_the_answer": 0,
+        "remaining_user_turns_containing_the_answer": 0
+      },
+      "hand": 0,
+      "item_id": "r0030",
+      "judge": 0,
+      "question_id": "3c1045c8",
+      "question_type": "multi-session",
+      "uses": [
+        {
+          "judge_primary": 0,
+          "mask": 116,
+          "position": 22,
+          "reader": "olmo-2-1124-7b-instruct",
+          "role": "switched-judged-wrong-secondary",
+          "within_primary_cap": false
+        }
+      ]
+    },
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 48,
+        "memories_shared_with_the_original_pool": 1,
+        "original_pool_has_answer_memories": 2,
+        "pool_memories_containing_the_answer": 0,
+        "remaining_user_turns_containing_the_answer": 0
+      },
+      "hand": 0,
+      "item_id": "r0031",
+      "judge": 0,
+      "question_id": "caf03d32",
+      "question_type": "single-session-preference",
+      "uses": [
+        {
+          "judge_primary": 0,
+          "mask": 46,
+          "reader": "olmo-2-1124-7b-instruct",
+          "role": "distractor"
+        }
+      ]
+    },
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 48,
+        "memories_shared_with_the_original_pool": 1,
+        "original_pool_has_answer_memories": 2,
+        "pool_memories_containing_the_answer": 0,
+        "remaining_user_turns_containing_the_answer": 0
+      },
+      "hand": 0,
+      "item_id": "r0032",
+      "judge": 0,
+      "question_id": "caf03d32",
+      "question_type": "single-session-preference",
+      "uses": [
+        {
+          "judge_primary": 0,
+          "mask": 228,
+          "reader": "olmo-2-1124-7b-instruct",
+          "role": "distractor"
+        }
+      ]
+    },
+    {
+      "decline": false,
+      "facts": {
+        "answer_normalized_tokens": 10,
+        "memories_shared_with_the_original_pool": 0,
+        "original_pool_has_answer_memories": 2,
+        "pool_memories_containing_the_answer": 0,
+        "remaining_user_turns_containing_the_answer": 0
+      },
+      "hand": 0,
+      "item_id": "r0033",
+      "judge": 0,
+      "question_id": "0bb5a684",
+      "question_type": "temporal-reasoning",
+      "uses": [
+        {
+          "judge_primary": 0,
+          "mask": 154,
+          "reader": "olmo-2-1124-7b-instruct",
+          "role": "distractor"
+        }
+      ]
+    }
+  ],
   "leakage": {
     "evidence_session_ids": 124,
     "has_answer_memories_in_the_ablated_pools": 0,

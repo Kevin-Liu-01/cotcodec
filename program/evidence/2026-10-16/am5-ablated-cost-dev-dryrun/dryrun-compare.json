@@ -121,7 +121,7 @@
     "am5_hand_labels_sha256": "9da82b416383fb01fcd5b4f9c97f383f13625748e6dd299020fbd0fd96e5658c",
     "am5_per_table_sha256": "58bec8389e37e9a9b92c6c1038fbced721731b496fee0512108d197763e11f9c",
     "am5_results_sha256": "a0d5f35812c9165d81134b3cbf68299cdcbb4cb2d068c677987f6a8af2096bdb",
-    "features_sha256": "753ea702ce4ef66203f26524a984e1de46da21e288f86c0408a99cc2e233d64c"
+    "features_sha256": "0f6984d4452103275da3f6a96f126a6374dc9b9e19ae5235c7ea6a86e5e9f249"
   },
   "passed": 24,
   "total": 24

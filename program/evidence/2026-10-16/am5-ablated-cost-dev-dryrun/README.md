@@ -25,6 +25,8 @@ of its pre-freeze dry run, which its section 15 summarises.
 | `c16437bc` | the held-out ablated artifact pinned (the dry run's image, job and analysis) |
 | `351dc062` | the hand-label receipt, committed before the join |
 | `cf9f9ebb`, `943348f4`, `8128800a` | the runbook rehearsal script, and two fixes to it |
+| `fc355d10` | pre-freeze check 1's fixes (code, scripts, tests, draft); the CPU parts rerun at it (section 9) |
+| `21eb1210` | the round-1 hand-label receipt, committed before the join |
 
 Host root `~/cotcodec-runs/stage0/am5r-dev-dryrun/`, mode `dev` of every `ops/am5r/` script, from
 clean checkouts made by `am5r-checkout.sh` from Mac bundles. Slurm partition `research`. D110's
@@ -154,7 +156,7 @@ So the cost side is AM5's.
 - **Hand-based costs.** They equal the judge-based ones at K = 8 (0, 5 and 3). At K = 70 the two
   unlabelled OLMo-2 replies make the hand-based cost 7 to 9 under the two registered assignments.
 
-## 7. Analyze (development mechanics; decides nothing)
+## 7. Analyze (development mechanics; decides nothing; round 0, `c16437bc`, now in `round0-c16437bc/`; round 1 in section 9)
 
 `am5r-analyze.sh dev c16437bc` ran `analyze` twice, with byte-identical outputs:
 `results.json` `b6455ca0...`, `per-table.json.gz` `fe2612ea...`, `tables.md` `9df87ff8...`.
@@ -200,6 +202,44 @@ used, and no held-out output exists.
   and passed 61 of 61 (`rehearse-943348f4-fixed.log`): 56 inherited cases and 5 of this
   registration's.
 
+## 9. Round 1: pre-freeze check 1's fixes, and the CPU parts rerun at `fc355d10`
+
+No GPU time and no model on held-out data. The GPU job's code is unchanged (`run`, `worker` and what
+they call); the held-out job's limit changed in the config (80 minutes), which the development job
+does not use.
+- **The inputs directory.** `chmod a-w` on the host's
+  `~/cotcodec-runs/stage0/am5-ablated-cost-v1/inputs` (it is now `dr-xr-xr-x`; its two files were
+  already read-only; `ops/jobs.log`).
+- **Round 0 set aside.** The CPU outputs of `c16437bc` (features, hand directory, receipts, analysis
+  outputs and logs) were moved on the host to `round0-c16437bc/`; their committed copies are in
+  `round0-c16437bc/` here, the round-0 receipt included.
+- **Extract** at `fc355d10` read job 1507 with its rerun-rule record (`complete`), refused nothing,
+  and wrote features `0f6984d4...` that record the job id (1507) and the record's digest; the replay
+  checks are as before (all three readers 4,473 of 4,473; judge items byte-identical).
+- **The blind hand check, relabelled under the new instructions** (`HAND_INSTRUCTIONS`
+  `1745340a...`, which ask for a note starting "decline:" on a 1 given for a decline). The plan is
+  the same (`2bcd07af...`, 34 items, one chunk). The CLI launch failed at 21:11:43Z; one fresh
+  subagent (`claude-opus-5-5`) labelled the chunk with the pinned prompt; its transcript (three tool
+  calls, one agent id, every line after the failure) passed the audit; 34 valid rows, no repair.
+  The receipt was committed at `21eb1210` before the join (`hand-check/`). Labels `d21c25b9...`:
+  equal to round 0's on all 34 items; 34 of 34 with the judge (kappa 1.00); no 1 was given for a
+  decline (no decline note), so no switched reply on these pools declined outside the patterns.
+- **Analyze** twice at `fc355d10` (byte-identical): `results.json` `8e3a090e...`,
+  `per-table.json.gz` `fe2612ea...` (unchanged), `tables.md` `c7a6043d...`. New in them: the
+  labelled items with their leakage facts and decline flags, the decline-note counts, and the split
+  by the two crude leak flags (no reader switched on a flagged development pool). `dryrun-compare`:
+  24 of 24 (`50317af3...`). `power.json` (`cac6186f...`) adds the power averaged over the
+  development uncertainty (Jeffreys' prior): Qwen3-8B COST_BELOW_GAIN 0.976-0.985, OLMo-2 either
+  direction 0.152-0.238, Qwen3.5-9B 0.253-0.366. The memcredit tests: 227 passed on the host, and
+  `tests/test_memcredit_am5r.py` 68 passed locally.
+- **The rehearsal** at `fc355d10`, in a new directory on the host that was deleted afterwards: 72 of
+  72 (`rehearsal/rehearse-fc355d10.log`), the 61 above and 11 for round 1: a rebuild refused after
+  a successful build; a job scontrol forgot recorded from the lane's termination record and then
+  decided; a forgotten job without a termination record left unrecorded (exit 2); rerun-decision
+  refusing a job with no saved record; extract refusing a job without a rerun-rule record, three
+  whose record does not say complete, and existing features; hand-sample refusing features of
+  another job.
+
 ## Files
 
 - `results.json`, `per-table.json.gz`, `tables.md`: the development analysis (text-free).
@@ -207,7 +247,8 @@ used, and no held-out output exists.
 - `power.json`: section 9's operating characteristics.
 - `prepare/`: the held-out ablated artifact's text-free summary and the prepare output.
 - `precheck/`: the CPU precheck's comparison on job 1487.
-- `hand-check/`: the receipt and its text-free records, as committed before the join.
+- `hand-check/`: the round-1 receipt and its text-free records, as committed before the join.
+- `round0-c16437bc/`: the first analysis (`c16437bc`) and its receipt, set aside in round 1.
 - `jobs/1507-development/`, `builds/`, `selftests/`, `manifests/`, `ops/`, `logs/`: the lane and
   operator records, with every raw output's SHA-256 and the judge items with each response
   replaced by its SHA-256.

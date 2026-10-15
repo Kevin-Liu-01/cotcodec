@@ -45,6 +45,25 @@ Plan `2bcd07af44ae049a...`, 34 items; uses by role: {'distractor': 18, 'switched
 
 Hand against judge (descriptive): 34 of 34 agree (judge yes, hand no 0; judge no, hand yes 0; kappa 1.00).
 
+Hand labels of 1 given for a decline (note starting "decline:"): 0 items, by role {}; label 0 with such a note: 0.
+
+## Switches and costs by the crude leak flags (descriptive)
+
+| Reader | flag | value | questions | K = 8: switched, judged correct, cost | K = 70: switched, judged correct, cost |
+|---|---|---|---:|---|---|
+| qwen3-8b | answer_in_a_pool_memory | flag | 4 | 0, 0, 0 | 0, 0, 0 |
+| qwen3-8b | answer_in_a_pool_memory | no_flag | 59 | 1, 1, 0 | 2, 1, 1 |
+| qwen3-8b | answer_in_a_remaining_user_turn | flag | 10 | 0, 0, 0 | 0, 0, 0 |
+| qwen3-8b | answer_in_a_remaining_user_turn | no_flag | 53 | 1, 1, 0 | 2, 1, 1 |
+| olmo-2-1124-7b-instruct | answer_in_a_pool_memory | flag | 4 | 0, 0, 0 | 0, 0, 0 |
+| olmo-2-1124-7b-instruct | answer_in_a_pool_memory | no_flag | 59 | 6, 1, 5 | 10, 1, 9 |
+| olmo-2-1124-7b-instruct | answer_in_a_remaining_user_turn | flag | 10 | 0, 0, 0 | 0, 0, 0 |
+| olmo-2-1124-7b-instruct | answer_in_a_remaining_user_turn | no_flag | 53 | 6, 1, 5 | 10, 1, 9 |
+| qwen3.5-9b | answer_in_a_pool_memory | flag | 4 | 0, 0, 0 | 0, 0, 0 |
+| qwen3.5-9b | answer_in_a_pool_memory | no_flag | 59 | 3, 0, 3 | 3, 0, 3 |
+| qwen3.5-9b | answer_in_a_remaining_user_turn | flag | 10 | 0, 0, 0 | 0, 0, 0 |
+| qwen3.5-9b | answer_in_a_remaining_user_turn | no_flag | 53 | 3, 0, 3 | 3, 0, 3 |
+
 ## Ablated pools (descriptive)
 
 | Reader | K | switch rate | cost (judge) | switched judged correct | top 4 does not abstain | all 8 abstains | every 4-subset abstains | mean reads |

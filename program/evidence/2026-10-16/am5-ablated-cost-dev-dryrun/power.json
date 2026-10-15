@@ -20,6 +20,15 @@
     "olmo-2-1124-7b-instruct": {
       "caps": {
         "70": {
+          "averaged_over_development_uncertainty": {
+            "above_alpha_0.0167": 0.336024596383765,
+            "above_alpha_0.05": 0.4261272023527232,
+            "any_alpha_0.0167": 0.3419813011761245,
+            "any_alpha_0.05": 0.4387287135259421,
+            "below_alpha_0.0167": 0.005956704792359539,
+            "below_alpha_0.05": 0.01260151117321888,
+            "prior": "q ~ Beta(9 + 1/2, 54 + 1/2) on [0, 0.5]"
+          },
           "gain_rate": 0.10086455331412104,
           "gains": 35,
           "scenarios": {
@@ -182,6 +191,15 @@
           }
         },
         "8": {
+          "averaged_over_development_uncertainty": {
+            "above_alpha_0.0167": 0.09880489172266516,
+            "above_alpha_0.05": 0.1478820221948571,
+            "any_alpha_0.0167": 0.1517913817540309,
+            "any_alpha_0.05": 0.23783217372150958,
+            "below_alpha_0.0167": 0.052986490031365754,
+            "below_alpha_0.05": 0.08995015152665248,
+            "prior": "q ~ Beta(5 + 1/2, 58 + 1/2) on [0, 0.5]"
+          },
           "gain_rate": 0.07780979827089338,
           "gains": 27,
           "scenarios": {
@@ -368,6 +386,15 @@
     "qwen3-8b": {
       "caps": {
         "70": {
+          "averaged_over_development_uncertainty": {
+            "above_alpha_0.0167": 4.362777175774152e-05,
+            "above_alpha_0.05": 9.691787890945267e-05,
+            "any_alpha_0.0167": 0.935656527545225,
+            "any_alpha_0.05": 0.9587602018410114,
+            "below_alpha_0.0167": 0.9356128997734673,
+            "below_alpha_0.05": 0.958663283962102,
+            "prior": "q ~ Beta(1 + 1/2, 62 + 1/2) on [0, 0.5]"
+          },
           "gain_rate": 0.11239193083573487,
           "gains": 39,
           "scenarios": {
@@ -530,6 +557,15 @@
           }
         },
         "8": {
+          "averaged_over_development_uncertainty": {
+            "above_alpha_0.0167": 1.2841861779516837e-05,
+            "above_alpha_0.05": 3.00481895117847e-05,
+            "any_alpha_0.0167": 0.9758179940431505,
+            "any_alpha_0.05": 0.9847786486043678,
+            "below_alpha_0.0167": 0.975805152181371,
+            "below_alpha_0.05": 0.984748600414856,
+            "prior": "q ~ Beta(0 + 1/2, 63 + 1/2) on [0, 0.5]"
+          },
           "gain_rate": 0.0893371757925072,
           "gains": 31,
           "scenarios": {
@@ -716,6 +752,15 @@
     "qwen3.5-9b": {
       "caps": {
         "70": {
+          "averaged_over_development_uncertainty": {
+            "above_alpha_0.0167": 0.007769101943970268,
+            "above_alpha_0.05": 0.01417502801599467,
+            "any_alpha_0.0167": 0.4032610140691871,
+            "any_alpha_0.05": 0.5034195686794151,
+            "below_alpha_0.0167": 0.3954919121252168,
+            "below_alpha_0.05": 0.4892445406634204,
+            "prior": "q ~ Beta(3 + 1/2, 60 + 1/2) on [0, 0.5]"
+          },
           "gain_rate": 0.0893371757925072,
           "gains": 31,
           "scenarios": {
@@ -878,6 +923,15 @@
           }
         },
         "8": {
+          "averaged_over_development_uncertainty": {
+            "above_alpha_0.0167": 0.018971838140487952,
+            "above_alpha_0.05": 0.03247579361943005,
+            "any_alpha_0.0167": 0.2528641262376784,
+            "any_alpha_0.05": 0.3659430155077301,
+            "below_alpha_0.0167": 0.23389228809719043,
+            "below_alpha_0.05": 0.3334672218883001,
+            "prior": "q ~ Beta(3 + 1/2, 60 + 1/2) on [0, 0.5]"
+          },
           "gain_rate": 0.07492795389048991,
           "gains": 26,
           "scenarios": {

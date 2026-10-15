@@ -896,6 +896,25 @@ of am3, am3g, AM5 and this registration pass (221). The whole suite on the host 
 `test_r04_nuisance.py`), the same two that am3g's dry run found failing on `main`; this branch
 changes no existing code.
 
+**Round 1 corrections, rerun on the CPU** (code at `fc355d10`; no GPU, no model on held-out data).
+The GPU job's code is unchanged (the held-out job's limit changed in the config, which the
+development job does not use), so no development GPU job was needed.
+- The registration root's `inputs/` directory on the host was made read-only (`chmod a-w`; its two
+  files already were).
+- The CPU outputs of `c16437bc` were set aside (`round0-c16437bc/`). `extract` read job 1507 again
+  with its rerun-rule record ("complete"; features `0f6984d4...`, recording job 1507).
+- The blind hand check was relabelled under the new instructions (`1745340a...`): the same plan
+  (`2bcd07af...`, 34 items); the CLI failed; one subagent, audit pass; receipt committed at
+  `21eb1210` before the join. The labels (`d21c25b9...`) equal round 0's on all 34 items; 34 of 34
+  with the judge; no decline note (no switched reply declined outside the patterns).
+- `analyze` twice (byte-identical; the per-pool table unchanged), now with the labelled items, the
+  decline counts and the split by the leak flags (no reader switched on a flagged development
+  pool); `dryrun-compare` 24 of 24; `power` with the averaged power of section 9; the memcredit
+  tests 227 on the host and `tests/test_memcredit_am5r.py` 68 locally.
+- The rehearsal at `fc355d10`, in a new host directory deleted afterwards: 72 of 72, the 61 above
+  and 11 cases for round 1 (the forgotten job, extract's refusals, hand-sample's job check, the
+  refused rebuild).
+
 Development also set: the construction and the outcome definition (AM5), the readers and engines
 (am3g), the 71 requests per pool, the development job's 13-minute limit and budgets (job 1487's
 timeline), and the held-out budgets (am3g's overhead model, section 11).
@@ -1066,7 +1085,8 @@ Before the freeze, by the orchestrator:
 4. Re-pin section 16 in a fill commit; run the tests locally and on the host.
 5. Confirm on the host, at the fill commit, that the inputs of section 4 have their digests (the
    held-out ablated artifact and its summary, AM5's artifact, job 1487's thirteen files, AM1's
-   held-out artifact, the dataset file) and that `git diff 9d66c4c4 --
+   held-out artifact, the dataset file), that the registration root's `inputs/` directory and its
+   two files are read-only, and that `git diff 9d66c4c4 --
    program/evidence/2026-10-15/am3-nonabstain-generality-v1 program/evidence/2026-10-16/am4-read-caps
    program/evidence/2026-10-16/am5-evidence-ablated` is empty.
 6. The fill commit rewrites the status line (line 3) to the frozen wording that am3g uses
@@ -1097,4 +1117,25 @@ receipt's, and that the receipt commit precedes the analysis log's start line.
 
 ## 19. Review log: the independent checks
 
-Two independent, sequential checks are required before the freeze (D121). None has run yet.
+Two independent, sequential checks are required before the freeze (D121).
+
+### Round 1
+
+Pre-freeze check 1 ran on `c76a6a5c` and found the file ready to freeze after fixes: no blocking
+item, one major, five minor and several for information. It confirmed the rehearsal (61 of 61),
+all 57 code pins and every data pin, the artifact's construction (rebuilt independently: 347 of
+347 pools, 700 sessions, none of the 691 `has_answer` turns surviving), blindness (job 1504 was
+CPU and tokenizer-only), the power table, the budgets, the docker and Slurm flags, the hygiene and
+the disclosures. The fixes are commit `fc355d10` (code, config, operator scripts, tests, this file)
+and the commit that carries this section; the CPU parts of the dry run were rerun at `fc355d10`
+(section 15). No model ran on the held-out artifact and round 1 used no GPU time.
+
+| Item | Finding | Disposition |
+|---|---|---|
+| M1 | A finished job could become undecidable (scontrol forgets it 300 s after it ends, accounting is off, and job-state then exits 2 for good), which section 8 did not define; extract never read the rerun decision, so a void or no-rerun job could be extracted. | Section 16 requires polling at most every 120 s while a job runs. `am5r-job-state.sh` saves a "forgotten" record (`JobState=FORGOTTEN`, the lane's termination record copied in with its digest) when scontrol no longer knows a job that was never recorded and the lane's `termination.env` exists; `am5r-rerun-decision.sh` accepts it; without a termination record the job is VOID (V2), as section 8 now says. `am5r-extract.sh` and `extract` (`--rerun-decision`, `check_rerun_decision`) refuse a job whose rerun-rule record does not say "complete" for that job and population, and refuse existing features; the features record the job id and the record's digest, and `hand-sample` refuses features of another job. Tests and rehearsal cases for each. |
+| m1 | Section 6.7 promised leakage facts beside each hand-labelled reply, but the features' per-question facts were unused. | `analyze` ports AM5's `labelled_items` (its check that one reply digest has one judge label) into `results.json`, with each item's decline flag, and adds `by_leak_flag`: per crude leak flag and value, the switches, the switched replies judged correct and the costs at K = 8 and 70 (sections 6.6, 6.7). The dry run's CPU parts were rerun (section 15). |
+| m2 | The hand label could not tell a decline from a correct answer (both 1). | `HAND_INSTRUCTIONS` require a note starting "decline:" for a 1 given to a decline (digest `1745340a...`, section 4; the launch prompt `98c35cea...` is unchanged); `analyze` reports text-free counts of such notes per role, per reader for the switched replies, and any 0 with such a note; section 6.1(d) says what the counts rest on; section 1.3 discloses that AM5's labeller scored a decline 0. |
+| m3 | After a rerun the runbook staged only the rerun job. | Section 16: `heldout:J0 heldout:JOB` when a rerun ran. |
+| m4 | The leakage counts were not in the disclosures or the licence. | Sections 1.2 and 7.1 ("What a licence amounts to"): 27 of 347 pools hold the answer string and 91 questions have it in a remaining user turn (crude); leakage can only lower the measured cost, which favours COST_BELOW_GAIN. |
+| m5 | The inputs directory was writable. | `chmod a-w` on the host's `~/cotcodec-runs/stage0/am5-ablated-cost-v1/inputs` (section 15); section 17 step 5 checks it. |
+| Info | Averaged power; the release wait; the hand plan's location; PENDING pins; a rebuild after a successful build; the staging pipeline; the rehearsal's cleanup; the mode-mismatch void. | Section 9 gives the power averaged over the development uncertainty (`predictive_power`, Jeffreys' prior: Qwen3-8B 0.98 COST_BELOW_GAIN, OLMo-2 0.15-0.24 and Qwen3.5-9B 0.25-0.37 for either direction) and says that NOT_SEPARATED is not evidence of equality. The budget model adds `run_step`'s 120 s release wait after every step; with it the residual path skipped judge32 under 70 minutes, so the limit is 80 minutes (caps 1.42 and 2.83 GPU-h) and judge32 starts and fits on every path (section 11; test). Section 8 says `hand-plan.json` sits in `R/hand/` and that the labeller gets only its chunk and the instructions. `load_config` no longer accepts "PENDING" for the held-out pins. `am5r-build.sh rebuild` refuses after a successful build (rehearsal case). `am5r-stage-evidence.sh`'s `$HOME` rewrite is pipefail-safe and covers the decompressed `.gz` files. The rehearsal removes `ablated-artifact.json`. The mode-mismatch void is kept for the whole run and disclosed (section 8): the mismatch means the environment that sets every step's mode is not the registered one, and the gated replay reader and the judge rest on it; it is am3g's rule, unchanged. |
