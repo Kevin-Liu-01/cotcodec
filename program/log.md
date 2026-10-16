@@ -6034,3 +6034,47 @@ they say so.)
 - Status. The caps were examined on the same questions the rule was confirmed on. AM4 is post
   hoc and licenses nothing, and any chosen K needs new questions.
 - Evidence: `program/evidence/2026-10-16/am4-read-caps/README.md`.
+
+## 2026-10-16 — G2-stream gauntlet wave 1: score 53 (two reviews), no honest exit, triad 3/3 refuted (branch `gauntlet/g2-kimi-expert-streaming`, not merged)
+
+- Candidate (D122, G2): how local is Kimi K2.x expert routing on chat, coding, agentic and
+  long-document decode, what expert-cache hit rates it reaches at a 128 GB budget, and whether a
+  host-side three-tier streaming emulator (engine cache, macOS file cache, SSD) calibrated on one
+  ds4 row predicts ds4's other published M5 Max rows before it predicts Kimi K2.6 at about 2.6
+  bits. Proposal `program/proposals/2026-10-16-g2-kimi-expert-streaming.md` (`fb34e6ae...`) and
+  DRAFT registration `g2-kimi-expert-streaming-v1` (`b86c3d70...`, not frozen, no ledger row) at
+  `9282aec5`. Pilot caps 7.45 GPU-h (1.95 conditional); full study 15.3-41.0 GPU-h, cap 50.
+- Run: workflow `wf_d097573c-dba`, budgets queries 150 (30 reserved for the triad),
+  wall_minutes 720, tokens 10,000,000, dollars 150, waves 3, gpu_hours 0.5. No pause.
+- Reviews: reviewer 1 (claude-opus-5-5) 58; reviewer 2 (qwen3.6-35b-a3b, lane job 1554, 196 s on
+  one H100) returned 56, but its ten scores sum to 53, so its total is 53. Score 53 (lower of 58
+  and 53; 56 if the produced total were kept), best 53. Caps 74, 79 and 89 applied by both and
+  none binds. Both reviews are unsigned (D24).
+- Blind discrimination: PASS against the Anemll Flash-MoE fork (Kimi-K2.5 M5 Max benchmarks and
+  its bank-modeling workflow at `a809594f`); the critic judged the proposal stronger. Colibri's
+  CNRE simulator and Anemll's estimator script were not in the packet.
+- Triad: all three refuted. Novelty: a recombination, not a direct prior (the file-cache tier is
+  published, including ds4 #810; trace-replay residency simulation with held-out splits exists in
+  Colibri CNRE). Identification: the one fitted constant is mis-identified and the contrasts have
+  a competing explanation (below). Feasibility: the decision rule is wired to the wrong lines and
+  its likely reading (KIMI_DOMINATED, about 85-90%) is forecastable from the bundle.
+- Largest defect: the emulator validation that gates every later reading cannot identify the
+  mechanism. CAL-B (the 30.8 s whole-layer 16-token append) gives B = 6.08 GB/s, but the same
+  runs' 1,024-token whole-pool initial prefill (55.92/55.16 t/s, about 18.3 s) implies at least
+  9.3 GB/s, and that row is absent from the targets (the recorder re-read ds4
+  QA_BEFORE_RELEASES.md at `90aa4b56`, lines 906-913). K2's 3.12 s gap matches a non-routed page-in
+  (3.24 s) that the uniform first-token term cannot represent, and the identical-routing
+  initial-generation rows differ by 9.5%. Second: the decision rule closes in-memory G1 and G3 and
+  closes G5 in the case G5 exists for.
+- Doctor at record time: FAIL (Compute and Novelty FAIL), byte-identical to the bundle copy.
+- Budgets, recounted from the transcripts: queries 99 of 150 (orx discover 69, web 11, GitHub 11,
+  Hugging Face 8; 91 under the literal rule; the bundle's cell figure 82 is 79 on recount; the
+  refuters used 20 of their 30). Tokens 4,952,403 of 10M (371,694 open-weight); $84.56 of $150
+  (list-price equivalent); 185.6 of 720 minutes; 0.0544 GPU-h (ledger row added; program total
+  28.3772).
+- Exit: none applies at wave 1. The triad stop blocks v1; a single-owner repair (wave 2, v2) fits
+  the remaining budgets once (projected about $134 and 8.1M tokens after it), not twice. Whether to
+  fund it, or to keep only the K2.6 hit-rate measurement given the forecastable decision, is an
+  owner call; admission of the full study is Kevin's (D24, D92).
+- Audit row 1 of `program/gauntlet/2026-10-16-g2-kimi-expert-streaming.jsonl`, row hash
+  `071cc2a885cdcbc798f6bd4cb9f027d4a0643c075390b05e59b9db653b3ed51c`.

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-15",
+  "updated": "2026-10-16",
   "program": "Checker adequacy and calibrated measurement for verifiable machine work",
   "program_doc": "program/PROGRAM.md",
   "stage": "stage-0",
@@ -468,7 +468,7 @@
     "Gauntleted packages that ended at honest exits and can advance only by your ruling (D24, D70, D76). S2 v3 (65) continues as S2 v4 under your delegation (D80 (iv)); its images are built and its registration is in a repair round before the freeze (D84). C5 Phase 1 (70-97 GPU-h) stays yours; its identification defect stands",
     "Shelved by Kevin (D101), not to be raised unless he asks: the outward items (disclosures, licence requests, host-admin request, publication, the GitHub Support request), key rotation and account items. Drafts are in the private archive."
   ],
-  "gpu_hours_spent_this_program": 28.3228,
+  "gpu_hours_spent_this_program": 28.3772,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -1540,6 +1540,15 @@
       ],
       "outcome": "every step complete (OLMo-2's fallback not needed); no has_answer turn left in the ablated haystacks or pools; switch rate at K = 8 / 70: Qwen3-8B 1 / 2, OLMo-2 6 / 10, Qwen3.5-9B 3 / 3 of 63; switched or answering-top-4 replies correct by chance: 3 of 18 (judge and blind hand labels agree on 18 of 18) (program/evidence/2026-10-16/am5-evidence-ablated/README.md)",
       "basis": "physical (scontrol RunTime 00:06:41 on 1 H100); Slurm limit 20 min (0.34 GPU-h cap); AM5 total 0.1297 of the 0.5 cap; submitted with no other GPU job of this program queued or running and 6 of 8 H100 free (D110's jobs on GPUs 0-1)"
+    },
+    {
+      "experiment": "G2-stream gauntlet wave 1 (g2-kimi-expert-streaming-v1 draft: Kimi K2.x expert-cache locality and a ds4-validated Mac streaming emulator; pilot of at most 8 GPU-h and the full study it gates, D122) open-weight review (D24)",
+      "gpu_hours": 0.0544,
+      "jobs": [
+        "1554 qwen3.6-35b-a3b review (1 H100; COMPLETED 0:0, 00:03:16)"
+      ],
+      "outcome": "review PARSED on attempt 1, replicates token-identical (seeds 42-44); the model returned total 56 although its ten scores sum to 53 (re-checked total 53, no cap binding); wave score 53 (lower of 58 and 53; 56 if the produced total is kept), best 53; no honest exit at wave 1 (wave 1 of 3; 99 of 150 queries, 4.95M of 10M tokens, $84.56 of $150, 185.6 of 720 minutes), but the candidate does not proceed as drafted (triad 3/3 refuted); reviewer inference only, not G2 pilot work. Audit row 1 of program/gauntlet/2026-10-16-g2-kimi-expert-streaming.jsonl (hash 071cc2a8...)",
+      "basis": "physical (scontrol RunTime 00:03:16 = 196 s on 1 H100, 00:44:01-00:47:17 UTC 2026-10-16; 15-minute limit, 0.25 GPU-h cap; reason=completed); submitted after the operator's in-command check at 00:43:59-00:44:00 UTC found only D110's jobs (1450 running, 1451 pending) and GPUs 1-7 idle, with no other job of this program queued or running; recorder's read-only check at 01:06:30 UTC: GPUs 1-7 at 0 MiB, no reviewer container"
     }
   ],
   "results": [
