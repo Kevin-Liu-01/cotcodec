@@ -1,0 +1,13 @@
+{
+ "url": "https://themenonlab.blog/blog/kimi-k2-1t-macbook-rustane",
+ "fetched_at": "2026-10-15T23:50:46Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 37744,
+ "raw_sha256": "f511b458be3eaa5731c84a7a621dec72b3941db2197343208ed8525b896223c3",
+ "raw_stored": false,
+ "primary": false,
+ "extract": {
+  "html_title": "Running a 1 Trillion Parameter Model on a MacBook Pro: The Kimi-K2 Story"
+ }
+}

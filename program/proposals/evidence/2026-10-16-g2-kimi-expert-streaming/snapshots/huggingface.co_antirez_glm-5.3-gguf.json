@@ -1,0 +1,13 @@
+{
+ "url": "https://huggingface.co/antirez/glm-5.3-gguf",
+ "fetched_at": "2026-10-15T23:50:42Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 195328,
+ "raw_sha256": "ec0fff2617112cd54b9b476d8c3a4addb57fb5469653a72f3042d19a47ca2c47",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "html_title": "antirez/glm-5.3-gguf · Hugging Face"
+ }
+}

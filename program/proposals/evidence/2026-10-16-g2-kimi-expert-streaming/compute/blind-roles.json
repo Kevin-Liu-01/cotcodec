@@ -1,0 +1,11 @@
+{
+ "note": "For the recorder only; never shown to the blind critic. Order for the critic: as listed in critic_order (seeded shuffle, seed 42).",
+ "critic_order": [
+  "paragraph-e78479f1.txt",
+  "paragraph-51dde768.txt"
+ ],
+ "roles": {
+  "paragraph-51dde768.txt": "proposal (G2-stream)",
+  "paragraph-e78479f1.txt": "closest prior: Anemll Flash-MoE llama.cpp fork, README 'Benchmarks \u2014 Kimi-K2.5 (M5 Max 128 GB)' and docs/moe-bank-modeling-workflow.md at a809594fd2035979ad2b7ef23398127c1d07e891, read in full by the synthesis owner"
+ }
+}

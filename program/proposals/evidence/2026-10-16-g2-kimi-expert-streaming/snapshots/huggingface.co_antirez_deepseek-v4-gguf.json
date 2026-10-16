@@ -1,0 +1,13 @@
+{
+ "url": "https://huggingface.co/antirez/deepseek-v4-gguf",
+ "fetched_at": "2026-10-15T23:50:41Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 246230,
+ "raw_sha256": "cc6344bb25e7654ead0fed4c96f3c68b7e202f5c7c784e527813c65b68956e03",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "html_title": "antirez/deepseek-v4-gguf · Hugging Face"
+ }
+}

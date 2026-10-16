@@ -1,0 +1,13 @@
+{
+ "url": "https://github.com/vllm-project/vllm/blob/v0.31.0/vllm/model_executor/layers/fused_moe/routed_experts_capturer.py",
+ "fetched_at": "2026-10-15T23:50:41Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 375376,
+ "raw_sha256": "228006a7814f48d3e2492d146293aaf59c28d2d1635dea45d3e8b433c8fabebc",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "html_title": "vllm/vllm/model_executor/layers/fused_moe/routed_experts_capturer.py at v0.31.0 · vllm-project/vllm · GitHub"
+ }
+}

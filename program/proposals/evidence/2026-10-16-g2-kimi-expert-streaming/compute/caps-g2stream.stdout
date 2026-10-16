@@ -1,0 +1,16 @@
+  0.00 cap       0 exp  P0 simulator, emulator, ds4-policy port, unit tests (Mac or host CPU)
+  0.00 cap       0 exp  P0b llama.cpp b11669 image build and dump-tool CPU test (host CPU lane)
+  0.00 cap       0 exp  P1 validation traces GLM 5.3 IQ2_XXS and V4 Flash Vision-Exp MXFP4, plus 32 matched GLM sessions (host CPU lane)
+  1.95 cap    None exp  P1-gpu fallback: same traces on 3 GPUs if the CPU route fails to load or exceeds 12 h wall
+  5.00 cap    3.77 exp  P2 Kimi K2.6 UD-Q2_K_XL traces on GPUs 1-5
+  0.50 cap     0.3 exp  P3 llama.cpp GPU expert-cache fidelity check (PR #29887), experts in host RAM
+pilot cap 7.45 expected 4.07
+[0.5, 0.5] F0 vLLM routed-experts capture smoke on Qwen3.6-35B-A3B (1 GPU)
+[3.78, 12.52] F1 INT4 TP8 generation with --enable-return-routed-experts (256 sessions)
+[0.11, 0.56] F2 INT4 teacher-forced re-pass of 64 sessions (decode against prefill routing)
+[2.49, 6.44] F3 Q2 teacher-forced on the INT4 token sequences (INT4 against Q2 equivalence), 5 GPUs
+[3.44, 9.93] F4 GLM 5.3 matched sessions for the speed ratio R, 3 GPUs (0 if on the CPU lane)
+[4.0, 8.0] F5 Q2 decode traces at top-6 and top-4 (G5 input), 64 sessions each, 5 GPUs
+[1.0, 3.0] F6 optional Q8_K_XL numerics arm (594.5 GB download), GPUs 1-7 plus RAM
+[0, 0] F7 cache simulation, 1 against 4 streams, Belady, emulator
+full [15.32, 40.95]

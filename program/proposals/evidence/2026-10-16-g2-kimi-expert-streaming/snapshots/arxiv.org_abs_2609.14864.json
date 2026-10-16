@@ -1,0 +1,30 @@
+{
+ "url": "https://arxiv.org/abs/2609.14864",
+ "fetched_at": "2026-10-15T23:50:13Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41002,
+ "raw_sha256": "39c29542a599f0edd16310fe67659f4d41f9d49a2dae519e65ddfae56c0dfc55",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "GGUF-Metadata Prediction of Single-Sequence llama.cpp Throughput Across Three Systems",
+  "authors": [
+   "Qiu, Xinyu",
+   "Xu, Chuhong",
+   "Su, Bo",
+   "Chen, Ziyao",
+   "Xu, Ruiyang",
+   "Dai, Shimeng"
+  ],
+  "citation_date": "2026/09/14",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 14 Sep 2026 00:31:14 UTC"
+   }
+  ],
+  "abstract": "We predict single-sequence model throughput from GGUF metadata using roofline-shaped predictors with quantization-specific scale factors fitted on reference models. The scored cohort comprises 318 phase-depth measurements from 53 host-file configurations on two Apple M4 Max systems and an NVIDIA RTX 5080. On host-specific held-out sets of four, five, and two configurations, an active-parameter decode model obtains 13.1%, 14.4%, and 36.1% mean absolute percentage error (MAPE), versus 49.4%, 55.3%, and 51.9% when charging total parameters. Leave-one-host-out coefficients fitted on the other two systems yield 11.6%, 16.8%, and 36.0% test MAPE. A low-bit model ladder changes ordering across runtime stacks. The P2 prefill baseline gives 18.7%, 22.2%, and 108.2% test MAPE. GGUF structure helps on all three systems, but fitted efficiencies are not universal.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

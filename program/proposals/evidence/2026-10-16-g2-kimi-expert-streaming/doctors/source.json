@@ -1,0 +1,41 @@
+{
+ "name": "Source",
+ "status": "PASS",
+ "protocol": "K-Dense literature-review (PRISMA counts); orx retrieval rule (six or more discover queries per cell, closest priors read in full)",
+ "evidence": {
+  "backends_reached": [
+   "orx alphaXiv keyword and embedding",
+   "OpenAlex",
+   "GitHub API",
+   "Hugging Face API",
+   "web search"
+  ],
+  "counts": {
+   "frontier": 37,
+   "kill_shot": 17,
+   "cross_domain": 26,
+   "asset_cost": 2,
+   "synthesis": 0,
+   "total_counted": 82,
+   "declared": 150,
+   "reserved_for_refuters": 30,
+   "remaining_after_synthesis": 68,
+   "orx_discover_records": 57
+  },
+  "prisma": {
+   "identified_ids": 549,
+   "unique_ids": 305,
+   "read_beyond_abstract": "about 45 (cells: 8 frontier full texts plus about 30 targeted; 13 kill-shot; 3 cross-domain plus 6 PDFs; synthesis: 5 orx full texts, ds4 and Anemll sources)",
+   "direct_priors": 0,
+   "narrowing_priors": 7
+  },
+  "cutoff": "2026-10-15",
+  "degraded": [
+   "orx 0.2.2 outdated against 0.2.18 (ranking may differ)",
+   "gated Kimi-K2-Thinking trace files not opened (README and listing only)",
+   "not searched: X, Reddit, Hacker News, OpenReview, ACL Anthology, patents, Chinese-language sources beyond one web search, citation graphs, the arXiv API",
+   "two Research Square preprints with empty abstracts; IJCAI 2026 DoMoE; KTransformers SOSP'25; later pages of the Zenodo PDF"
+  ]
+ },
+ "remediation": "Semantic Scholar citer refresh for 2608.12103 and 2510.05497 through the host relay; a Chinese-language search for Kimi routing locality"
+}

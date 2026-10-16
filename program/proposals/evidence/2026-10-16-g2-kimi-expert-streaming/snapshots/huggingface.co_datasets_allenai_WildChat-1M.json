@@ -1,0 +1,13 @@
+{
+ "url": "https://huggingface.co/datasets/allenai/WildChat-1M",
+ "fetched_at": "2026-10-15T23:50:43Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 1152523,
+ "raw_sha256": "991b7d129bb3b519c581b385fdef9058913b20ab7f527eea3cae5a4bd196f29e",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "html_title": "allenai/WildChat-1M · Datasets at Hugging Face"
+ }
+}

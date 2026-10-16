@@ -1,0 +1,61 @@
+{
+ "note": "Pre-registered validation targets for g2-kimi-expert-streaming-v1 (section 8). Every value is first-party: measured by the ds4 maintainer on an M5 Max with 128 GB, as published in antirez/ds4 at commit 90aa4b560a1dec1590f2c60648af404aa40b1188 (2026-09-06). Files read at that commit, with SHA-256 of the fetched bytes: QA_BEFORE_RELEASES.md 6a0e5254d79491e1b4e0dc360efcbe38689391145c1a0f21cb16fb413b7e428b; docs/SSD_STREAMING.md 923c1d9ba422bb110ae05d440e8a208883d64e4c708391967bcbbadc5a10be3d; ds4_metal.m 3075842282f423358bbfbf926282763fefbfd7dcbc86eb45a29c0ab84d35d38d; ds4.c eb0e98e650c04e99c22d7386286a935dd741f15095a3783e22c788c9a02d8f2b; ds4_bench.c f8cc29d57c1e37748273274611b85cad8fd71d1896e0f7c00a109f20ade57ad0. QA line numbers refer to that commit. ds4 used two M5 Max machines ('The reference ran on the other M5'); which machine produced each row is not always stated.",
+ "input_fidelity": {
+  "EXACT": "prompt text and flags published verbatim (tests/test-vectors/glm-openrouter/prompts/long_memory_archive.txt, git blob a7355098, first 2,500 bytes; the apple prompt string)",
+  "PROBABLE": "ds4-bench rows; docs/PERFORMANCE.md names speed-bench/promessi_sposi.txt (git blob 4655f69d) and a fixed greedy non-EOS probe as the benchmark's inputs, but the rows do not restate the prompt",
+  "CANDIDATE": "'the code-audit prompt, 1,024 initial tokens'; candidate file tests/test-vectors/glm-openrouter/prompts/long_code_audit.txt truncated to 1,024 tokens; the appended 16/43/114 tokens are unpublished",
+  "INDEPENDENT": "a whole-pool read whose cost does not depend on prompt content"
+ },
+ "noise_class_eps": {"median3": 0.10, "repeated": 0.10, "single": 0.15, "about": 0.15},
+ "targets": [
+  {"id": "CAL-B", "role": "calibration", "model": "glm53_iq2xxs", "cache_gib": 61.35, "metric": "append_latency_s", "value": 30.8, "noise": "median3", "fidelity": "INDEPENDENT",
+   "condition": "16-token append with DS4_METAL_DISABLE_STREAMING_PREFILL_BATCH_SELECTED_ADDR=1 (whole-layer append path); 8K allocation; forced snapshot restore", "source": "QA_BEFORE_RELEASES.md lines 898-906 (2026-09-06)",
+   "use": "fixes the single calibrated constant B_seq = routed pool bytes / (30.8 s - compute for 16 tokens); the 43- and 114-token whole-layer appends (34.4 s, 34.9 s, single) are its consistency checks"},
+  {"id": "V1", "role": "holdout-level", "model": "glm53_iq2xxs", "cache_gib": 16.0, "metric": "prefill_tps", "value": 12.59, "noise": "median3", "fidelity": "EXACT",
+   "condition": "ctx 1024, 463 input tokens (first 2,500 bytes of long_memory_archive.txt), 16 greedy tokens, --nothink --temp 0 --seed 1, warm-up discarded, median of three", "source": "QA lines 746-781 and 1677"},
+  {"id": "V2", "role": "holdout-level", "model": "glm53_iq2xxs", "cache_gib": 16.0, "metric": "generation_tps", "value": 6.14, "noise": "median3", "fidelity": "EXACT",
+   "condition": "ctx 1024, 'Write the word apple exactly 100 times, separated by one space. Do not stop early and output nothing else.', 64 greedy tokens, warm-up discarded, median of three; GLM demand-fills its cache (no preload)", "source": "QA lines 746-781 and 1677"},
+  {"id": "V3", "role": "holdout-level", "model": "glm53_iq2xxs", "cache_gib": 35.36, "metric": "generation_tps", "value": 3.655, "noise": "repeated", "fidelity": "PROBABLE",
+   "condition": "16K ctx, 8K initial prompt, 16 output tokens, snapshot restoration; 3.69 (single run) and 3.62 (repeat on the other M5); value is their mean; min available memory 27.87-27.88 GiB", "source": "QA lines 852-869 and 927-931"},
+  {"id": "V3p", "role": "holdout-level", "model": "glm53_iq2xxs", "cache_gib": 35.36, "metric": "prefill_tps", "value": 92.74, "noise": "repeated", "fidelity": "PROBABLE",
+   "condition": "as V3; 90.70 and 94.81", "source": "QA lines 852-869 and 927-931"},
+  {"id": "V4", "role": "holdout-level", "model": "glm53_iq2xxs", "cache_gib": 35.36, "metric": "generation_tps", "value": 3.885, "noise": "repeated", "fidelity": "PROBABLE",
+   "condition": "as V3, after a 4K append; 3.96 and 3.81", "source": "QA lines 852-869 and 927-931"},
+  {"id": "V4p", "role": "holdout-level", "model": "glm53_iq2xxs", "cache_gib": 35.36, "metric": "prefill_tps", "value": 87.70, "noise": "repeated", "fidelity": "PROBABLE",
+   "condition": "as V4; 84.31 and 91.08", "source": "QA lines 852-869 and 927-931"},
+  {"id": "V5", "role": "holdout-level", "model": "glm53_iq2xxs", "cache_gib": 61.35, "metric": "generation_tps", "value": 5.11, "noise": "median3", "fidelity": "CANDIDATE",
+   "condition": "1,024-token code-audit prompt, 64 greedy tokens, then a 16-token append on the selected-address path (default), then 64 greedy tokens; min available memory 15.05 GiB", "source": "QA lines 898-913"},
+  {"id": "V5i", "role": "holdout-level", "model": "glm53_iq2xxs", "cache_gib": 61.35, "metric": "generation_tps", "value": 3.78, "noise": "median3", "fidelity": "CANDIDATE",
+   "condition": "initial generation (64 tokens) after the 1,024-token prompt, default path", "source": "QA lines 909-911"},
+  {"id": "V5b", "role": "holdout-level", "model": "glm53_iq2xxs", "cache_gib": 61.35, "metric": "generation_tps", "value": 4.09, "noise": "median3", "fidelity": "CANDIDATE",
+   "condition": "generation after the 16-token append on the whole-layer path (env var set); identical logits and text to V5", "source": "QA lines 898-906"},
+  {"id": "V5bi", "role": "holdout-level", "model": "glm53_iq2xxs", "cache_gib": 61.35, "metric": "generation_tps", "value": 4.14, "noise": "median3", "fidelity": "CANDIDATE",
+   "condition": "initial generation on the whole-layer path", "source": "QA lines 909-911"},
+  {"id": "V6", "role": "holdout-level", "model": "glm53_iq2xxs", "cache_gib": 61.35, "metric": "generation_tps", "value": 5.34, "noise": "single", "fidelity": "CANDIDATE",
+   "condition": "after a 43-token append, selected-address path (whole-layer path: 4.00)", "source": "QA lines 906-908"},
+  {"id": "V7", "role": "holdout-level", "model": "glm53_iq2xxs", "cache_gib": 61.35, "metric": "generation_tps", "value": 5.39, "noise": "single", "fidelity": "CANDIDATE",
+   "condition": "after a 114-token append, selected-address path (whole-layer path: 3.90)", "source": "QA lines 906-908"},
+  {"id": "V8", "role": "holdout-level", "model": "v4flash_vision_mxfp4", "cache_gib": 86.2, "metric": "generation_tps", "value": 11.90, "noise": "single", "fidelity": "PROBABLE",
+   "condition": "8K prompt, 128 tokens, includes the first-token wait; updated eviction priorities; DeepSeek hot-expert preload on", "source": "docs/SSD_STREAMING.md (M5 Max measurements); QA lines 856-863 (11.90)"},
+  {"id": "V8p", "role": "holdout-level", "model": "v4flash_vision_mxfp4", "cache_gib": 86.2, "metric": "prefill_tps", "value": 299.87, "noise": "single", "fidelity": "PROBABLE", "condition": "as V8", "source": "QA lines 856-863"},
+  {"id": "V9", "role": "holdout-level", "model": "v4flash_vision_mxfp4", "cache_gib": 86.2, "metric": "generation_tps", "value": 19.34, "noise": "single", "fidelity": "PROBABLE", "condition": "same run, after a 4K append, 128 tokens", "source": "QA lines 856-863"},
+  {"id": "V9p", "role": "holdout-level", "model": "v4flash_vision_mxfp4", "cache_gib": 86.2, "metric": "prefill_tps", "value": 263.32, "noise": "single", "fidelity": "PROBABLE", "condition": "as V9", "source": "QA lines 856-863"}
+ ],
+ "contrasts": [
+  {"id": "K1", "primary": true, "ratio": "V9/V8", "value": 1.625, "kind": "within-run (same process, cache-state change only)"},
+  {"id": "K2", "primary": true, "ratio": "V5/V5b", "value": 1.249, "kind": "paired, identical routing (all logits and text matched), code-path toggle only"},
+  {"id": "K3", "primary": true, "ratio": "V5/V5i", "value": 1.352, "kind": "within-run: generation after a short append against initial generation"},
+  {"id": "K4", "primary": false, "ratio": "V6/(43-token whole-layer 4.00)", "value": 1.335, "kind": "paired, one pair"},
+  {"id": "K5", "primary": false, "ratio": "V7/(114-token whole-layer 3.90)", "value": 1.382, "kind": "paired, one pair"},
+  {"id": "K6", "primary": false, "ratio": "append latency whole-layer/selected for 16, 43, 114 tokens", "value": [10.62, 6.37, 4.01], "kind": "paired prefill-path contrast"},
+  {"id": "K7", "primary": false, "ratio": "V4/V3", "value": [1.073, 1.052], "kind": "within-run, two machines"}
+ ],
+ "excluded": [
+  "GLM 5.3 4.09/5.11 as a software change (the pair is used only as K2, same commit, env toggle)",
+  "Earlier-code rows: DeepSeek 10.42/16.15 and GLM 2.93/3.85 (before the 2026-09-06 cache-policy follow-up; different eviction priorities and GLM aging clock)",
+  "GLM-5.3-Flash Q4_K 2K/1K rows (121/104 prefill, 11.9/14.9 generation): included only if llama.cpp b11669 loads its glm5-next architecture in P0, decided before any trace",
+  "Runs that overlapped a model download (QA: 'not performance references')",
+  "The 8K/12K replayed-prefix run (5.79/5.94): prefix replay changes cache state (PERFORMANCE.md)"
+ ],
+ "memory_available_gib": {"61.35": 15.05, "35.36": 27.87, "86.2_coding_session_proxy": 7.40, "16.0_planned_total": 39.63}
+}

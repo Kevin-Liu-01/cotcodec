@@ -1,0 +1,31 @@
+{
+ "url": "https://arxiv.org/abs/2609.18110",
+ "fetched_at": "2026-10-15T23:50:13Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42136,
+ "raw_sha256": "531537200975438345f3ea63e4549bacda86a09d6abb0baadfcddc5600e0797f",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "SSD-LLaMA: SSD-Native Inference for Trillion-Parameter MoE at 1+ Token/s on a Consumer PC",
+  "authors": [
+   "Liang, Fangzhou",
+   "Shen, Yibin",
+   "Hu, Jianmin",
+   "Xu, Jiayang",
+   "Gao, Hanchi",
+   "Xu, Minxian",
+   "Meng, Zili"
+  ],
+  "citation_date": "2026/09/16",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 16 Sep 2026 04:28:47 UTC"
+   }
+  ],
+  "abstract": "Frontier open-weight language models increasingly use Mixture-of-Experts (MoE) architectures to expand model capacity while activating only a small subset of experts per token. Local inference must nevertheless keep the complete expert pool available, which remains far beyond consumer-grade RAM and VRAM capacity even after quantization. SSDs provide practical capacity at this scale, but turning that capacity into executable model memory requires efficient expert delivery, coordinated management of SSD, RAM, and VRAM, and CPU--GPU hybrid execution under bounded bandwidth. We present \\textit{SSD-LLaMA}, an SSD-native local MoE inference system that addresses these challenges with an SSD I/O pipeline optimized for expert delivery, a native three-tier storage hierarchy that delivers and retains experts dynamically, and balanced CPU--GPU hybrid execution. \\textit{SSD-LLaMA} executes every selected expert without pruning or substitution. Across three frontier MoE model families, \\textit{SSD-LLaMA} improves prefill token rate by 1.52$\\times$--4.19$\\times$ and decode token rate by 2.10$\\times$--15.58$\\times$ over the evaluated baselines. We also achieve higher than 1 token/s for running trillion-parameter model with a single RTX 5090 and no more than 32GB RAM.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

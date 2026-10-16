@@ -1,0 +1,35 @@
+{
+ "url": "https://arxiv.org/abs/1509.03118",
+ "fetched_at": "2026-10-15T23:50:10Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 40176,
+ "raw_sha256": "c3e05e0c978fe9481e2d93c14a42f7ea5e1fa920831b62e7e8625d61acf0cb58",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "Execution-Cache-Memory Performance Model: Introduction and Validation",
+  "authors": [
+   "Hofmann, Johannes",
+   "Eitzinger, Jan",
+   "Fey, Dietmar"
+  ],
+  "citation_date": "2015/09/10",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 10 Sep 2015 12:02:51 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Thu, 2 Mar 2017 11:12:37 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Fri, 3 Mar 2017 08:33:37 UTC"
+   }
+  ],
+  "abstract": "This report serves two purposes: To introduce and validate the Execution-Cache-Memory (ECM) performance model and to provide a thorough analysis of current Intel processor architectures with a special emphasis on Intel Xeon Haswell-EP. The ECM model is a simple analytical performance model which focuses on basic architectural resources. The architectural analysis and model predictions are showcased and validated using a set of elementary microbenchmarks.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

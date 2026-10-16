@@ -1,0 +1,22 @@
+{
+ "name": "Novelty",
+ "status": "FAIL",
+ "evidence": {
+  "frontier_verdict": "NARROWED, not OCCUPIED",
+  "killshot_verdict": "NARROWED, not OCCUPIED",
+  "closest_prior": "Anemll Flash-MoE llama.cpp fork and docs/moe-bank-modeling-workflow.md at a809594f, read in full by the synthesis owner",
+  "closest_paper_priors_read_full": [
+   "2608.12103",
+   "2608.07911",
+   "2510.05497",
+   "2609.14864",
+   "2608.16157"
+  ],
+  "not_run": [
+   "blind closest-prior discrimination",
+   "novelty refuter"
+  ],
+  "open_risk": "recombination of the Anemll workflow, S82's policy comparison and 2609.14864's held-out discipline"
+ },
+ "remediation": "Run the blind critic on blind/ (order in compute/blind-roles.json, recorder only) and the novelty refuter within the remaining query budget"
+}
