@@ -6096,3 +6096,45 @@ they say so.)
   unchanged.
 - Verification. A fresh verifier reproduced the run byte for byte and recomputed it independently.
 - Evidence: `program/evidence/2026-10-16/am5-ablated-cost-v2/RESULTS.md`.
+
+## 2026-10-16 — LM1 gauntlet wave 1: score 56 (two reviews), no honest exit, triad 3/3 refuted (branch `gauntlet/lm1-matched-memory-quality`, not merged)
+
+- Candidate (D122, D125, D127, LM1): on a 128 GB unified-memory target, is Kimi K2.5 UD-TQ1_0
+  (239.5 GB, about 1.87 bpw, streamable only) better than the best resident model? The synthesis
+  narrowed it to short-answer factual recall in instant mode (AA-Omniscience-Public 600 plus
+  SimpleQA-Verified 1,000, judged), RAM-matched eligibility tiers and an asymmetric decision rule
+  (NOT_WORTH by Bonferroni non-superiority at a 5-point margin; LEADS by an intersection-union
+  test). Proposal `program/proposals/2026-10-16-lm1-matched-memory-quality.md` (`32c83dc1...`) and
+  DRAFT registration `lm1-matched-memory-quality-v1` (`fdde887d...`, not frozen, no ledger row) at
+  `9008efc2`. Pilot line 8.0 GPU-h (6.9 guards plus a 1.1 reserve); full study 112-606 GPU-h.
+- Run: workflow `wf_1b5f1b7c-579`, budgets queries 150 (30 reserved for the triad),
+  wall_minutes 720, tokens 10,000,000, dollars 150, waves 3, gpu_hours 0.5. No pause.
+- Reviews: reviewer 1 (claude-opus-5-5) 56; reviewer 2 (qwen3.6-35b-a3b, lane job 1700, 226 s on
+  one H100) 58, equal to the sum of its scores. Score 56, best 56. Caps 79 and 89 applied by both,
+  74 by reviewer 1 only; none binds. Both reviews are unsigned (D24).
+- Blind discrimination: PASS against CC-MoE (arXiv 2509.25689); the critic judged the proposal
+  stronger. The closer comparison-design priors (2504.02010, the oobabooga table) were not in the
+  packet.
+- Triad: all three refuted. Novelty: a recombination at instance level (the oobabooga size-sorted
+  table already shows a 1.78-bit DeepSeek-V3 file at 23/48 against resident Qwen3-235B IQ3 files at
+  40/48; recorder re-fetched it). Identification and feasibility: below.
+- Largest defect: the primary endpoint does not measure the edge the design rests on, so the
+  favoured NOT_WORTH reading (desk forecast about 0.55) cannot carry its stated conclusions. Half
+  the pooled endpoint is SimpleQA-Verified, where full-precision K2.5 already trails arm Q (Epoch AI
+  34% against the Qwen card's vendor 54.3), and there is no higher-precision Kimi arm, yet KIMI_WORSE
+  is read as knowledge loss below 2 bits. NOT_WORTH tests raw accuracy under an abstention-inviting
+  prompt. Registration 7.3 leaves the NOT_WORTH/SPLIT precedence to `sim_lm1.py`, whose simulation
+  never draws opposite-sign per-benchmark effects. Second: only LEADS with H5 changes Kevin's local
+  model (about 0.1 or less).
+- Doctor at record time: FAIL (Compute and Novelty FAIL), byte-identical to the bundle copy.
+- Budgets, recounted from the transcripts: queries 111 of 150 (orx discover 66, web 38, GitHub 4,
+  Hugging Face 3; 108 literal; the bundle's 92 for the cells and synthesis is 84 on recount, since
+  the asset cell's 13 included 8 fixed-URL reads; the refuters used 27). Tokens 3,920,609 of 10M
+  (343,899 open-weight); $67.19 of $150 (list-price equivalent); 101.3 of 720 minutes; 0.0628 GPU-h
+  (ledger row added; branch total 33.1317, 35.3686 once merged with main's G3b rows).
+- Exit: none applies at wave 1. The triad stop blocks v1; a single-owner repair (wave 2, v2) fits
+  the remaining budgets once (projected about $117 and 6.8M tokens after it), not twice. Whether to
+  fund it, or to close LM1 as D125 closed G2, is an owner call; admission of the full study is
+  Kevin's (D24, D92).
+- Audit row 1 of `program/gauntlet/2026-10-16-lm1-matched-memory-quality.jsonl`, row hash
+  `f078979dc198e2fad573a5e945ba22dc08e96eb8a9b73d7e5d7fdc2b8bd6db93`.
