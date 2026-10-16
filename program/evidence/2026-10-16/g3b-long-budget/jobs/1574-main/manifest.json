@@ -1,0 +1,52 @@
+{
+  "batch_script_sha256": "2a10c9c72c22ab6dd5135061ff1b9b50977a468687180353d8cd7273acbaf1ec",
+  "command": [
+    "python",
+    "scripts/run_g3b_long_budget.py",
+    "run",
+    "--phase",
+    "main",
+    "--model",
+    "qwen3.5-4b",
+    "--arm",
+    "fp32",
+    "--seeds",
+    "42",
+    "43",
+    "44",
+    "--output-dir",
+    "/outputs/g3b",
+    "--allocation-minutes",
+    "55"
+  ],
+  "container_profile": "vllm",
+  "cpus": 16,
+  "git_sha": "8ba1898acf3ad6267dbec0b5ec1a84aefc92baf5",
+  "gpu_type": "h100",
+  "gpus": 1,
+  "image_id": "sha256:cd9170d5dbd03f878289b74458c34b34fca2ccba8782a831fe6f4ad3fc165736",
+  "max_gpu_hours": 0.9167,
+  "memory_gb": 128,
+  "minutes": 55,
+  "model": {
+    "artifact_root_sha256": "3b8a075149bffe4dea784db5b4b37bc0896688cba0b3de7d8d0f6e8ae6157b9e",
+    "cache_host_path": "/home/kevin/cotcodec-runs/hf-cache",
+    "model_id": "qwen3.5-4b",
+    "receipt_sha256": "75ebfc531acdcbc0c39bbf83ee7bf5267a3ddf02c4fafdf6181624612a0d3082",
+    "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a"
+  },
+  "name": "g3b-main-q35-4b-fp32",
+  "randomness_contract": "assignment-seed-matrix",
+  "run_root": "/home/kevin/cotcodec-runs/stage0/g3b-long-budget/runs/main",
+  "runtime": "docker-single-node-discovery-v1",
+  "schema_version": 1,
+  "seed_binding": {
+    "flag": "--seeds"
+  },
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "source_sha256": "69ec1a7639e4289ebbb3aff1cfa363a20c5ebc258185da6ef6537aa805e09bc6"
+}

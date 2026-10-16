@@ -1,0 +1,4 @@
+selftest exit 0
+plan pilot exit 0
+plan main exit 0
+plan aa exit 0

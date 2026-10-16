@@ -468,7 +468,7 @@
     "Gauntleted packages that ended at honest exits and can advance only by your ruling (D24, D70, D76). S2 v3 (65) continues as S2 v4 under your delegation (D80 (iv)); its images are built and its registration is in a repair round before the freeze (D84). C5 Phase 1 (70-97 GPU-h) stays yours; its identification defect stands",
     "Shelved by Kevin (D101), not to be raised unless he asks: the outward items (disclosures, licence requests, host-admin request, publication, the GitHub Support request), key rotation and account items. Drafts are in the private archive."
   ],
-  "gpu_hours_spent_this_program": 32.2159,
+  "gpu_hours_spent_this_program": 34.4528,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -1605,6 +1605,37 @@
       ],
       "outcome": "review PARSED on attempt 1, replicates token-identical (seeds 42-44); the model returned total 56 although its ten scores sum to 53 (re-checked total 53, no cap binding); wave score 53 (lower of 58 and 53; 56 if the produced total is kept), best 53; no honest exit at wave 1 (wave 1 of 3; 99 of 150 queries, 4.95M of 10M tokens, $84.56 of $150, 185.6 of 720 minutes), but the candidate does not proceed as drafted (triad 3/3 refuted); reviewer inference only, not G2 pilot work. Audit row 1 of program/gauntlet/2026-10-16-g2-kimi-expert-streaming.jsonl (hash 071cc2a8...)",
       "basis": "physical (scontrol RunTime 00:03:16 = 196 s on 1 H100, 00:44:01-00:47:17 UTC 2026-10-16; 15-minute limit, 0.25 GPU-h cap; reason=completed); submitted after the operator's in-command check at 00:43:59-00:44:00 UTC found only D110's jobs (1450 running, 1451 pending) and GPUs 1-7 idle, with no other job of this program queued or running; recorder's read-only check at 01:06:30 UTC: GPUs 1-7 at 0 MiB, no reviewer container"
+    },
+    {
+      "experiment": "G3b image builds (EXPLORATORY; g3b-long-budget-v1, D124): cotcodec-vllm cu129 overlays from the source capsules of 78471b75 (pilot), 8ba1898a (main phase declared) and 063273d1 (partial A/A phase declared)",
+      "gpu_hours": 0.0703,
+      "jobs": [
+        "1557 vLLM overlay build 78471b75 (1 H100; COMPLETED 0:0, 00:01:14)",
+        "1569 vLLM overlay build 8ba1898a (1 H100; COMPLETED 0:0, 00:01:46)",
+        "1583 vLLM overlay build 063273d1 (1 H100; COMPLETED 0:0, 00:01:13)"
+      ],
+      "outcome": "images e9950f79, cd9170d5, 34f01e3a, provenance PASS; CPU selftests (no GRES) 1558, 1570 and 1584 pass (prompt 857 + 81,920 <= 82,944; 23 sequences of 82,944 tokens fit both of G3's 4B block pools); the A/A image was not used (the A/A gate did not submit it) (program/evidence/2026-10-16/g3b-long-budget/README.md)",
+      "basis": "physical (scontrol RunTime on 1 H100 each; 1557 read by hand within a minute of completion); GPU 0 held by another project's job (1451) throughout"
+    },
+    {
+      "experiment": "G3b sizing pilot (EXPLORATORY; g3b-long-budget-v1, phase pilot, not in the analysis): Qwen3.5-4B fp32 and bf16 GDN state, one H100 each, the 153 main requests (51 questions with a capped rollout in G3 x seeds 42-44) at 81,920 tokens and max_num_seqs 23, 240 s of generation each",
+      "gpu_hours": 0.1844,
+      "jobs": [
+        "1562 fp32 (FAILED 3:0 by design, time budget; 00:05:32)",
+        "1564 bf16 (FAILED 3:0 by design, time budget; 00:05:32)"
+      ],
+      "outcome": "block pools 3,821 x 528 and 7,418 x 272, so 23 sequences of 82,944 tokens fit (23.7 and 24.1; vLLM's own figure agrees); 23 running, 0 preemptions, about 2,520 output tok/s; step time about 6 ms + 12 ms per million context tokens; sized the main run to Slurm limits of 55 and 82 min and no A/A (program/evidence/2026-10-16/g3b-long-budget/pilot/pilot.json)",
+      "basis": "physical (scontrol RunTime on 1 H100 each); both jobs side by side"
+    },
+    {
+      "experiment": "G3b main run (EXPLORATORY; g3b-long-budget-v1, phase main): Qwen3.5-4B x GDN state fp32 (auto) and bf16, one H100 each, side by side: the 51 MATH-500 level-5 questions with a capped rollout in G3 x seeds 42-44 (G3's prompts, sampling and request seeds) at 81,920 tokens, max_model_len 82,944, max_num_seqs 23 (no preemption)",
+      "gpu_hours": 1.9822,
+      "jobs": [
+        "1574 fp32 (COMPLETED 0:0, 00:40:58)",
+        "1576 bf16 (FAILED 3:0 by design: 13 seed-44 rollouts cut by the time budget; 01:17:58)"
+      ],
+      "outcome": "0 preemptions in both engines; accuracy fp32 / bf16 (checker v2): at 81,920 92.5 / 75.5 on the 140 pairs with no time-cut rollout (-17.0 [-25.8, -8.8]; as run -21.6, time-cut counted as solved -13.1); rescored at 32,768 67.0 / 23.5 (-43.5 [-54.6, -32.4]) against G3's -28.8 on the same questions, with no seed-order pattern (+5.6 [-10.0, +22.2] against G3's -33.3); bf16 mean length +22,395 tokens (+76%), 23% of bf16 rollouts reach 81,920 against 2%; partial A/A not run (the gate left 947 GPU-s); the bf16 job overlapped a host-load window (04:05-04:08 UTC, another project's CPU run outside Slurm), so its wall-clock figures are labelled affected; CPU analysis 1599 (program/evidence/2026-10-16/g3b-long-budget/README.md)",
+      "basis": "physical (scontrol RunTime on 1 H100 each); G3b total 8,053 GPU-s = 2.2369 of the 2.5 cap (the three rows sum to 2.2369)"
     }
   ],
   "results": [

@@ -1,0 +1,2 @@
+82c235962472a2ca39c496ee15cedc413cb24177ae378b0960d0bd4b5e3ec179  ./qwen3.5-4b-fp32-math/texts.jsonl.gz
+41e58fd6e26b9a5056810e1984ce004e3afe4778cf9fd18c17443810bd93b61a  ./qwen3.5-4b-fp32-math/tokens.npz

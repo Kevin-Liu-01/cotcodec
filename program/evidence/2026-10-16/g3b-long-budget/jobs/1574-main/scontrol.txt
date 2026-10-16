@@ -1,0 +1,29 @@
+JobId=1574 JobName=g3b-main-q35-4b-fp32
+   UserId=kevin(1004) GroupId=kevin(1004) MCS_label=N/A
+   Priority=4294900186 Nice=0 Account=(null) QOS=(null)
+   JobState=COMPLETED Reason=None Dependency=(null)
+   Requeue=0 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=00:40:58 TimeLimit=00:55:00 TimeMin=N/A
+   SubmitTime=2026-10-16T02:57:00 EligibleTime=2026-10-16T02:57:00
+   AccrueTime=2026-10-16T02:57:00
+   StartTime=2026-10-16T02:57:00 EndTime=2026-10-16T03:37:58 Deadline=N/A
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2026-10-16T02:57:00 Scheduler=Main
+   Partition=research AllocNode:Sid=fal-h100-01:2695877
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=fal-h100-01
+   BatchHost=fal-h100-01
+   NumNodes=1 NumCPUs=16 NumTasks=1 CPUs/Task=16 ReqB:S:C:T=0:0:*:*
+   TRES=cpu=16,mem=128G,node=1,billing=16
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   MinCPUsNode=16 MinMemoryNode=128G MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+   Command=/home/kevin/cotcodec-runs/stage0/g3b-long-budget/checkout-8ba1898a/infra/slurm/host-single-node/docker-research.sbatch
+   WorkDir=/home/kevin/cotcodec-runs/stage0/g3b-long-budget/checkout-8ba1898a
+   StdErr=/home/kevin/cotcodec-runs/stage0/g3b-long-budget/runs/main/slurm-1574.out
+   StdIn=/dev/null
+   StdOut=/home/kevin/cotcodec-runs/stage0/g3b-long-budget/runs/main/slurm-1574.out
+   Power=
+   TresPerNode=gres:gpu:h100:1
+   
+
