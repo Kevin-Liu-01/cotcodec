@@ -3172,3 +3172,41 @@ not preempt. The G3 line is complete.**
 - Practical reading: for long reasoning on GDN hybrids in vLLM, keep the
   recurrent state at fp32. bf16 costs accuracy at any budget tested, and more
   so on a lightly loaded server.
+
+**D129. LM1 (matched-memory: streamed Kimi against resident models) is closed
+after gauntlet wave 1, which scored 56. Next: LM2, an exploratory evaluation
+of the resident models on real tasks, to settle which model to run on a
+128 GB machine and what 2-bit quantization costs.**
+- Wave 1 (`program/gauntlet/2026-10-16-lm1-matched-memory-quality.jsonl`):
+  - Score 56, the lower of 56 and 58. The open-weight reviewer ran (job 1700,
+    0.0628 GPU-h). The blind discrimination passed.
+  - The triad refuted it 3 of 3:
+    - Identification: on the primary endpoint (factual recall), full-precision
+      Kimi K2.5 already trails Qwen3-235B (SimpleQA Verified 34% against
+      54.3%), and the pilot had no Kimi reference, so model identity and
+      abstention behaviour confound "bits".
+    - Novelty: community matched-memory tables already compare giants at
+      about 1.8 bits with resident models.
+    - Feasibility: the deployment decision is the same under nearly every
+      reading. A resident model wins unless the streamed Kimi wins by a large
+      margin, which its 2-bit knowledge loss (GSQ: GPQA-D −12.7) makes
+      unlikely.
+- Why it is closed rather than repaired: the repaired study would cost
+  112-606 GPU-h to confirm a decision the evidence already points to. On a
+  128 GB machine, run a resident model. Kimi streams at about 2-3 tok/s
+  (Anemll) and loses knowledge at 2 bits.
+- LM2, exploratory, at most 8 GPU-h, CPU judging where possible:
+  - Arms: the resident candidates already on the host, served with the pinned
+    llama.cpp image on 1-2 GPUs each:
+    - DeepSeek V4 Flash 0731 at ds4 Q2 (86.7 GB) and UD-IQ3_XXS (104.2 GB),
+      against its UD-Q8_K_XL reference (161.9 GB);
+    - Qwen3-235B-2507 UD-Q3_K_XL (104.2 GB);
+    - gpt-oss-120b (63.4 GB).
+  - Tasks: verifiable, low-contamination tasks, such as recent math with exact
+    answers and code with unit tests, plus one knowledge set.
+  - Each model's reasoning mode and budget are fixed and reported.
+  - Output: per model, accuracy with paired intervals; the 2-bit and 3-bit
+    cost against the 8-bit reference (the dossier's G4, at task level); and a
+    quality-against-memory frontier for a 128 GB machine.
+  - Kimi TQ1_0 is optional, only if GPUs and budget allow, and reported
+    descriptively.
