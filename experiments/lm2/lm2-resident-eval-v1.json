@@ -9,33 +9,58 @@
     "GPU-b23c3b4d-5413-4d75-cad3-74be85f8d058"
   ],
   "llama_server": "/opt/llama.cpp/llama-server",
-  "seeds": [42, 43, 44],
+  "seeds": [
+    42,
+    43,
+    44
+  ],
   "reference_arm": "v4f-q8",
   "datasets": {
     "root": "/model-cache/cotcodec-datasets/lm2",
     "receipt_sha256": "07e4502e26a5c2bfc76b8aae50ccb3edfa9cec7ddfc6e8d598089291be3e9abc",
     "fetch_script": "scripts/fetch_lm2_datasets.py",
-    "math": {"file": "math.jsonl", "sha256": "97201a7edfb40d58a7592b0112fdad2ce7c55699f2e314d7b4efc6030d2649f6"},
-    "code": {"file": "code.jsonl", "sha256": "49a20e04dbb73a15c34a0104a3d9c983209834e04c1432c4d378abf6b08f8123"},
-    "knowledge": {"file": "knowledge.jsonl", "sha256": "93f1cebde92b8574b2c707f6fc652e3a41df8e8d8820c584acbdcf37724640cb"}
+    "math": {
+      "file": "math.jsonl",
+      "sha256": "97201a7edfb40d58a7592b0112fdad2ce7c55699f2e314d7b4efc6030d2649f6"
+    },
+    "code": {
+      "file": "code.jsonl",
+      "sha256": "49a20e04dbb73a15c34a0104a3d9c983209834e04c1432c4d378abf6b08f8123"
+    },
+    "knowledge": {
+      "file": "knowledge.jsonl",
+      "sha256": "93f1cebde92b8574b2c707f6fc652e3a41df8e8d8820c584acbdcf37724640cb"
+    }
   },
   "tasks": {
     "math": {
-      "sources": ["aime_2026", "hmmt_feb_2026", "arxivmath_0626", "arxivmath_0826"],
-      "numeric_reference_only_sources": ["arxivmath_0626", "arxivmath_0826"],
+      "sources": [
+        "aime_2026",
+        "hmmt_feb_2026",
+        "arxivmath_0626",
+        "arxivmath_0826"
+      ],
+      "numeric_reference_only_sources": [
+        "arxivmath_0626",
+        "arxivmath_0826"
+      ],
       "numeric_reference_rule": "keep an arxivmath item only if its reference answer evaluates to a number under G3's checker v2 (harness.g3_state_precision.evaluate after normalize_math); symbolic answers with free variables are dropped because the checker compares them only as strings",
       "max_tokens": 32768,
       "scoring": "the last \\boxed{} of the final answer (content after the reasoning), checked with harness.g3_state_precision.math_equiv (G3 checker v2)"
     },
     "code": {
-      "sources": ["lcb_v6"],
+      "sources": [
+        "lcb_v6"
+      ],
       "contest_date_from": "2025-01-01",
       "contest_date_to": "2025-05-01",
       "max_tokens": 32768,
       "scoring": "LiveCodeBench extraction (text between the last two lines containing ```); every public and private test must pass (6 s wall per test, first failure stops), run CPU-only in a no-network, no-GPU, read-only container (scripts/lm2_code_grader.py)"
     },
     "knowledge": {
-      "sources": ["supergpqa"],
+      "sources": [
+        "supergpqa"
+      ],
       "subset_size": 300,
       "max_tokens": 16384,
       "scoring": "the last 'Answer: X' line of the final answer against the reference letter (10-option multiple choice)"
@@ -43,7 +68,11 @@
   },
   "order": {
     "rng_seed": 42,
-    "interleave": ["math", "code", "knowledge"],
+    "interleave": [
+      "math",
+      "code",
+      "knowledge"
+    ],
     "rule": "within a task, items sorted by the SHA-256 of their id and shuffled with random.Random(42); tasks alternate one item at a time; the seeds of an item are adjacent; a budget cut keeps a prefix of each task's permutation (--cap task=N)"
   },
   "arms": {
@@ -56,17 +85,29 @@
       "artifact_root_sha256": "29ff486fb13e372b256c4084ce2166de1ef83f4757f4e560da4fe511a461badc",
       "file_bytes": 161869621346,
       "gpus": 3,
-      "slots": 32,
+      "slots": 64,
       "ctx_per_slot": 36864,
-      "server_args": ["-lm", "none", "-lzm", "off"],
+      "server_args": [
+        "-lm",
+        "none",
+        "-lzm",
+        "off"
+      ],
       "load_timeout_s": 420,
       "chat_template_file": "experiments/lm2/templates/deepseek-v4-flash-0731-unsloth.jinja",
       "chat_template_sha256": "e643c31fcec17f342f72296e02c46d35846bf4c70f6a0271f23bad73fd4eb645",
       "mode": "thinking, reasoning_effort low (DeepSeek's default level: no effort prefix; encoding_dsv4.py at 7872f01b)",
-      "chat_template_kwargs": {"thinking": true},
+      "chat_template_kwargs": {
+        "thinking": true
+      },
       "reasoning_effort": "low",
       "thinking": true,
-      "sampling": {"temperature": 1.0, "top_p": 1.0, "top_k": 0, "min_p": 0.0},
+      "sampling": {
+        "temperature": 1.0,
+        "top_p": 1.0,
+        "top_k": 0,
+        "min_p": 0.0
+      },
       "sampling_source": "deepseek-ai/DeepSeek-V4-Flash-0731 README at 7872f01b: temperature 1.0, top_p 1.0 outside agentic use"
     },
     "v4f-iq3": {
@@ -78,17 +119,29 @@
       "artifact_root_sha256": "c2c4ce4fe186166b4808167e4093edea488658a0fc30e2f86c354496e2a62113",
       "file_bytes": 104207853858,
       "gpus": 2,
-      "slots": 32,
+      "slots": 64,
       "ctx_per_slot": 36864,
-      "server_args": ["-lm", "none", "-lzm", "off"],
+      "server_args": [
+        "-lm",
+        "none",
+        "-lzm",
+        "off"
+      ],
       "load_timeout_s": 300,
       "chat_template_file": "experiments/lm2/templates/deepseek-v4-flash-0731-unsloth.jinja",
       "chat_template_sha256": "e643c31fcec17f342f72296e02c46d35846bf4c70f6a0271f23bad73fd4eb645",
       "mode": "thinking, reasoning_effort low (DeepSeek's default level: no effort prefix; encoding_dsv4.py at 7872f01b)",
-      "chat_template_kwargs": {"thinking": true},
+      "chat_template_kwargs": {
+        "thinking": true
+      },
       "reasoning_effort": "low",
       "thinking": true,
-      "sampling": {"temperature": 1.0, "top_p": 1.0, "top_k": 0, "min_p": 0.0},
+      "sampling": {
+        "temperature": 1.0,
+        "top_p": 1.0,
+        "top_k": 0,
+        "min_p": 0.0
+      },
       "sampling_source": "deepseek-ai/DeepSeek-V4-Flash-0731 README at 7872f01b: temperature 1.0, top_p 1.0 outside agentic use"
     },
     "v4f-q2": {
@@ -100,17 +153,29 @@
       "artifact_root_sha256": "0d60a7ac567eed483b206def3aee470a9023a5a75bc62fff7edd2b99bce8389e",
       "file_bytes": 86720115016,
       "gpus": 2,
-      "slots": 32,
+      "slots": 64,
       "ctx_per_slot": 36864,
-      "server_args": ["-lm", "none", "-lzm", "off"],
+      "server_args": [
+        "-lm",
+        "none",
+        "-lzm",
+        "off"
+      ],
       "load_timeout_s": 300,
       "chat_template_file": "experiments/lm2/templates/deepseek-v4-flash-0731-unsloth.jinja",
       "chat_template_sha256": "e643c31fcec17f342f72296e02c46d35846bf4c70f6a0271f23bad73fd4eb645",
       "mode": "thinking, reasoning_effort low (DeepSeek's default level: no effort prefix; encoding_dsv4.py at 7872f01b)",
-      "chat_template_kwargs": {"thinking": true},
+      "chat_template_kwargs": {
+        "thinking": true
+      },
       "reasoning_effort": "low",
       "thinking": true,
-      "sampling": {"temperature": 1.0, "top_p": 1.0, "top_k": 0, "min_p": 0.0},
+      "sampling": {
+        "temperature": 1.0,
+        "top_p": 1.0,
+        "top_k": 0,
+        "min_p": 0.0
+      },
       "sampling_source": "deepseek-ai/DeepSeek-V4-Flash-0731 README at 7872f01b: temperature 1.0, top_p 1.0 outside agentic use"
     },
     "qwen235-q3": {
@@ -121,17 +186,31 @@
       "receipt_sha256": "32e64cd077c3d5c07b408fffbd67aaea93673b1d853b2c33f162b7d83f3f1357",
       "artifact_root_sha256": "78fcdc166c9ff6d7a35728e3d2e9555c853bb8d0dbfb444e6f54edfa83c55b7e",
       "file_bytes": 104152938929,
-      "gpus": 2,
-      "slots": 12,
+      "gpus": 3,
+      "slots": 32,
       "ctx_per_slot": 20480,
-      "server_args": ["-lm", "none", "-lzm", "off"],
+      "server_args": [
+        "-lm",
+        "none",
+        "-lzm",
+        "off"
+      ],
       "load_timeout_s": 300,
       "expected_embedded_template_sha256": "40c21f34cf67d8c760ef72f8ad3ae5afad514299d4b06e91dd9a8d705af7b541",
       "mode": "non-thinking (Instruct-2507 has no thinking mode)",
       "thinking": false,
-      "max_tokens": {"math": 16384, "code": 16384, "knowledge": 16384},
+      "max_tokens": {
+        "math": 16384,
+        "code": 16384,
+        "knowledge": 16384
+      },
       "max_tokens_source": "Qwen/Qwen3-235B-A22B-Instruct-2507 README at ac9c66cc: an output length of 16,384 tokens for most queries",
-      "sampling": {"temperature": 0.7, "top_p": 0.8, "top_k": 20, "min_p": 0.0},
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0.0
+      },
       "sampling_source": "Qwen/Qwen3-235B-A22B-Instruct-2507 README at ac9c66cc: Temperature 0.7, TopP 0.8, TopK 20, MinP 0"
     },
     "gptoss120": {
@@ -142,17 +221,28 @@
       "receipt_sha256": "dc5007aa56057007c80e8a364584d41dc24980d9f9a87770614245d2e1c38f8c",
       "artifact_root_sha256": "329ede2a5e5e773129c05d20b1a969923e706f0a0520c9b9702088692eee779f",
       "file_bytes": 63387346665,
-      "gpus": 1,
-      "slots": 10,
+      "gpus": 2,
+      "slots": 48,
       "ctx_per_slot": 36864,
-      "server_args": ["-lm", "none", "-lzm", "off"],
+      "server_args": [
+        "-lm",
+        "none",
+        "-lzm",
+        "off"
+      ],
       "load_timeout_s": 240,
       "expected_embedded_template_sha256": "a4c9919cbbd4acdd51ccffe22da049264b1b73e59055fa58811a99efbd7c8146",
       "mode": "reasoning effort medium (the harmony template's default), set on every request",
       "reasoning_effort": "medium",
       "thinking": true,
-      "sampling": {"temperature": 1.0, "top_p": 1.0, "top_k": 0, "min_p": 0.0},
+      "sampling": {
+        "temperature": 1.0,
+        "top_p": 1.0,
+        "top_k": 0,
+        "min_p": 0.0
+      },
       "sampling_source": "openai/gpt-oss README (github.com/openai/gpt-oss, 'Recommended Sampling Parameters'): temperature 1.0, top_p 1.0"
     }
-  }
+  },
+  "slot_sizing_note": "Pilot starting points from HBM arithmetic: MoE decode reads most expert weights once per step once the batch is large, so more slots raise throughput until compute or KV memory binds; layer split runs the GPUs one after another, so throughput per GPU-hour is set by slots per step. Qwen3-235B's f16 KV (188 KiB per token) limits it to about 14 slots on 2 GPUs, so it gets 3 GPUs and 32 slots; gpt-oss-120b's 13 GiB of free memory on 1 GPU allows about 10 slots, so it gets 2 GPUs and 48. The driver's --slots overrides a value after the pilot, and the manifest records it."
 }

@@ -263,8 +263,8 @@ def test_driver_helpers(plan: dict, tmp_path: Path) -> None:
     assert argv[:2] == [plan["llama_server"], "-m"]
     for flag in ("-ngl", "all", "--split-mode", "layer", "-fit", "off", "--jinja", "--metrics"):
         assert flag in argv
-    assert argv[argv.index("-np") + 1] == "32"
-    assert argv[argv.index("-c") + 1] == str(32 * 36864)
+    assert argv[argv.index("-np") + 1] == "64"
+    assert argv[argv.index("-c") + 1] == str(64 * 36864)
     assert argv[argv.index("--chat-template-file") + 1].endswith(
         "deepseek-v4-flash-0731-unsloth.jinja"
     )
