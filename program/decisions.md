@@ -3144,3 +3144,31 @@ gt-transcreate speedrun, capped at 4 GPUs. LM1 host prep is done.**
   - fixed reasoning modes and token budgets;
   - a throughput pilot with parallel slots before GPU-hours are budgeted.
 - Next: an LM1 gauntlet wave on the H100 host's prepared assets.
+
+**D128. G3b (exploratory): the bf16 GDN-state accuracy loss survives at the
+model card's full 81,920-token budget, and it is larger on a server that does
+not preempt. The G3 line is complete.**
+- G3b used 2.24 GPU-h (`program/evidence/2026-10-16/g3b-long-budget/README.md`).
+  An independent check reproduced every number and the analysis byte for byte.
+- Setup: Qwen3.5-4B, fp32 against bf16 state, on the 51 MATH-500 level-5
+  questions G3 capped, × seeds 42-44, at 81,920 tokens, with 0 preemptions
+  (23 concurrent sequences).
+- Accuracy, bf16 minus fp32:
+  - −17.0 [−25.8, −8.8] with the 13 time-cut pairs dropped;
+  - −21.6 with them counted unsolved;
+  - −13.1 with them counted solved;
+  - −19.6 [−30.4, −9.8] for seeds 42-43 pooled, with nothing missing.
+  - Against the 15-point bar set in advance for "just longer", three of the
+    four readings pass. bf16 is still gaining at the top of the budget, so
+    larger budgets are untested.
+- Mechanism: bf16 reasons 76% longer (52K against 30K tokens), 23% of its
+  rollouts reach the cap against 2%, and finished rollouts are accurate.
+- Load: without preemption, bf16 on these questions is 14.4 points below G3
+  at the same 32K cut, while fp32 is unchanged. This is consistent with G3's
+  hypothesis that preemption's prefill rebuild partly protects bf16. The
+  seed-order null alone cannot separate preemption from concurrency.
+- The selected 51 questions make every gap a biased estimate of G3's
+  population gap.
+- Practical reading: for long reasoning on GDN hybrids in vLLM, keep the
+  recurrent state at fp32. bf16 costs accuracy at any budget tested, and more
+  so on a lightly loaded server.
