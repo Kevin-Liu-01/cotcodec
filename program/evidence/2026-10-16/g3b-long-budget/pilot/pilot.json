@@ -1,0 +1,124 @@
+{
+  "decision": "main: fp32 and bf16 side by side, max_num_seqs 23, Slurm limits 55 min (fp32) and 82 min (bf16), so the cap of 2.5 GPU-h holds even if both are cut by time; the partial A/A does not fit and is not run",
+  "jobs": {
+    "bf16": {
+      "block_size": 272,
+      "finished": 4,
+      "fit": {
+        "block_size": 272,
+        "blocks_needed": 7084,
+        "blocks_per_sequence": 308,
+        "formula_concurrency": 24.084415584415584,
+        "gdn_groups": 3,
+        "max_model_len": 82944,
+        "max_num_seqs": 23,
+        "max_sequences_that_fit": 24,
+        "num_gpu_blocks": 7418,
+        "ok": true,
+        "vllm_agrees": true,
+        "vllm_kv_cache_max_concurrency": 24.084415584415584
+      },
+      "init_s": 66.7,
+      "job": 1564,
+      "mean_running": 22.950431034482758,
+      "num_gpu_blocks": 7418,
+      "output_tok_per_s": 2513.7177037675297,
+      "output_tokens": 603888,
+      "peak_kv_usage": 0.2747741674531482,
+      "peak_running": 23.0,
+      "preemptions_delta": 0.0,
+      "stopped_by": "time budget",
+      "wall_s": 240.237
+    },
+    "fp32": {
+      "block_size": 528,
+      "finished": 14,
+      "fit": {
+        "block_size": 528,
+        "blocks_needed": 3703,
+        "blocks_per_sequence": 161,
+        "formula_concurrency": 23.732919254658384,
+        "gdn_groups": 3,
+        "max_model_len": 82944,
+        "max_num_seqs": 23,
+        "max_sequences_that_fit": 23,
+        "num_gpu_blocks": 3821,
+        "ok": true,
+        "vllm_agrees": true,
+        "vllm_kv_cache_max_concurrency": 23.732919254658384
+      },
+      "init_s": 67.4,
+      "job": 1562,
+      "mean_running": 22.9505376344086,
+      "num_gpu_blocks": 3821,
+      "output_tok_per_s": 2537.860997301889,
+      "output_tokens": 609513,
+      "peak_kv_usage": 0.21910994764397906,
+      "peak_running": 23.0,
+      "preemptions_delta": 0.0,
+      "stopped_by": "time budget",
+      "wall_s": 240.168
+    }
+  },
+  "note": "Sizing only (EXPLORATORY); not in the analysis. ops/size_main.py on the pilot's text-free records (jobs 1562, 1564) and G3's committed per-request data. Simulated wall = generation time of the main run, 30 draws per setting.",
+  "simulation": [
+    {
+      "arm": "fp32",
+      "hazard_scale": 1.0,
+      "tokens_m": 4.53,
+      "wall_max_s": 2740,
+      "wall_mean_s": 2528,
+      "wall_p90_s": 2642
+    },
+    {
+      "arm": "fp32",
+      "hazard_scale": 0.6,
+      "tokens_m": 4.88,
+      "wall_max_s": 3206,
+      "wall_mean_s": 2897,
+      "wall_p90_s": 3056
+    },
+    {
+      "arm": "bf16",
+      "hazard_scale": 1.0,
+      "tokens_m": 5.94,
+      "wall_max_s": 3707,
+      "wall_mean_s": 3501,
+      "wall_p90_s": 3682
+    },
+    {
+      "arm": "bf16",
+      "hazard_scale": 0.6,
+      "tokens_m": 6.59,
+      "wall_max_s": 4619,
+      "wall_mean_s": 4186,
+      "wall_p90_s": 4412
+    }
+  ],
+  "step_time_fit": [
+    {
+      "a_ms": 5.979487050066243,
+      "arm": "fp32",
+      "c_ms_per_mtok": 11.99155107859688,
+      "context_mtok_range": [
+        0.003443913626574535,
+        0.38461405385122044
+      ],
+      "requests_finished": 14,
+      "steps_used": 26495,
+      "tok_per_s": 2539.807878778535
+    },
+    {
+      "a_ms": 5.691406395092484,
+      "arm": "bf16",
+      "c_ms_per_mtok": 12.208911016300515,
+      "context_mtok_range": [
+        0.003442389398155393,
+        0.5297746922603105
+      ],
+      "requests_finished": 4,
+      "steps_used": 26250,
+      "tok_per_s": 2516.3750977672194
+    }
+  ]
+}

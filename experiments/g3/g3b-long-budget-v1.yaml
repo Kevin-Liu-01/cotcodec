@@ -127,6 +127,17 @@ main:
   seeds: [42, 43, 44]
   gen_seconds: 4800
 
+# Partial A/A, declared after the main fp32 job (1574: 153 of 153 in 2,338 s, RunTime 00:40:58, 0
+# preemptions; its seed-42 requests had all finished by 1,110 s) and while the main bf16 job
+# (1576, limit 82 min) was still running. A second fp32 engine on the 51 seed-42 requests (the
+# main run's first-admitted wave; same request seeds and order), Slurm limit 25 min. It runs only
+# if, once job 1576 has ended, the GPU-h used so far (builds, pilot, main) leave at least 25 min
+# of the 2.5 GPU-h cap; otherwise it is not run. gen_seconds is an upper bound.
+aa:
+  arms: [fp32_aa]
+  seeds: [42]
+  gen_seconds: 1200
+
 analysis:
   bootstrap_reps: 10000
   bootstrap_seed: 42
