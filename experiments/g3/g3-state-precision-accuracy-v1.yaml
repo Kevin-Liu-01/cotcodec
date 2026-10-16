@@ -1,0 +1,206 @@
+# G3 (EXPLORATORY): at inference, does a 16-bit gated-DeltaNet (GDN) recurrent state change task
+# accuracy on the Qwen3.5 hybrids? G2b and G2c (program/evidence/2026-10-15/g2b-state-dtype/,
+# g2c-precision-vs-layout/) found that vLLM 0.31.0's --mamba-ssm-cache-dtype float16 or bfloat16
+# (against the checkpoints' float32) gives 1.3-1.4x serving throughput and raises the
+# sampler-trainer mismatch about 2x (fp16) and 5x (bf16), growing with position. They did not
+# measure task accuracy. G3 does, with everything but the state dtype fixed.
+#
+# EXPLORATORY. Not a registered experiment: no preregistration, no hypothesis test, no decision
+# rule, no confirmatory claim. Cap: 4.0 physical GPU-h in all, image builds, pilot and judge
+# included.
+#
+# Jobs (docker-research lane, one H100 each, digest-pinned cotcodec-vllm cu129 overlay):
+#   pilot  scripts/run_g3_accuracy.py run --phase pilot --arm fp32: sizing only (lengths,
+#          per-question variance, throughput, prefill rate); its outputs are not in the analysis.
+#   main   scripts/run_g3_accuracy.py run --phase main --arm A, one job per model x arm, the arms
+#          of a model side by side on separate GPUs: the math task in one engine (G2b's rollout
+#          engine), then the long-context task in a second engine (the same settings with a
+#          longer max_model_len).
+#   judge  scripts/run_g3_accuracy.py judge: AM1's primary judge on every long-context reply.
+# scripts/analyze_g3_accuracy.py (CPU, on the host, where the texts stay) scores and joins them.
+schema_version: 1
+experiment_id: g3-state-precision-accuracy-v1
+claim_level: exploratory
+
+# Declared before any job. Math: every question is sampled once per seed; the request seed is
+# 100000 * seed + question index, identical across arms (paired). Long context: one sample per
+# question with the first seed. The main run's math seed list is set from the pilot (below).
+seeds: [42, 43, 44]
+
+models:
+  qwen3.5-4b:
+    revision: "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a"
+    receipt_root: cotcodec-receipts
+  qwen3.5-9b:
+    revision: "c202236235762e1c871ad0ccb60c8ee5ba337b9a"
+    receipt_root: cotcodec-receipts
+
+# The arms: vLLM 0.31.0's mamba_ssm_cache_dtype at vLLM's own block size (G2b, G2c). "auto" is
+# vLLM's default and resolves to the checkpoints' float32 (recorded per engine).
+arms:
+  fp32: auto
+  fp16: float16
+  bf16: bfloat16
+
+# G2b's rollout engine (experiments/g2/g2b-state-dtype-v1.yaml, engine), unchanged except that
+# max_model_len is per task (below; math 33,792 against G2b's 33,536).
+engine:
+  dtype: bfloat16
+  seed: 42
+  gpu_memory_utilization: 0.90
+  max_num_seqs: 512
+  max_num_batched_tokens: 8192
+  enable_prefix_caching: false
+  logprobs_mode: raw_logprobs
+  limit_mm_per_prompt: {image: 0, video: 0}
+  disable_log_stats: false
+stats_interval_s: 0.5
+
+tasks:
+  # A long-reasoning math set: all 134 MATH-500 level-5 problems, thinking on, the Qwen3.5 model
+  # card's recommended thinking-mode sampling and output length (README "Best Practices":
+  # temperature=1.0, top_p=0.95, top_k=20, min_p=0.0, presence_penalty=1.5,
+  # repetition_penalty=1.0; 32,768 output tokens for most queries).
+  math:
+    prompts:
+      file: experiments/g3/math500-l5-134.jsonl
+      sha256: "04154d6474b60dc8e2134cabfe5d43aca08756c3e153c49e8cf9133b9a81891e"
+      count: 134
+      source:
+        dataset: HuggingFaceH4/MATH-500
+        file: test.jsonl
+        revision: "6e4ed1a2a79af7d8630a6b768ec859cb5af4d3be"
+        sha256: "35dc41080a3680858b27fa7e0533d2d547825316fc5dafe5d316f4ccc5a06132"
+        bytes: 446564
+        license: MIT
+        selection: "level 5 only (134), sorted by unique_id; fields as in experiments/g2/prompts-math500-l5-64.jsonl (a subset of this file)"
+    user_suffix: "\nPlease reason step by step, and put your final answer within \\boxed{}."
+    enable_thinking: true
+    # G2b's 33,536 left 768 prompt tokens; the longest of these 134 prompts is 857 tokens
+    # (selftest job 1490), so 32,768 + 1,024.
+    max_model_len: 33792
+    sampling:
+      temperature: 1.0
+      top_p: 0.95
+      top_k: 20
+      min_p: 0.0
+      presence_penalty: 1.5
+      repetition_penalty: 1.0
+      max_tokens: 32768
+      logprobs: 0
+  # A long-context task: LongMemEval-S (cleaned, MIT, on the host since AM1 step 0), with each
+  # question's full haystack as the context (102-113K tokens in the Qwen3.5 tokenizer; CPU probe
+  # job 1488). Thinking off, the model card's recommended non-thinking sampling (temperature=0.7,
+  # top_p=0.8, top_k=20, min_p=0.0, presence_penalty=1.5, repetition_penalty=1.0) and a short
+  # answer, so the task is prefill-heavy with a short decode: the other common serving shape.
+  lme:
+    source:
+      dataset: xiaowu0162/longmemeval-cleaned
+      file: longmemeval_s_cleaned.json
+      revision: "98d7416c24c778c2fee6e6f3006e7a073259d48f"
+      sha256: "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+      size_bytes: 277383467
+      license: MIT
+    # Non-abstention questions only (the judge's abstention template is not used). Order: within
+    # each question type, ids sorted then random.Random(f"{selection_seed}:{type}").shuffle; the
+    # types are interleaved by rank / type size, so every prefix is close to proportional.
+    selection_seed: 42
+    enable_thinking: false
+    max_model_len: 131072
+    # Sessions in chronological order (by date, then file order). The wording is this program's,
+    # in the style of AM1's reader prompt (experiments/am1/memcredit-study-v1.yaml).
+    template:
+      head: "Below are your earlier chat sessions with the user, in chronological order, each with its date.\n\n"
+      session: "### Session {number} ({date})"
+      turn: "{role}: {content}"
+      tail: "\n\nCurrent date: {question_date}\nQuestion: {question}\n\nAnswer the question in one short sentence based on the chat sessions. If they do not contain the answer, say \"I don't know\"."
+    sampling:
+      temperature: 0.7
+      top_p: 0.8
+      top_k: 20
+      min_p: 0.0
+      presence_penalty: 1.5
+      repetition_penalty: 1.0
+      max_tokens: 256
+      logprobs: 0
+
+# AM1's primary judge (experiments/am1/memcredit-study-v1.yaml, judge.primary): Qwen3-32B with
+# LongMemEval's official answer-check prompt (harness.memcredit_study.JUDGE_TEMPLATES), greedy,
+# thinking off. Validation items per question: the reference answer (expect yes) and "I don't
+# know." (expect no).
+judge:
+  model_id: qwen3-32b
+  revision: "9216db5781bf21249d130ec9da846c4624c16137"
+  receipt_root: cotcodec-receipts
+  engine:
+    dtype: bfloat16
+    max_model_len: 4096
+    gpu_memory_utilization: 0.92
+    max_num_seqs: 128
+    max_num_batched_tokens: 8192
+    enable_prefix_caching: true
+    logprobs_mode: raw_logprobs
+  sampling: {temperature: 0.0, max_tokens: 10, logprobs: 0}
+  enable_thinking: false
+  idk_response: "I don't know."
+
+# Sizing pilot: the fp32 arm only, a seeded subset of each task. Not part of the analysis.
+pilot:
+  arms: [fp32]
+  math:
+    questions: 48  # random.Random(42).sample(range(134), 48), in index order
+    seeds: [42, 43]
+    gen_seconds: 1200
+  lme:
+    questions: 12  # the first 12 of the selection order
+    seeds: [42]
+    gen_seconds: 600
+
+# The main run, declared after the pilot (jobs 1498 and 1500, fp32 only; their outputs are not
+# in the analysis). Sizing from the pilot (analysis-pilot-4bbf141c/pilot.json):
+#   math: accuracy 0.90 (4B) and 0.93 (9B); mean per-question p(1-p) 0.042 and 0.031 (48
+#   questions x 2 seeds), so a paired difference over 134 questions with k seeds has a 95%
+#   half-width of about 1.96 * sqrt(2 m / (134 k)): k = 3 gives +-2.8 (4B) and +-2.4 (9B) points,
+#   k = 4 +-2.4 and +-2.1. Mean length 13.7K (4B) and 12.5K (9B) tokens; 7-8% hit 32,768.
+#   A block-pool simulation fitted to the pilot's step times gives about 1,050-1,400 s of math
+#   per engine at k = 3 (more if a 16-bit state lengthens the reasoning, as bf16 did in G2b),
+#   and 1,400-1,900 s at k = 4.
+#   long context: prefill at 37.9K (4B) and 27.7K (9B) prompt tok/s, 2.9 and 3.9 s per question
+#   per engine; replies of about 20 tokens.
+# Within the 4.0 GPU-h cap (0.39 used by the builds and the pilot): k = 3 for math on all 134
+# questions, and the first 100 long-context questions of the selection order. The pilot's 12
+# long-context questions are the first 12 of these 100 (the pilot is sizing only).
+main:
+  arms: [fp32, fp16, bf16]
+  math:
+    questions: 134
+    seeds: [42, 43, 44]
+    gen_seconds: 2100
+  lme:
+    questions: 100
+    seeds: [42]
+    gen_seconds: 600
+
+# Added after the main run, under the budget (program/evidence/2026-10-16/
+# g3-state-precision-accuracy/ops/jobs.log, 19:06:14Z). The main math phases took 1,400-1,640 s
+# per engine against the simulated 930-1,390 s, and with every in-job long-context phase the total
+# was projected at 3.97 of 4.0 GPU-h. So the three 4B jobs were sent the lane's USR1 when their
+# math phase had saved: their long-context workers stopped during engine start and produced no
+# reply. The 9B jobs ran the long-context phase as declared. The 4B's long-context arms run here,
+# one job per arm, on the first 50 of the main run's 100 questions (the same order and seed).
+lme_extra:
+  arms: [fp32, fp16, bf16]
+  lme:
+    questions: 50
+    seeds: [42]
+    gen_seconds: 450
+
+analysis:
+  bootstrap_reps: 10000
+  bootstrap_seed: 42
+  # The equivalence reading (descriptive): is the 90% bootstrap interval of the paired difference
+  # inside +-margin (a TOST reading at 5% per side), and is the 95% interval?
+  equivalence_margin: 0.02
+
+budget:
+  total_physical_gpu_hours: 4.0

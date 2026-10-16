@@ -1,0 +1,78 @@
+{
+  "allocation_minutes": 15.0,
+  "arm": "bf16",
+  "claim_level": "exploratory",
+  "deadline_source": "job.env started_at",
+  "deadline_utc": "2026-10-15T19:38:17Z",
+  "experiment_id": "g3-state-precision-accuracy-v1",
+  "finished_at": "2026-10-15T19:31:32Z",
+  "job": "accuracy",
+  "model": "qwen3.5-4b",
+  "phase": "lme_extra",
+  "plan": {
+    "arms": [
+      "fp32",
+      "fp16",
+      "bf16"
+    ],
+    "lme_gen_seconds": 450.0,
+    "lme_questions": 50,
+    "lme_seeds": [
+      42
+    ],
+    "math_gen_seconds": 0.0,
+    "math_questions": [],
+    "math_seeds": [],
+    "phase": "lme_extra"
+  },
+  "signal": null,
+  "started_at": "2026-10-15T19:26:57Z",
+  "tasks": [
+    "lme"
+  ],
+  "verification": {
+    "artifact_root_sha256": "3b8a075149bffe4dea784db5b4b37bc0896688cba0b3de7d8d0f6e8ae6157b9e",
+    "mode": "full",
+    "model_id": "qwen3.5-4b",
+    "receipt": "/model-cache/cotcodec-receipts/qwen3.5-4b.json",
+    "receipt_sha256": "75ebfc531acdcbc0c39bbf83ee7bf5267a3ddf02c4fafdf6181624612a0d3082",
+    "repo_id": "Qwen/Qwen3.5-4B",
+    "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+    "total_bytes": 9342907469,
+    "verified_by": "lane (model-verification.txt)"
+  },
+  "workers": {
+    "lme": {
+      "argv": [
+        "/usr/local/bin/python",
+        "/workspace/cotcodec/scripts/run_g3_accuracy.py",
+        "worker",
+        "--phase",
+        "lme_extra",
+        "--model",
+        "qwen3.5-4b",
+        "--arm",
+        "bf16",
+        "--task",
+        "lme",
+        "--output-dir",
+        "/outputs/g3",
+        "--deadline",
+        "1792093097.000",
+        "--longmemeval-path",
+        "/inputs/longmemeval_s_cleaned.json"
+      ],
+      "exit": 0,
+      "gpu_memory_after_mib": [
+        0
+      ],
+      "started_at": "2026-10-15T19:27:01Z",
+      "status": "complete",
+      "wall_s": 271.0,
+      "worker_done": {
+        "exit": 0,
+        "utc": "2026-10-15T19:31:27Z"
+      }
+    }
+  }
+}

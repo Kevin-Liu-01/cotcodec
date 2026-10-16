@@ -1,0 +1,12 @@
+runs/main/1517/g3/qwen3.5-9b-fp32-lme
+runs/main/1517/g3/qwen3.5-9b-fp32-math
+runs/main/1519/g3/qwen3.5-9b-fp16-lme
+runs/main/1519/g3/qwen3.5-9b-fp16-math
+runs/main/1521/g3/qwen3.5-9b-bf16-lme
+runs/main/1521/g3/qwen3.5-9b-bf16-math
+runs/main/1523/g3/qwen3.5-4b-fp32-math
+runs/main/1525/g3/qwen3.5-4b-fp16-math
+runs/main/1527/g3/qwen3.5-4b-bf16-math
+runs/lme_extra/1536/g3/qwen3.5-4b-fp32-lme
+runs/lme_extra/1538/g3/qwen3.5-4b-fp16-lme
+runs/lme_extra/1540/g3/qwen3.5-4b-bf16-lme

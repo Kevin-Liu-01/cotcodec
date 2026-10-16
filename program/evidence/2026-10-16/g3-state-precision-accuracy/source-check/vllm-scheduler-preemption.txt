@@ -1,0 +1,255 @@
+== vllm '0.31.0'
+f820bee4f42b878b262a30f3728a97d7413477b2a277748e20f2528ac2ec2f2a  v1/core/sched/scheduler.py
+157:        # Whether a preempted request's in-flight output must be dropped; see
+228:        # IDs of requests preempted since the last call to schedule().
+229:        self.reset_preempted_req_ids: set[str] = set()
+578:        preempted_reqs: list[Request] = []
+766:                        preempted_req = max(
+771:                        preempted_req = self.running[-1]
+774:                    if not self._request_blocks_can_be_freed(preempted_req):
+778:                        victim_index = self.running.index(preempted_req)
+783:                        if preempted_req in scheduled_running_reqs:
+784:                            preempted_req_id = preempted_req.request_id
+785:                            scheduled_running_reqs.remove(preempted_req)
+786:                            restored = num_scheduled_tokens.pop(preempted_req_id)
+789:                            req_to_new_blocks.pop(preempted_req_id)
+790:                            scheduled_spec_decode_tokens.pop(preempted_req_id, None)
+791:                            preempted_encoder_inputs = scheduled_encoder_inputs.pop(
+792:                                preempted_req_id, None
+794:                            if preempted_encoder_inputs:
+795:                                # Restore encoder compute budget if the preempted
+798:                                    preempted_req.get_num_encoder_embeds(i)
+799:                                    for i in preempted_encoder_inputs
+803:                        preempted_req = self.running.pop()
+805:                    self._preempt_request(
+806:                        preempted_req,
+810:                    preempted_reqs.append(preempted_req)
+811:                    if preempted_req == request:
+812:                        # No more request to preempt. Cannot schedule this request.
+873:        if not preempted_reqs and self._pause_state == PauseState.UNPAUSED:
+1033:                    # Track first scheduled prefill, not post-preemption repeat prefills
+1034:                    if request.prefill_stats and request.num_preemptions <= 0:
+1197:                    # no forward progress and isn't preemptible here. Admit it
+1200:                    # predictable preemptions.
+1249:                            preempted=request.num_preemptions > 0,
+1470:            preempted_req_ids=self.reset_preempted_req_ids,
+1538:    def _preempt_request(
+1549:        which the preemption's block free would leave without valid KV.
+1552:            "Only running requests can be preempted"
+1575:        request.num_preemptions += 1
+1581:        self.reset_preempted_req_ids.add(request.request_id)
+1611:        # Clear the finished and preempted request IDs.
+1615:        self.reset_preempted_req_ids = set()
+2017:        stopped_preempted_reqs: set[Request] = set()
+2024:                # Drain any stale share (see _preempt_request) in lockstep.
+2063:                # tokens). A stale rejection count predates the preemption
+2187:                    stopped_preempted_reqs.add(request)
+2237:        if stopped_preempted_reqs:
+2239:            self.waiting.remove_requests(stopped_preempted_reqs)
+2240:            self.kv_holding_waiting.remove_requests(stopped_preempted_reqs)
+2241:            self.deferred_waiting.difference_update(stopped_preempted_reqs)
+2780:        preempted and moved to the waiting queue.
+2804:                self._preempt_request(request, timestamp, drop_stale_output=True)
+2806:            # Clear scheduled request ids cache. Since we are forcing preemption
+2816:                "preempted and moved to the waiting queue. This is likely due to "
+3108:            # Promote request to waiting or preempted.
+3110:            if request.num_preemptions:
+== v1/core/sched/scheduler.py:760-776
+   760	                    ):
+   761	                        break
+   762	
+   763	                    # The request cannot be scheduled.
+   764	                    # Preempt the lowest-priority request.
+   765	                    if self.policy == SchedulingPolicy.PRIORITY:
+   766	                        preempted_req = max(
+   767	                            self.running,
+   768	                            key=lambda r: (r.priority, r.arrival_time),
+   769	                        )
+   770	                    else:
+   771	                        preempted_req = self.running[-1]
+   772	
+   773	                    # A deferred free will not help with immediate allocation.
+   774	                    if not self._request_blocks_can_be_freed(preempted_req):
+   775	                        break
+   776	
+== v1/core/sched/scheduler.py:765-781
+   765	                    if self.policy == SchedulingPolicy.PRIORITY:
+   766	                        preempted_req = max(
+   767	                            self.running,
+   768	                            key=lambda r: (r.priority, r.arrival_time),
+   769	                        )
+   770	                    else:
+   771	                        preempted_req = self.running[-1]
+   772	
+   773	                    # A deferred free will not help with immediate allocation.
+   774	                    if not self._request_blocks_can_be_freed(preempted_req):
+   775	                        break
+   776	
+   777	                    if self.policy == SchedulingPolicy.PRIORITY:
+   778	                        victim_index = self.running.index(preempted_req)
+   779	                        del self.running[victim_index]
+   780	                        if victim_index < req_index:
+   781	                            req_index -= 1
+== v1/core/sched/scheduler.py:797-813
+   797	                                num_embeds_to_restore = sum(
+   798	                                    preempted_req.get_num_encoder_embeds(i)
+   799	                                    for i in preempted_encoder_inputs
+   800	                                )
+   801	                                encoder_compute_budget += num_embeds_to_restore
+   802	                    else:
+   803	                        preempted_req = self.running.pop()
+   804	
+   805	                    self._preempt_request(
+   806	                        preempted_req,
+   807	                        scheduled_timestamp,
+   808	                        drop_stale_output=self.requires_kv_delivery,
+   809	                    )
+   810	                    preempted_reqs.append(preempted_req)
+   811	                    if preempted_req == request:
+   812	                        # No more request to preempt. Cannot schedule this request.
+   813	                        break
+== v1/core/sched/scheduler.py:1019-1035
+  1019	                        new_computed_blocks = (
+  1020	                            self.kv_cache_manager.empty_kv_cache_blocks
+  1021	                        )
+  1022	                        num_new_local_computed_tokens = 0
+  1023	                        num_external_computed_tokens = 0
+  1024	                        connector_prefix_cache_hits = 0
+  1025	                        num_computed_tokens = 0
+  1026	                        load_kv_async = False
+  1027	
+  1028	                    # Skip request with pending mm encoding prefetches
+  1029	                    if self._ec_transfer_pending(request, num_computed_tokens):
+  1030	                        skip_request(request_queue)
+  1031	                        continue
+  1032	
+  1033	                    # Track first scheduled prefill, not post-preemption repeat prefills
+  1034	                    if request.prefill_stats and request.num_preemptions <= 0:
+  1035	                        assert num_computed_tokens <= request.num_prompt_tokens
+== v1/core/sched/scheduler.py:1296-1312
+  1296	                if self.log_stats:
+  1297	                    request.record_event(
+  1298	                        EngineCoreEventType.SCHEDULED, scheduled_timestamp
+  1299	                    )
+  1300	                if request.status == RequestStatus.WAITING:
+  1301	                    scheduled_new_reqs.append(request)
+  1302	                elif request.status == RequestStatus.PREEMPTED:
+  1303	                    scheduled_resumed_reqs.append(request)
+  1304	                else:
+  1305	                    raise RuntimeError(f"Invalid request status: {request.status}")
+  1306	
+  1307	                if self.lora_config and request.lora_request:
+  1308	                    scheduled_loras.add(request.lora_request.lora_int_id)
+  1309	                req_to_new_blocks[request_id] = self.kv_cache_manager.get_blocks(
+  1310	                    request_id
+  1311	                )
+  1312	                num_scheduled_tokens[request_id] = num_new_tokens
+== v1/core/sched/scheduler.py:1532-1548
+  1532	            skip = self._skip_zero_block_ids
+  1533	            new_block_ids_to_zero = [b for b in new_block_ids_to_zero if b not in skip]
+  1534	            skip.clear()
+  1535	
+  1536	        return new_block_ids_to_zero or None
+  1537	
+  1538	    def _preempt_request(
+  1539	        self, request: Request, timestamp: float, drop_stale_output: bool = False
+  1540	    ) -> None:
+  1541	        """Preempt a request and put it back to the waiting queue.
+  1542	
+  1543	        NOTE: The request should be popped from the running queue outside of this
+  1544	        method.
+  1545	
+  1546	        drop_stale_output: drop (rather than deliver) any in-flight output; used
+  1547	        by reset_prefix_cache, whose same-step resume would otherwise deliver
+  1548	        tokens out of order, and for connectors with a pending KV hand-off,
+== v1/core/sched/scheduler.py:1553-1569
+  1553	        )
+  1554	        if self.aux_output_connector is not None:
+  1555	            self.aux_output_connector.request_finished(request)
+  1556	        self._free_request_blocks(request)
+  1557	        self.encoder_cache_manager.free(request)
+  1558	        self._inflight_prefills.discard(request)
+  1559	        request.status = RequestStatus.PREEMPTED
+  1560	        request.num_computed_tokens = 0
+  1561	        if request.spec_token_ids:
+  1562	            request.spec_token_ids = []
+  1563	        # Async scheduling: mark all in-flight output as stale. Its tokens are
+  1564	        # still delivered on return (dropping them would perturb spec-decode
+  1565	        # acceptance) but must not mutate the reset counters; each step drains
+  1566	        # its share in update_from_output. num_in_flight_tokens already
+  1567	        # includes any undrained stale share, so assign rather than accumulate.
+  1568	        # An undrained drop-mode share stays dropped: its positions have
+  1569	        # already been resampled.
+== v1/core/sched/scheduler.py:1554-1570
+  1554	        if self.aux_output_connector is not None:
+  1555	            self.aux_output_connector.request_finished(request)
+  1556	        self._free_request_blocks(request)
+  1557	        self.encoder_cache_manager.free(request)
+  1558	        self._inflight_prefills.discard(request)
+  1559	        request.status = RequestStatus.PREEMPTED
+  1560	        request.num_computed_tokens = 0
+  1561	        if request.spec_token_ids:
+  1562	            request.spec_token_ids = []
+  1563	        # Async scheduling: mark all in-flight output as stale. Its tokens are
+  1564	        # still delivered on return (dropping them would perturb spec-decode
+  1565	        # acceptance) but must not mutate the reset counters; each step drains
+  1566	        # its share in update_from_output. num_in_flight_tokens already
+  1567	        # includes any undrained stale share, so assign rather than accumulate.
+  1568	        # An undrained drop-mode share stays dropped: its positions have
+  1569	        # already been resampled.
+  1570	        request.drop_stale_output = drop_stale_output or (
+== v1/core/sched/scheduler.py:2797-2813
+  2797	            # Invalidate all the current running requests KV's by pushing them to
+  2798	            # the waiting queue. In this case, we can reduce the ref count of all
+  2799	            # the kv blocks to 0 and thus we can make sure the reset is successful.
+  2800	            # Preempt in reverse order so the requests will be added back to the
+  2801	            # running queue in FIFO order.
+  2802	            while self.running:
+  2803	                request = self.running.pop()
+  2804	                self._preempt_request(request, timestamp, drop_stale_output=True)
+  2805	
+  2806	            # Clear scheduled request ids cache. Since we are forcing preemption
+  2807	            # + resumption in the same step, we must act as if these requests were
+  2808	            # not scheduled in the prior step. They will be flushed from the
+  2809	            # persistent batch in the model runner.
+  2810	            self.prev_step_scheduled_req_ids.clear()
+  2811	
+  2812	        reset_successful = self.kv_cache_manager.reset_prefix_cache()
+  2813	        if reset_running_requests and not reset_successful:
+== v1/core/sched/scheduler.py:3105-3121
+  3105	            if request_id not in self.finished_recving_kv_req_ids:
+  3106	                logger.debug("%s is still in WAITING_FOR_REMOTE_KVS state.", request_id)
+  3107	                return False
+  3108	            # Promote request to waiting or preempted.
+  3109	            self._update_waiting_for_remote_kv(request)
+  3110	            if request.num_preemptions:
+  3111	                request.status = RequestStatus.PREEMPTED
+  3112	            else:
+  3113	                request.status = RequestStatus.WAITING
+  3114	
+  3115	        elif request.status == RequestStatus.WAITING_FOR_STRUCTURED_OUTPUT_GRAMMAR:
+  3116	            # Check whether grammar compilation has finished.
+  3117	            struct_output_req = request.structured_output_request
+  3118	            if not struct_output_req or struct_output_req.grammar is None:
+  3119	                return False
+  3120	            if isinstance(struct_output_req.grammar, Exception):
+  3121	                self.grammar_compile_error_reqs.add(request.request_id)
+== v1/core/sched/scheduler.py:3269-3285
+  3269	            if (
+  3270	                request is not None
+  3271	                and request.status == RequestStatus.WAITING_FOR_REMOTE_KVS
+  3272	            ):
+  3273	                affected_req_ids.add(req_id)
+  3274	                if self.recompute_kv_load_failures:
+  3275	                    request.num_computed_tokens = 0
+  3276	                    self.failed_recving_kv_req_ids.add(req_id)
+  3277	        return set() if self.recompute_kv_load_failures else affected_req_ids
+  3278	
+  3279	    def _handle_invalid_blocks(
+  3280	        self, invalid_block_ids: set[int], num_scheduled_tokens: dict[str, int]
+  3281	    ) -> set[str]:
+  3282	        """Handle requests affected by invalid KV cache blocks.
+  3283	
+  3284	        Returns:
+  3285	            Set of affected request IDs to skip in update_from_output main loop.
+exit 0

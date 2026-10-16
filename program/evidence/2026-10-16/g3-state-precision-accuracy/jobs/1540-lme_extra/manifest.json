@@ -1,0 +1,63 @@
+{
+  "batch_script_sha256": "2a10c9c72c22ab6dd5135061ff1b9b50977a468687180353d8cd7273acbaf1ec",
+  "command": [
+    "python",
+    "scripts/run_g3_accuracy.py",
+    "run",
+    "--phase",
+    "lme_extra",
+    "--model",
+    "qwen3.5-4b",
+    "--arm",
+    "bf16",
+    "--seeds",
+    "42",
+    "43",
+    "44",
+    "--output-dir",
+    "/outputs/g3",
+    "--allocation-minutes",
+    "15",
+    "--longmemeval-path",
+    "/inputs/longmemeval_s_cleaned.json"
+  ],
+  "container_profile": "vllm",
+  "cpus": 16,
+  "git_sha": "274a2a9969a0ba50888eb6f2ab7aacf3486d5615",
+  "gpu_type": "h100",
+  "gpus": 1,
+  "image_id": "sha256:03b8bf0277029e7d9df525625a262666d9005b2f4c8e159929b6bf547f799d3e",
+  "max_gpu_hours": 0.25,
+  "memory_gb": 128,
+  "minutes": 15,
+  "model": {
+    "artifact_root_sha256": "3b8a075149bffe4dea784db5b4b37bc0896688cba0b3de7d8d0f6e8ae6157b9e",
+    "cache_host_path": "/home/kevin/cotcodec-runs/hf-cache",
+    "model_id": "qwen3.5-4b",
+    "receipt_sha256": "75ebfc531acdcbc0c39bbf83ee7bf5267a3ddf02c4fafdf6181624612a0d3082",
+    "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a"
+  },
+  "name": "g3-lmex-q35-4b-bf16",
+  "public_benchmark": {
+    "container_path": "/inputs/longmemeval_s_cleaned.json",
+    "host_path": "/home/kevin/cotcodec-runs/inputs/longmemeval/98d7416c24c778c2fee6e6f3006e7a073259d48f/longmemeval_s_cleaned.json",
+    "license": "MIT",
+    "revision": "98d7416c24c778c2fee6e6f3006e7a073259d48f",
+    "sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+    "size_bytes": 277383467,
+    "source_id": "longmemeval-s-cleaned"
+  },
+  "randomness_contract": "assignment-seed-matrix",
+  "run_root": "/home/kevin/cotcodec-runs/stage0/g3-state-precision-accuracy/runs/lme_extra",
+  "runtime": "docker-single-node-discovery-v1",
+  "schema_version": 1,
+  "seed_binding": {
+    "flag": "--seeds"
+  },
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "source_sha256": "2507198f2fd5d503b329b193e345f126ab53670c8b3b226035f5cbcadc0f0687"
+}

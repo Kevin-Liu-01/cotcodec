@@ -1,0 +1,181 @@
+{
+  "claim_level": "exploratory",
+  "engine_kwargs": {
+    "qwen3.5-4b": {
+      "fp32": {
+        "lme": {
+          "disable_log_stats": false,
+          "dtype": "bfloat16",
+          "enable_prefix_caching": false,
+          "gpu_memory_utilization": 0.9,
+          "limit_mm_per_prompt": {
+            "image": 0,
+            "video": 0
+          },
+          "logprobs_mode": "raw_logprobs",
+          "mamba_ssm_cache_dtype": "auto",
+          "max_model_len": 131072,
+          "max_num_batched_tokens": 8192,
+          "max_num_seqs": 512,
+          "model": "/model-cache/cotcodec-models/qwen3.5-4b",
+          "seed": 42,
+          "tokenizer": "/model-cache/cotcodec-models/qwen3.5-4b",
+          "trust_remote_code": false
+        },
+        "math": {
+          "disable_log_stats": false,
+          "dtype": "bfloat16",
+          "enable_prefix_caching": false,
+          "gpu_memory_utilization": 0.9,
+          "limit_mm_per_prompt": {
+            "image": 0,
+            "video": 0
+          },
+          "logprobs_mode": "raw_logprobs",
+          "mamba_ssm_cache_dtype": "auto",
+          "max_model_len": 33792,
+          "max_num_batched_tokens": 8192,
+          "max_num_seqs": 512,
+          "model": "/model-cache/cotcodec-models/qwen3.5-4b",
+          "seed": 42,
+          "tokenizer": "/model-cache/cotcodec-models/qwen3.5-4b",
+          "trust_remote_code": false
+        }
+      }
+    },
+    "qwen3.5-9b": {
+      "fp32": {
+        "lme": {
+          "disable_log_stats": false,
+          "dtype": "bfloat16",
+          "enable_prefix_caching": false,
+          "gpu_memory_utilization": 0.9,
+          "limit_mm_per_prompt": {
+            "image": 0,
+            "video": 0
+          },
+          "logprobs_mode": "raw_logprobs",
+          "mamba_ssm_cache_dtype": "auto",
+          "max_model_len": 131072,
+          "max_num_batched_tokens": 8192,
+          "max_num_seqs": 512,
+          "model": "/model-cache/cotcodec-models/qwen3.5-9b",
+          "seed": 42,
+          "tokenizer": "/model-cache/cotcodec-models/qwen3.5-9b",
+          "trust_remote_code": false
+        },
+        "math": {
+          "disable_log_stats": false,
+          "dtype": "bfloat16",
+          "enable_prefix_caching": false,
+          "gpu_memory_utilization": 0.9,
+          "limit_mm_per_prompt": {
+            "image": 0,
+            "video": 0
+          },
+          "logprobs_mode": "raw_logprobs",
+          "mamba_ssm_cache_dtype": "auto",
+          "max_model_len": 33792,
+          "max_num_batched_tokens": 8192,
+          "max_num_seqs": 512,
+          "model": "/model-cache/cotcodec-models/qwen3.5-9b",
+          "seed": 42,
+          "tokenizer": "/model-cache/cotcodec-models/qwen3.5-9b",
+          "trust_remote_code": false
+        }
+      }
+    }
+  },
+  "experiment_id": "g3-state-precision-accuracy-v1",
+  "lme_requests": 12,
+  "math_prompts": 134,
+  "math_requests": 96,
+  "phase": {
+    "arms": [
+      "fp32"
+    ],
+    "lme_gen_seconds": 600.0,
+    "lme_questions": 12,
+    "lme_seeds": [
+      42
+    ],
+    "math_gen_seconds": 1200.0,
+    "math_questions": [
+      0,
+      3,
+      4,
+      6,
+      11,
+      12,
+      13,
+      19,
+      20,
+      25,
+      26,
+      27,
+      28,
+      29,
+      35,
+      43,
+      45,
+      48,
+      53,
+      54,
+      57,
+      62,
+      64,
+      69,
+      70,
+      71,
+      75,
+      77,
+      83,
+      86,
+      89,
+      91,
+      94,
+      95,
+      97,
+      101,
+      107,
+      114,
+      116,
+      117,
+      118,
+      120,
+      121,
+      122,
+      123,
+      128,
+      129,
+      133
+    ],
+    "math_seeds": [
+      42,
+      43
+    ],
+    "phase": "pilot"
+  },
+  "sampling": {
+    "lme": {
+      "logprobs": 0,
+      "max_tokens": 256,
+      "min_p": 0.0,
+      "presence_penalty": 1.5,
+      "repetition_penalty": 1.0,
+      "temperature": 0.7,
+      "top_k": 20,
+      "top_p": 0.8
+    },
+    "math": {
+      "logprobs": 0,
+      "max_tokens": 32768,
+      "min_p": 0.0,
+      "presence_penalty": 1.5,
+      "repetition_penalty": 1.0,
+      "temperature": 1.0,
+      "top_k": 20,
+      "top_p": 0.95
+    }
+  }
+}

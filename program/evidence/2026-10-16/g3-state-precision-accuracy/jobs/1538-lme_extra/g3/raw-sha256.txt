@@ -1,0 +1,2 @@
+c65d3bdd0889a4c84dd825b68f9870c91d6f2ddec8e8eb9b1a93ebe53deb3d7a  ./qwen3.5-4b-fp16-lme/texts.jsonl.gz
+369689d890c61b5ac4b4036351cff15efdbb311788c7e5cc88d418cfdbe69898  ./qwen3.5-4b-fp16-lme/tokens.npz

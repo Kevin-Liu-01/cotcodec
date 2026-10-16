@@ -1,0 +1,4 @@
+53da61faa6a94c419bbf01fbfe8837a548e0183b31c44d2e38e99699eeb85ee3  ./qwen3.5-9b-bf16-lme/texts.jsonl.gz
+7d7fe0c630357140e17ebb0606d42522148ebe6408024683d8e59024e5761485  ./qwen3.5-9b-bf16-lme/tokens.npz
+fbe9380bcee1e7461e3fb61fcd6af143eb20fb0f6d7c9bdd333a198a177d5a27  ./qwen3.5-9b-bf16-math/texts.jsonl.gz
+5af845ba7d798bf935c934d64517bf54932a44cc06992e09b9272824cfce3210  ./qwen3.5-9b-bf16-math/tokens.npz

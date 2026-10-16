@@ -1,0 +1,44 @@
+# g3-state-precision-accuracy-v1 (EXPLORATORY) judge: AM1 primary judge (Qwen3-32B, LongMemEval answer-check prompt, greedy) on 158 distinct long-context replies (9B x 100 and 4B x 50 questions, three arms) and 200 validation items
+# Slurm limit 15 min x 1 H100 = 0.25 GPU-h cap; the drivers stop starting work 210 s before it.
+runtime: docker-single-node-discovery-v1
+name: g3-judge
+image_id: sha256:03b8bf0277029e7d9df525625a262666d9005b2f4c8e159929b6bf547f799d3e
+git_sha: "274a2a9969a0ba50888eb6f2ab7aacf3486d5615"
+source_sha256: "2507198f2fd5d503b329b193e345f126ab53670c8b3b226035f5cbcadc0f0687"
+run_root: /home/kevin/cotcodec-runs/stage0/g3-state-precision-accuracy/runs/judge
+container_profile: vllm
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 16
+  memory_gb: 128
+  minutes: 15
+budget:
+  max_gpu_hours: 0.25
+randomness_contract: deterministic
+seeds: []
+model:
+  cache_host_path: /home/kevin/cotcodec-runs/hf-cache
+  model_id: qwen3-32b
+  revision: "9216db5781bf21249d130ec9da846c4624c16137"
+  receipt_sha256: "06e4a7e981eee4f6c079fd6b02dc58e3a9fd798e0d806820383d873cf9cd1fd1"
+  artifact_root_sha256: "8fcd9106bfb1854a5b160c64a0ff3d3463208ab69854ae8c1cc26ba19dbf5714"
+study_artifact:
+  source_id: g3-judge-input
+  revision: "274a2a9969a0ba50888eb6f2ab7aacf3486d5615"
+  license: MIT
+  host_path: /home/kevin/cotcodec-runs/stage0/g3-state-precision-accuracy/judge-input/judge-input-6ae45397.json
+  sha256: "0ba91de75ccb10bf7127fa97e2984f4823e2653119aef8088ed779a53e39a63c"
+  size_bytes: 91753
+command:
+  - "python"
+  - "scripts/run_g3_accuracy.py"
+  - "judge"
+  - "--evidence"
+  - "/inputs/study-artifact.json"
+  - "--expected-evidence-sha256"
+  - "0ba91de75ccb10bf7127fa97e2984f4823e2653119aef8088ed779a53e39a63c"
+  - "--output-dir"
+  - "/outputs/g3judge"
+  - "--allocation-minutes"
+  - "15"

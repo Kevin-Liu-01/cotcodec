@@ -1,0 +1,291 @@
+{
+  "claim_level": "exploratory",
+  "engine_kwargs": {
+    "qwen3.5-4b": {
+      "bf16": {
+        "lme": {
+          "disable_log_stats": false,
+          "dtype": "bfloat16",
+          "enable_prefix_caching": false,
+          "gpu_memory_utilization": 0.9,
+          "limit_mm_per_prompt": {
+            "image": 0,
+            "video": 0
+          },
+          "logprobs_mode": "raw_logprobs",
+          "mamba_ssm_cache_dtype": "bfloat16",
+          "max_model_len": 131072,
+          "max_num_batched_tokens": 8192,
+          "max_num_seqs": 512,
+          "model": "/model-cache/cotcodec-models/qwen3.5-4b",
+          "seed": 42,
+          "tokenizer": "/model-cache/cotcodec-models/qwen3.5-4b",
+          "trust_remote_code": false
+        },
+        "math": {
+          "disable_log_stats": false,
+          "dtype": "bfloat16",
+          "enable_prefix_caching": false,
+          "gpu_memory_utilization": 0.9,
+          "limit_mm_per_prompt": {
+            "image": 0,
+            "video": 0
+          },
+          "logprobs_mode": "raw_logprobs",
+          "mamba_ssm_cache_dtype": "bfloat16",
+          "max_model_len": 33792,
+          "max_num_batched_tokens": 8192,
+          "max_num_seqs": 512,
+          "model": "/model-cache/cotcodec-models/qwen3.5-4b",
+          "seed": 42,
+          "tokenizer": "/model-cache/cotcodec-models/qwen3.5-4b",
+          "trust_remote_code": false
+        }
+      },
+      "fp16": {
+        "lme": {
+          "disable_log_stats": false,
+          "dtype": "bfloat16",
+          "enable_prefix_caching": false,
+          "gpu_memory_utilization": 0.9,
+          "limit_mm_per_prompt": {
+            "image": 0,
+            "video": 0
+          },
+          "logprobs_mode": "raw_logprobs",
+          "mamba_ssm_cache_dtype": "float16",
+          "max_model_len": 131072,
+          "max_num_batched_tokens": 8192,
+          "max_num_seqs": 512,
+          "model": "/model-cache/cotcodec-models/qwen3.5-4b",
+          "seed": 42,
+          "tokenizer": "/model-cache/cotcodec-models/qwen3.5-4b",
+          "trust_remote_code": false
+        },
+        "math": {
+          "disable_log_stats": false,
+          "dtype": "bfloat16",
+          "enable_prefix_caching": false,
+          "gpu_memory_utilization": 0.9,
+          "limit_mm_per_prompt": {
+            "image": 0,
+            "video": 0
+          },
+          "logprobs_mode": "raw_logprobs",
+          "mamba_ssm_cache_dtype": "float16",
+          "max_model_len": 33792,
+          "max_num_batched_tokens": 8192,
+          "max_num_seqs": 512,
+          "model": "/model-cache/cotcodec-models/qwen3.5-4b",
+          "seed": 42,
+          "tokenizer": "/model-cache/cotcodec-models/qwen3.5-4b",
+          "trust_remote_code": false
+        }
+      },
+      "fp32": {
+        "lme": {
+          "disable_log_stats": false,
+          "dtype": "bfloat16",
+          "enable_prefix_caching": false,
+          "gpu_memory_utilization": 0.9,
+          "limit_mm_per_prompt": {
+            "image": 0,
+            "video": 0
+          },
+          "logprobs_mode": "raw_logprobs",
+          "mamba_ssm_cache_dtype": "auto",
+          "max_model_len": 131072,
+          "max_num_batched_tokens": 8192,
+          "max_num_seqs": 512,
+          "model": "/model-cache/cotcodec-models/qwen3.5-4b",
+          "seed": 42,
+          "tokenizer": "/model-cache/cotcodec-models/qwen3.5-4b",
+          "trust_remote_code": false
+        },
+        "math": {
+          "disable_log_stats": false,
+          "dtype": "bfloat16",
+          "enable_prefix_caching": false,
+          "gpu_memory_utilization": 0.9,
+          "limit_mm_per_prompt": {
+            "image": 0,
+            "video": 0
+          },
+          "logprobs_mode": "raw_logprobs",
+          "mamba_ssm_cache_dtype": "auto",
+          "max_model_len": 33792,
+          "max_num_batched_tokens": 8192,
+          "max_num_seqs": 512,
+          "model": "/model-cache/cotcodec-models/qwen3.5-4b",
+          "seed": 42,
+          "tokenizer": "/model-cache/cotcodec-models/qwen3.5-4b",
+          "trust_remote_code": false
+        }
+      }
+    },
+    "qwen3.5-9b": {
+      "bf16": {
+        "lme": {
+          "disable_log_stats": false,
+          "dtype": "bfloat16",
+          "enable_prefix_caching": false,
+          "gpu_memory_utilization": 0.9,
+          "limit_mm_per_prompt": {
+            "image": 0,
+            "video": 0
+          },
+          "logprobs_mode": "raw_logprobs",
+          "mamba_ssm_cache_dtype": "bfloat16",
+          "max_model_len": 131072,
+          "max_num_batched_tokens": 8192,
+          "max_num_seqs": 512,
+          "model": "/model-cache/cotcodec-models/qwen3.5-9b",
+          "seed": 42,
+          "tokenizer": "/model-cache/cotcodec-models/qwen3.5-9b",
+          "trust_remote_code": false
+        },
+        "math": {
+          "disable_log_stats": false,
+          "dtype": "bfloat16",
+          "enable_prefix_caching": false,
+          "gpu_memory_utilization": 0.9,
+          "limit_mm_per_prompt": {
+            "image": 0,
+            "video": 0
+          },
+          "logprobs_mode": "raw_logprobs",
+          "mamba_ssm_cache_dtype": "bfloat16",
+          "max_model_len": 33792,
+          "max_num_batched_tokens": 8192,
+          "max_num_seqs": 512,
+          "model": "/model-cache/cotcodec-models/qwen3.5-9b",
+          "seed": 42,
+          "tokenizer": "/model-cache/cotcodec-models/qwen3.5-9b",
+          "trust_remote_code": false
+        }
+      },
+      "fp16": {
+        "lme": {
+          "disable_log_stats": false,
+          "dtype": "bfloat16",
+          "enable_prefix_caching": false,
+          "gpu_memory_utilization": 0.9,
+          "limit_mm_per_prompt": {
+            "image": 0,
+            "video": 0
+          },
+          "logprobs_mode": "raw_logprobs",
+          "mamba_ssm_cache_dtype": "float16",
+          "max_model_len": 131072,
+          "max_num_batched_tokens": 8192,
+          "max_num_seqs": 512,
+          "model": "/model-cache/cotcodec-models/qwen3.5-9b",
+          "seed": 42,
+          "tokenizer": "/model-cache/cotcodec-models/qwen3.5-9b",
+          "trust_remote_code": false
+        },
+        "math": {
+          "disable_log_stats": false,
+          "dtype": "bfloat16",
+          "enable_prefix_caching": false,
+          "gpu_memory_utilization": 0.9,
+          "limit_mm_per_prompt": {
+            "image": 0,
+            "video": 0
+          },
+          "logprobs_mode": "raw_logprobs",
+          "mamba_ssm_cache_dtype": "float16",
+          "max_model_len": 33792,
+          "max_num_batched_tokens": 8192,
+          "max_num_seqs": 512,
+          "model": "/model-cache/cotcodec-models/qwen3.5-9b",
+          "seed": 42,
+          "tokenizer": "/model-cache/cotcodec-models/qwen3.5-9b",
+          "trust_remote_code": false
+        }
+      },
+      "fp32": {
+        "lme": {
+          "disable_log_stats": false,
+          "dtype": "bfloat16",
+          "enable_prefix_caching": false,
+          "gpu_memory_utilization": 0.9,
+          "limit_mm_per_prompt": {
+            "image": 0,
+            "video": 0
+          },
+          "logprobs_mode": "raw_logprobs",
+          "mamba_ssm_cache_dtype": "auto",
+          "max_model_len": 131072,
+          "max_num_batched_tokens": 8192,
+          "max_num_seqs": 512,
+          "model": "/model-cache/cotcodec-models/qwen3.5-9b",
+          "seed": 42,
+          "tokenizer": "/model-cache/cotcodec-models/qwen3.5-9b",
+          "trust_remote_code": false
+        },
+        "math": {
+          "disable_log_stats": false,
+          "dtype": "bfloat16",
+          "enable_prefix_caching": false,
+          "gpu_memory_utilization": 0.9,
+          "limit_mm_per_prompt": {
+            "image": 0,
+            "video": 0
+          },
+          "logprobs_mode": "raw_logprobs",
+          "mamba_ssm_cache_dtype": "auto",
+          "max_model_len": 33792,
+          "max_num_batched_tokens": 8192,
+          "max_num_seqs": 512,
+          "model": "/model-cache/cotcodec-models/qwen3.5-9b",
+          "seed": 42,
+          "tokenizer": "/model-cache/cotcodec-models/qwen3.5-9b",
+          "trust_remote_code": false
+        }
+      }
+    }
+  },
+  "experiment_id": "g3-state-precision-accuracy-v1",
+  "lme_requests": 50,
+  "math_prompts": 134,
+  "math_requests": 0,
+  "phase": {
+    "arms": [
+      "fp32",
+      "fp16",
+      "bf16"
+    ],
+    "lme_gen_seconds": 450.0,
+    "lme_questions": 50,
+    "lme_seeds": [
+      42
+    ],
+    "math_gen_seconds": 0.0,
+    "math_questions": [],
+    "math_seeds": [],
+    "phase": "lme_extra"
+  },
+  "sampling": {
+    "lme": {
+      "logprobs": 0,
+      "max_tokens": 256,
+      "min_p": 0.0,
+      "presence_penalty": 1.5,
+      "repetition_penalty": 1.0,
+      "temperature": 0.7,
+      "top_k": 20,
+      "top_p": 0.8
+    },
+    "math": {
+      "logprobs": 0,
+      "max_tokens": 32768,
+      "min_p": 0.0,
+      "presence_penalty": 1.5,
+      "repetition_penalty": 1.0,
+      "temperature": 1.0,
+      "top_k": 20,
+      "top_p": 0.95
+    }
+  }
+}

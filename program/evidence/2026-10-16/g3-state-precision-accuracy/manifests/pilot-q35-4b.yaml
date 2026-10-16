@@ -1,0 +1,54 @@
+# g3-state-precision-accuracy-v1 (EXPLORATORY) run: pilot (sizing only), qwen3.5-4b fp32 state: math 48 MATH-500 L5 questions x seeds 42 43 at 32K, then 12 LongMemEval-S full-haystack questions
+# Slurm limit 45 min x 1 H100 = 0.75 GPU-h cap; the drivers stop starting work 210 s before it.
+runtime: docker-single-node-discovery-v1
+name: g3-pilot-q35-4b
+image_id: sha256:05a6446d022cc4f4f6e03e814b0e7eda72af6d617a739d3a1ec859a9c32d3866
+git_sha: "4bbf141c1139f96a42c545300c1a6cd8ad8e8b4a"
+source_sha256: "1837e6aef92a3d4a3a15e9e0d22ff9aede2e0f2230223e4946ae1a2c57f2d8dd"
+run_root: /home/kevin/cotcodec-runs/stage0/g3-state-precision-accuracy/runs/pilot
+container_profile: vllm
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 16
+  memory_gb: 128
+  minutes: 45
+budget:
+  max_gpu_hours: 0.75
+randomness_contract: assignment-seed-matrix
+seeds: [42, 43, 44]
+seed_binding:
+  flag: "--seeds"
+model:
+  cache_host_path: /home/kevin/cotcodec-runs/hf-cache
+  model_id: qwen3.5-4b
+  revision: "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a"
+  receipt_sha256: "75ebfc531acdcbc0c39bbf83ee7bf5267a3ddf02c4fafdf6181624612a0d3082"
+  artifact_root_sha256: "3b8a075149bffe4dea784db5b4b37bc0896688cba0b3de7d8d0f6e8ae6157b9e"
+public_benchmark:
+  source_id: longmemeval-s-cleaned
+  revision: "98d7416c24c778c2fee6e6f3006e7a073259d48f"
+  license: MIT
+  host_path: /home/kevin/cotcodec-runs/inputs/longmemeval/98d7416c24c778c2fee6e6f3006e7a073259d48f/longmemeval_s_cleaned.json
+  sha256: "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+  size_bytes: 277383467
+command:
+  - "python"
+  - "scripts/run_g3_accuracy.py"
+  - "run"
+  - "--phase"
+  - "pilot"
+  - "--model"
+  - "qwen3.5-4b"
+  - "--arm"
+  - "fp32"
+  - "--seeds"
+  - "42"
+  - "43"
+  - "44"
+  - "--output-dir"
+  - "/outputs/g3"
+  - "--allocation-minutes"
+  - "45"
+  - "--longmemeval-path"
+  - "/inputs/longmemeval_s_cleaned.json"
