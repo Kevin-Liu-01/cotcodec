@@ -45,7 +45,7 @@
         "arxivmath_0826"
       ],
       "numeric_reference_rule": "keep an arxivmath item only if its reference answer evaluates to a number under G3's checker v2 (harness.g3_state_precision.evaluate after normalize_math); symbolic answers with free variables are dropped because the checker compares them only as strings",
-      "max_tokens": 32768,
+      "max_tokens": 16384,
       "scoring": "the last \\boxed{} of the final answer (content after the reasoning), checked with harness.g3_state_precision.math_equiv (G3 checker v2)"
     },
     "code": {
@@ -54,7 +54,7 @@
       ],
       "contest_date_from": "2025-01-01",
       "contest_date_to": "2025-05-01",
-      "max_tokens": 32768,
+      "max_tokens": 16384,
       "scoring": "LiveCodeBench extraction (text between the last two lines containing ```); every public and private test must pass (6 s wall per test, first failure stops), run CPU-only in a no-network, no-GPU, read-only container (scripts/lm2_code_grader.py)"
     },
     "knowledge": {
@@ -86,7 +86,7 @@
       "file_bytes": 161869621346,
       "gpus": 3,
       "slots": 64,
-      "ctx_per_slot": 36864,
+      "ctx_per_slot": 20480,
       "server_args": [
         "-lm",
         "none",
@@ -96,12 +96,11 @@
       "load_timeout_s": 420,
       "chat_template_file": "experiments/lm2/templates/deepseek-v4-flash-0731-unsloth.jinja",
       "chat_template_sha256": "e643c31fcec17f342f72296e02c46d35846bf4c70f6a0271f23bad73fd4eb645",
-      "mode": "thinking, reasoning_effort low (DeepSeek's default level: no effort prefix; encoding_dsv4.py at 7872f01b)",
+      "mode": "non-thinking: DeepSeek's chat mode (encoding_dsv4.py thinking_mode='chat' at 7872f01b; the pinned template emits </think> right after the assistant tag)",
       "chat_template_kwargs": {
-        "thinking": true
+        "thinking": false
       },
-      "reasoning_effort": "low",
-      "thinking": true,
+      "thinking": false,
       "sampling": {
         "temperature": 1.0,
         "top_p": 1.0,
@@ -120,7 +119,7 @@
       "file_bytes": 104207853858,
       "gpus": 2,
       "slots": 64,
-      "ctx_per_slot": 36864,
+      "ctx_per_slot": 20480,
       "server_args": [
         "-lm",
         "none",
@@ -130,12 +129,11 @@
       "load_timeout_s": 300,
       "chat_template_file": "experiments/lm2/templates/deepseek-v4-flash-0731-unsloth.jinja",
       "chat_template_sha256": "e643c31fcec17f342f72296e02c46d35846bf4c70f6a0271f23bad73fd4eb645",
-      "mode": "thinking, reasoning_effort low (DeepSeek's default level: no effort prefix; encoding_dsv4.py at 7872f01b)",
+      "mode": "non-thinking: DeepSeek's chat mode (encoding_dsv4.py thinking_mode='chat' at 7872f01b; the pinned template emits </think> right after the assistant tag)",
       "chat_template_kwargs": {
-        "thinking": true
+        "thinking": false
       },
-      "reasoning_effort": "low",
-      "thinking": true,
+      "thinking": false,
       "sampling": {
         "temperature": 1.0,
         "top_p": 1.0,
@@ -154,7 +152,7 @@
       "file_bytes": 86720115016,
       "gpus": 2,
       "slots": 64,
-      "ctx_per_slot": 36864,
+      "ctx_per_slot": 20480,
       "server_args": [
         "-lm",
         "none",
@@ -164,12 +162,11 @@
       "load_timeout_s": 300,
       "chat_template_file": "experiments/lm2/templates/deepseek-v4-flash-0731-unsloth.jinja",
       "chat_template_sha256": "e643c31fcec17f342f72296e02c46d35846bf4c70f6a0271f23bad73fd4eb645",
-      "mode": "thinking, reasoning_effort low (DeepSeek's default level: no effort prefix; encoding_dsv4.py at 7872f01b)",
+      "mode": "non-thinking: DeepSeek's chat mode (encoding_dsv4.py thinking_mode='chat' at 7872f01b; the pinned template emits </think> right after the assistant tag)",
       "chat_template_kwargs": {
-        "thinking": true
+        "thinking": false
       },
-      "reasoning_effort": "low",
-      "thinking": true,
+      "thinking": false,
       "sampling": {
         "temperature": 1.0,
         "top_p": 1.0,
@@ -199,12 +196,7 @@
       "expected_embedded_template_sha256": "40c21f34cf67d8c760ef72f8ad3ae5afad514299d4b06e91dd9a8d705af7b541",
       "mode": "non-thinking (Instruct-2507 has no thinking mode)",
       "thinking": false,
-      "max_tokens": {
-        "math": 16384,
-        "code": 16384,
-        "knowledge": 16384
-      },
-      "max_tokens_source": "Qwen/Qwen3-235B-A22B-Instruct-2507 README at ac9c66cc: an output length of 16,384 tokens for most queries",
+      "max_tokens_source": "Qwen/Qwen3-235B-A22B-Instruct-2507 README at ac9c66cc: an output length of 16,384 tokens for most queries (the cap every arm uses)",
       "sampling": {
         "temperature": 0.7,
         "top_p": 0.8,
@@ -221,19 +213,20 @@
       "receipt_sha256": "dc5007aa56057007c80e8a364584d41dc24980d9f9a87770614245d2e1c38f8c",
       "artifact_root_sha256": "329ede2a5e5e773129c05d20b1a969923e706f0a0520c9b9702088692eee779f",
       "file_bytes": 63387346665,
-      "gpus": 2,
-      "slots": 48,
-      "ctx_per_slot": 36864,
+      "gpus": 1,
+      "slots": 24,
+      "ctx_per_slot": 20480,
       "server_args": [
         "-lm",
         "none",
         "-lzm",
-        "off"
+        "off",
+        "-bs"
       ],
       "load_timeout_s": 240,
       "expected_embedded_template_sha256": "a4c9919cbbd4acdd51ccffe22da049264b1b73e59055fa58811a99efbd7c8146",
-      "mode": "reasoning effort medium (the harmony template's default), set on every request",
-      "reasoning_effort": "medium",
+      "mode": "reasoning effort low (its minimum; the harmony analysis channel cannot be turned off), set on every request",
+      "reasoning_effort": "low",
       "thinking": true,
       "sampling": {
         "temperature": 1.0,
@@ -241,8 +234,12 @@
         "top_k": 0,
         "min_p": 0.0
       },
-      "sampling_source": "openai/gpt-oss README (github.com/openai/gpt-oss, 'Recommended Sampling Parameters'): temperature 1.0, top_p 1.0"
+      "sampling_source": "openai/gpt-oss README (github.com/openai/gpt-oss, 'Recommended Sampling Parameters'): temperature 1.0, top_p 1.0",
+      "backend_sampling_note": "-bs (stock llama.cpp backend sampling, marked experimental) moves sampling to the GPU; the sampler chain here is temperature and dist only, the same distribution as CPU sampling. The diagnostic job 1832 measured 475 against 285 tok/s for the pilot job 1804 (2 H100, 48 slots); it did not change V4 Flash's throughput (job 1830), so only this arm uses it."
     }
   },
-  "slot_sizing_note": "Pilot starting points from HBM arithmetic: MoE decode reads most expert weights once per step once the batch is large, so more slots raise throughput until compute or KV memory binds; layer split runs the GPUs one after another, so throughput per GPU-hour is set by slots per step. Qwen3-235B's f16 KV (188 KiB per token) limits it to about 14 slots on 2 GPUs, so it gets 3 GPUs and 32 slots; gpt-oss-120b's 13 GiB of free memory on 1 GPU allows about 10 slots, so it gets 2 GPUs and 48. The driver's --slots overrides a value after the pilot, and the manifest records it."
+  "slot_sizing_note": "V4 Flash: 64 slots (throughput saturates near 210 tok/s per instance; the KV cache of 64 slots at 20,480 tokens is about 10 GB). Qwen3-235B: f16 KV is 188 KiB per token, so 32 slots of 20,480 need about 120 GiB, which 3 H100s hold beside the 97 GiB of weights. gpt-oss-120b: 36 KiB of KV per token, so 24 slots of 20,480 (about 17 GiB) fit on 1 H100 beside its 58 GiB of weights.",
+  "tier": "instant",
+  "tier_rule": "Every arm in its least-deliberating mode, as LM1's instant tier defined it: DeepSeek V4 Flash 0731 in chat (non-thinking) mode, Qwen3-235B-A22B-Instruct-2507 (non-thinking only), gpt-oss-120b at reasoning effort low (its minimum; it cannot turn reasoning off). One output cap for every arm and task: 16,384 tokens (Qwen's stated adequate length for instruct use).",
+  "design_change_after_pilot": "The first plan ran V4 Flash in thinking mode at reasoning effort low with a 32,768 cap. The pilot (jobs 1802 and 1830, not analysed) measured about 210 generated tok/s in aggregate for ds4 Q2 on 2 H100s at 64 slots (3.3 tok/s per slot), with or without backend sampling: llama.cpp b11669's DeepSeek V4 decode costs about 4.5 ms per sequence per step. At that rate a thinking suite with three seeds does not fit 8 GPU-hours, so the evaluation moved to the instant tier before any output was scored."
 }

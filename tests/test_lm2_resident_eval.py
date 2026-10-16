@@ -44,8 +44,8 @@ def test_the_v4_arms_share_one_pinned_template(plan: dict) -> None:
     for arm in v4:
         path = ROOT / arm["chat_template_file"]
         assert lm2.sha256_file(path) == arm["chat_template_sha256"]
-        assert arm["chat_template_kwargs"] == {"thinking": True}
-        assert arm["reasoning_effort"] == "low"
+        assert arm["chat_template_kwargs"] == {"thinking": False}
+        assert "reasoning_effort" not in arm and arm["thinking"] is False
         assert arm["sampling"] == {"temperature": 1.0, "top_p": 1.0, "top_k": 0, "min_p": 0.0}
     # The template adds no effort prefix for "low", and opens the reasoning block.
     text = (ROOT / v4[0]["chat_template_file"]).read_text()
@@ -58,7 +58,7 @@ def test_plan_validation_rejects_tampering(plan: dict) -> None:
     with pytest.raises(lm2.LM2Error):
         lm2.validate_plan(bad)
     bad = copy.deepcopy(plan)
-    bad["arms"]["gptoss120"]["ctx_per_slot"] = 30000
+    bad["arms"]["gptoss120"]["ctx_per_slot"] = 16000
     with pytest.raises(lm2.LM2Error):
         lm2.validate_plan(bad)
     bad = copy.deepcopy(plan)
@@ -120,15 +120,15 @@ def test_payloads_set_every_sampler_and_the_mode(plan: dict) -> None:
     item = {"id": "aime_2026/1", "problem": "Find x."}
     p = lm2.chat_payload(plan, "v4f-q2", "math", item, 42)
     assert p["temperature"] == 1.0 and p["top_k"] == 0 and p["min_p"] == 0.0
-    assert p["chat_template_kwargs"] == {"thinking": True} and p["reasoning_effort"] == "low"
-    assert p["max_tokens"] == 32768 and p["cache_prompt"] is False
+    assert p["chat_template_kwargs"] == {"thinking": False} and "reasoning_effort" not in p
+    assert p["max_tokens"] == 16384 and p["cache_prompt"] is False
     assert p["repeat_penalty"] == 1.0 and p["dry_multiplier"] == 0.0
     assert p["messages"][0]["content"].endswith(lm2.MATH_SUFFIX)
     q = lm2.chat_payload(plan, "qwen235-q3", "math", item, 42)
     assert q["max_tokens"] == 16384 and q["top_k"] == 20 and "chat_template_kwargs" not in q
     assert q["seed"] == p["seed"]
     g = lm2.chat_payload(plan, "gptoss120", "math", item, 42)
-    assert g["reasoning_effort"] == "medium" and g["max_tokens"] == 32768
+    assert g["reasoning_effort"] == "low" and g["max_tokens"] == 16384
 
 
 def test_code_prompt_follows_livecodebench() -> None:
@@ -264,7 +264,7 @@ def test_driver_helpers(plan: dict, tmp_path: Path) -> None:
     for flag in ("-ngl", "all", "--split-mode", "layer", "-fit", "off", "--jinja", "--metrics"):
         assert flag in argv
     assert argv[argv.index("-np") + 1] == "64"
-    assert argv[argv.index("-c") + 1] == str(64 * 36864)
+    assert argv[argv.index("-c") + 1] == str(64 * 20480)
     assert argv[argv.index("--chat-template-file") + 1].endswith(
         "deepseek-v4-flash-0731-unsloth.jinja"
     )
