@@ -78,8 +78,26 @@ for whatever gains actual results"; D80). Under that delegation:
     - **H2 (descriptive, judge-qualified):** the rule turns correct
       abstentions on the 30 unanswerable questions into wrong answers 1-8
       times. The net effect at LongMemEval-S's mix stays positive.
-    - Next is AM4, exploratory on CPU: read caps, then an internal
-      write-up.
+  - AM4 (read caps, post hoc) and AM5 (development, evidence removed) are
+    done (D120-D121).
+  - **`am5-ablated-cost-v2` (row 27; D126), verified.** When the evidence is
+    removed, the capped rule's cost is below its gain for Qwen3-8B (6 vs 31)
+    and Qwen3.5-9B (6 vs 26). It is not separated for OLMo-2 (22 vs 27).
+    Break-even unanswerable shares are 0.84, 0.81 and 0.55. v1 (row 26) was
+    voided before it ran, because of a freeze error (D123).
+  - The memory line is complete for now. The internal note is in
+    `paper/memory-keepset-note/`.
+- **Local giant models (Kevin, D122-D125), on the H100 host.**
+  - The sweep dossier is verified
+    (`program/evidence/2026-10-16/local-frontier-moe-sweep/DOSSIER.md`).
+  - Kimi-K2.6 (595 GB) is on the host.
+  - G2 (streaming emulator) is closed after gauntlet wave 1 (53).
+  - Next is LM1: quality at matched memory, a 1T model at about 1.8 bits
+    against smaller models near native precision. Host prep (llama.cpp
+    image and GGUFs) is running.
+- **G3 (D124):** a 16-bit GDN state costs about 10 points of long-reasoning
+  math accuracy (bf16) on Qwen3.5. G3b, a test at the full output budget, is
+  running.
   - G2-RL is closed at an honest exit (gauntlet 63; D114).
   - The node also hosts LaMa and ROSE inference for another of Kevin's
     projects through 2026-10-20 (D110).
@@ -97,9 +115,9 @@ See `pending_decisions_for_kevin` in `program/state.json`.
 
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
-`uv run python scripts/preregister.py check-chain`, 25 rows). Decisions taken
-on Kevin's behalf are D1-D119 in `program/decisions.md`. GPU-hours are in
-`program/state.json` (`gpu_hours_ledger`, physical hours): 28.19 in total.
+`uv run python scripts/preregister.py check-chain`, 27 rows). Decisions taken
+on Kevin's behalf are D1-D126 in `program/decisions.md`. GPU-hours are in
+`program/state.json` (`gpu_hours_ledger`, physical hours): 32.69 in total.
 
 | Registration | Outcome | Evidence |
 |---|---|---|
@@ -118,6 +136,7 @@ on Kevin's behalf are D1-D119 in `program/decisions.md`. GPU-hours are in
 | `am1-memory-credit-v1` | **All gates pass; H2 MISSPECIFIED for all five primary rules** (D112). At B = 4 of 8 retrieved memories, leave-one-out regret is 0.277, 99% [0.223, 0.333], which is +0.233 [0.194, 0.273] more than exact Shapley. Every reader request and primary-judge item replayed bit for bit. Verified by a fresh rerun (11 of 11 outputs byte-identical). No gauntlet score (D111); agent hand labels (D9) | `program/evidence/2026-10-16/am1-confirmatory/RESULTS.md` |
 | `am1-keepset-search-v1` | **H-C NONABSTAIN_HELPS; H-A INCONCLUSIVE** (D117). A label-free keep rule (best-BM25-ranked 4-subset whose reply does not abstain) scores 0.571 against 0.458 for BM25 top 4 (+0.112, 39 vs 0, p 3.6e-12). With an oracle, direct search beats sampled credit rules (3 comparisons at equal calls, 3 with search on fewer calls; greedy backward, itself a search rule, not separated; D120). CPU only; verified byte for byte | `program/evidence/2026-10-16/am1-keepset-search/RESULTS.md` |
 | `am3-nonabstain-generality-v1` | **H1 NONABSTAIN_HELPS for OLMo-2 and Qwen3.5-9B** (D119): +0.101 (35 vs 0) and +0.089 (31 vs 0), confirmed by a blind hand check; anchor Qwen3-8B replays token for token. **H2 (descriptive, judge-qualified):** cost on 30 unanswerable questions 5, 8, 1 of 30; net at LongMemEval-S's mix +0.08 to +0.10. 0.67 GPU-h; verified | `program/evidence/2026-10-15/am3-nonabstain-generality-v1/RESULTS.md` |
+| `am5-ablated-cost-v2` | **COST_BELOW_GAIN for Qwen3-8B and Qwen3.5-9B; NOT_SEPARATED for OLMo-2** (D126). With the evidence removed, the capped (K = 8) non-abstention rule's cost against its gain on the same 347 held-out questions: 6 vs 31, 6 vs 26, 22 vs 27; break-even unanswerable shares 0.84, 0.81, 0.55; hand-confirmed; gain side known before and K post hoc. v1 void before running (D123). 0.35 GPU-h; verified | `program/evidence/2026-10-16/am5-ablated-cost-v2/RESULTS.md` |
 | `q2-zinv-reserve-validation-v1` | **PASS, descriptive** (D88). zinv accepts 13 of 13 held-out z-order equivalence mutants and newly accepts none of 15 violation mutants. The original comparator rejects 13 of 13 | `program/evidence/2026-10-12/q2-zinv-reserve-run/` |
 
 Gauntlet records: K1 v2 (45, honest exit), K1 v3 (51, 55, 56; honest exit, D54), Q1 Stage 0 (45, honest exit).

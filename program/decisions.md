@@ -3072,3 +3072,37 @@ memory (LM1), with the H100 host prepared for it now.**
   - Then a smoke test on GPUs 1-7.
   - The matched-memory study gets its own gauntlet once the cloud session's
     ranking lands, or from this session if it does not.
+
+**D126. `am5-ablated-cost-v2` result: when the evidence is absent, the
+non-abstention rule's cost is below its gain for Qwen3-8B and Qwen3.5-9B, and
+not separated for OLMo-2. The memory line is complete for now.**
+- Run. Ledger row 27 (freeze `6578e0f0`), job 1552, 0.35 GPU-h. The blind hand
+  check confirms both directional readings. A fresh verifier reproduced
+  analyze and extract byte for byte and recomputed every count
+  independently (`program/evidence/2026-10-16/am5-ablated-cost-v2/RESULTS.md`).
+- K = 8 (cost when the evidence is removed / gain with the evidence, of 347):
+
+  | Reader | Cost / gain | Reading | Break-even share |
+  |---|---|---|---|
+  | Qwen3-8B | 6 / 31 | COST_BELOW_GAIN | 0.84 |
+  | Qwen3.5-9B | 6 / 26 | COST_BELOW_GAIN | 0.81 |
+  | OLMo-2 | 22 / 27 | NOT_SEPARATED | 0.55 |
+
+- Caveats:
+  - The gain side was known before, and K = 8 was chosen post hoc.
+  - Qwen3.5-9B is NOT_SEPARATED for the uncapped rule (K = 70).
+  - Leakage favours COST_BELOW_GAIN.
+  - A path-guard test failed in reg mode. It is environmental, and the
+    outputs are unchanged.
+- The memory line in one paragraph:
+  - Per-memory deletion credit picks the wrong memories to keep (AM1).
+  - With an oracle, search over keep sets beats sampled credit (A1-A6).
+  - Without labels, abstention is the usable signal. Skipping keep sets that
+    make the reader abstain gains 9-11 points on answerable questions, for
+    three readers from two families.
+  - When the evidence is absent, its cost (capped at 8 reads) is a fifth or
+    less of that gain for the two Qwen readers. For OLMo-2 it is
+    inconclusive.
+- The memory line is complete for now. Next: the program's effort goes to
+  Kevin's local-giant-model direction (D122, D125: LM1 matched-memory
+  quality) and to G3b.
