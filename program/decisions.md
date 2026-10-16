@@ -3036,3 +3036,39 @@ a test of the same at the model card's full output budget.**
   the 51 questions with a capped rollout, at max_tokens 81,920 (the model
   card's math budget), without preemption. Rescoring at 32K replicates the
   main gap and tests the preemption hypothesis.
+
+**D125. G2 (Kimi expert-streaming emulator) is closed after gauntlet wave 1,
+which scored 53. Next for the local-giant-model direction: quality at matched
+memory (LM1), with the H100 host prepared for it now.**
+- Wave 1 (`program/gauntlet/2026-10-16-g2-kimi-expert-streaming.jsonl`):
+  - Score 53, the lower of 58 and 53. The open-weight reviewer ran (job 1554,
+    0.0544 GPU-h). The blind discrimination passed: the proposal is the
+    stronger design.
+  - The triad refuted it 3 of 3.
+  - Closest prior: the Anemll flash-llama.cpp fork already streams Kimi K2.5
+    on a 128 GB M5 Max. It measured 2.2 tok/s at native top-8 routing (67%
+    hit rate) and 3.2-3.3 tok/s at top-4, and documents a bank-modelling
+    workflow.
+  - The emulator's one fitted constant is mis-identified, because ds4's own
+    1,024-token prefill implies at least 9.3 GB/s.
+  - The pilot's decision rule was wired to lines that a streaming ratio
+    cannot close.
+- Why it is closed rather than repaired: the budget funds one more wave and
+  cannot certify 100 (D24). More importantly, the practical speed answer
+  already exists. Streamed Kimi on Kevin's class of machine runs at about
+  2-3 tok/s.
+- The question that decides whether a 700B-1T model is worth running locally
+  is its quality at matched memory. Does a 1T-class model at about 1.8 bits
+  beat a smaller model near native precision at the same cap? A parallel
+  cloud session of Kevin's has ranked this first (LM1, using Unsloth's 239.5
+  GB Kimi K2.5 build). It matches this program's dossier gaps G3 and G4.
+- Plan:
+  - Prepare the H100 host now: a digest-pinned llama.cpp CUDA image built
+    from an upstream tag, and the candidate GGUFs fetched with receipts:
+    - Kimi K2.5 UD-TQ1_0;
+    - DeepSeek V4 Flash 0731 at about 2 bits;
+    - Qwen3-235B-2507 at about 3 bits;
+    - gpt-oss-120b.
+  - Then a smoke test on GPUs 1-7.
+  - The matched-memory study gets its own gauntlet once the cloud session's
+    ranking lands, or from this session if it does not.
