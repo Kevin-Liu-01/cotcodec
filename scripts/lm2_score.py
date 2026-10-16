@@ -218,12 +218,13 @@ def censor(args: argparse.Namespace) -> int:
                 "finish_reason": "length",
                 "finish_reason_raw": None,
                 "completion_tokens": args.min_tokens,
+                "min_tokens": args.min_tokens,
                 "censored": True,
                 "over_analysis_cap": True,
                 "has_final": False,
                 "has_answer": False,
                 "correct": False,
-                "final_found": "unfinished_at_abort",
+                "final_found": "unfinished_at_job_end",
                 "max_tokens": args.max_tokens,
             }
         )
@@ -231,6 +232,101 @@ def censor(args: argparse.Namespace) -> int:
         for row in out:
             handle.write(json.dumps(row, sort_keys=True) + "\n")
     print(json.dumps({"censored_rows": len(out)}))
+    return 0
+
+
+def censor_tasks(args: argparse.Namespace) -> int:
+    """Censored rows for a job's requests that were still running when the job ended, from the
+    server log's per-task table (``ops/lm2-parse-server-log.py``: task id, prompt tokens, the last
+    ``n_gen`` printed, whether the task was released).
+
+    A request is identified by its prompt length (unique among the job's holes in this suite;
+    checked) and its seed by task-id order within the item (requests of one item were dispatched
+    seed 42, 43, 44 in turn). ``min_tokens`` is the last ``n_gen`` the server printed, a lower
+    bound on what the request had generated. Rows for every unreleased task inside the caps are
+    written; ``finalize`` uses a row only where ``min_tokens`` reaches its budget.
+    """
+
+    pre = [json.loads(line) for line in args.pre.read_text().splitlines() if line.strip()]
+    length_arms = set(args.length_arms or [args.arm])
+    lengths: dict[str, int] = {}
+    meta: dict[str, dict[str, Any]] = {}
+    for row in pre:
+        meta.setdefault(
+            row["item_id"], {"task": row["task"], "rank": row["rank"], "source": row["source"]}
+        )
+        if row["arm"] in length_arms and row.get("prompt_tokens"):
+            lengths[row["item_id"]] = row["prompt_tokens"]
+    caps = {k: int(v) for k, v in (spec.split("=") for spec in args.cap)}
+    done = {
+        (r["item_id"], r["seed"])
+        for r in pre
+        if r["arm"] == args.arm and str(r["job_id"]) <= args.run_id
+    }
+    holes: dict[str, list[int]] = {}
+    for item, m in meta.items():
+        if m["rank"] < caps.get(m["task"], 0):
+            missing = [s for s in (42, 43, 44) if (item, s) not in done]
+            if missing:
+                holes[item] = missing
+    tasks = [json.loads(line) for line in args.tasks.read_text().splitlines() if line.strip()]
+    open_tasks = [t for t in tasks if not t["released"]]
+    per_item: dict[str, list[dict[str, Any]]] = {}
+    for t in open_tasks:
+        cands = [i for i in holes if lengths.get(i) == t["prompt_tokens"]]
+        if len(cands) > 1:
+            raise SystemExit(f"task {t['task']}: prompt length matches several holes {cands}")
+        if cands:
+            per_item.setdefault(cands[0], []).append(t)
+    out, notes = [], []
+    for item, ts in sorted(per_item.items()):
+        ts.sort(key=lambda t: t["task"])
+        seeds = sorted(holes[item])
+        if len(ts) != len(seeds):
+            raise SystemExit(f"{item}: {len(ts)} open tasks for holes {seeds}")
+        mixed = len({t["n_gen"] >= args.report_cap for t in ts}) > 1
+        if mixed:
+            notes.append({"item": item, "seeds": seeds, "n_gen": [t["n_gen"] for t in ts]})
+        for t, seed in zip(ts, seeds, strict=True):
+            m = meta[item]
+            out.append(
+                {
+                    "key": f"{args.arm}|{m['task']}|{item}|{seed}",
+                    "arm": args.arm,
+                    "task": m["task"],
+                    "item_id": item,
+                    "source": m["source"],
+                    "seed": seed,
+                    "rank": m["rank"],
+                    "job_id": args.run_id,
+                    "slurm_job": args.job,
+                    "server_task": t["task"],
+                    "min_tokens": t["n_gen"],
+                    "completion_tokens": t["n_gen"],
+                    "max_tokens": args.max_tokens,
+                    "finish_reason": "length",
+                    "finish_reason_raw": None,
+                    "censored": True,
+                    "over_analysis_cap": True,
+                    "has_final": False,
+                    "has_answer": False,
+                    "correct": False,
+                    "final_found": "unfinished_at_job_end",
+                    "seed_assignment": "task_order" if len(ts) > 1 else "unique",
+                }
+            )
+    with args.out.open("w", encoding="utf-8") as handle:
+        for row in out:
+            handle.write(json.dumps(row, sort_keys=True) + "\n")
+    print(
+        json.dumps(
+            {
+                "censored_rows": len(out),
+                "holes": sum(map(len, holes.values())),
+                "mixed_items_at_report_cap": notes,
+            }
+        )
+    )
     return 0
 
 
@@ -266,14 +362,33 @@ def finalize(args: argparse.Namespace) -> int:
             grade["passed_tests"] = verdict.get("passed_tests")
             grade["grade_s"] = verdict.get("elapsed_s")
         out_rows.append(grade)
-    keys = {g["key"] for g in out_rows}
+    # Censored attempts (still running when a job ended, ``min_tokens`` generated) are determined
+    # failures under a budget at or below ``min_tokens``. Per key the earliest attempt with a
+    # determined outcome counts, so a censored original overrides a later re-run of the same key
+    # (job_id is the run id, a UTC timestamp).
+    by_key: dict[str, list[dict[str, Any]]] = {}
+    for grade in out_rows:
+        by_key.setdefault(grade["key"], []).append(grade)
+    overridden = 0
     for path in args.censored:
         for line in path.read_text(encoding="utf-8").splitlines():
-            if line.strip():
-                row = json.loads(line)
-                if row["key"] not in keys:
-                    out_rows.append(row)
-                    keys.add(row["key"])
+            if not line.strip():
+                continue
+            row = json.loads(line)
+            if args.max_rank is not None and row["rank"] >= args.max_rank:
+                continue
+            if int(row.get("min_tokens", row.get("completion_tokens") or 0)) < args.analysis_cap:
+                continue  # undetermined under this budget
+            by_key.setdefault(row["key"], []).append(row)
+    out_rows = []
+    for key in sorted(by_key):
+        rows = sorted(by_key[key], key=lambda r: str(r["job_id"]))
+        chosen = rows[0]
+        if len(rows) > 1 and chosen.get("censored"):
+            chosen = {**chosen, "overrides_job_ids": [r["job_id"] for r in rows[1:]]}
+            overridden += sum(1 for r in rows[1:] if not r.get("censored"))
+        out_rows.append(chosen)
+    print(json.dumps({"censored_overrides_of_reruns": overridden}))
     with args.out.open("w", encoding="utf-8") as handle:
         for grade in out_rows:
             handle.write(json.dumps(grade, sort_keys=True) + "\n")
@@ -298,6 +413,7 @@ def main(argv: list[str] | None = None) -> int:
     f.add_argument("--out", type=Path, required=True)
     f.add_argument("--censored", type=Path, nargs="*", default=[])
     f.add_argument("--max-rank", type=int, help="keep items whose rank in the order is below N")
+    f.add_argument("--analysis-cap", type=int, default=5120)
     c = sub.add_parser("censor")
     c.add_argument(
         "--plan", type=Path, default=PROJECT_ROOT / "experiments/lm2/lm2-resident-eval-v1.json"
@@ -311,7 +427,20 @@ def main(argv: list[str] | None = None) -> int:
     c.add_argument("--max-tokens", type=int, required=True)
     c.add_argument("--analysis-cap", type=int, default=5120)
     c.add_argument("--out", type=Path, required=True)
+    t = sub.add_parser("censor-tasks")
+    t.add_argument("--pre", type=Path, required=True)
+    t.add_argument("--tasks", type=Path, required=True)
+    t.add_argument("--arm", required=True)
+    t.add_argument("--run-id", required=True)
+    t.add_argument("--job", required=True)
+    t.add_argument("--cap", action="append", required=True)
+    t.add_argument("--max-tokens", type=int, required=True)
+    t.add_argument("--length-arms", nargs="*")
+    t.add_argument("--report-cap", type=int, default=5120)
+    t.add_argument("--out", type=Path, required=True)
     args = parser.parse_args(argv)
+    if args.command == "censor-tasks":
+        return censor_tasks(args)
     if args.command == "censor":
         return censor(args)
     return prepare(args) if args.command == "prepare" else finalize(args)

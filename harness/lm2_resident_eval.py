@@ -423,7 +423,8 @@ def item_means(rows: Iterable[dict[str, Any]], seeds: set[int] | None = None) ->
         if seeds is not None and row["seed"] not in seeds:
             continue
         sums.setdefault(row["item_id"], []).append(1.0 if row["correct"] else 0.0)
-    return {item: sum(v) / len(v) for item, v in sums.items()}
+    # Sorted by item id, so a bootstrap over the values does not depend on row order.
+    return {item: sum(sums[item]) / len(sums[item]) for item in sorted(sums)}
 
 
 def paired_rows(
@@ -466,16 +467,84 @@ def cluster_bootstrap_diff(
     lo = stats[int(0.025 * draws)]
     hi = stats[min(draws - 1, int(math.ceil(0.975 * draws)) - 1)]
     discordant = sum(1 for d in diffs if d != 0)
+    mean = sum(stats) / draws
+    se = math.sqrt(sum((x - mean) ** 2 for x in stats) / (draws - 1))
     return {
         "n_items": n,
         "diff": round(point, 2),
         "ci95": [round(lo, 2), round(hi, 2)],
+        "se": round(se, 2),
+        # The difference a two-sided 5% test would detect with 80% power at this SE.
+        "mdd80": round(MDD_FACTOR * se, 1),
         "a_mean": round(100.0 * sum(a) / n, 2),
         "b_mean": round(100.0 * sum(b) / n, 2),
         "items_discordant": discordant,
         "items_a_better": sum(1 for d in diffs if d > 0),
         "items_b_better": sum(1 for d in diffs if d < 0),
     }
+
+
+MDD_FACTOR = 2.8  # z(0.975) + z(0.80)
+
+
+def task_mean_bootstrap(
+    pairs: dict[str, tuple[Sequence[float], Sequence[float]]],
+    draws: int = 10_000,
+    seed: int = 42,
+) -> dict[str, Any]:
+    """Equal-weight mean over tasks of the per-task paired differences, with a bootstrap that
+    resamples items within every task in each draw (tasks have different items)."""
+
+    tasks = sorted(t for t, (a, b) in pairs.items() if a and len(a) == len(b))
+    if not tasks:
+        return {"diff": None, "ci95": None}
+    diffs = {t: [x - y for x, y in zip(*pairs[t], strict=True)] for t in tasks}
+    point = 100.0 * sum(sum(d) / len(d) for d in diffs.values()) / len(tasks)
+    rng = random.Random(seed)
+    stats = []
+    for _ in range(draws):
+        total = 0.0
+        for t in tasks:
+            d = diffs[t]
+            total += sum(d[rng.randrange(len(d))] for _ in range(len(d))) / len(d)
+        stats.append(100.0 * total / len(tasks))
+    stats.sort()
+    mean = sum(stats) / draws
+    se = math.sqrt(sum((x - mean) ** 2 for x in stats) / (draws - 1))
+    return {
+        "tasks": tasks,
+        "diff": round(point, 2),
+        "ci95": [round(stats[int(0.025 * draws)], 2), round(stats[int(0.975 * draws) - 1], 2)],
+        "se": round(se, 2),
+        "mdd80": round(MDD_FACTOR * se, 1),
+    }
+
+
+def outcomes_at_budget(
+    graded: Sequence[dict[str, Any]], censored: Sequence[dict[str, Any]], budget: int
+) -> list[dict[str, Any]]:
+    """Rows scored as "answered within ``budget`` output tokens", one per key.
+
+    ``graded`` rows were scored with no budget (content-based ``correct``). Such a row is correct
+    at the budget only if it was correct and stopped by itself within the budget. A censored row
+    (an attempt still running when its job ended, ``min_tokens`` generated) is a determined
+    failure at every budget up to ``min_tokens`` and undetermined above it. Per key, the earliest
+    attempt with a determined outcome counts (``job_id`` is the run id, a UTC timestamp), so a
+    re-run cannot replace an original attempt that had already failed the budget.
+    """
+
+    candidates: dict[str, list[dict[str, Any]]] = {}
+    for row in graded:
+        if row.get("censored"):
+            continue
+        tokens = int(row.get("completion_tokens") or 0)
+        stopped = (row.get("finish_reason_raw") or row.get("finish_reason")) == "stop"
+        ok = bool(row["correct"]) and stopped and tokens <= budget
+        candidates.setdefault(row["key"], []).append({**row, "correct": ok, "censored": False})
+    for row in censored:
+        if int(row.get("min_tokens", row.get("completion_tokens") or 0)) >= budget:
+            candidates.setdefault(row["key"], []).append({**row, "correct": False})
+    return [min(rows, key=lambda r: str(r["job_id"])) for _, rows in sorted(candidates.items())]
 
 
 def bootstrap_mean(values: Sequence[float], draws: int = 10_000, seed: int = 42) -> list[float]:

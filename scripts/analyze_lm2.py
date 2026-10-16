@@ -31,7 +31,9 @@ from harness.lm2_resident_eval import (  # noqa: E402
     cluster_bootstrap_diff,
     item_means,
     load_plan,
+    outcomes_at_budget,
     paired_rows,
+    task_mean_bootstrap,
 )
 
 GIB = 2**30
@@ -232,13 +234,17 @@ def analyze(
     for key, pairs in (("g4", PAIRS_G4), ("models", PAIRS_MODELS)):
         for x, y in pairs:
             entry = {}
+            pairs_by_task = {}
             for t in tasks:
                 if by[(x, t)] and by[(y, t)]:
                     a_vals, b_vals = paired_rows(by[(x, t)], by[(y, t)])
                     entry[t] = cluster_bootstrap_diff(a_vals, b_vals)
-            # Equal-weight task mean of per-task differences, over the tasks both arms have.
-            diffs = [entry[t]["diff"] for t in entry if entry[t]["diff"] is not None]
-            entry["task_mean_diff"] = round(sum(diffs) / len(diffs), 2) if diffs else None
+                    pairs_by_task[t] = (a_vals, b_vals)
+            # Equal-weight task mean of per-task differences, over the tasks both arms have, with
+            # a bootstrap that resamples items within every task in each draw.
+            tm = task_mean_bootstrap(pairs_by_task)
+            entry["task_mean_diff"] = tm["diff"]
+            entry["task_mean"] = tm
             result["paired"][key][f"{x} - {y}"] = entry
     if args.jobs:
         for arm_dir in sorted(p for p in args.jobs.iterdir() if p.is_dir()):
@@ -269,7 +275,7 @@ def tables(result: dict[str, Any]) -> str:
         for t in tasks:
             b = blocks.get(t)
             cells.append(
-                f"{b['accuracy']:.1f} [{b['ci95'][0]:.1f}, {b['ci95'][1]:.1f}] (n={b['items']}x{b['samples'] // max(1, b['items'])})"
+                f"{b['accuracy']:.1f} [{b['ci95'][0]:.1f}, {b['ci95'][1]:.1f}] ({b['items']} items, {b['samples']} samples)"
                 if b and b["accuracy"] is not None
                 else "-"
             )
@@ -314,12 +320,34 @@ def tables(result: dict[str, Any]) -> str:
                     if e and e["diff"] is not None
                     else "-"
                 )
-            tm = entry.get("task_mean_diff")
+            tmb = entry.get("task_mean") or {}
             out.append(
-                f"| {name} | " + " | ".join(cells) + f" | {tm:+.1f} |"
-                if tm is not None
+                f"| {name} | "
+                + " | ".join(cells)
+                + f" | {tmb['diff']:+.1f} {fmt_ci(tmb['ci95'])} |"
+                if tmb.get("diff") is not None
                 else f"| {name} | " + " | ".join(cells) + " | - |"
             )
+        out += [
+            "",
+            "Minimum detectable difference (80% power, two-sided 5%, from the paired bootstrap SE), points: "
+            + "; ".join(
+                f"{name} "
+                + ", ".join(
+                    f"{t} {entry[t]['mdd80']}"
+                    for t in tasks
+                    if entry.get(t) and entry[t].get("mdd80") is not None
+                )
+                + (
+                    f", task mean {entry['task_mean']['mdd80']}"
+                    if entry.get("task_mean", {}).get("mdd80") is not None
+                    else ""
+                )
+                for name, entry in result["paired"][key].items()
+                if any(entry.get(t) and entry[t].get("mdd80") is not None for t in tasks)
+            )
+            + ".",
+        ]
     out += [
         "",
         "## Output tokens and truncation",
@@ -369,6 +397,111 @@ def tables(result: dict[str, Any]) -> str:
     return "\n".join(out) + "\n"
 
 
+SWEEP_ARMS = ("v4f-q8", "v4f-iq3", "v4f-q2", "gptoss120")
+
+
+def budget_sweep(
+    graded_path: Path, censored_dir: Path, budgets: list[int], cap: int
+) -> dict[str, Any]:
+    """Accuracy and paired contrasts at each budget ("stopped within B tokens"), for the arms
+    with all 20 items per task; censored attempts count where B is at or below their tokens."""
+
+    graded = [g for g in load_jsonl(graded_path) if g["rank"] < cap and g["arm"] in SWEEP_ARMS]
+    censored = [
+        c
+        for p in sorted(censored_dir.glob("*.jsonl"))
+        for c in load_jsonl(p)
+        if c["rank"] < cap and c["arm"] in SWEEP_ARMS
+    ]
+    out: dict[str, Any] = {}
+    for b in budgets:
+        rows = outcomes_at_budget(graded, censored, b)
+        by = {
+            (a, t): [r for r in rows if r["arm"] == a and r["task"] == t]
+            for a in SWEEP_ARMS
+            for t in ("math", "code", "knowledge")
+        }
+        acc = {
+            a: {
+                t: round(100 * sum(r["correct"] for r in by[(a, t)]) / len(by[(a, t)]), 1)
+                for t in ("math", "code", "knowledge")
+                if by[(a, t)]
+            }
+            for a in SWEEP_ARMS
+        }
+        paired = {}
+        for x, y in PAIRS_G4 + [p for p in PAIRS_MODELS if "qwen235-q3" not in p]:
+            entry = {}
+            for t in ("math", "code", "knowledge"):
+                a_vals, b_vals = paired_rows(by[(x, t)], by[(y, t)])
+                d = cluster_bootstrap_diff(a_vals, b_vals)
+                entry[t] = {k: d[k] for k in ("diff", "ci95", "n_items")}
+            paired[f"{x} - {y}"] = entry
+        out[str(b)] = {"accuracy": acc, "paired": paired, "keys": len(rows)}
+    return out
+
+
+def code_breakdown(grades_path: Path, nocap_path: Path, cap: int) -> dict[str, Any]:
+    """ds4 Q2 and UD-IQ3_XXS against Q8 on code at the primary budget: where the losses are, and
+    whether the quantized files write longer code answers (per-item mean tokens, censored rows at
+    their lower bound)."""
+
+    rows = [g for g in load_jsonl(grades_path) if g["rank"] < cap and g["task"] == "code"]
+    nocap = {g["key"]: g for g in load_jsonl(nocap_path) if g["rank"] < cap and g["task"] == "code"}
+    by_arm = {
+        a: {(r["item_id"], r["seed"]): r for r in rows if r["arm"] == a}
+        for a in ("v4f-q8", "v4f-q2", "v4f-iq3")
+    }
+    q8 = by_arm["v4f-q8"]
+    unfinished = lambda r: bool(r.get("censored") or r.get("over_analysis_cap"))  # noqa: E731
+    out: dict[str, Any] = {}
+    for arm in ("v4f-q2", "v4f-iq3"):
+        other = by_arm[arm]
+        keys = sorted(set(q8) & set(other))
+        lost = [k for k in keys if q8[k]["correct"] and not other[k]["correct"]]
+        won = [k for k in keys if other[k]["correct"] and not q8[k]["correct"]]
+        unf = [k for k in keys if unfinished(other[k])]
+        both = [k for k in keys if not unfinished(other[k]) and not unfinished(q8[k])]
+        items = sorted({k[0] for k in keys})
+
+        def mean_tokens(table: dict, item: str) -> float:
+            vals = [
+                int(table[(item, s)]["completion_tokens"] or 0)
+                for s in (42, 43, 44)
+                if (item, s) in table
+            ]
+            return sum(vals) / len(vals)
+
+        longer = sum(1 for i in items if mean_tokens(other, i) > mean_tokens(q8, i))
+        a_vals = [1.0 if other[k]["correct"] else 0.0 for k in both]
+        b_vals = [1.0 if q8[k]["correct"] else 0.0 for k in both]
+        by_item: dict[str, list[tuple[float, float]]] = {}
+        for k, a, b in zip(both, a_vals, b_vals, strict=True):
+            by_item.setdefault(k[0], []).append((a, b))
+        pa = [sum(x for x, _ in v) / len(v) for _, v in sorted(by_item.items())]
+        pb = [sum(y for _, y in v) / len(v) for _, v in sorted(by_item.items())]
+        out[arm] = {
+            "samples": len(keys),
+            "q8_solved_arm_not": len(lost),
+            "of_which_arm_finished_wrong": sum(1 for k in lost if not unfinished(other[k])),
+            "of_which_arm_unfinished": sum(1 for k in lost if unfinished(other[k])),
+            "arm_solved_q8_not": len(won),
+            "arm_unfinished": len(unf),
+            "q8_unfinished": sum(1 for k in keys if unfinished(q8[k])),
+            "q8_solved_where_arm_unfinished": sum(1 for k in unf if q8[k]["correct"]),
+            "both_finished_pairs": len(both),
+            "both_finished_arm_solved": int(sum(a_vals)),
+            "both_finished_q8_solved": int(sum(b_vals)),
+            "both_finished_paired": cluster_bootstrap_diff(pa, pb),
+            "items_longer_than_q8": longer,
+            "items": len(items),
+            "rerun_rows_kept_in_nocap": sum(
+                1 for k in keys if f"{arm}|code|{k[0]}|{k[1]}" in nocap
+            ),
+        }
+    return out
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n", 1)[0])
     parser.add_argument(
@@ -384,6 +517,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--gpu-hours", type=Path)
     parser.add_argument("--out-json", type=Path, required=True)
     parser.add_argument("--out-md", type=Path, required=True)
+    parser.add_argument("--sweep-censored", type=Path, help="directory of censored-row files")
+    parser.add_argument("--sweep-budgets", type=int, nargs="+", default=[2048, 3072, 4096, 5120])
     args = parser.parse_args(argv)
     result = analyze(args)
     md = tables(result)
@@ -412,6 +547,38 @@ def main(argv: list[str] | None = None) -> int:
         }
         md += f"\n# {args.alt_name}\n\n"
         md += "\n".join(tables(alt).splitlines()[2:]).split("## Output tokens")[0]
+    if args.sweep_censored:
+        sweep = budget_sweep(args.grades_16k, args.sweep_censored, args.sweep_budgets, 20)
+        result["budget_sweep"] = sweep
+        md += "\n# Budget sweep (answered within B tokens; three V4 Flash files and gpt-oss)\n\n"
+        md += "| Budget | " + " | ".join(f"{a} math/code/knowledge" for a in SWEEP_ARMS) + " |\n"
+        md += "|---|" + "---|" * len(SWEEP_ARMS) + "\n"
+        for b, v in sweep.items():
+            md += (
+                f"| {b} | "
+                + " | ".join(
+                    "/".join(f"{v['accuracy'][a][t]:.1f}" for t in ("math", "code", "knowledge"))
+                    for a in SWEEP_ARMS
+                )
+                + " |\n"
+            )
+        md += "\n| Budget | Contrast | Math | Code | Knowledge |\n|---|---|---|---|---|\n"
+        for b, v in sweep.items():
+            for name, e in v["paired"].items():
+                md += (
+                    f"| {b} | {name} | "
+                    + " | ".join(
+                        f"{e[t]['diff']:+.1f} {fmt_ci(e[t]['ci95'])}"
+                        for t in ("math", "code", "knowledge")
+                    )
+                    + " |\n"
+                )
+        breakdown = code_breakdown(args.grades, args.grades_16k, 20)
+        result["code_breakdown_vs_q8"] = breakdown
+        md += "\n# Code against Q8 at the 5,120 budget\n\n| Arm | Q8 solved, arm not | of which finished, wrong | of which unfinished | Arm solved, Q8 not | Arm unfinished | Q8 solved where arm unfinished | Both finished: pairs, arm / Q8 solved, paired diff | Items longer than Q8 |\n|---|---:|---:|---:|---:|---:|---:|---|---:|\n"
+        for a, v in breakdown.items():
+            d = v["both_finished_paired"]
+            md += f"| {a} | {v['q8_solved_arm_not']} | {v['of_which_arm_finished_wrong']} | {v['of_which_arm_unfinished']} | {v['arm_solved_q8_not']} | {v['arm_unfinished']} of {v['samples']} | {v['q8_solved_where_arm_unfinished']} | {v['both_finished_pairs']}, {v['both_finished_arm_solved']} / {v['both_finished_q8_solved']}, {d['diff']:+.1f} {fmt_ci(d['ci95'])} | {v['items_longer_than_q8']} of {v['items']} |\n"
     args.out_json.write_text(json.dumps(result, indent=1, sort_keys=True) + "\n")
     args.out_md.write_text(md)
     return 0

@@ -369,3 +369,214 @@ def test_analysis_on_synthetic_grades(tmp_path: Path) -> None:
     assert result["arms"]["v4f-q2"]["fit"]["tier_at_32k"] == "Yes"
     assert result["arms"]["v4f-q8"]["fit"]["tier_at_32k"] == "No"
     assert "EXPLORATORY" in out_md.read_text()
+
+
+def _jsonl(path: Path, rows: list[dict]) -> Path:
+    path.write_text("".join(json.dumps(r) + "\n" for r in rows))
+    return path
+
+
+def test_finalize_censored_original_overrides_rerun(tmp_path: Path) -> None:
+    base = {"arm": "v4f-q2", "task": "math", "source": "aime_2026", "rank": 0, "has_answer": True}
+    pre = _jsonl(
+        tmp_path / "pre.jsonl",
+        [
+            # Re-run of key a (later run id) that finished correctly within the budget.
+            {
+                **base,
+                "key": "v4f-q2|math|m/0|42",
+                "item_id": "m/0",
+                "seed": 42,
+                "job_id": "20261016T081313Z-1",
+                "correct": True,
+                "completion_tokens": 900,
+            },
+            # Re-run of key b whose original was cancelled below the budget (undetermined).
+            {
+                **base,
+                "key": "v4f-q2|math|m/0|43",
+                "item_id": "m/0",
+                "seed": 43,
+                "job_id": "20261016T081313Z-1",
+                "correct": True,
+                "completion_tokens": 800,
+            },
+        ],
+    )
+    censored = _jsonl(
+        tmp_path / "c.jsonl",
+        [
+            {
+                **base,
+                "key": "v4f-q2|math|m/0|42",
+                "item_id": "m/0",
+                "seed": 42,
+                "censored": True,
+                "job_id": "20261016T064613Z-1",
+                "min_tokens": 6574,
+                "correct": False,
+                "has_answer": False,
+            },
+            {
+                **base,
+                "key": "v4f-q2|math|m/0|43",
+                "item_id": "m/0",
+                "seed": 43,
+                "censored": True,
+                "job_id": "20261016T064613Z-1",
+                "min_tokens": 3993,
+                "correct": False,
+                "has_answer": False,
+            },
+        ],
+    )
+    verdicts = _jsonl(tmp_path / "v.jsonl", [])
+    out = tmp_path / "grades.jsonl"
+    assert (
+        score.main(
+            [
+                "finalize",
+                "--pre",
+                str(pre),
+                "--verdicts",
+                str(verdicts),
+                "--censored",
+                str(censored),
+                "--analysis-cap",
+                "5120",
+                "--out",
+                str(out),
+            ]
+        )
+        == 0
+    )
+    rows = {r["key"]: r for r in map(json.loads, out.read_text().splitlines())}
+    assert rows["v4f-q2|math|m/0|42"]["censored"] is True
+    assert rows["v4f-q2|math|m/0|42"]["correct"] is False
+    assert rows["v4f-q2|math|m/0|42"]["overrides_job_ids"] == ["20261016T081313Z-1"]
+    # Below the budget the original is undetermined, so the re-run stands.
+    assert rows["v4f-q2|math|m/0|43"]["correct"] is True
+    assert "censored" not in rows["v4f-q2|math|m/0|43"]
+
+
+def test_outcomes_at_budget_uses_the_earliest_determined_attempt() -> None:
+    graded = [
+        {
+            "key": "k1",
+            "job_id": "b",
+            "correct": True,
+            "completion_tokens": 3000,
+            "finish_reason_raw": "stop",
+        },
+        {
+            "key": "k2",
+            "job_id": "a",
+            "correct": True,
+            "completion_tokens": 6000,
+            "finish_reason_raw": "stop",
+        },
+        {
+            "key": "k3",
+            "job_id": "b",
+            "correct": True,
+            "completion_tokens": 5120,
+            "finish_reason_raw": "length",
+        },
+    ]
+    censored = [{"key": "k1", "job_id": "a", "min_tokens": 4000, "censored": True}]
+    at = lambda b: {r["key"]: r["correct"] for r in lm2.outcomes_at_budget(graded, censored, b)}  # noqa: E731
+    assert at(3500) == {"k1": False, "k2": False, "k3": False}  # k1: original past 3,500
+    assert at(5120) == {"k1": True, "k2": False, "k3": False}  # original undetermined at 5,120
+    assert at(8192) == {"k1": True, "k2": True, "k3": False}
+
+
+def test_item_means_do_not_depend_on_row_order() -> None:
+    rows = [{"item_id": f"i{n % 7}", "seed": 42 + n % 3, "correct": n % 5 == 0} for n in range(40)]
+    a = lm2.item_means(rows)
+    b = lm2.item_means(list(reversed(rows)))
+    assert list(a) == sorted(a) and a == b and list(a.values()) == list(b.values())
+    assert lm2.bootstrap_mean(list(a.values()), draws=500) == lm2.bootstrap_mean(
+        list(b.values()), draws=500
+    )
+
+
+def test_task_mean_bootstrap_and_mdd() -> None:
+    pairs = {"math": ([1.0, 0.0, 1.0, 1.0], [0.0, 0.0, 1.0, 0.0]), "code": ([0.0, 1.0], [0.0, 1.0])}
+    r = lm2.task_mean_bootstrap(pairs, draws=2000)
+    assert r["diff"] == pytest.approx(100 * (0.5 + 0.0) / 2, abs=0.01)
+    assert r["ci95"][0] <= r["diff"] <= r["ci95"][1] and r["mdd80"] > 0
+    d = lm2.cluster_bootstrap_diff([1.0, 0.0, 1.0], [0.0, 0.0, 1.0], draws=2000)
+    assert d["mdd80"] == pytest.approx(lm2.MDD_FACTOR * d["se"], abs=0.1)
+
+
+def test_censor_tasks_maps_open_tasks_by_prompt_length_and_task_order(tmp_path: Path) -> None:
+    pre = _jsonl(
+        tmp_path / "pre.jsonl",
+        [
+            {
+                "arm": "v4f-q8",
+                "item_id": "c/1",
+                "task": "code",
+                "rank": 0,
+                "source": "lcb_v6",
+                "seed": s,
+                "prompt_tokens": 611,
+                "job_id": "x",
+            }
+            for s in (42, 43, 44)
+        ]
+        + [
+            {
+                "arm": "v4f-q2",
+                "item_id": "c/1",
+                "task": "code",
+                "rank": 0,
+                "source": "lcb_v6",
+                "seed": 43,
+                "prompt_tokens": 611,
+                "job_id": "20261016T064613Z-1",
+            },
+        ],
+    )
+    tasks = _jsonl(
+        tmp_path / "tasks.jsonl",
+        [
+            {"task": 7, "prompt_tokens": 611, "n_gen": 5403, "released": False, "cancelled": True},
+            {"task": 3, "prompt_tokens": 611, "n_gen": 6000, "released": False, "cancelled": True},
+            {"task": 5, "prompt_tokens": 611, "n_gen": 900, "released": True, "cancelled": False},
+            {"task": 9, "prompt_tokens": 99, "n_gen": 7000, "released": False, "cancelled": True},
+        ],
+    )
+    out = tmp_path / "c.jsonl"
+    assert (
+        score.main(
+            [
+                "censor-tasks",
+                "--pre",
+                str(pre),
+                "--tasks",
+                str(tasks),
+                "--arm",
+                "v4f-q2",
+                "--run-id",
+                "20261016T064613Z-1",
+                "--job",
+                "1842",
+                "--cap",
+                "code=1",
+                "--max-tokens",
+                "16384",
+                "--length-arms",
+                "v4f-q8",
+                "--out",
+                str(out),
+            ]
+        )
+        == 0
+    )
+    rows = [json.loads(line) for line in out.read_text().splitlines()]
+    assert [(r["seed"], r["min_tokens"], r["server_task"]) for r in rows] == [
+        (42, 6000, 3),
+        (44, 5403, 7),
+    ]
+    assert all(r["censored"] and r["job_id"] == "20261016T064613Z-1" for r in rows)
