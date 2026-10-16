@@ -1,0 +1,38 @@
+d0744c0715c38ec8dc84da11f7474cd8b08b5e01315f6d0859bc137a4bde5b13  /home/kevin/cotcodec-runs/stage0/lm2-resident-eval/ops/fetch_lm2_datasets.py
+Traceback (most recent call last):
+  File "/home/kevin/cotcodec-runs/stage0/lm2-resident-eval/ops/fetch_lm2_datasets.py", line 296, in <module>
+    sys.exit(main())
+  File "/home/kevin/cotcodec-runs/stage0/lm2-resident-eval/ops/fetch_lm2_datasets.py", line 290, in main
+    receipt = fetch(args.out)
+  File "/home/kevin/cotcodec-runs/stage0/lm2-resident-eval/ops/fetch_lm2_datasets.py", line 266, in fetch
+    math_items += normalize_math(source["name"], read_parquet_rows(dest))
+  File "/home/kevin/cotcodec-runs/stage0/lm2-resident-eval/ops/fetch_lm2_datasets.py", line 164, in read_parquet_rows
+    return pq.read_table(path).to_pylist()
+  File "/home/kevin/.cache/uv/archive-v0/6Ah1xncM141WyMLs/lib/python3.10/site-packages/pyarrow/parquet/core.py", line 1793, in read_table
+    dataset = ParquetDataset(
+  File "/home/kevin/.cache/uv/archive-v0/6Ah1xncM141WyMLs/lib/python3.10/site-packages/pyarrow/parquet/core.py", line 1291, in __init__
+    import pyarrow.dataset as ds
+  File "/home/kevin/.cache/uv/archive-v0/6Ah1xncM141WyMLs/lib/python3.10/site-packages/pyarrow/dataset.py", line 24, in <module>
+    from pyarrow._dataset import (  # noqa
+  File "pyarrow/_dataset.pyx", line 154, in init pyarrow._dataset
+  File "pyarrow/_compute.pyx", line 2707, in pyarrow._compute.Expression._scalar
+  File "pyarrow/scalar.pxi", line 1196, in pyarrow.lib.scalar
+  File "pyarrow/array.pxi", line 55, in pyarrow.lib._is_array_like
+  File "pyarrow/pandas-shim.pxi", line 124, in pyarrow.lib._PandasAPIShim._have_pandas_internal
+  File "pyarrow/pandas-shim.pxi", line 103, in pyarrow.lib._PandasAPIShim._check_import
+  File "pyarrow/pandas-shim.pxi", line 106, in pyarrow.lib._PandasAPIShim._check_import
+  File "pyarrow/pandas-shim.pxi", line 50, in pyarrow.lib._PandasAPIShim._import_pandas
+  File "/usr/lib/python3/dist-packages/pandas/__init__.py", line 28, in <module>
+    from pandas.compat import (
+  File "/usr/lib/python3/dist-packages/pandas/compat/__init__.py", line 15, in <module>
+    from pandas.compat.numpy import (
+  File "/usr/lib/python3/dist-packages/pandas/compat/numpy/__init__.py", line 7, in <module>
+    from pandas.util.version import Version
+  File "/usr/lib/python3/dist-packages/pandas/util/__init__.py", line 1, in <module>
+    from pandas.util._decorators import (  # noqa
+  File "/usr/lib/python3/dist-packages/pandas/util/_decorators.py", line 14, in <module>
+    from pandas._libs.properties import cache_readonly  # noqa
+  File "/usr/lib/python3/dist-packages/pandas/_libs/__init__.py", line 13, in <module>
+    from pandas._libs.interval import Interval
+  File "pandas/_libs/interval.pyx", line 1, in init pandas._libs.interval
+ValueError: numpy.dtype size changed, may indicate binary incompatibility. Expected 96 from C header, got 88 from PyObject

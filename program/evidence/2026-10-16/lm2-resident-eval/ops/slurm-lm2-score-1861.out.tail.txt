@@ -1,0 +1,4 @@
+source e643f2c1a681eed9c599994704faa9163f1e9294
+{"responses": 163, "code_rows": 43}
+dc65fc28ca5aca9bd329e6c8031cba87773947711c0ef466bd17cf3f14df6328  /home/kevin/cotcodec-runs/stage0/lm2-resident-eval/grading/smoke/code-input.jsonl
+7635434fd933246571a02164b0b8a4f85cb988d6ff613dd9ebc31f920cb4d165  /home/kevin/cotcodec-runs/stage0/lm2-resident-eval/grading/smoke/grades-pre.jsonl

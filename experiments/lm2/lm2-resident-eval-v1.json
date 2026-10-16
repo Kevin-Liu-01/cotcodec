@@ -1,0 +1,245 @@
+{
+  "schema_version": 1,
+  "experiment": "lm2-resident-eval-v1",
+  "status": "EXPLORATORY",
+  "decision": "D129",
+  "purpose": "LM2 (EXPLORATORY): which model that fits a 128 GB machine to run, and what 2-bit and 3-bit quantization cost DeepSeek V4 Flash 0731 against its 8-bit reference on verifiable tasks (the dossier's G4 at task level). All runs on the H100 host with stock llama.cpp b11669 (CUDA); the Mac is only the target spec.",
+  "refuse_gpu_uuids_reason": "physical GPU 0 of the host, held by another project's job (D110, D127); the driver stops before loading anything if it is visible",
+  "refuse_gpu_uuids": [
+    "GPU-b23c3b4d-5413-4d75-cad3-74be85f8d058"
+  ],
+  "llama_server": "/opt/llama.cpp/llama-server",
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "reference_arm": "v4f-q8",
+  "datasets": {
+    "root": "/model-cache/cotcodec-datasets/lm2",
+    "receipt_sha256": "07e4502e26a5c2bfc76b8aae50ccb3edfa9cec7ddfc6e8d598089291be3e9abc",
+    "fetch_script": "scripts/fetch_lm2_datasets.py",
+    "math": {
+      "file": "math.jsonl",
+      "sha256": "97201a7edfb40d58a7592b0112fdad2ce7c55699f2e314d7b4efc6030d2649f6"
+    },
+    "code": {
+      "file": "code.jsonl",
+      "sha256": "49a20e04dbb73a15c34a0104a3d9c983209834e04c1432c4d378abf6b08f8123"
+    },
+    "knowledge": {
+      "file": "knowledge.jsonl",
+      "sha256": "93f1cebde92b8574b2c707f6fc652e3a41df8e8d8820c584acbdcf37724640cb"
+    }
+  },
+  "tasks": {
+    "math": {
+      "sources": [
+        "aime_2026",
+        "hmmt_feb_2026",
+        "arxivmath_0626",
+        "arxivmath_0826"
+      ],
+      "numeric_reference_only_sources": [
+        "arxivmath_0626",
+        "arxivmath_0826"
+      ],
+      "numeric_reference_rule": "keep an arxivmath item only if its reference answer evaluates to a number under G3's checker v2 (harness.g3_state_precision.evaluate after normalize_math); symbolic answers with free variables are dropped because the checker compares them only as strings",
+      "max_tokens": 16384,
+      "scoring": "the last \\boxed{} of the final answer (content after the reasoning), checked with harness.g3_state_precision.math_equiv (G3 checker v2)"
+    },
+    "code": {
+      "sources": [
+        "lcb_v6"
+      ],
+      "contest_date_from": "2025-01-01",
+      "contest_date_to": "2025-05-01",
+      "max_tokens": 16384,
+      "scoring": "LiveCodeBench extraction (text between the last two lines containing ```); every public and private test must pass (6 s wall per test, first failure stops), run CPU-only in a no-network, no-GPU, read-only container (scripts/lm2_code_grader.py)"
+    },
+    "knowledge": {
+      "sources": [
+        "supergpqa"
+      ],
+      "subset_size": 300,
+      "max_tokens": 16384,
+      "scoring": "the last 'Answer: X' line of the final answer against the reference letter (10-option multiple choice)"
+    }
+  },
+  "order": {
+    "rng_seed": 42,
+    "interleave": [
+      "math",
+      "code",
+      "knowledge"
+    ],
+    "rule": "within a task, items sorted by the SHA-256 of their id and shuffled with random.Random(42); tasks alternate one item at a time; the seeds of an item are adjacent; a budget cut keeps a prefix of each task's permutation (--cap task=N)"
+  },
+  "arms": {
+    "v4f-q8": {
+      "label": "DeepSeek V4 Flash 0731 UD-Q8_K_XL (reference)",
+      "family": "deepseek-v4-flash-0731",
+      "model_id": "deepseek-v4-flash-0731-ud-q8-k-xl-gguf",
+      "gguf": "UD-Q8_K_XL/DeepSeek-V4-Flash-0731-UD-Q8_K_XL-00001-of-00005.gguf",
+      "receipt_sha256": "a06fc7c2393fe5204f66c799140380c7a095ffd126459e1c00c3d84852ba31e3",
+      "artifact_root_sha256": "29ff486fb13e372b256c4084ce2166de1ef83f4757f4e560da4fe511a461badc",
+      "file_bytes": 161869621346,
+      "gpus": 3,
+      "slots": 64,
+      "ctx_per_slot": 20480,
+      "server_args": [
+        "-lm",
+        "none",
+        "-lzm",
+        "off"
+      ],
+      "load_timeout_s": 420,
+      "chat_template_file": "experiments/lm2/templates/deepseek-v4-flash-0731-unsloth.jinja",
+      "chat_template_sha256": "e643c31fcec17f342f72296e02c46d35846bf4c70f6a0271f23bad73fd4eb645",
+      "mode": "non-thinking: DeepSeek's chat mode (encoding_dsv4.py thinking_mode='chat' at 7872f01b; the pinned template emits </think> right after the assistant tag)",
+      "chat_template_kwargs": {
+        "thinking": false
+      },
+      "thinking": false,
+      "sampling": {
+        "temperature": 1.0,
+        "top_p": 1.0,
+        "top_k": 0,
+        "min_p": 0.0
+      },
+      "sampling_source": "deepseek-ai/DeepSeek-V4-Flash-0731 README at 7872f01b: temperature 1.0, top_p 1.0 outside agentic use"
+    },
+    "v4f-iq3": {
+      "label": "DeepSeek V4 Flash 0731 UD-IQ3_XXS",
+      "family": "deepseek-v4-flash-0731",
+      "model_id": "deepseek-v4-flash-0731-ud-iq3-xxs-gguf",
+      "gguf": "UD-IQ3_XXS/DeepSeek-V4-Flash-0731-UD-IQ3_XXS-00001-of-00004.gguf",
+      "receipt_sha256": "22ef49169d1eaa02a438235e440a34727cfc5ff4e6fb66238ab9bec9cb04f9b3",
+      "artifact_root_sha256": "c2c4ce4fe186166b4808167e4093edea488658a0fc30e2f86c354496e2a62113",
+      "file_bytes": 104207853858,
+      "gpus": 2,
+      "slots": 64,
+      "ctx_per_slot": 20480,
+      "server_args": [
+        "-lm",
+        "none",
+        "-lzm",
+        "off"
+      ],
+      "load_timeout_s": 300,
+      "chat_template_file": "experiments/lm2/templates/deepseek-v4-flash-0731-unsloth.jinja",
+      "chat_template_sha256": "e643c31fcec17f342f72296e02c46d35846bf4c70f6a0271f23bad73fd4eb645",
+      "mode": "non-thinking: DeepSeek's chat mode (encoding_dsv4.py thinking_mode='chat' at 7872f01b; the pinned template emits </think> right after the assistant tag)",
+      "chat_template_kwargs": {
+        "thinking": false
+      },
+      "thinking": false,
+      "sampling": {
+        "temperature": 1.0,
+        "top_p": 1.0,
+        "top_k": 0,
+        "min_p": 0.0
+      },
+      "sampling_source": "deepseek-ai/DeepSeek-V4-Flash-0731 README at 7872f01b: temperature 1.0, top_p 1.0 outside agentic use"
+    },
+    "v4f-q2": {
+      "label": "DeepSeek V4 Flash 0731 ds4 Q2 (antirez)",
+      "family": "deepseek-v4-flash-0731",
+      "model_id": "deepseek-v4-flash-0731-ds4-q2-gguf",
+      "gguf": "DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf",
+      "receipt_sha256": "415e09ea35bbbfa60c75586e91fec5299855dcfe6dcd62b5faddf46f3124a3fc",
+      "artifact_root_sha256": "0d60a7ac567eed483b206def3aee470a9023a5a75bc62fff7edd2b99bce8389e",
+      "file_bytes": 86720115016,
+      "gpus": 2,
+      "slots": 64,
+      "ctx_per_slot": 20480,
+      "server_args": [
+        "-lm",
+        "none",
+        "-lzm",
+        "off"
+      ],
+      "load_timeout_s": 300,
+      "chat_template_file": "experiments/lm2/templates/deepseek-v4-flash-0731-unsloth.jinja",
+      "chat_template_sha256": "e643c31fcec17f342f72296e02c46d35846bf4c70f6a0271f23bad73fd4eb645",
+      "mode": "non-thinking: DeepSeek's chat mode (encoding_dsv4.py thinking_mode='chat' at 7872f01b; the pinned template emits </think> right after the assistant tag)",
+      "chat_template_kwargs": {
+        "thinking": false
+      },
+      "thinking": false,
+      "sampling": {
+        "temperature": 1.0,
+        "top_p": 1.0,
+        "top_k": 0,
+        "min_p": 0.0
+      },
+      "sampling_source": "deepseek-ai/DeepSeek-V4-Flash-0731 README at 7872f01b: temperature 1.0, top_p 1.0 outside agentic use"
+    },
+    "qwen235-q3": {
+      "label": "Qwen3-235B-A22B-Instruct-2507 UD-Q3_K_XL",
+      "family": "qwen3-235b-a22b-instruct-2507",
+      "model_id": "qwen3-235b-a22b-instruct-2507-ud-q3-k-xl-gguf",
+      "gguf": "UD-Q3_K_XL/Qwen3-235B-A22B-Instruct-2507-UD-Q3_K_XL-00001-of-00003.gguf",
+      "receipt_sha256": "32e64cd077c3d5c07b408fffbd67aaea93673b1d853b2c33f162b7d83f3f1357",
+      "artifact_root_sha256": "78fcdc166c9ff6d7a35728e3d2e9555c853bb8d0dbfb444e6f54edfa83c55b7e",
+      "file_bytes": 104152938929,
+      "gpus": 3,
+      "slots": 32,
+      "ctx_per_slot": 20480,
+      "server_args": [
+        "-lm",
+        "none",
+        "-lzm",
+        "off"
+      ],
+      "load_timeout_s": 300,
+      "expected_embedded_template_sha256": "40c21f34cf67d8c760ef72f8ad3ae5afad514299d4b06e91dd9a8d705af7b541",
+      "mode": "non-thinking (Instruct-2507 has no thinking mode)",
+      "thinking": false,
+      "max_tokens_source": "Qwen/Qwen3-235B-A22B-Instruct-2507 README at ac9c66cc: an output length of 16,384 tokens for most queries (the cap every arm uses)",
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.8,
+        "top_k": 20,
+        "min_p": 0.0
+      },
+      "sampling_source": "Qwen/Qwen3-235B-A22B-Instruct-2507 README at ac9c66cc: Temperature 0.7, TopP 0.8, TopK 20, MinP 0"
+    },
+    "gptoss120": {
+      "label": "gpt-oss-120b MXFP4 (native)",
+      "family": "gpt-oss-120b",
+      "model_id": "gpt-oss-120b-mxfp4-gguf",
+      "gguf": "gpt-oss-120b-MXFP4.gguf",
+      "receipt_sha256": "dc5007aa56057007c80e8a364584d41dc24980d9f9a87770614245d2e1c38f8c",
+      "artifact_root_sha256": "329ede2a5e5e773129c05d20b1a969923e706f0a0520c9b9702088692eee779f",
+      "file_bytes": 63387346665,
+      "gpus": 1,
+      "slots": 24,
+      "ctx_per_slot": 20480,
+      "server_args": [
+        "-lm",
+        "none",
+        "-lzm",
+        "off",
+        "-bs"
+      ],
+      "load_timeout_s": 240,
+      "expected_embedded_template_sha256": "a4c9919cbbd4acdd51ccffe22da049264b1b73e59055fa58811a99efbd7c8146",
+      "mode": "reasoning effort low (its minimum; the harmony analysis channel cannot be turned off), set on every request",
+      "reasoning_effort": "low",
+      "thinking": true,
+      "sampling": {
+        "temperature": 1.0,
+        "top_p": 1.0,
+        "top_k": 0,
+        "min_p": 0.0
+      },
+      "sampling_source": "openai/gpt-oss README (github.com/openai/gpt-oss, 'Recommended Sampling Parameters'): temperature 1.0, top_p 1.0",
+      "backend_sampling_note": "-bs (stock llama.cpp backend sampling, marked experimental) moves sampling to the GPU; the sampler chain here is temperature and dist only, the same distribution as CPU sampling. The diagnostic job 1832 measured 475 against 285 tok/s for the pilot job 1804 (2 H100, 48 slots); it did not change V4 Flash's throughput (job 1830), so only this arm uses it."
+    }
+  },
+  "slot_sizing_note": "V4 Flash: 64 slots (throughput saturates near 210 tok/s per instance; the KV cache of 64 slots at 20,480 tokens is about 10 GB). Qwen3-235B: f16 KV is 188 KiB per token, so 32 slots of 20,480 need about 120 GiB, which 3 H100s hold beside the 97 GiB of weights. gpt-oss-120b: 36 KiB of KV per token, so 24 slots of 20,480 (about 17 GiB) fit on 1 H100 beside its 58 GiB of weights.",
+  "tier": "instant",
+  "tier_rule": "Every arm in its least-deliberating mode, as LM1's instant tier defined it: DeepSeek V4 Flash 0731 in chat (non-thinking) mode, Qwen3-235B-A22B-Instruct-2507 (non-thinking only), gpt-oss-120b at reasoning effort low (its minimum; it cannot turn reasoning off). One output cap for every arm and task: 16,384 tokens (Qwen's stated adequate length for instruct use).",
+  "design_change_after_pilot": "The first plan ran V4 Flash in thinking mode at reasoning effort low with a 32,768 cap. The pilot (jobs 1802 and 1830, not analysed) measured about 210 generated tok/s in aggregate for ds4 Q2 on 2 H100s at 64 slots (3.3 tok/s per slot), with or without backend sampling: llama.cpp b11669's DeepSeek V4 decode costs about 4.5 ms per sequence per step. At that rate a thinking suite with three seeds does not fit 8 GPU-hours, so the evaluation moved to the instant tier before any output was scored."
+}

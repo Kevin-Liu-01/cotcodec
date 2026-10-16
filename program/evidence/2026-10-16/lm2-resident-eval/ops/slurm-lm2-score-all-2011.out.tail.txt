@@ -1,0 +1,20 @@
+7189d820fc08f58e765ffc0db5b9444cc6357cc1
+{"responses": 1248, "code_rows": 402}
+{"responses": 1248, "code_rows": 402}
+{"responses": 1248, "code_rows": 402}
+{"censored_rows": 19}
+{"censored_rows": 12}
+f0068cf3ae4295c6e80e72e3824e46b1e1a91e8253f618a050b626e86d059f3d  /home/kevin/cotcodec-runs/stage0/lm2-resident-eval/grading/b4096/code-input.jsonl
+298e036c76bc0dab7bd5282d12d14eab496160f9d5963faa263467e62bf04d99  /home/kevin/cotcodec-runs/stage0/lm2-resident-eval/grading/b4096/grades-pre.jsonl
+fd6c597f1d1001ed066acc86e2390f1813ff57d919fbd7a6d4eb82a55cc6806f  /home/kevin/cotcodec-runs/stage0/lm2-resident-eval/grading/c16k/code-input.jsonl
+b789648b8ab31cabaa456246813cdbf06be2354ae173ffc02f99f961d316707e  /home/kevin/cotcodec-runs/stage0/lm2-resident-eval/grading/c16k/grades-pre.jsonl
+06bf41112a8f072bd2c864634681c42247742db349370d4a88963eb4934bc810  /home/kevin/cotcodec-runs/stage0/lm2-resident-eval/grading/early/code-input-cap20.jsonl
+879a8ef85cf1b0cded2cd308052226add333d71455459b8cbdc8fede5663549c  /home/kevin/cotcodec-runs/stage0/lm2-resident-eval/grading/early/code-input.jsonl
+1abed1fdd802830efb3d671717847dca2fcea1fd9519104d2a649ef5df35f49a  /home/kevin/cotcodec-runs/stage0/lm2-resident-eval/grading/early/code-verdicts-early.jsonl
+751d310048d71946599553902a28f339792021ee42cacea38340b2e6dd12ce53  /home/kevin/cotcodec-runs/stage0/lm2-resident-eval/grading/early/grades-pre.jsonl
+2d4fb0617389ba59582775488cf4e4956b297548d0ffad9e4f292d95af15a3d9  /home/kevin/cotcodec-runs/stage0/lm2-resident-eval/grading/main/code-input.jsonl
+c40c6f55286baca6c963b993add303262cdae79403c554cc43cbbfa92fa74d04  /home/kevin/cotcodec-runs/stage0/lm2-resident-eval/grading/main/grades-pre.jsonl
+dc65fc28ca5aca9bd329e6c8031cba87773947711c0ef466bd17cf3f14df6328  /home/kevin/cotcodec-runs/stage0/lm2-resident-eval/grading/smoke/code-input.jsonl
+7635434fd933246571a02164b0b8a4f85cb988d6ff613dd9ebc31f920cb4d165  /home/kevin/cotcodec-runs/stage0/lm2-resident-eval/grading/smoke/grades-pre.jsonl
+826c66dc22abf779a99226c1516166f59525423a963535bbd59b49aa27c3c321  /home/kevin/cotcodec-runs/stage0/lm2-resident-eval/grading/censored-qwen235-q3-4096.jsonl
+66a01a01589782039131037f4109987777cd57e74a101e7292c27831a79a333b  /home/kevin/cotcodec-runs/stage0/lm2-resident-eval/grading/censored-v4f-q2.jsonl

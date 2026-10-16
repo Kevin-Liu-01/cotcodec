@@ -1,0 +1,98 @@
+{
+  "counts": {
+    "aime_2026": 30,
+    "arxivmath_0626": 48,
+    "arxivmath_0826": 57,
+    "hmmt_feb_2026": 33,
+    "lcb_v6": 175,
+    "supergpqa": 26529
+  },
+  "experiment": "lm2-resident-eval",
+  "fetched_at": "2026-10-16T05:58:30Z",
+  "normalized": {
+    "code": {
+      "file": "code.jsonl",
+      "rows": 175,
+      "sha256": "49a20e04dbb73a15c34a0104a3d9c983209834e04c1432c4d378abf6b08f8123"
+    },
+    "knowledge": {
+      "file": "knowledge.jsonl",
+      "rows": 26529,
+      "sha256": "93f1cebde92b8574b2c707f6fc652e3a41df8e8d8820c584acbdcf37724640cb"
+    },
+    "math": {
+      "file": "math.jsonl",
+      "rows": 168,
+      "sha256": "97201a7edfb40d58a7592b0112fdad2ce7c55699f2e314d7b4efc6030d2649f6"
+    }
+  },
+  "schema_version": 1,
+  "sources": [
+    {
+      "bytes": 10065,
+      "kind": "math",
+      "license": "cc-by-nc-sa-4.0",
+      "name": "aime_2026",
+      "path": "data/train-00000-of-00001.parquet",
+      "repo": "MathArena/aime_2026",
+      "revision": "d2de22f3c656b4f56cf8981212186377d1e23bc3",
+      "sha256": "d91db799651b4cc1f0734f52792a695c9cc60dac342524b3d8e5b2ff31c3e957",
+      "url": "https://huggingface.co/datasets/MathArena/aime_2026/resolve/d2de22f3c656b4f56cf8981212186377d1e23bc3/data/train-00000-of-00001.parquet"
+    },
+    {
+      "bytes": 9984,
+      "kind": "math",
+      "license": "cc-by-nc-sa-4.0",
+      "name": "hmmt_feb_2026",
+      "path": "data/train-00000-of-00001.parquet",
+      "repo": "MathArena/hmmt_feb_2026",
+      "revision": "02fba4f74d8e68e73e66a02d540fd979c05c274c",
+      "sha256": "e5fcff6b1c2262841c0c37bf6d7b42529f284528d5f0d5c45c52e8bf0654a916",
+      "url": "https://huggingface.co/datasets/MathArena/hmmt_feb_2026/resolve/02fba4f74d8e68e73e66a02d540fd979c05c274c/data/train-00000-of-00001.parquet"
+    },
+    {
+      "bytes": 22770,
+      "kind": "math",
+      "license": "cc-by-sa-4.0",
+      "name": "arxivmath_0626",
+      "path": "data/train-00000-of-00001.parquet",
+      "repo": "MathArena/arxivmath-0626",
+      "revision": "dca0d771ab20c1b8e8c50d0921bf693f7bfe663d",
+      "sha256": "67e038c57192b6c2aaf5131d6877ce82684551ae44282c17c3906cef68de7446",
+      "url": "https://huggingface.co/datasets/MathArena/arxivmath-0626/resolve/dca0d771ab20c1b8e8c50d0921bf693f7bfe663d/data/train-00000-of-00001.parquet"
+    },
+    {
+      "bytes": 55180,
+      "kind": "math",
+      "license": "cc-by-sa-4.0",
+      "name": "arxivmath_0826",
+      "path": "data/train-00000-of-00001.parquet",
+      "repo": "MathArena/arxivmath-0826",
+      "revision": "977a3a0083198e11ac4f20fe79288351cebd6281",
+      "sha256": "a635931866406bbe7eb5cee8a4e47e188634b3c25b0b0b83dc06d36435e75609",
+      "url": "https://huggingface.co/datasets/MathArena/arxivmath-0826/resolve/977a3a0083198e11ac4f20fe79288351cebd6281/data/train-00000-of-00001.parquet"
+    },
+    {
+      "bytes": 134303240,
+      "kind": "code",
+      "license": "cc (dataset card); problems from LeetCode, AtCoder and Codeforces",
+      "name": "lcb_v6",
+      "path": "test6.jsonl",
+      "repo": "livecodebench/code_generation_lite",
+      "revision": "0fe84c3912ea0c4d4a78037083943e8f0c4dd505",
+      "sha256": "bb4c364f71921c4495a6ad15abe1a927350b720009f4933e2e71f8af0f6fd1f5",
+      "url": "https://huggingface.co/datasets/livecodebench/code_generation_lite/resolve/0fe84c3912ea0c4d4a78037083943e8f0c4dd505/test6.jsonl"
+    },
+    {
+      "bytes": 23957124,
+      "kind": "knowledge",
+      "license": "odc-by",
+      "name": "supergpqa",
+      "path": "SuperGPQA-all.jsonl",
+      "repo": "m-a-p/SuperGPQA",
+      "revision": "4430d4458112c7d4497fdcf94d7cc223313d6acf",
+      "sha256": "28b998e70205ee95e540317b5adc06a06552a3961fb50b153df126b833f7a910",
+      "url": "https://huggingface.co/datasets/m-a-p/SuperGPQA/resolve/4430d4458112c7d4497fdcf94d7cc223313d6acf/SuperGPQA-all.jsonl"
+    }
+  ]
+}

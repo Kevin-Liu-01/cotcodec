@@ -1,0 +1,29 @@
+JobId=1898 JobName=lm2-main-v4f-q8
+   UserId=kevin(1004) GroupId=kevin(1004) MCS_label=N/A
+   Priority=4294899862 Nice=0 Account=(null) QOS=(null)
+   JobState=COMPLETED Reason=None Dependency=(null)
+   Requeue=0 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=00:38:13 TimeLimit=00:55:00 TimeMin=N/A
+   SubmitTime=2026-10-16T07:10:34 EligibleTime=2026-10-16T07:10:34
+   AccrueTime=2026-10-16T07:10:34
+   StartTime=2026-10-16T07:15:29 EndTime=2026-10-16T07:53:42 Deadline=N/A
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2026-10-16T07:15:29 Scheduler=Main
+   Partition=research AllocNode:Sid=fal-h100-01:900115
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=fal-h100-01
+   BatchHost=fal-h100-01
+   NumNodes=1 NumCPUs=16 NumTasks=1 CPUs/Task=16 ReqB:S:C:T=0:0:*:*
+   TRES=cpu=16,mem=128G,node=1,billing=16
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   MinCPUsNode=16 MinMemoryNode=128G MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+   Command=/home/kevin/cotcodec-runs/stage0/lm2-resident-eval/checkout/infra/slurm/host-single-node/docker-research.sbatch
+   WorkDir=/home/kevin/cotcodec-runs/stage0/lm2-resident-eval/checkout
+   StdErr=/home/kevin/cotcodec-runs/stage0/lm2-resident-eval/runs/v4f-q8/slurm-1898.out
+   StdIn=/dev/null
+   StdOut=/home/kevin/cotcodec-runs/stage0/lm2-resident-eval/runs/v4f-q8/slurm-1898.out
+   Power=
+   TresPerNode=gres:gpu:h100:3
+   
+

@@ -1,0 +1,47 @@
+# LM2 (D129, EXPLORATORY) pilot: arm v4f-q2 on 2 H100 in stock llama.cpp b11669 (layer split, all
+# layers on GPU). Slurm limit 10 min x 2 H100 = 0.3334 GPU-h cap; the driver stops at its own
+# budget (8 min after it starts, less a 200 s reserve; the lane sends USR1 180 s before the limit).
+runtime: docker-single-node-discovery-v1
+name: lm2-pilot-v4f-q2
+image_id: sha256:eb56b4a51ec2fbd74d523d593b71f605ff254a95076ae4660979ce6e0be35b2f
+git_sha: "87118ed35b6f7712e5b1a13eb87247bf97b96d61"
+source_sha256: "43d45f32e7157d4ff27f4bad6bfccd19df3560afc63760915ac398290d98e717"
+run_root: /home/kevin/cotcodec-runs/stage0/lm2-resident-eval/runs/v4f-q2
+resources:
+  gpu_type: h100
+  gpus: 2
+  cpus: 16
+  memory_gb: 128
+  minutes: 10
+budget:
+  max_gpu_hours: 0.3334
+randomness_contract: assignment-seed-matrix
+seeds: [42, 43, 44]
+seed_binding:
+  flag: "--seeds"
+model:
+  cache_host_path: /home/kevin/cotcodec-runs/hf-cache
+  model_id: gpt-oss-120b-mxfp4-gguf
+  revision: "238abdd290bb874b90a5da1b4549881b7d05c091"
+  receipt_sha256: "dc5007aa56057007c80e8a364584d41dc24980d9f9a87770614245d2e1c38f8c"
+  artifact_root_sha256: "329ede2a5e5e773129c05d20b1a969923e706f0a0520c9b9702088692eee779f"
+command:
+  - "python"
+  - "scripts/run_lm2_eval.py"
+  - "run"
+  - "--plan"
+  - "experiments/lm2/lm2-resident-eval-v1.json"
+  - "--expected-plan-sha256"
+  - "62d4946c29facab9c63e37547eff279d3a9de4bcd3dbd380991d17f7ac8f8e7b"
+  - "--arm"
+  - "v4f-q2"
+  - "--phase"
+  - "pilot"
+  - "--seeds"
+  - "42"
+  - "43"
+  - "44"
+  - "--output-dir"
+  - "/outputs/lm2"
+  - "--allocation-minutes"
+  - "8"

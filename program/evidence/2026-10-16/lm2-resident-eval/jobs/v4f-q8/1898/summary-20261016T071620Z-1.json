@@ -1,0 +1,254 @@
+{
+  "already_done": 0,
+  "arm": "v4f-q8",
+  "caps": {
+    "code": 30,
+    "knowledge": 30,
+    "math": 30
+  },
+  "completed_tokens": 277185,
+  "counts": {
+    "aborted": 0,
+    "error": 0,
+    "http_error": 0,
+    "ok": 270
+  },
+  "ctx_per_slot": 20480,
+  "diag_chat_mode": false,
+  "elapsed_s": 2242.0,
+  "experiment": "lm2-resident-eval-v1",
+  "extra_server_args": [],
+  "generation_s": 2157.3,
+  "generation_started_s": 83.4,
+  "job_id": "20261016T071620Z-1",
+  "order_len": 270,
+  "peak_mib": {
+    "GPU-843dc4cf-3b6b-5e3c-4dc9-75b0560cc86c": 58727,
+    "GPU-a485003c-eb56-c00a-5efc-ba2fb61d12d5": 58411,
+    "GPU-cb6c8040-84ce-500e-3ebb-927aacaff4b7": 52495
+  },
+  "phase": "main",
+  "plan_sha256": "6bce5970f0b0e7769f51927a21489c1f82dbdc21759f772e532b92670ad0a770",
+  "remaining_in_queue": 0,
+  "schema_version": 1,
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "server": {
+    "gpus": [
+      {
+        "index": 0,
+        "total_mib": 81559,
+        "uuid": "GPU-a485003c-eb56-c00a-5efc-ba2fb61d12d5"
+      },
+      {
+        "index": 1,
+        "total_mib": 81559,
+        "uuid": "GPU-843dc4cf-3b6b-5e3c-4dc9-75b0560cc86c"
+      },
+      {
+        "index": 2,
+        "total_mib": 81559,
+        "uuid": "GPU-cb6c8040-84ce-500e-3ebb-927aacaff4b7"
+      }
+    ],
+    "load_s": 82.24,
+    "peak_mib_after_load": {
+      "GPU-843dc4cf-3b6b-5e3c-4dc9-75b0560cc86c": 58585,
+      "GPU-a485003c-eb56-c00a-5efc-ba2fb61d12d5": 58271,
+      "GPU-cb6c8040-84ce-500e-3ebb-927aacaff4b7": 52357
+    },
+    "probe_render": {
+      "chars": 87,
+      "http_status": 200,
+      "sha256": "3527ea62583869f3d500a41e3fcd08864aa5ed7a38dcb17c2bc9da4092ba5fae",
+      "tail_after_user": "<\uff5cAssistant\uff5c></think>"
+    },
+    "props": {
+      "build_info": "b11669-620d2225",
+      "chat_template_sha256": "e643c31fcec17f342f72296e02c46d35846bf4c70f6a0271f23bad73fd4eb645",
+      "model_path_tail": "8_K_XL/DeepSeek-V4-Flash-0731-UD-Q8_K_XL-00001-of-00005.gguf",
+      "n_ctx": 20480,
+      "total_slots": 64
+    },
+    "receipt": {
+      "artifact_root_sha256": "29ff486fb13e372b256c4084ce2166de1ef83f4757f4e560da4fe511a461badc",
+      "files": 6,
+      "gguf_bytes": 161869615520,
+      "receipt_sha256": "a06fc7c2393fe5204f66c799140380c7a095ffd126459e1c00c3d84852ba31e3",
+      "revision": "fbbb5b93fb787c21338159b0af3318bb3f4d9768",
+      "sizes_match": true,
+      "total_bytes": 161869621346
+    },
+    "server_argv": [
+      "/opt/llama.cpp/llama-server",
+      "-m",
+      "<snapshot>/UD-Q8_K_XL/DeepSeek-V4-Flash-0731-UD-Q8_K_XL-00001-of-00005.gguf",
+      "-ngl",
+      "all",
+      "--split-mode",
+      "layer",
+      "-fit",
+      "off",
+      "-c",
+      "1310720",
+      "-np",
+      "64",
+      "--jinja",
+      "--metrics",
+      "--no-webui",
+      "-cram",
+      "0",
+      "-lv",
+      "4",
+      "-lm",
+      "none",
+      "-lzm",
+      "off",
+      "--chat-template-file",
+      "/workspace/cotcodec/experiments/lm2/templates/deepseek-v4-flash-0731-unsloth.jinja",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "18941",
+      "-t",
+      "16"
+    ]
+  },
+  "server_exit_code": 0,
+  "server_log": {
+    "all_layers_offloaded": true,
+    "buffers": [
+      {
+        "buffer": "CUDA0",
+        "kind": "model",
+        "mib": 53129.62
+      },
+      {
+        "buffer": "CUDA1",
+        "kind": "model",
+        "mib": 53137.25
+      },
+      {
+        "buffer": "CUDA2",
+        "kind": "model",
+        "mib": 47088.94
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "model",
+        "mib": 1010.0
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "KV",
+        "mib": 720.0
+      },
+      {
+        "buffer": "CUDA1",
+        "kind": "KV",
+        "mib": 720.0
+      },
+      {
+        "buffer": "CUDA2",
+        "kind": "KV",
+        "mib": 624.0
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "KV",
+        "mib": 2240.0
+      },
+      {
+        "buffer": "CUDA1",
+        "kind": "KV",
+        "mib": 2240.0
+      },
+      {
+        "buffer": "CUDA2",
+        "kind": "KV",
+        "mib": 2240.0
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "KV",
+        "mib": 96.0
+      },
+      {
+        "buffer": "CUDA1",
+        "kind": "KV",
+        "mib": 128.0
+      },
+      {
+        "buffer": "CUDA2",
+        "kind": "KV",
+        "mib": 96.0
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "KV",
+        "mib": 560.0
+      },
+      {
+        "buffer": "CUDA1",
+        "kind": "KV",
+        "mib": 560.0
+      },
+      {
+        "buffer": "CUDA2",
+        "kind": "KV",
+        "mib": 560.0
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 680.05
+      },
+      {
+        "buffer": "CUDA1",
+        "kind": "compute",
+        "mib": 888.09
+      },
+      {
+        "buffer": "CUDA2",
+        "kind": "compute",
+        "mib": 904.05
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 84.55
+      }
+    ],
+    "cpu_fallback_lines": 0,
+    "kv_lines": [
+      "1.21.383.097 I llama_kv_cache_iswa: creating non-SWA KV cache, size = 20480 cells",
+      "1.21.410.808 I llama_kv_cache_iswa: creating     SWA KV cache, size = 768 cells",
+      "1.21.413.249 I llama_kv_cache:      CUDA0 KV buffer size =   720.00 MiB",
+      "1.21.413.963 I llama_kv_cache:      CUDA1 KV buffer size =   720.00 MiB",
+      "1.21.414.622 I llama_kv_cache:      CUDA2 KV buffer size =   624.00 MiB",
+      "1.21.414.871 I llama_kv_cache_dsv4: creating DSV4 CSA compressed KV cache, size = 5120 cells",
+      "1.21.422.893 I llama_kv_cache:      CUDA0 KV buffer size =  2240.00 MiB",
+      "1.21.424.038 I llama_kv_cache:      CUDA1 KV buffer size =  2240.00 MiB",
+      "1.21.425.196 I llama_kv_cache:      CUDA2 KV buffer size =  2240.00 MiB",
+      "1.21.425.950 I llama_kv_cache_dsv4: creating DSV4 HCA compressed KV cache, size = 160 cells",
+      "1.21.427.077 I llama_kv_cache:      CUDA0 KV buffer size =    96.00 MiB",
+      "1.21.427.283 I llama_kv_cache:      CUDA1 KV buffer size =   128.00 MiB",
+      "1.21.427.486 I llama_kv_cache:      CUDA2 KV buffer size =    96.00 MiB",
+      "1.21.427.542 I llama_kv_cache_dsv4: creating DSV4 lightning-indexer KV cache, size = 5120 cells",
+      "1.21.435.408 I llama_kv_cache:      CUDA0 KV buffer size =   560.00 MiB",
+      "1.21.435.855 I llama_kv_cache:      CUDA1 KV buffer size =   560.00 MiB",
+      "1.21.436.294 I llama_kv_cache:      CUDA2 KV buffer size =   560.00 MiB"
+    ],
+    "offloaded_layers": [
+      "44/44"
+    ],
+    "sha256": "5efe2dd24f42fc04c96278307afe9196313036481617afa352a5b3309ee5b699"
+  },
+  "slots": 64,
+  "todo": 270,
+  "visible_gpus": 3,
+  "vram_samples": 4160
+}

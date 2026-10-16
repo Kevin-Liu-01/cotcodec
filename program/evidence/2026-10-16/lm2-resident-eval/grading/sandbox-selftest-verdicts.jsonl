@@ -1,0 +1,9 @@
+{"elapsed_s": 0.03, "failure": null, "item_id": "t1", "key": "ok_stdin", "passed": true, "passed_tests": 1, "tests": 1}
+{"elapsed_s": 0.03, "failure": null, "item_id": "t2", "key": "ok_func", "passed": true, "passed_tests": 1, "tests": 1}
+{"elapsed_s": 6.01, "failure": "timeout", "item_id": "t3", "key": "timeout", "passed": false, "passed_tests": 0, "tests": 1}
+{"elapsed_s": 0.04, "failure": null, "item_id": "p1", "key": "probe_net", "passed": true, "passed_tests": 1, "tests": 1}
+{"elapsed_s": 0.03, "failure": null, "item_id": "p2", "key": "probe_gpu", "passed": true, "passed_tests": 1, "tests": 1}
+{"elapsed_s": 0.03, "failure": null, "item_id": "p3", "key": "probe_write_root", "passed": true, "passed_tests": 1, "tests": 1}
+{"elapsed_s": 5.46, "failure": null, "item_id": "p4", "key": "probe_fork", "passed": true, "passed_tests": 1, "tests": 1}
+{"elapsed_s": 0.03, "failure": null, "item_id": "p5", "key": "probe_mem", "passed": true, "passed_tests": 1, "tests": 1}
+{"elapsed_s": 0.03, "failure": null, "item_id": "p6", "key": "probe_proc", "passed": true, "passed_tests": 1, "tests": 1}

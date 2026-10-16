@@ -1,0 +1,16 @@
+usage: run_lm2_eval.py run [-h] --plan PLAN
+                           [--expected-plan-sha256 EXPECTED_PLAN_SHA256] --arm
+                           ARM --phase {pilot,main,diag}
+                           [--extra-server-arg EXTRA_SERVER_ARG]
+                           [--diag-chat-mode] --seeds SEEDS [SEEDS ...]
+                           [--cap CAP] --output-dir OUTPUT_DIR
+                           [--prior-dir PRIOR_DIR] --allocation-minutes
+                           ALLOCATION_MINUTES [--reserve-s RESERVE_S]
+                           [--drain-s DRAIN_S]
+                           [--request-timeout-s REQUEST_TIMEOUT_S]
+                           [--metrics-interval-s METRICS_INTERVAL_S]
+                           [--model-root MODEL_ROOT]
+                           [--receipt-root RECEIPT_ROOT] [--port PORT]
+                           [--slots SLOTS] [--server-log-verbosity {3,4}]
+                           [--ctx-per-slot CTX_PER_SLOT]
+run_lm2_eval.py run: error: argument --extra-server-arg: expected one argument

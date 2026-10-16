@@ -1,0 +1,88 @@
+{
+ "version": 3,
+ "tensors": 0,
+ "meta": {
+  "general.architecture": "deepseek4",
+  "tokenizer.chat_template": {
+   "sha256": "e643c31fcec17f342f72296e02c46d35846bf4c70f6a0271f23bad73fd4eb645",
+   "chars": 13698,
+   "file": "tokenizer_chat_template.jinja"
+  },
+  "general.type": "model",
+  "general.sampling.top_p": 1.0,
+  "general.sampling.temp": 1.0,
+  "general.name": "Deepseek-V4-Flash-0731",
+  "general.version": "0731",
+  "general.basename": "Deepseek-V4-Flash-0731",
+  "general.quantized_by": "Unsloth",
+  "general.size_label": "256x8.4B",
+  "general.license": "mit",
+  "general.repo_url": "https://huggingface.co/unsloth",
+  "general.base_model.count": 1,
+  "general.base_model.0.name": "DeepSeek V4 Flash 0731",
+  "general.base_model.0.version": "0731",
+  "general.base_model.0.organization": "Deepseek Ai",
+  "general.base_model.0.repo_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731",
+  "general.tags": {
+   "array_of_str": 1,
+   "sample": [
+    "unsloth"
+   ]
+  },
+  "deepseek4.block_count": 43,
+  "deepseek4.context_length": 1048576,
+  "deepseek4.embedding_length": 4096,
+  "deepseek4.attention.head_count": 64,
+  "deepseek4.attention.head_count_kv": 1,
+  "deepseek4.rope.scaling.type": "yarn",
+  "deepseek4.rope.scaling.factor": 16.0,
+  "deepseek4.rope.scaling.original_context_length": 65536,
+  "deepseek4.rope.scaling.yarn_beta_fast": 32.0,
+  "deepseek4.rope.scaling.yarn_beta_slow": 1.0,
+  "deepseek4.rope.freq_base": 10000.0,
+  "deepseek4.attention.layer_norm_rms_epsilon": 9.999999974752427e-07,
+  "deepseek4.expert_count": 256,
+  "deepseek4.expert_used_count": 6,
+  "deepseek4.expert_gating_func": 4,
+  "deepseek4.attention.key_length": 512,
+  "deepseek4.attention.value_length": 512,
+  "deepseek4.rope.dimension_count": 64,
+  "deepseek4.attention.q_lora_rank": 1024,
+  "deepseek4.attention.sliding_window": 128,
+  "deepseek4.expert_feed_forward_length": 2048,
+  "deepseek4.expert_shared_count": 1,
+  "deepseek4.expert_weights_scale": 1.5,
+  "deepseek4.expert_weights_norm": true,
+  "deepseek4.swiglu_clamp_exp": {
+   "array": 43,
+   "type": 6
+  },
+  "deepseek4.swiglu_clamp_shexp": {
+   "array": 43,
+   "type": 6
+  },
+  "deepseek4.attention.indexer.head_count": 64,
+  "deepseek4.attention.indexer.key_length": 128,
+  "deepseek4.attention.indexer.top_k": 512,
+  "deepseek4.attention.output_group_count": 8,
+  "deepseek4.attention.output_lora_rank": 1024,
+  "deepseek4.attention.compress_ratios": {
+   "array": 46,
+   "type": 5
+  },
+  "deepseek4.attention.compress_rope_freq_base": 160000.0,
+  "deepseek4.hyper_connection.count": 4,
+  "deepseek4.hyper_connection.sinkhorn_iterations": 20,
+  "deepseek4.hyper_connection.epsilon": 9.999999974752427e-07,
+  "deepseek4.hash_layer_count": 3,
+  "general.quantization_version": 2,
+  "general.file_type": 23,
+  "quantize.imatrix.file": "DeepSeek-V4-Flash-0731-GGUF/imatrix_unsloth.gguf_file",
+  "quantize.imatrix.dataset": "unsloth_calibration_DeepSeek-V4-Flash-0731.txt",
+  "quantize.imatrix.entries_count": 768,
+  "quantize.imatrix.chunks_count": 50,
+  "split.no": 0,
+  "split.tensors.count": 1328,
+  "split.count": 4
+ }
+}

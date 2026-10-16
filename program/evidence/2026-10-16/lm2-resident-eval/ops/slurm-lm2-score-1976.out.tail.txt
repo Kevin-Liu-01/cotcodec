@@ -1,0 +1,4 @@
+source 7cff15352cf046b794696cbf038d01ac7bfc47b1
+{"responses": 958, "code_rows": 304}
+879a8ef85cf1b0cded2cd308052226add333d71455459b8cbdc8fede5663549c  /home/kevin/cotcodec-runs/stage0/lm2-resident-eval/grading/early/code-input.jsonl
+751d310048d71946599553902a28f339792021ee42cacea38340b2e6dd12ce53  /home/kevin/cotcodec-runs/stage0/lm2-resident-eval/grading/early/grades-pre.jsonl

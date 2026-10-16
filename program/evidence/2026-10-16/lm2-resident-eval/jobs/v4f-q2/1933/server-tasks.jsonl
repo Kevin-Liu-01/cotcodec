@@ -1,0 +1,30 @@
+{"task": 0, "slot": 0, "prompt_tokens": 113, "n_gen": 3558, "cancelled": false, "released": true, "final_n_tokens": 3684}
+{"task": 2, "slot": 1, "prompt_tokens": 113, "n_gen": 1626, "cancelled": false, "released": true, "final_n_tokens": 1747}
+{"task": 3, "slot": 2, "prompt_tokens": 145, "n_gen": 1817, "cancelled": false, "released": true, "final_n_tokens": 1965}
+{"task": 4, "slot": 3, "prompt_tokens": 585, "n_gen": 3609, "cancelled": false, "released": false}
+{"task": 5, "slot": 4, "prompt_tokens": 547, "n_gen": 547, "cancelled": false, "released": true, "final_n_tokens": 1099}
+{"task": 6, "slot": 5, "prompt_tokens": 115, "n_gen": 1913, "cancelled": false, "released": true, "final_n_tokens": 2039}
+{"task": 7, "slot": 6, "prompt_tokens": 145, "n_gen": 3605, "cancelled": false, "released": false}
+{"task": 8, "slot": 7, "prompt_tokens": 136, "n_gen": 2969, "cancelled": false, "released": true, "final_n_tokens": 3118}
+{"task": 9, "slot": 8, "prompt_tokens": 631, "n_gen": 3609, "cancelled": false, "released": false}
+{"task": 10, "slot": 9, "prompt_tokens": 882, "n_gen": 3608, "cancelled": false, "released": false}
+{"task": 11, "slot": 16, "prompt_tokens": 631, "n_gen": 3606, "cancelled": false, "released": false}
+{"task": 12, "slot": 10, "prompt_tokens": 666, "n_gen": 491, "cancelled": false, "released": true, "final_n_tokens": 1166}
+{"task": 13, "slot": 22, "prompt_tokens": 666, "n_gen": 1456, "cancelled": false, "released": true, "final_n_tokens": 2123}
+{"task": 14, "slot": 11, "prompt_tokens": 882, "n_gen": 3608, "cancelled": false, "released": false}
+{"task": 15, "slot": 14, "prompt_tokens": 1081, "n_gen": 3606, "cancelled": false, "released": false}
+{"task": 16, "slot": 17, "prompt_tokens": 803, "n_gen": 3605, "cancelled": false, "released": false}
+{"task": 17, "slot": 13, "prompt_tokens": 195, "n_gen": 3608, "cancelled": false, "released": false}
+{"task": 18, "slot": 12, "prompt_tokens": 803, "n_gen": 3608, "cancelled": false, "released": false}
+{"task": 19, "slot": 15, "prompt_tokens": 778, "n_gen": 3606, "cancelled": false, "released": false}
+{"task": 20, "slot": 18, "prompt_tokens": 803, "n_gen": 3605, "cancelled": false, "released": false}
+{"task": 21, "slot": 27, "prompt_tokens": 778, "n_gen": 3604, "cancelled": false, "released": false}
+{"task": 22, "slot": 19, "prompt_tokens": 631, "n_gen": 3605, "cancelled": false, "released": false}
+{"task": 23, "slot": 20, "prompt_tokens": 611, "n_gen": 3605, "cancelled": false, "released": false}
+{"task": 24, "slot": 21, "prompt_tokens": 778, "n_gen": 3604, "cancelled": false, "released": false}
+{"task": 25, "slot": 25, "prompt_tokens": 1081, "n_gen": 3605, "cancelled": false, "released": false}
+{"task": 26, "slot": 23, "prompt_tokens": 1081, "n_gen": 3605, "cancelled": false, "released": false}
+{"task": 27, "slot": 29, "prompt_tokens": 625, "n_gen": 3603, "cancelled": false, "released": false}
+{"task": 28, "slot": 26, "prompt_tokens": 611, "n_gen": 3604, "cancelled": false, "released": false}
+{"task": 29, "slot": 24, "prompt_tokens": 611, "n_gen": 3605, "cancelled": false, "released": false}
+{"task": 30, "slot": 28, "prompt_tokens": 625, "n_gen": 3603, "cancelled": false, "released": false}

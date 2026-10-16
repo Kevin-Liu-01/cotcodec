@@ -1,0 +1,23 @@
+[
+  "python",
+  "scripts/run_lm2_eval.py",
+  "run",
+  "--plan",
+  "experiments/lm2/lm2-resident-eval-v1.json",
+  "--expected-plan-sha256",
+  "62d4946c29facab9c63e37547eff279d3a9de4bcd3dbd380991d17f7ac8f8e7b",
+  "--arm",
+  "gptoss120",
+  "--phase",
+  "diag",
+  "--seeds",
+  "42",
+  "43",
+  "44",
+  "--output-dir",
+  "/outputs/lm2",
+  "--allocation-minutes",
+  "7",
+  "--extra-server-arg",
+  "-bs"
+]

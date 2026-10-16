@@ -1,0 +1,69 @@
+2026-10-16T05:57:01Z dataset fetch job 1764 submitted (CPU only, no GRES, limit 30 min)
+2026-10-16T05:58:28Z dataset fetch job 1772 submitted (rerun of 1764, which failed reading parquet against the system pandas; CPU only)
+2026-10-16T06:12:19Z clean checkout of 5a142a804b911608cbb1408c54a2a45330320f16 (tree 1eea1187) from bundle 58fe68aa; git archive sha256 8846e3c971f283b22de180064076f752e2d9d8a615c840f57f3cc4afa68104f4
+2026-10-16T06:12:36Z capsule c471ed5a4bd39582c5de7518bc1babc061499debfbb8866b7cf41548edee44eb (git 5a142a80)
+2026-10-16T06:12:37Z llama.cpp overlay build job 1791 submitted (git 5a142a80, archive c471ed5a, CPU only, no GRES, limit 10 min)
+2026-10-16T06:12:46Z LM2 receipt verification job 1792 submitted (CPU only, no GRES, no network; source checkout 5a142a80; ids: deepseek-v4-flash-0731-ud-q8-k-xl-gguf deepseek-v4-flash-0731-ud-iq3-xxs-gguf deepseek-v4-flash-0731-ds4-q2-gguf qwen3-235b-a22b-instruct-2507-ud-q3-k-xl-gguf gpt-oss-120b-mxfp4-gguf)
+2026-10-16T06:13:03Z LM2 code sandbox self-test job 1793 submitted (CPU only, no GRES; operator-written probe programs)
+2026-10-16T06:14:13Z LM2 MathArena priors job 1795 submitted (CPU only)
+2026-10-16T06:15:41Z clean checkout of 87118ed35b6f7712e5b1a13eb87247bf97b96d61 (tree 9953371f) from bundle 67a26546; git archive sha256 2eebcdf2ff90744f5c3c95b05305378a98870111c0b53de46c1ec7a693e2d10b
+2026-10-16T06:16:02Z capsule 43d45f32e7157d4ff27f4bad6bfccd19df3560afc63760915ac398290d98e717 (git 87118ed3)
+2026-10-16T06:16:03Z llama.cpp overlay build job 1797 submitted (git 87118ed3, archive 43d45f32, CPU only, no GRES, limit 10 min)
+2026-10-16T06:17:04Z LM2 pilot v4f-q2 job 1802 submitted (2 H100, limit 10 min = 0.3334 GPU-h cap; overlay sha256:eb56b4a51ec2fbd74d523d593b71f605ff254a95076ae4660979ce6e0be35b2f; pilot-v4f-q2-061703.yaml; extra: )
+2026-10-16T06:17:06Z LM2 pilot gptoss120 job 1804 submitted (2 H100, limit 10 min = 0.3334 GPU-h cap; overlay sha256:eb56b4a51ec2fbd74d523d593b71f605ff254a95076ae4660979ce6e0be35b2f; pilot-gptoss120-061704.yaml; extra: )
+2026-10-16T06:23:05Z LM2 pilot v4f-q2 job 1802 JobState=FAILED ExitCode=4:0 RunTime=00:05:53 AllocTRES=
+2026-10-16T06:25:06Z LM2 pilot gptoss120 job 1804 JobState=FAILED ExitCode=4:0 RunTime=00:05:59 AllocTRES=
+2026-10-16T06:26:41Z clean checkout of cefe0a8ddb0d7d3544e71217c0cbe429c0a6fff3 (tree 9695a117) from bundle 3dbecbc8; git archive sha256 b011a443734b773a4d6029a6bb9278408ef5a892c38e294b20ec5f9eeb8fc40b
+2026-10-16T06:27:02Z capsule a9e5160b0aaea17ecffbbd3e57f7205af9462075e756264650263055d087372e (git cefe0a8d)
+2026-10-16T06:27:02Z llama.cpp overlay build job 1818 submitted (git cefe0a8d, archive a9e5160b, CPU only, no GRES, limit 10 min)
+2026-10-16T06:27:48Z LM2 diag v4f-q2 job 1820 submitted (2 H100, limit 9 min = 0.3 GPU-h cap; overlay sha256:afd70feeb9cda9b70aaec1677d47ffe8bcda8103e8e4c6d05bc846ba4f7763b1; diag-v4f-q2-062747.yaml; extra: --extra-server-arg -bs)
+2026-10-16T06:27:50Z LM2 diag gptoss120 job 1822 submitted (2 H100, limit 9 min = 0.3 GPU-h cap; overlay sha256:afd70feeb9cda9b70aaec1677d47ffe8bcda8103e8e4c6d05bc846ba4f7763b1; diag-gptoss120-062748.yaml; extra: --extra-server-arg -bs)
+2026-10-16T06:28:48Z LM2 diag v4f-q2 job 1820 JobState=FAILED ExitCode=2:0 RunTime=00:00:55 AllocTRES=
+2026-10-16T06:29:50Z LM2 diag gptoss120 job 1822 JobState=FAILED ExitCode=2:0 RunTime=00:00:50 AllocTRES=
+2026-10-16T06:36:45Z LM2 diag v4f-q2 job 1830 submitted (2 H100, limit 9 min = 0.3 GPU-h cap; overlay sha256:afd70feeb9cda9b70aaec1677d47ffe8bcda8103e8e4c6d05bc846ba4f7763b1; diag-v4f-q2-063644.yaml; extra: --extra-server-arg=-bs)
+2026-10-16T06:36:47Z LM2 diag gptoss120 job 1832 submitted (2 H100, limit 9 min = 0.3 GPU-h cap; overlay sha256:afd70feeb9cda9b70aaec1677d47ffe8bcda8103e8e4c6d05bc846ba4f7763b1; diag-gptoss120-063645.yaml; extra: --extra-server-arg=-bs)
+2026-10-16T06:41:46Z LM2 diag v4f-q2 job 1830 JobState=FAILED ExitCode=4:0 RunTime=00:04:40 AllocTRES=
+2026-10-16T06:41:47Z LM2 diag gptoss120 job 1832 JobState=FAILED ExitCode=4:0 RunTime=00:04:39 AllocTRES=
+2026-10-16T06:44:06Z clean checkout of e643f2c1a681eed9c599994704faa9163f1e9294 (tree 0457038c) from bundle 02d955b7; git archive sha256 e8fd97f5b07afe08b77ed1038eff27f085e2f5b7759218b4d65e3b5155bc4542
+2026-10-16T06:44:26Z capsule 2d8eebe11456b7775815ca88f9c4901acfbe28d116b77de6cefa59eb7f4f8355 (git e643f2c1)
+2026-10-16T06:44:27Z llama.cpp overlay build job 1839 submitted (git e643f2c1, archive 2d8eebe1, CPU only, no GRES, limit 10 min)
+2026-10-16T06:45:23Z LM2 main v4f-q2 job 1842 submitted (2 H100, limit 45 min = 1.5 GPU-h cap; overlay sha256:7f4f81e232e0e9c24a141c79ef41c1ae96d1121b45b680c96f566e0ef20a702d; main-v4f-q2-064521.yaml; extra: --drain-s 300)
+2026-10-16T06:45:24Z LM2 main gptoss120 job 1844 submitted (1 H100, limit 30 min = 0.5 GPU-h cap; overlay sha256:7f4f81e232e0e9c24a141c79ef41c1ae96d1121b45b680c96f566e0ef20a702d; main-gptoss120-064523.yaml; extra: --drain-s 180)
+2026-10-16T06:51:58Z LM2 scoring smoke (prepare on partial main outputs) job 1861 submitted (CPU only)
+2026-10-16T06:52:34Z LM2 main v4f-iq3 job 1865 submitted (2 H100, limit 37 min = 1.2334 GPU-h cap; overlay sha256:7f4f81e232e0e9c24a141c79ef41c1ae96d1121b45b680c96f566e0ef20a702d; main-v4f-iq3-065232.yaml; extra: --drain-s 300)
+2026-10-16T07:09:55Z LM2 main gptoss120 job 1844 JobState=FAILED ExitCode=4:0 RunTime=00:24:27 AllocTRES=
+2026-10-16T07:10:34Z LM2 main v4f-q8 job 1898 submitted (3 H100, limit 75 min = 3.75 GPU-h cap; overlay sha256:7f4f81e232e0e9c24a141c79ef41c1ae96d1121b45b680c96f566e0ef20a702d; main-v4f-q8-071032.yaml; extra: --cap math=30 --cap code=30 --cap knowledge=30)
+2026-10-16T07:10:56Z LM2 main v4f-q8 job 1898 time limit lowered from 75 to 55 min before it started (budget guard: at most 2.75 GPU-h; the driver ends when its capped queue is done)
+2026-10-16T07:10:57Z LM2 main qwen235-q3 job 1900 submitted (3 H100, limit 40 min = 2.0 GPU-h cap; overlay sha256:7f4f81e232e0e9c24a141c79ef41c1ae96d1121b45b680c96f566e0ef20a702d; main-qwen235-q3-071056.yaml; extra: --cap math=30 --cap code=30 --cap knowledge=30)
+2026-10-16T07:25:34Z LM2 main v4f-iq3 job 1865 JobState=FAILED ExitCode=4:0 RunTime=00:32:34 AllocTRES=
+2026-10-16T07:26:23Z LM2 main v4f-q2 job 1842 JobState=FAILED ExitCode=4:0 RunTime=00:40:33 AllocTRES=
+2026-10-16T07:27:27Z LM2 main qwen235-q3 job 1900 JobState=CANCELLED ExitCode=137:0 RunTime=00:00:45 AllocTRES=
+2026-10-16T07:28:08Z Orchestrator (coordinator) cancelled LM2 job 1900 (qwen235-q3, 3 H100) about 45 s after it started: LM2 had exceeded the 3-GPU research share (D127) with 1898 running. From now on: at most 3 GPUs across all LM2 jobs, running or pending; one GPU job at a time; tight limits; Qwen on 2 GPUs after 1898; suite cut to 20 items per task.
+2026-10-16T07:54:05Z LM2 main v4f-q8 job 1898 JobState=COMPLETED ExitCode=0:0 RunTime=00:38:13 AllocTRES=
+2026-10-16T07:55:01Z LM2 main v4f-q2 job 1933 submitted (2 H100, limit 22 min = 0.7334 GPU-h cap; overlay sha256:7f4f81e232e0e9c24a141c79ef41c1ae96d1121b45b680c96f566e0ef20a702d; main-v4f-q2-075500.yaml; extra: --reserve-s 150 --cap math=20 --cap code=20 --cap knowledge=20)
+2026-10-16T08:07:29Z LM2 main v4f-q2 top-up job 1933 cancelled by the operator at about 12 min: its 20 remaining code requests (all started together, each about 6K tokens in) could not reach the 16,384 cap within the budget; holes will be re-run at max_tokens 8,192 and the analysis cap is 8,192 for every arm
+2026-10-16T08:08:01Z LM2 main v4f-q2 job 1933 JobState=CANCELLED ExitCode=137:0 RunTime=00:12:28 AllocTRES=
+2026-10-16T08:08:56Z clean checkout of 977c7cfc7780d7be98cbdc3574089adcbc0a16ff (tree 23d3393e) from bundle f9ad89ae; git archive sha256 643ddf614d5e8c201d04a54bfa021f8c6b7de6cbdfc53d46d88cdb3c2fd49c68
+2026-10-16T08:09:17Z capsule 66cb03782b99bbd6220a169ab30cbc57608e7da95c37a331b6f78ffab1f55e86 (git 977c7cfc)
+2026-10-16T08:09:18Z llama.cpp overlay build job 1945 submitted (git 977c7cfc, archive 66cb0378, CPU only, no GRES, limit 10 min)
+2026-10-16T08:10:00Z LM2 main v4f-q2 job 1949 submitted (2 H100, limit 21 min = 0.7 GPU-h cap; overlay sha256:c7d60872b90604d2662348498e7f86ca7522e64a9f0a8a28ca9cadf8beeba377; main-v4f-q2-080959.yaml; extra: --reserve-s 120 --max-tokens 8192 --prior-dir /model-cache/cotcodec-datasets/lm2-prior/v4f-q2 --cap math=20 --cap code=20 --cap knowledge=20)
+2026-10-16T08:11:58Z LM2 main v4f-q2 job 1949 cancelled by the operator about 1.5 min into generation: the staged prior files were named <job>-responses-*.jsonl, which the driver glob responses*.jsonl misses, so it re-ran the whole cap-20 queue instead of the 22 holes; its completed rows are valid 8,192-cap samples but are not used
+2026-10-16T08:12:23Z LM2 main v4f-q2 job 1955 submitted (2 H100, limit 21 min = 0.7 GPU-h cap; overlay sha256:c7d60872b90604d2662348498e7f86ca7522e64a9f0a8a28ca9cadf8beeba377; main-v4f-q2-081222.yaml; extra: --reserve-s 120 --max-tokens 8192 --prior-dir /model-cache/cotcodec-datasets/lm2-prior/v4f-q2 --cap math=20 --cap code=20 --cap knowledge=20)
+2026-10-16T08:12:30Z LM2 main v4f-q2 job 1949 JobState=CANCELLED ExitCode=137:0 RunTime=00:01:58 AllocTRES=
+2026-10-16T08:15:27Z clean checkout of 0ec15c792ed989710c092920bdc34a2f0b3ce457 (tree 4472a934) from bundle 6ad87032; git archive sha256 2fc839ea1d4a241e6646141e21f1271cbbad401aec4dd54e6ab6d6fe2e9102c6
+2026-10-16T08:15:44Z capsule c5716a1546e8eff05a1c9afc15390a23bcaa9dcb49e72809d148593e298b4e4d (git 0ec15c79)
+2026-10-16T08:15:44Z llama.cpp overlay build job 1958 submitted (git 0ec15c79, archive c5716a15, CPU only, no GRES, limit 10 min)
+2026-10-16T08:30:23Z LM2 main v4f-q2 job 1955 JobState=FAILED ExitCode=4:0 RunTime=00:17:52 AllocTRES=
+2026-10-16T08:30:24Z LM2 main v4f-iq3 job 1974 submitted (2 H100, limit 21 min = 0.7 GPU-h cap; overlay sha256:54aeb54187235c154cc9da6a8569fa961610915d0db5a2a458db3d3971398205; main-v4f-iq3-083022.yaml; extra: --reserve-s 150 --max-tokens 5120 --prior-dir /model-cache/cotcodec-datasets/lm2-prior/v4f-iq3 --cap math=20 --cap code=20 --cap knowledge=20)
+2026-10-16T08:31:34Z clean checkout of 7cff15352cf046b794696cbf038d01ac7bfc47b1 (tree 3c78767a) from bundle 118e53b6; git archive sha256 a8a020207af70d5c16edd5e21a92cd8dbf5c0f4882272a0296110f48ae7b8065
+2026-10-16T08:32:04Z capsule 881568ce5e4a86ba71727db5f9e94bdb47ed6482b86f5bbb32a805346867eb34 (git 7cff1535)
+2026-10-16T08:32:05Z llama.cpp overlay build job 1975 submitted (git 7cff1535, archive 881568ce, CPU only, no GRES, limit 10 min)
+2026-10-16T08:32:05Z LM2 early scoring prepare job 1976 (CPU only; Q8 1898, gpt-oss 1844, Q2 1842/1933/1955)
+2026-10-16T08:32:17Z LM2 code sandbox job 1977 submitted (CPU only, no GRES; early rows: Q8, gpt-oss, Q2 within cap 20)
+2026-10-16T08:45:24Z LM2 main v4f-iq3 job 1974 JobState=COMPLETED ExitCode=0:0 RunTime=00:14:55 AllocTRES=
+2026-10-16T08:46:28Z LM2 main qwen235-q3 job 1987 submitted (2 H100, limit 22 min = 0.7334 GPU-h cap; overlay sha256:5f4bae2fe3842f0459914b2a59f353c0599431ede547cc92c1d3ff0afb0a3525; main-qwen235-q3-084626.yaml; extra: --reserve-s 150 --slots 28 --ctx-per-slot 9216 --max-tokens 5120 --cap math=15 --cap code=15 --cap knowledge=15)
+2026-10-16T08:51:28Z clean checkout of 7189d820fc08f58e765ffc0db5b9444cc6357cc1 (tree 87794a8f) from bundle 26281511; git archive sha256 334efbaad95d3e6cc3378cb1f654048d06a2c469d4b54b12b7e52c800705c2f8
+2026-10-16T09:04:58Z LM2 main qwen235-q3 job 1987 JobState=FAILED ExitCode=4:0 RunTime=00:18:22 AllocTRES=
+2026-10-16T09:06:56Z LM2 scoring job 2011 (CPU only): prepare at 5,120 / 4,096 / no cap over the main runs, censored rows for Q2 (job 1955, >= 6,300 tokens) and Qwen first wave (job 1987, >= 4,900 tokens)
+2026-10-16T09:07:34Z LM2 code sandbox job 2012 submitted (CPU only, no GRES; remaining code rows within cap 20: IQ3, Qwen)
+2026-10-16T09:10:21Z LM2 finalize job 2015 (CPU only): grades at 5,120, 4,096 and the 16K completed-only reading

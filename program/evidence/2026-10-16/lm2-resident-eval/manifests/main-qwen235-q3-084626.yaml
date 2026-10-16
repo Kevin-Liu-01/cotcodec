@@ -1,0 +1,61 @@
+# LM2 (D129, EXPLORATORY) main: arm qwen235-q3 on 2 H100 in stock llama.cpp b11669 (layer split, all
+# layers on GPU). Slurm limit 22 min x 2 H100 = 0.7334 GPU-h cap; the driver stops at its own
+# budget (20 min after it starts, less a 200 s reserve; the lane sends USR1 180 s before the limit).
+runtime: docker-single-node-discovery-v1
+name: lm2-main-qwen235-q3
+image_id: sha256:5f4bae2fe3842f0459914b2a59f353c0599431ede547cc92c1d3ff0afb0a3525
+git_sha: "7cff15352cf046b794696cbf038d01ac7bfc47b1"
+source_sha256: "881568ce5e4a86ba71727db5f9e94bdb47ed6482b86f5bbb32a805346867eb34"
+run_root: /home/kevin/cotcodec-runs/stage0/lm2-resident-eval/runs/qwen235-q3
+resources:
+  gpu_type: h100
+  gpus: 2
+  cpus: 16
+  memory_gb: 128
+  minutes: 22
+budget:
+  max_gpu_hours: 0.7334
+randomness_contract: assignment-seed-matrix
+seeds: [42, 43, 44]
+seed_binding:
+  flag: "--seeds"
+model:
+  cache_host_path: /home/kevin/cotcodec-runs/hf-cache
+  model_id: gpt-oss-120b-mxfp4-gguf
+  revision: "238abdd290bb874b90a5da1b4549881b7d05c091"
+  receipt_sha256: "dc5007aa56057007c80e8a364584d41dc24980d9f9a87770614245d2e1c38f8c"
+  artifact_root_sha256: "329ede2a5e5e773129c05d20b1a969923e706f0a0520c9b9702088692eee779f"
+command:
+  - "python"
+  - "scripts/run_lm2_eval.py"
+  - "run"
+  - "--plan"
+  - "experiments/lm2/lm2-resident-eval-v1.json"
+  - "--expected-plan-sha256"
+  - "6bce5970f0b0e7769f51927a21489c1f82dbdc21759f772e532b92670ad0a770"
+  - "--arm"
+  - "qwen235-q3"
+  - "--phase"
+  - "main"
+  - "--seeds"
+  - "42"
+  - "43"
+  - "44"
+  - "--output-dir"
+  - "/outputs/lm2"
+  - "--allocation-minutes"
+  - "20"
+  - "--reserve-s"
+  - "150"
+  - "--slots"
+  - "28"
+  - "--ctx-per-slot"
+  - "9216"
+  - "--max-tokens"
+  - "5120"
+  - "--cap"
+  - "math=15"
+  - "--cap"
+  - "code=15"
+  - "--cap"
+  - "knowledge=15"
