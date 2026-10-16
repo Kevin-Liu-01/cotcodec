@@ -1,0 +1,1 @@
+{"sandbox": {"gpu_nodes": [], "interfaces": ["lo"], "uid": 65534}, "rows": 156, "workers": 28}

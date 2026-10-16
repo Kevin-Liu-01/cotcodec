@@ -1,0 +1,56 @@
+{
+ "version": 3,
+ "tensors": 539,
+ "meta": {
+  "general.architecture": "qwen3moe",
+  "general.type": "model",
+  "general.name": "Qwen3-235B-A22B-Instruct-2507",
+  "general.version": "2507",
+  "general.finetune": "Instruct",
+  "general.basename": "Qwen3-235B-A22B-Instruct-2507",
+  "general.quantized_by": "Unsloth",
+  "general.size_label": "235B-A22B",
+  "general.license": "apache-2.0",
+  "general.license.link": "https://huggingface.co/Qwen/Qwen3-235B-A22B-Instruct-2507/blob/main/LICENSE",
+  "general.repo_url": "https://huggingface.co/unsloth",
+  "general.base_model.count": 1,
+  "general.base_model.0.name": "Qwen3 235B A22B Instruct 2507",
+  "general.base_model.0.version": "2507",
+  "general.base_model.0.organization": "Qwen",
+  "general.base_model.0.repo_url": "https://huggingface.co/Qwen/Qwen3-235B-A22B-Instruct-2507",
+  "general.tags": {
+   "array_of_str": 2,
+   "sample": [
+    "unsloth",
+    "text-generation"
+   ]
+  },
+  "qwen3moe.block_count": 94,
+  "qwen3moe.context_length": 262144,
+  "qwen3moe.embedding_length": 4096,
+  "qwen3moe.feed_forward_length": 12288,
+  "qwen3moe.attention.head_count": 64,
+  "qwen3moe.attention.head_count_kv": 4,
+  "qwen3moe.rope.freq_base": 5000000.0,
+  "qwen3moe.attention.layer_norm_rms_epsilon": 9.999999974752427e-07,
+  "qwen3moe.expert_used_count": 8,
+  "qwen3moe.attention.key_length": 128,
+  "qwen3moe.attention.value_length": 128,
+  "qwen3moe.expert_count": 128,
+  "qwen3moe.expert_feed_forward_length": 1536,
+  "tokenizer.chat_template": {
+   "sha256": "40c21f34cf67d8c760ef72f8ad3ae5afad514299d4b06e91dd9a8d705af7b541",
+   "chars": 4040,
+   "file": "tokenizer_chat_template.jinja"
+  },
+  "general.quantization_version": 2,
+  "general.file_type": 12,
+  "quantize.imatrix.file": "Qwen3-235B-A22B-Instruct-2507-GGUF/imatrix_unsloth.dat",
+  "quantize.imatrix.dataset": "unsloth_calibration_Qwen3-235B-A22B-Instruct-2507.txt",
+  "quantize.imatrix.entries_count": 745,
+  "quantize.imatrix.chunks_count": 693,
+  "split.no": 0,
+  "split.tensors.count": 1131,
+  "split.count": 3
+ }
+}

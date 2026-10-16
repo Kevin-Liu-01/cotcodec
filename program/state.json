@@ -468,7 +468,7 @@
     "Gauntleted packages that ended at honest exits and can advance only by your ruling (D24, D70, D76). S2 v3 (65) continues as S2 v4 under your delegation (D80 (iv)); its images are built and its registration is in a repair round before the freeze (D84). C5 Phase 1 (70-97 GPU-h) stays yours; its identification defect stands",
     "Shelved by Kevin (D101), not to be raised unless he asks: the outward items (disclosures, licence requests, host-admin request, publication, the GitHub Support request), key rotation and account items. Drafts are in the private archive."
   ],
-  "gpu_hours_spent_this_program": 35.3686,
+  "gpu_hours_spent_this_program": 43.1124,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -1695,6 +1695,46 @@
       ],
       "outcome": "review PARSED on attempt 1, replicates token-identical (seeds 42-44); total 58, equal to the sum of its ten scores, caps 79 and 89 non-binding; wave score 56 (lower of reviewer 1's 56 and 58), best 56; no honest exit at wave 1 (wave 1 of 3; 111 of 150 queries, 3.92M of 10M tokens, $67.19 of $150, 101.3 of 720 minutes), but the candidate does not proceed as drafted (triad 3/3 refuted); reviewer inference only, not LM1 pilot work. Audit row 1 of program/gauntlet/2026-10-16-lm1-matched-memory-quality.jsonl (hash f078979d...)",
       "basis": "physical (scontrol RunTime 00:03:46 = 226 s on 1 H100, 05:25:52-05:29:38 UTC 2026-10-16; 15-minute limit, 0.25 GPU-h cap; reason=completed); submitted after the operator's check at 05:25:51 UTC found 4 idle GPUs among 1-7 (GPUs 4-7 at 0 MiB) and no other reviewer job of this gauntlet; recorder's read-only check at 05:35:41 UTC: no reviewer container left"
+    },
+    {
+      "experiment": "LM2 pilot and diagnostics (EXPLORATORY; lm2-resident-eval-v1, D129; not analysed): DeepSeek V4 Flash 0731 ds4 Q2 (thinking, effort low) and gpt-oss-120b (medium) in stock llama.cpp b11669 on 2 H100s each, 64 and 48 slots, with CPU sampling (pilot) and backend sampling (-bs, diagnostic)",
+      "gpu_hours": 0.7645,
+      "jobs": [
+        "1802 ds4 Q2 pilot (FAILED 4:0 by design, time budget; 00:05:53)",
+        "1804 gpt-oss pilot (FAILED 4:0 by design; 00:05:59)",
+        "1820 ds4 Q2 diagnostic (FAILED 2:0, argument parsing; 00:00:55)",
+        "1822 gpt-oss diagnostic (FAILED 2:0, argument parsing; 00:00:50)",
+        "1830 ds4 Q2 diagnostic -bs (FAILED 4:0 by design; 00:04:40)",
+        "1832 gpt-oss diagnostic -bs (FAILED 4:0 by design; 00:04:39)"
+      ],
+      "outcome": "V4 Flash ds4 Q2 about 210 generated tok/s per 2-GPU server at 64 slots (3.3 per slot), unchanged by backend sampling (about 4.5 ms per sequence per decode step in llama.cpp's DeepSeek V4 path); gpt-oss 285 tok/s, 475 with -bs; a thinking-mode suite with three seeds did not fit 8 GPU-h, so LM2 moved to the instant tier before scoring (program/evidence/2026-10-16/lm2-resident-eval/README.md)",
+      "basis": "physical (scontrol RunTime x GPUs in TresPerNode)"
+    },
+    {
+      "experiment": "LM2 main runs (EXPLORATORY; lm2-resident-eval-v1, D129, instant tier): V4 Flash 0731 UD-Q8_K_XL (3 H100), UD-IQ3_XXS and ds4 Q2 (2 H100 each) in chat mode, gpt-oss-120b at low effort (1 H100, -bs) and Qwen3-235B-2507 UD-Q3_K_XL (2 H100), stock llama.cpp b11669; math (AIME/HMMT Feb 2026, numeric arxivmath 06/08-2026), LiveCodeBench v6, SuperGPQA; 20 items per task x seeds 42-44",
+      "gpu_hours": 6.9418,
+      "jobs": [
+        "1842 ds4 Q2 (FAILED 4:0 by design, time budget; 00:40:33)",
+        "1844 gpt-oss (FAILED 4:0 by design; 00:24:27)",
+        "1865 UD-IQ3_XXS (FAILED 4:0 by design; 00:32:34)",
+        "1898 UD-Q8_K_XL (COMPLETED 0:0; 00:38:13)",
+        "1933 ds4 Q2 top-up (CANCELLED by the operator: long code requests could not finish in budget; 00:12:28)",
+        "1949 ds4 Q2 top-up at 8,192 (CANCELLED by the operator: misnamed prior files; 00:01:58; not used)",
+        "1955 ds4 Q2 holes at 8,192 (FAILED 4:0 by design; 19 still running past about 6,300 tokens, censored; 00:17:52)",
+        "1974 UD-IQ3_XXS holes at 5,120 (COMPLETED 0:0; 00:14:55)",
+        "1987 Qwen3-235B on 2 H100 (FAILED 4:0 by design; 36 of 135 done; 00:18:22)"
+      ],
+      "outcome": "Answered within 5,120 tokens (primary; math / code / knowledge, percent): Q8 38.3 / 46.7 / 50.0, UD-IQ3_XXS 48.3 / 41.7 / 48.3, ds4 Q2 40.0 / 35.0 / 51.7, gpt-oss 40.0 / 48.3 / 40.0. G4 paired: ds4 Q2 minus Q8 +1.7 [-10.0, +13.3] / -11.7 [-25.0, 0.0] / +1.7 [-11.7, +15.0]; UD-IQ3_XXS minus Q8 +10.0 [-1.7, +23.3] / -5.0 [-11.7, +1.7] / -1.7 [-13.3, +11.7]. The 2-bit code loss is mostly answers that did not finish within 5,120 tokens (20 of 60 against 4 of 60 for Q8). Qwen unresolved (its non-thinking math answers ran past about 4,900 tokens); 4,096 reading only on a 3/6/7-item prefix. Exploratory recommendation: gpt-oss-120b as the default resident model, UD-IQ3_XXS when knowledge matters and memory can be freed (program/evidence/2026-10-16/lm2-resident-eval/README.md)",
+      "basis": "physical (scontrol RunTime x GPUs in TresPerNode); LM2 total 7.7438 of the 8.0 budget (the three LM2 rows sum to 7.7438)"
+    },
+    {
+      "experiment": "LM2 job 1900 (Qwen3-235B-2507 UD-Q3_K_XL on 3 H100), cancelled by the orchestrator 45 s after it started because LM2 exceeded the 3-GPU research share (D127)",
+      "gpu_hours": 0.0375,
+      "jobs": [
+        "1900 (CANCELLED 137:0 by the orchestrator; 00:00:45)"
+      ],
+      "outcome": "no output used; afterwards LM2 held at most 3 GPUs across all jobs, one GPU job at a time, and Qwen ran on 2 GPUs (job 1987)",
+      "basis": "physical (scontrol RunTime x GPUs in TresPerNode)"
     }
   ],
   "results": [

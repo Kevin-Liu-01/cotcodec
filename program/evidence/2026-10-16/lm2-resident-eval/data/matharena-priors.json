@@ -1,0 +1,398 @@
+{
+ "aime_2026": {
+  "configs": {
+   "anthropic/opus_46": {
+    "accuracy": 96.7,
+    "mean_output_tokens": 13329,
+    "model_name": "Claude-Opus-4.6 (High)",
+    "n": 120
+   },
+   "anthropic/opus_47": {
+    "accuracy": 95.8,
+    "mean_output_tokens": 10728,
+    "model_name": "Claude-Opus-4.7 (xhigh)",
+    "n": 120
+   },
+   "anthropic/opus_48_max": {
+    "accuracy": 100.0,
+    "mean_output_tokens": 21360,
+    "model_name": "Claude-Opus-4.8 (max)",
+    "n": 60
+   },
+   "deepseek/deepseek_v32_dec": {
+    "accuracy": 94.2,
+    "mean_output_tokens": 14854,
+    "model_name": "DeepSeek-v3.2 (Think)",
+    "n": 120
+   },
+   "deepseek/deepseek_v4_flash": {
+    "accuracy": 95.8,
+    "mean_output_tokens": 33588,
+    "model_name": "DeepSeek-v4-Flash (Max)",
+    "n": 120
+   },
+   "deepseek/deepseek_v4_pro": {
+    "accuracy": 96.7,
+    "mean_output_tokens": 23567,
+    "model_name": "DeepSeek-v4-Pro (Max)",
+    "n": 120
+   },
+   "gemini/gemini-3-flash": {
+    "accuracy": 96.7,
+    "mean_output_tokens": 20504,
+    "model_name": "Gemini 3 Flash",
+    "n": 120
+   },
+   "gemini/gemini-31-pro": {
+    "accuracy": 98.3,
+    "mean_output_tokens": 14364,
+    "model_name": "Gemini 3.1 Pro Preview",
+    "n": 120
+   },
+   "gemini/gemini-35-flash": {
+    "accuracy": 95.0,
+    "mean_output_tokens": 13992,
+    "model_name": "Gemini 3.5 Flash",
+    "n": 60
+   },
+   "gemini/gemini-36-flash": {
+    "accuracy": 96.7,
+    "mean_output_tokens": 10951,
+    "model_name": "Gemini 3.6 Flash",
+    "n": 60
+   },
+   "gemini/riftrunner": {
+    "accuracy": 91.7,
+    "mean_output_tokens": 14712,
+    "model_name": "Gemini 3 Pro (preview)",
+    "n": 120
+   },
+   "glm/glm-5": {
+    "accuracy": 96.7,
+    "mean_output_tokens": 23541,
+    "model_name": "GLM 5",
+    "n": 120
+   },
+   "glm/glm-51": {
+    "accuracy": 95.8,
+    "mean_output_tokens": 26546,
+    "model_name": "GLM 5.1",
+    "n": 120
+   },
+   "glm/glm-52": {
+    "accuracy": 90.0,
+    "mean_output_tokens": 18424,
+    "model_name": "GLM 5.2",
+    "n": 60
+   },
+   "moonshot/k25": {
+    "accuracy": 95.8,
+    "mean_output_tokens": 22849,
+    "model_name": "Kimi K2.5 (Think)",
+    "n": 120
+   },
+   "moonshot/k26": {
+    "accuracy": 95.8,
+    "mean_output_tokens": 22722,
+    "model_name": "Kimi K2.6 (Think)",
+    "n": 120
+   },
+   "moonshot/k3": {
+    "accuracy": 96.7,
+    "mean_output_tokens": 7031,
+    "model_name": "Kimi K3 (Think)",
+    "n": 60
+   },
+   "nvidia/nemotron-3-super": {
+    "accuracy": 91.7,
+    "mean_output_tokens": 24114,
+    "model_name": "NVIDIA-Nemotron-3-Super",
+    "n": 120
+   },
+   "openai/gpt-52-high": {
+    "accuracy": 98.3,
+    "mean_output_tokens": 8403,
+    "model_name": "GPT-5.2 (high)",
+    "n": 120
+   },
+   "openai/gpt-54": {
+    "accuracy": 99.2,
+    "mean_output_tokens": 10743,
+    "model_name": "GPT-5.4 (xhigh)",
+    "n": 120
+   },
+   "openai/gpt-55": {
+    "accuracy": 100.0,
+    "mean_output_tokens": 5219,
+    "model_name": "GPT-5.5 (xhigh)",
+    "n": 120
+   },
+   "other/qed-nano": {
+    "accuracy": 82.5,
+    "mean_output_tokens": 35191,
+    "model_name": "QED-Nano",
+    "n": 120
+   },
+   "qwen/qwen3.5_27b": {
+    "accuracy": 91.7,
+    "mean_output_tokens": 29363,
+    "model_name": "Qwen3.5-27B",
+    "n": 120
+   },
+   "qwen/qwen3.5_35b_a3b": {
+    "accuracy": 93.3,
+    "mean_output_tokens": 31856,
+    "model_name": "Qwen3.5-35B-A3B",
+    "n": 120
+   },
+   "qwen/qwen3.5_397b": {
+    "accuracy": 94.2,
+    "mean_output_tokens": 20797,
+    "model_name": "Qwen3.5-397b-a17b",
+    "n": 120
+   },
+   "qwen/qwen3.5_4b": {
+    "accuracy": 99.0,
+    "mean_output_tokens": 27853,
+    "model_name": "Qwen3.5-4B",
+    "n": 96
+   },
+   "qwen/qwen3.5_9b": {
+    "accuracy": 92.5,
+    "mean_output_tokens": 31184,
+    "model_name": "Qwen3.5-9B",
+    "n": 120
+   },
+   "qwen/qwen3_30b_a3b_2507": {
+    "accuracy": 88.3,
+    "mean_output_tokens": 17939,
+    "model_name": "Qwen3-30B-A3B-2507-Think",
+    "n": 120
+   },
+   "qwen/qwen3_4b_2507": {
+    "accuracy": 82.5,
+    "mean_output_tokens": 21206,
+    "model_name": "Qwen3-4B-2507-Think",
+    "n": 120
+   },
+   "stepfun/3.5-flash": {
+    "accuracy": 96.7,
+    "mean_output_tokens": 42072,
+    "model_name": "Step 3.5 Flash",
+    "n": 120
+   },
+   "stepfun/3.7-flash": {
+    "accuracy": 95.0,
+    "mean_output_tokens": 50365,
+    "model_name": "Step 3.7 Flash",
+    "n": 120
+   },
+   "xai/grok-41-fast-reasoning": {
+    "accuracy": 94.2,
+    "mean_output_tokens": 9618,
+    "model_name": "Grok 4.1 Fast (Reasoning)",
+    "n": 120
+   }
+  },
+  "repo": "MathArena/aime_2026_outputs",
+  "revision": "f916cfc3eebc6ffbbf57d70918e79804d740806f"
+ },
+ "hmmt_feb_2026": {
+  "configs": {
+   "anthropic/opus_46": {
+    "accuracy": 96.2,
+    "mean_output_tokens": 25758,
+    "model_name": "Claude-Opus-4.6 (High)",
+    "n": 132
+   },
+   "anthropic/opus_47": {
+    "accuracy": 93.9,
+    "mean_output_tokens": 22279,
+    "model_name": "Claude-Opus-4.7 (xhigh)",
+    "n": 132
+   },
+   "anthropic/opus_48_max": {
+    "accuracy": 95.5,
+    "mean_output_tokens": 30441,
+    "model_name": "Claude-Opus-4.8 (max)",
+    "n": 66
+   },
+   "deepseek/deepseek_v32_dec": {
+    "accuracy": 84.1,
+    "mean_output_tokens": 24288,
+    "model_name": "DeepSeek-v3.2 (Think)",
+    "n": 132
+   },
+   "deepseek/deepseek_v4_flash": {
+    "accuracy": 93.9,
+    "mean_output_tokens": 54365,
+    "model_name": "DeepSeek-v4-Flash (Max)",
+    "n": 132
+   },
+   "deepseek/deepseek_v4_pro": {
+    "accuracy": 93.9,
+    "mean_output_tokens": 40696,
+    "model_name": "DeepSeek-v4-Pro (Max)",
+    "n": 132
+   },
+   "gemini/gemini-3-flash": {
+    "accuracy": 89.4,
+    "mean_output_tokens": 21896,
+    "model_name": "Gemini 3 Flash",
+    "n": 132
+   },
+   "gemini/gemini-31-pro": {
+    "accuracy": 94.7,
+    "mean_output_tokens": 16761,
+    "model_name": "Gemini 3.1 Pro Preview",
+    "n": 132
+   },
+   "gemini/gemini-35-flash": {
+    "accuracy": 95.5,
+    "mean_output_tokens": 16121,
+    "model_name": "Gemini 3.5 Flash",
+    "n": 66
+   },
+   "gemini/gemini-36-flash": {
+    "accuracy": 89.4,
+    "mean_output_tokens": 13542,
+    "model_name": "Gemini 3.6 Flash",
+    "n": 66
+   },
+   "gemini/riftrunner": {
+    "accuracy": 86.4,
+    "mean_output_tokens": 15502,
+    "model_name": "Gemini 3 Pro (preview)",
+    "n": 132
+   },
+   "glm/glm-5": {
+    "accuracy": 86.4,
+    "mean_output_tokens": 33206,
+    "model_name": "GLM 5",
+    "n": 132
+   },
+   "glm/glm-51": {
+    "accuracy": 89.4,
+    "mean_output_tokens": 39645,
+    "model_name": "GLM 5.1",
+    "n": 132
+   },
+   "glm/glm-52": {
+    "accuracy": 92.4,
+    "mean_output_tokens": 23293,
+    "model_name": "GLM 5.2",
+    "n": 66
+   },
+   "moonshot/k25": {
+    "accuracy": 87.1,
+    "mean_output_tokens": 28765,
+    "model_name": "Kimi K2.5 (Think)",
+    "n": 132
+   },
+   "moonshot/k26": {
+    "accuracy": 94.7,
+    "mean_output_tokens": 33563,
+    "model_name": "Kimi K2.6 (Think)",
+    "n": 132
+   },
+   "moonshot/k3": {
+    "accuracy": 97.0,
+    "mean_output_tokens": 14694,
+    "model_name": "Kimi K3 (Think)",
+    "n": 66
+   },
+   "nvidia/nemotron-3-super": {
+    "accuracy": 84.8,
+    "mean_output_tokens": 45773,
+    "model_name": "NVIDIA-Nemotron-3-Super",
+    "n": 132
+   },
+   "openai/gpt-52-high": {
+    "accuracy": 97.0,
+    "mean_output_tokens": 13709,
+    "model_name": "GPT-5.2 (high)",
+    "n": 132
+   },
+   "openai/gpt-54": {
+    "accuracy": 97.7,
+    "mean_output_tokens": 14538,
+    "model_name": "GPT-5.4 (xhigh)",
+    "n": 132
+   },
+   "openai/gpt-55": {
+    "accuracy": 98.5,
+    "mean_output_tokens": 8496,
+    "model_name": "GPT-5.5 (xhigh)",
+    "n": 132
+   },
+   "other/qed-nano": {
+    "accuracy": 64.4,
+    "mean_output_tokens": 57709,
+    "model_name": "QED-Nano",
+    "n": 132
+   },
+   "qwen/qwen3.5_27b": {
+    "accuracy": 80.9,
+    "mean_output_tokens": 37594,
+    "model_name": "Qwen3.5-27B",
+    "n": 131
+   },
+   "qwen/qwen3.5_35b_a3b": {
+    "accuracy": 81.8,
+    "mean_output_tokens": 42716,
+    "model_name": "Qwen3.5-35B-A3B",
+    "n": 132
+   },
+   "qwen/qwen3.5_397b": {
+    "accuracy": 87.9,
+    "mean_output_tokens": 24189,
+    "model_name": "Qwen3.5-397b-a17b",
+    "n": 132
+   },
+   "qwen/qwen3.5_4b": {
+    "accuracy": 84.1,
+    "mean_output_tokens": 32653,
+    "model_name": "Qwen3.5-4B",
+    "n": 88
+   },
+   "qwen/qwen3.5_9b": {
+    "accuracy": 71.2,
+    "mean_output_tokens": 40607,
+    "model_name": "Qwen3.5-9B",
+    "n": 132
+   },
+   "qwen/qwen3_30b_a3b_2507": {
+    "accuracy": 78.8,
+    "mean_output_tokens": 24319,
+    "model_name": "Qwen3-30B-A3B-2507-Think",
+    "n": 132
+   },
+   "qwen/qwen3_4b_2507": {
+    "accuracy": 53.0,
+    "mean_output_tokens": 27600,
+    "model_name": "Qwen3-4B-2507-Think",
+    "n": 132
+   },
+   "stepfun/3.5-flash": {
+    "accuracy": 86.4,
+    "mean_output_tokens": 60004,
+    "model_name": "Step 3.5 Flash",
+    "n": 132
+   },
+   "stepfun/3.7-flash": {
+    "accuracy": 87.9,
+    "mean_output_tokens": 81069,
+    "model_name": "Step 3.7 Flash",
+    "n": 66
+   },
+   "xai/grok-41-fast-reasoning": {
+    "accuracy": 86.4,
+    "mean_output_tokens": 13846,
+    "model_name": "Grok 4.1 Fast (Reasoning)",
+    "n": 132
+   }
+  },
+  "repo": "MathArena/hmmt_feb_2026_outputs",
+  "revision": "4523bd2724d5da98d36b89b1609b839cbc03ef00"
+ }
+}

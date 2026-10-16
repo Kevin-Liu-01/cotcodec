@@ -1,0 +1,181 @@
+{
+ "jobs": [
+  {
+   "job": 1802,
+   "name": "lm2-pilot-v4f-q2",
+   "state": "FAILED",
+   "exit_code": "4:0",
+   "start": "2026-10-16T06:17:05",
+   "end": "2026-10-16T06:22:58",
+   "gpus": 2,
+   "run_s": 353,
+   "gpu_hours": 0.1961
+  },
+  {
+   "job": 1804,
+   "name": "lm2-pilot-gptoss120",
+   "state": "FAILED",
+   "exit_code": "4:0",
+   "start": "2026-10-16T06:18:45",
+   "end": "2026-10-16T06:24:44",
+   "gpus": 2,
+   "run_s": 359,
+   "gpu_hours": 0.1994
+  },
+  {
+   "job": 1820,
+   "name": "lm2-diag-v4f-q2",
+   "state": "FAILED",
+   "exit_code": "2:0",
+   "start": "2026-10-16T06:27:48",
+   "end": "2026-10-16T06:28:43",
+   "gpus": 2,
+   "run_s": 55,
+   "gpu_hours": 0.0306
+  },
+  {
+   "job": 1822,
+   "name": "lm2-diag-gptoss120",
+   "state": "FAILED",
+   "exit_code": "2:0",
+   "start": "2026-10-16T06:28:43",
+   "end": "2026-10-16T06:29:33",
+   "gpus": 2,
+   "run_s": 50,
+   "gpu_hours": 0.0278
+  },
+  {
+   "job": 1830,
+   "name": "lm2-diag-v4f-q2",
+   "state": "FAILED",
+   "exit_code": "4:0",
+   "start": "2026-10-16T06:36:46",
+   "end": "2026-10-16T06:41:26",
+   "gpus": 2,
+   "run_s": 280,
+   "gpu_hours": 0.1556
+  },
+  {
+   "job": 1832,
+   "name": "lm2-diag-gptoss120",
+   "state": "FAILED",
+   "exit_code": "4:0",
+   "start": "2026-10-16T06:36:49",
+   "end": "2026-10-16T06:41:28",
+   "gpus": 2,
+   "run_s": 279,
+   "gpu_hours": 0.155
+  },
+  {
+   "job": 1842,
+   "name": "lm2-main-v4f-q2",
+   "state": "FAILED",
+   "exit_code": "4:0",
+   "start": "2026-10-16T06:45:23",
+   "end": "2026-10-16T07:25:56",
+   "gpus": 2,
+   "run_s": 2433,
+   "gpu_hours": 1.3517
+  },
+  {
+   "job": 1844,
+   "name": "lm2-main-gptoss120",
+   "state": "FAILED",
+   "exit_code": "4:0",
+   "start": "2026-10-16T06:45:26",
+   "end": "2026-10-16T07:09:53",
+   "gpus": 1,
+   "run_s": 1467,
+   "gpu_hours": 0.4075
+  },
+  {
+   "job": 1865,
+   "name": "lm2-main-v4f-iq3",
+   "state": "FAILED",
+   "exit_code": "4:0",
+   "start": "2026-10-16T06:52:34",
+   "end": "2026-10-16T07:25:08",
+   "gpus": 2,
+   "run_s": 1954,
+   "gpu_hours": 1.0856
+  },
+  {
+   "job": 1898,
+   "name": "lm2-main-v4f-q8",
+   "state": "COMPLETED",
+   "exit_code": "0:0",
+   "start": "2026-10-16T07:15:29",
+   "end": "2026-10-16T07:53:42",
+   "gpus": 3,
+   "run_s": 2293,
+   "gpu_hours": 1.9108
+  },
+  {
+   "job": 1900,
+   "name": "lm2-main-qwen235-q3",
+   "state": "CANCELLED",
+   "exit_code": "137:0",
+   "start": "2026-10-16T07:25:56",
+   "end": "2026-10-16T07:26:41",
+   "gpus": 3,
+   "run_s": 45,
+   "gpu_hours": 0.0375
+  },
+  {
+   "job": 1933,
+   "name": "lm2-main-v4f-q2",
+   "state": "CANCELLED",
+   "exit_code": "137:0",
+   "start": "2026-10-16T07:55:01",
+   "end": "2026-10-16T08:07:29",
+   "gpus": 2,
+   "run_s": 748,
+   "gpu_hours": 0.4156
+  },
+  {
+   "job": 1949,
+   "name": "lm2-main-v4f-q2",
+   "state": "CANCELLED",
+   "exit_code": "137:0",
+   "start": "2026-10-16T08:10:00",
+   "end": "2026-10-16T08:11:58",
+   "gpus": 2,
+   "run_s": 118,
+   "gpu_hours": 0.0656
+  },
+  {
+   "job": 1955,
+   "name": "lm2-main-v4f-q2",
+   "state": "FAILED",
+   "exit_code": "4:0",
+   "start": "2026-10-16T08:12:23",
+   "end": "2026-10-16T08:30:15",
+   "gpus": 2,
+   "run_s": 1072,
+   "gpu_hours": 0.5956
+  },
+  {
+   "job": 1974,
+   "name": "lm2-main-v4f-iq3",
+   "state": "COMPLETED",
+   "exit_code": "0:0",
+   "start": "2026-10-16T08:30:24",
+   "end": "2026-10-16T08:45:19",
+   "gpus": 2,
+   "run_s": 895,
+   "gpu_hours": 0.4972
+  },
+  {
+   "job": 1987,
+   "name": "lm2-main-qwen235-q3",
+   "state": "FAILED",
+   "exit_code": "4:0",
+   "start": "2026-10-16T08:46:28",
+   "end": "2026-10-16T09:04:50",
+   "gpus": 2,
+   "run_s": 1102,
+   "gpu_hours": 0.6122
+  }
+ ],
+ "total_gpu_hours": 7.7438
+}

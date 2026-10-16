@@ -9,6 +9,9 @@
 # Usage: lm2-submit.sh <commit short id> <arm> <pilot|main> <slurm minutes> <check|submit> \
 #          [extra driver arguments, e.g. --cap math=40 --slots 24]
 # Env: LM2_RESUME_JOB=<job id> copies that job's /outputs/lm2 into the new job (same commit only).
+#      LM2_GPUS=<n> overrides the plan's GPU count (Qwen on 2 GPUs under the 3-GPU share, D127).
+# Share rule (coordinator, 2026-10-16): at most 3 GPUs across all LM2 jobs, running or pending, so
+# this script refuses to submit while any other LM2 GPU job is in the queue.
 set -Eeuo pipefail
 source "$(dirname "$0")/lm2-env.sh"
 S="${1:?commit short id}"; ARM="${2:?arm}"; PHASE="${3:?pilot|main}"; MIN="${4:?minutes}"
@@ -42,6 +45,8 @@ if bad:
 PY
 PLAN=experiments/lm2/lm2-resident-eval-v1.json
 GPUS=$(python3 -c "import json,sys; print(json.load(open(sys.argv[1]))['arms'][sys.argv[2]]['gpus'])" "$PLAN" "$ARM")
+GPUS="${LM2_GPUS:-$GPUS}"
+(( GPUS >= 1 && GPUS <= 3 )) || { echo "LM2 may hold at most 3 GPUs"; exit 2; }
 CAP=$(python3 -c "import math,sys; print(math.ceil(int(sys.argv[1])*int(sys.argv[2])/60*10000)/10000)" "$GPUS" "$MIN")
 DRV_MIN=$((MIN - 2))
 MID=gpt-oss-120b-mxfp4-gguf
@@ -92,6 +97,8 @@ sub() { uv run --locked python scripts/submit_docker_research_job.py "$M" "$@"; 
 sub --dry-run > "${M%.yaml}.dry-run.json" 2>&1 || { echo "dry-run failed"; tail -5 "${M%.yaml}.dry-run.json"; exit 2; }
 sub --test-only > "${M%.yaml}.test-only.txt" 2>&1 || { echo "test-only failed"; tail -5 "${M%.yaml}.test-only.txt"; exit 2; }
 if [[ "$MODE" != submit ]]; then echo "checks passed: $(tail -1 "${M%.yaml}.test-only.txt") ($M)"; exit 0; fi
+others=$(squeue -h -u "$USER" -o "%i %j %b" | awk '$2 ~ /^lm2-/ && $3 ~ /gpu/' | wc -l)
+(( others == 0 )) || { echo "another LM2 GPU job is queued or running; not submitting (3-GPU share)"; exit 4; }
 gres_used=$(scontrol show nodes -d | sed -n 's/^ *GresUsed=//p')
 [[ "$gres_used" =~ IDX:0([,-]|\)) ]] || { echo "GPU 0 is not allocated to another job ($gres_used); not submitting"; exit 4; }
 lama=$(squeue -h -o "%i %j %T %b" | awk '$2 ~ /^transcreate-/ && $3 == "RUNNING"' | head -1)

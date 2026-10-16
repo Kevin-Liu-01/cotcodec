@@ -107,14 +107,20 @@ def accuracy_block(rows: list[dict[str, Any]]) -> dict[str, Any]:
 def throughput(job_dir: Path) -> dict[str, Any] | None:
     """Aggregate generated tok/s while every slot is busy (completed + in-flight decoded)."""
 
-    metrics_files = sorted(job_dir.glob("metrics-*.jsonl"))
-    summaries = sorted(job_dir.glob("summary-*.json"))
-    if not metrics_files or not summaries:
+    # A resumed job's directory also holds its predecessor's copied files; the job's own run is
+    # the latest run id (run ids start with a UTC timestamp). A job cancelled by scancel has no
+    # summary of its own (the container was stopped), so its metrics stand alone.
+    metrics_all = sorted(job_dir.glob("metrics-*.jsonl"))
+    if not metrics_all:
         return None
-    summary = json.loads(summaries[0].read_text())
-    slots = summary.get("slots")
-    rows = load_jsonl(metrics_files[0])
-    rows = [r for r in rows if "busy_slots" in r]
+    run_id = metrics_all[-1].name[len("metrics-") : -len(".jsonl")]
+    own = job_dir / f"summary-{run_id}.json"
+    summary = json.loads(own.read_text()) if own.exists() else {}
+    rows = [r for r in load_jsonl(metrics_all[-1]) if "busy_slots" in r]
+    slots = summary.get("slots") or max((r["busy_slots"] for r in rows), default=None)
+    gpus = summary.get("visible_gpus") or (
+        len(rows[-1].get("gpu_used_mib") or {}) if rows else None
+    )
     if len(rows) < 3:
         return None
     gen = [(r["t"], r["completed_tokens"] + r["inflight_decoded"], r["busy_slots"]) for r in rows]
@@ -124,17 +130,19 @@ def throughput(job_dir: Path) -> dict[str, Any] | None:
     rate = (g1 - g0) / (t1 - t0) if t1 > t0 else None
     total_gen = gen[-1][1]
     return {
-        "job_id": summary.get("job_id"),
+        "job_id": job_dir.name,
+        "run_id": run_id,
+        "phase": summary.get("phase") or "cancelled; no summary",
+        "extra_server_args": summary.get("extra_server_args"),
+        "max_tokens_override": summary.get("max_tokens_override"),
         "slots": slots,
-        "gpus": summary.get("visible_gpus"),
+        "gpus": gpus,
         "load_s": (summary.get("server") or {}).get("load_s"),
         "generation_s": summary.get("generation_s"),
         "steady_window_s": round(t1 - t0, 1),
         "steady_busy_fraction": round(len(full) / len(gen), 2),
         "aggregate_tok_s": round(rate, 1) if rate else None,
-        "tok_s_per_gpu": round(rate / summary["visible_gpus"], 1)
-        if rate and summary.get("visible_gpus")
-        else None,
+        "tok_s_per_gpu": round(rate / gpus, 1) if rate and gpus else None,
         "generated_tokens": total_gen,
         "completed_requests": (summary.get("counts") or {}).get("ok"),
         "peak_mib": summary.get("peak_mib"),
@@ -146,7 +154,10 @@ def fmt_ci(ci: list[float] | None) -> str:
 
 
 def analyze(
-    args: argparse.Namespace, grades_path: Path | None = None, min_max_tokens: int | None = None
+    args: argparse.Namespace,
+    grades_path: Path | None = None,
+    min_max_tokens: int | None = None,
+    caps_path: Path | None = None,
 ) -> dict[str, Any]:
     plan = load_plan(args.plan)
     grades = [g for g in load_jsonl(grades_path or args.grades) if g.get("correct") is not None]
@@ -158,10 +169,19 @@ def analyze(
             for g in grades
             if (g.get("max_tokens") or 0) >= min_max_tokens and not g.get("censored")
         ]
-    caps = json.loads(args.caps.read_text()) if args.caps else {}
+    caps_file = caps_path or args.caps
+    caps = json.loads(caps_file.read_text()) if caps_file else {}
+    per_arm = caps.get("per_arm", {})
+
+    def cap_of(arm: str, task: str) -> int:
+        return per_arm.get(arm, {}).get(task, caps.get(task, 0))
+
     if caps:
-        # Only the registered prefix of each task's order enters the analysis.
-        grades = [g for g in grades if g["rank"] is not None and g["rank"] < caps.get(g["task"], 0)]
+        # Only the evaluated prefix of each task's order enters the analysis: the plan's cut, or
+        # an arm's complete prefix (all three seeds) when its run covered less (per_arm).
+        grades = [
+            g for g in grades if g["rank"] is not None and g["rank"] < cap_of(g["arm"], g["task"])
+        ]
     arms = list(plan["arms"])
     tasks = [t for t in plan["order"]["interleave"] if any(g["task"] == t for g in grades)]
     by = {
@@ -196,6 +216,18 @@ def analyze(
         result["by_source"][a] = {
             s: accuracy_block([g for g in grades if g["arm"] == a and g["source"] == s])
             for s in sources
+        }
+    if per_arm:
+        # Every arm on the common prefix (the smallest cap per task), for a like-for-like table.
+        common = {t: min(cap_of(a, t) for a in arms if cap_of(a, t) > 0) for t in tasks}
+        result["common_prefix"] = common
+        result["accuracy_common"] = {
+            a: {
+                t: accuracy_block([g for g in by[(a, t)] if g["rank"] < common[t]])
+                for t in tasks
+                if by[(a, t)]
+            }
+            for a in arms
         }
     for key, pairs in (("g4", PAIRS_G4), ("models", PAIRS_MODELS)):
         for x, y in pairs:
@@ -242,6 +274,26 @@ def tables(result: dict[str, Any]) -> str:
                 else "-"
             )
         out.append(f"| {a} | " + " | ".join(cells) + " |")
+    if result.get("accuracy_common"):
+        cp = result["common_prefix"]
+        out += [
+            "",
+            "## Accuracy on the common prefix ("
+            + ", ".join(f"{t} {cp[t]} items" for t in tasks)
+            + ")",
+            "",
+        ]
+        out += ["| Arm | " + " | ".join(tasks) + " |", "|---|" + "---|" * len(tasks)]
+        for a, blocks in result["accuracy_common"].items():
+            cells = []
+            for t in tasks:
+                b = blocks.get(t)
+                cells.append(
+                    f"{b['accuracy']:.1f} [{b['ci95'][0]:.1f}, {b['ci95'][1]:.1f}]"
+                    if b and b["accuracy"] is not None
+                    else "-"
+                )
+            out.append(f"| {a} | " + " | ".join(cells) + " |")
     for key, title in (
         ("g4", "Quantization cost inside V4 Flash 0731 (paired, points)"),
         ("models", "Between models (paired, points)"),
@@ -284,13 +336,13 @@ def tables(result: dict[str, Any]) -> str:
         "",
         "## Throughput on the H100s (llama.cpp b11669, layer split)",
         "",
-        "| Arm | Job | GPUs | Slots | Load s | Aggregate tok/s (all slots busy) | tok/s per GPU | Generated tokens | Completed requests |",
+        "| Arm | Job (phase) | GPUs | Slots | Load s | Aggregate tok/s (all slots busy) | tok/s per GPU | Generated tokens | Completed requests |",
         "|---|---|---:|---:|---:|---:|---:|---:|---:|",
     ]
     for a, rows in result["throughput"].items():
         for r in rows:
             out.append(
-                f"| {a} | {r['job_id']} | {r['gpus']} | {r['slots']} | {r['load_s']} | {r['aggregate_tok_s']} | {r['tok_s_per_gpu']} | {r['generated_tokens']} | {r['completed_requests']} |"
+                f"| {a} | {r['job_id']} ({r['phase']}{', ' + ' '.join(r['extra_server_args']) if r.get('extra_server_args') else ''}) | {r['gpus']} | {r['slots']} | {r['load_s']} | {r['aggregate_tok_s']} | {r['tok_s_per_gpu']} | {r['generated_tokens']} | {r['completed_requests']} |"
             )
     out += [
         "",
@@ -324,6 +376,9 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--grades", type=Path, required=True)
     parser.add_argument("--grades-16k", type=Path, help="grades scored with no analysis cap")
+    parser.add_argument("--alt-grades", type=Path, help="a second budget reading")
+    parser.add_argument("--alt-caps", type=Path)
+    parser.add_argument("--alt-name", default="alternative reading")
     parser.add_argument("--caps", type=Path)
     parser.add_argument("--jobs", type=Path)
     parser.add_argument("--gpu-hours", type=Path)
@@ -339,6 +394,24 @@ def main(argv: list[str] | None = None) -> int:
         }
         md += "\n# Secondary reading: completed responses at the 16,384 run cap only\n\n"
         md += "\n".join(tables(secondary).splitlines()[2:]).split("## Throughput")[0]
+    if args.alt_grades:
+        alt = analyze(args, args.alt_grades, None, args.alt_caps)
+        result["alt_reading"] = {
+            "name": args.alt_name,
+            **{
+                k: alt.get(k)
+                for k in (
+                    "caps",
+                    "accuracy",
+                    "accuracy_common",
+                    "common_prefix",
+                    "paired",
+                    "by_source",
+                )
+            },
+        }
+        md += f"\n# {args.alt_name}\n\n"
+        md += "\n".join(tables(alt).splitlines()[2:]).split("## Output tokens")[0]
     args.out_json.write_text(json.dumps(result, indent=1, sort_keys=True) + "\n")
     args.out_md.write_text(md)
     return 0

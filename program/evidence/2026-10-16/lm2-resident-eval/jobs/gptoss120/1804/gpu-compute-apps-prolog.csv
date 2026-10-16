@@ -1,0 +1,8 @@
+GPU-b23c3b4d-5413-4d75-cad3-74be85f8d058, 2626734, python, 7890 MiB
+GPU-34c1e8e2-bec3-3ce7-c1be-618cb05ca896, 470977, VLLM::EngineCore, 12030 MiB
+GPU-34c1e8e2-bec3-3ce7-c1be-618cb05ca896, 479061, /home/kevin/tc-speedrun/envs/ocr-paddle/bin/python, 20198 MiB
+GPU-34c1e8e2-bec3-3ce7-c1be-618cb05ca896, 515185, python, 19554 MiB
+GPU-a485003c-eb56-c00a-5efc-ba2fb61d12d5, 508192, /home/kevin/tc-speedrun/.venv/bin/python, 2864 MiB
+GPU-0524ae85-a4b2-36bd-5769-d31e83c463e2, 513547, /opt/llama.cpp/llama-server, 42014 MiB
+GPU-16606cca-c630-0974-e67c-7a20468864b5, 495431, python, 4522 MiB
+GPU-53d0f760-e9ef-5f8a-34b7-fd31a605e8a5, 513547, /opt/llama.cpp/llama-server, 40712 MiB

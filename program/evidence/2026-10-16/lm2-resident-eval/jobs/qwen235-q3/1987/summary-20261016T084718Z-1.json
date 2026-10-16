@@ -1,0 +1,171 @@
+{
+  "already_done": 0,
+  "arm": "qwen235-q3",
+  "caps": {
+    "code": 15,
+    "knowledge": 15,
+    "math": 15
+  },
+  "completed_tokens": 32794,
+  "counts": {
+    "aborted": 28,
+    "error": 0,
+    "http_error": 0,
+    "ok": 36
+  },
+  "ctx_per_slot": 9216,
+  "diag_chat_mode": false,
+  "elapsed_s": 1051.8,
+  "experiment": "lm2-resident-eval-v1",
+  "extra_server_args": [],
+  "generation_s": 973.2,
+  "generation_started_s": 76.9,
+  "job_id": "20261016T084718Z-1",
+  "max_tokens_override": 5120,
+  "order_len": 135,
+  "peak_mib": {
+    "GPU-16606cca-c630-0974-e67c-7a20468864b5": 72809,
+    "GPU-843dc4cf-3b6b-5e3c-4dc9-75b0560cc86c": 75547
+  },
+  "phase": "main",
+  "plan_sha256": "6bce5970f0b0e7769f51927a21489c1f82dbdc21759f772e532b92670ad0a770",
+  "remaining_in_queue": 70,
+  "schema_version": 1,
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "server": {
+    "gpus": [
+      {
+        "index": 0,
+        "total_mib": 81559,
+        "uuid": "GPU-843dc4cf-3b6b-5e3c-4dc9-75b0560cc86c"
+      },
+      {
+        "index": 1,
+        "total_mib": 81559,
+        "uuid": "GPU-16606cca-c630-0974-e67c-7a20468864b5"
+      }
+    ],
+    "load_s": 75.72,
+    "peak_mib_after_load": {
+      "GPU-16606cca-c630-0974-e67c-7a20468864b5": 72697,
+      "GPU-843dc4cf-3b6b-5e3c-4dc9-75b0560cc86c": 75431
+    },
+    "probe_render": {
+      "chars": 87,
+      "http_status": 200,
+      "sha256": "fc48942d9b261d008418dfaa40ca69213d8059c796816a4d2df365232b9d95eb",
+      "tail_after_user": "<|im_end|>\n<|im_start|>assistant\n"
+    },
+    "props": {
+      "build_info": "b11669-620d2225",
+      "chat_template_sha256": "40c21f34cf67d8c760ef72f8ad3ae5afad514299d4b06e91dd9a8d705af7b541",
+      "model_path_tail": "Qwen3-235B-A22B-Instruct-2507-UD-Q3_K_XL-00001-of-00003.gguf",
+      "n_ctx": 9216,
+      "total_slots": 28
+    },
+    "receipt": {
+      "artifact_root_sha256": "78fcdc166c9ff6d7a35728e3d2e9555c853bb8d0dbfb444e6f54edfa83c55b7e",
+      "files": 4,
+      "gguf_bytes": 104152926944,
+      "receipt_sha256": "32e64cd077c3d5c07b408fffbd67aaea93673b1d853b2c33f162b7d83f3f1357",
+      "revision": "437d6915c5c512869e4cf8b16b840bbe3fb172bc",
+      "sizes_match": true,
+      "total_bytes": 104152938929
+    },
+    "server_argv": [
+      "/opt/llama.cpp/llama-server",
+      "-m",
+      "<snapshot>/UD-Q3_K_XL/Qwen3-235B-A22B-Instruct-2507-UD-Q3_K_XL-00001-of-00003.gguf",
+      "-ngl",
+      "all",
+      "--split-mode",
+      "layer",
+      "-fit",
+      "off",
+      "-c",
+      "258048",
+      "-np",
+      "28",
+      "--jinja",
+      "--metrics",
+      "--no-webui",
+      "-cram",
+      "0",
+      "-lv",
+      "4",
+      "-lm",
+      "none",
+      "-lzm",
+      "off",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "18941",
+      "-t",
+      "16"
+    ]
+  },
+  "server_exit_code": 0,
+  "server_log": {
+    "all_layers_offloaded": true,
+    "buffers": [
+      {
+        "buffer": "CUDA0",
+        "kind": "model",
+        "mib": 50320.3
+      },
+      {
+        "buffer": "CUDA1",
+        "kind": "model",
+        "mib": 48668.1
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "model",
+        "mib": 333.84
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "KV",
+        "mib": 24192.0
+      },
+      {
+        "buffer": "CUDA1",
+        "kind": "KV",
+        "mib": 23184.0
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 311.78
+      },
+      {
+        "buffer": "CUDA1",
+        "kind": "compute",
+        "mib": 236.95
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 120.6
+      }
+    ],
+    "cpu_fallback_lines": 0,
+    "kv_lines": [
+      "1.15.222.949 I llama_kv_cache:      CUDA0 KV buffer size = 24192.00 MiB",
+      "1.15.232.976 I llama_kv_cache:      CUDA1 KV buffer size = 23184.00 MiB"
+    ],
+    "offloaded_layers": [
+      "95/95"
+    ],
+    "sha256": "4ace57b6ec3c6453ed5bd7855e38de8697a42a0817b7efeff375faab9faf3921"
+  },
+  "slots": 28,
+  "todo": 135,
+  "visible_gpus": 2,
+  "vram_samples": 1979
+}

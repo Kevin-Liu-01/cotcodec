@@ -1,0 +1,283 @@
+== pilot-v4f-q2-061703 at 2026-10-16T06:17:04Z
+1556 transcreate-lama PENDING 0:00 gres:gpu:h100:1
+1451 transcreate-lama RUNNING 4:11:54 gres:gpu:h100:1
+1588 tcsr-ocr RUNNING 2:07:34 gres:gpu:h100:1
+1779 tcsr-eval-detect RUNNING 16:27 gres:gpu:h100:1
+1780 tcsr-erase-chain RUNNING 16:11 gres:gpu:h100:1
+1789 tcsr-rovo30-masks RUNNING 5:12 N/A
+1796 tcsr-linear-agents2-erase RUNNING 1:49 gres:gpu:h100:1
+1798 tcsr-notion2-render RUNNING 0:18 N/A
+GresUsed=gpu:h100:5(IDX:0-2,4-5)
+0, 7899 MiB, 0 %
+1, 51014 MiB, 99 %
+2, 4 MiB, 0 %
+3, 0 MiB, 0 %
+4, 39421 MiB, 0 %
+5, 3165 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+== pilot-gptoss120-061704 at 2026-10-16T06:17:06Z
+1556 transcreate-lama PENDING 0:00 gres:gpu:h100:1
+1451 transcreate-lama RUNNING 4:11:56 gres:gpu:h100:1
+1588 tcsr-ocr RUNNING 2:07:36 gres:gpu:h100:1
+1779 tcsr-eval-detect RUNNING 16:29 gres:gpu:h100:1
+1780 tcsr-erase-chain RUNNING 16:13 gres:gpu:h100:1
+1789 tcsr-rovo30-masks RUNNING 5:14 N/A
+1796 tcsr-linear-agents2-erase RUNNING 1:51 gres:gpu:h100:1
+1798 tcsr-notion2-render RUNNING 0:20 N/A
+1802 lm2-pilot-v4f-q2 RUNNING 0:01 gres:gpu:h100:2
+GresUsed=gpu:h100:7(IDX:0-6)
+0, 7899 MiB, 0 %
+1, 51014 MiB, 100 %
+2, 861 MiB, 0 %
+3, 0 MiB, 0 %
+4, 39421 MiB, 0 %
+5, 3165 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+== diag-v4f-q2-062747 at 2026-10-16T06:27:48Z
+1556 transcreate-lama PENDING 0:00 gres:gpu:h100:1
+1451 transcreate-lama RUNNING 4:22:38 gres:gpu:h100:1
+1588 tcsr-ocr RUNNING 2:18:18 gres:gpu:h100:1
+1780 tcsr-erase-chain RUNNING 26:55 gres:gpu:h100:1
+1789 tcsr-rovo30-masks RUNNING 15:56 N/A
+1805 tcsr-erase-dbg RUNNING 8:50 N/A
+1809 tcsr-eval-erase RUNNING 4:30 gres:gpu:h100:1
+1816 tcsr-notion2-erase RUNNING 2:57 gres:gpu:h100:1
+GresUsed=gpu:h100:5(IDX:0-4)
+0, 7899 MiB, 0 %
+1, 35075 MiB, 100 %
+2, 3269 MiB, 0 %
+3, 2617 MiB, 31 %
+4, 3261 MiB, 15 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+== diag-gptoss120-062748 at 2026-10-16T06:27:49Z
+1556 transcreate-lama PENDING 0:00 gres:gpu:h100:1
+1451 transcreate-lama RUNNING 4:22:39 gres:gpu:h100:1
+1588 tcsr-ocr RUNNING 2:18:19 gres:gpu:h100:1
+1780 tcsr-erase-chain RUNNING 26:56 gres:gpu:h100:1
+1789 tcsr-rovo30-masks RUNNING 15:57 N/A
+1805 tcsr-erase-dbg RUNNING 8:51 N/A
+1809 tcsr-eval-erase RUNNING 4:31 gres:gpu:h100:1
+1816 tcsr-notion2-erase RUNNING 2:58 gres:gpu:h100:1
+1820 lm2-diag-v4f-q2 RUNNING 0:01 gres:gpu:h100:2
+GresUsed=gpu:h100:7(IDX:0-6)
+0, 7899 MiB, 0 %
+1, 35075 MiB, 100 %
+2, 3269 MiB, 52 %
+3, 2617 MiB, 25 %
+4, 3261 MiB, 58 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+== diag-v4f-q2-063644 at 2026-10-16T06:36:45Z
+1556 transcreate-lama PENDING 0:00 gres:gpu:h100:1
+1451 transcreate-lama RUNNING 4:31:35 gres:gpu:h100:1
+1588 tcsr-ocr RUNNING 2:27:15 gres:gpu:h100:1
+1780 tcsr-erase-chain RUNNING 35:52 gres:gpu:h100:1
+1805 tcsr-erase-dbg RUNNING 17:47 N/A
+1809 tcsr-eval-erase RUNNING 13:27 gres:gpu:h100:1
+1825 tcsr-rovo30-ierase RUNNING 5:52 N/A
+GresUsed=gpu:h100:4(IDX:0-3)
+0, 7903 MiB, 33 %
+1, 22965 MiB, 59 %
+2, 5497 MiB, 49 %
+3, 4093 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+== diag-gptoss120-063645 at 2026-10-16T06:36:47Z
+1556 transcreate-lama PENDING 0:00 gres:gpu:h100:1
+1451 transcreate-lama RUNNING 4:31:37 gres:gpu:h100:1
+1588 tcsr-ocr RUNNING 2:27:17 gres:gpu:h100:1
+1780 tcsr-erase-chain RUNNING 35:54 gres:gpu:h100:1
+1805 tcsr-erase-dbg RUNNING 17:49 N/A
+1809 tcsr-eval-erase RUNNING 13:29 gres:gpu:h100:1
+1825 tcsr-rovo30-ierase RUNNING 5:54 N/A
+1830 lm2-diag-v4f-q2 RUNNING 0:01 gres:gpu:h100:2
+GresUsed=gpu:h100:6(IDX:0-5)
+0, 7903 MiB, 0 %
+1, 22965 MiB, 58 %
+2, 5497 MiB, 48 %
+3, 4093 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+== main-v4f-q2-064521 at 2026-10-16T06:45:22Z
+1556 transcreate-lama PENDING 0:00 gres:gpu:h100:1
+1451 transcreate-lama RUNNING 4:40:12 gres:gpu:h100:1
+1588 tcsr-ocr RUNNING 2:35:52 gres:gpu:h100:1
+1809 tcsr-eval-erase RUNNING 22:04 gres:gpu:h100:1
+1836 tcsr-erase-dev RUNNING 3:56 gres:gpu:h100:1
+1838 tcsr-notion2-erase RUNNING 1:56 gres:gpu:h100:1
+1840 tcsr-rovo30-render RUNNING 0:42 N/A
+GresUsed=gpu:h100:5(IDX:0-4)
+0, 7905 MiB, 0 %
+1, 4 MiB, 0 %
+2, 2893 MiB, 31 %
+3, 5089 MiB, 0 %
+4, 1417 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+== main-gptoss120-064523 at 2026-10-16T06:45:24Z
+1556 transcreate-lama PENDING 0:00 gres:gpu:h100:1
+1451 transcreate-lama RUNNING 4:40:14 gres:gpu:h100:1
+1588 tcsr-ocr RUNNING 2:35:54 gres:gpu:h100:1
+1809 tcsr-eval-erase RUNNING 22:06 gres:gpu:h100:1
+1836 tcsr-erase-dev RUNNING 3:58 gres:gpu:h100:1
+1838 tcsr-notion2-erase RUNNING 1:58 gres:gpu:h100:1
+1840 tcsr-rovo30-render RUNNING 0:44 N/A
+1842 lm2-main-v4f-q2 RUNNING 0:01 gres:gpu:h100:2
+GresUsed=gpu:h100:7(IDX:0-6)
+0, 7905 MiB, 0 %
+1, 593 MiB, 2 %
+2, 2893 MiB, 37 %
+3, 5089 MiB, 0 %
+4, 1417 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+== main-v4f-iq3-065232 at 2026-10-16T06:52:33Z
+1556 transcreate-lama PENDING 0:00 gres:gpu:h100:1
+1451 transcreate-lama RUNNING 4:47:23 gres:gpu:h100:1
+1842 lm2-main-v4f-q2 RUNNING 7:10 gres:gpu:h100:2
+1844 lm2-main-gptoss120 RUNNING 7:07 gres:gpu:h100:1
+1856 tcsr-erase-chain RUNNING 1:01 gres:gpu:h100:1
+1859 tcsr-notion2-detect RUNNING 0:51 gres:gpu:h100:1
+1862 tcsr-notion2-render RUNNING 0:30 N/A
+GresUsed=gpu:h100:6(IDX:0-2,5-7)
+0, 7905 MiB, 0 %
+1, 1723 MiB, 0 %
+2, 20205 MiB, 49 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 48547 MiB, 36 %
+6, 47831 MiB, 53 %
+7, 78675 MiB, 84 %
+== main-v4f-q8-071032 at 2026-10-16T07:10:34Z
+1556 transcreate-lama PENDING 0:00 gres:gpu:h100:1
+1451 transcreate-lama RUNNING 5:05:24 gres:gpu:h100:1
+1842 lm2-main-v4f-q2 RUNNING 25:11 gres:gpu:h100:2
+1865 lm2-main-v4f-iq3 RUNNING 18:00 gres:gpu:h100:2
+1893 tcsr-asana2-render RUNNING 1:31 N/A
+1894 tcsr-notion2-masks RUNNING 0:58 N/A
+1895 tcsr-databricks2-detect RUNNING 0:55 gres:gpu:h100:1
+1896 tcsr-erase-dev RUNNING 0:47 gres:gpu:h100:1
+GresUsed=gpu:h100:7(IDX:0-6)
+0, 7905 MiB, 0 %
+1, 55773 MiB, 0 %
+2, 25377 MiB, 5 %
+3, 57797 MiB, 0 %
+4, 1285 MiB, 40 %
+5, 48547 MiB, 87 %
+6, 47831 MiB, 0 %
+7, 0 MiB, 0 %
+== main-qwen235-q3-071056 at 2026-10-16T07:10:57Z
+1556 transcreate-lama PENDING 0:00 gres:gpu:h100:1
+1898 lm2-main-v4f-q8 PENDING 0:00 gres:gpu:h100:3
+1451 transcreate-lama RUNNING 5:05:47 gres:gpu:h100:1
+1842 lm2-main-v4f-q2 RUNNING 25:34 gres:gpu:h100:2
+1865 lm2-main-v4f-iq3 RUNNING 18:23 gres:gpu:h100:2
+1893 tcsr-asana2-render RUNNING 1:54 N/A
+1894 tcsr-notion2-masks RUNNING 1:21 N/A
+1895 tcsr-databricks2-detect RUNNING 1:18 gres:gpu:h100:1
+1896 tcsr-erase-dev RUNNING 1:10 gres:gpu:h100:1
+GresUsed=gpu:h100:7(IDX:0-6)
+0, 7905 MiB, 0 %
+1, 55773 MiB, 56 %
+2, 20205 MiB, 100 %
+3, 57797 MiB, 0 %
+4, 1395 MiB, 40 %
+5, 48547 MiB, 73 %
+6, 47831 MiB, 4 %
+7, 0 MiB, 0 %
+== main-v4f-q2-075500 at 2026-10-16T07:55:01Z
+1556 transcreate-lama PENDING 0:00 gres:gpu:h100:1
+1451 transcreate-lama RUNNING 5:49:51 gres:gpu:h100:1
+1915 tcsr-eval-erase RUNNING 23:56 gres:gpu:h100:1
+1920 tcsr-databricks2-erase RUNNING 18:45 gres:gpu:h100:1
+1928 tcsr-erase-dev RUNNING 2:25 gres:gpu:h100:1
+1929 tcsr-asana2-render RUNNING 2:24 N/A
+1931 tcsr-linear-agents2-erase RUNNING 0:20 gres:gpu:h100:1
+GresUsed=gpu:h100:5(IDX:0-2,5-6)
+0, 7905 MiB, 0 %
+1, 4309 MiB, 0 %
+2, 771 MiB, 2 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 1401 MiB, 39 %
+6, 9939 MiB, 0 %
+7, 0 MiB, 0 %
+== main-v4f-q2-080959 at 2026-10-16T08:10:00Z
+1556 transcreate-lama PENDING 0:00 gres:gpu:h100:1
+1451 transcreate-lama RUNNING 6:04:50 gres:gpu:h100:1
+1915 tcsr-eval-erase RUNNING 38:55 gres:gpu:h100:1
+1943 tcsr-erase-dev RUNNING 3:54 gres:gpu:h100:1
+1944 tcsr-databricks2-qa RUNNING 0:58 gres:gpu:h100:1
+1946 tcsr-linear-agents2-qa RUNNING 0:34 gres:gpu:h100:1
+1947 tcsr-asana2-track RUNNING 0:13 N/A
+GresUsed=gpu:h100:5(IDX:0-4)
+0, 7905 MiB, 0 %
+1, 4319 MiB, 0 %
+2, 3643 MiB, 0 %
+3, 20203 MiB, 59 %
+4, 20205 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+== main-v4f-q2-081222 at 2026-10-16T08:12:23Z
+1556 transcreate-lama PENDING 0:00 gres:gpu:h100:1
+1951 tcsr-erase-chainB PENDING 0:00 gres:gpu:h100:1
+1451 transcreate-lama RUNNING 6:07:13 gres:gpu:h100:1
+1915 tcsr-eval-erase RUNNING 41:18 gres:gpu:h100:1
+1944 tcsr-databricks2-qa RUNNING 3:21 gres:gpu:h100:1
+1950 tcsr-erase-chain RUNNING 2:00 gres:gpu:h100:1
+1952 tcsr-linear-releases2-track RUNNING 0:25 N/A
+1953 tcsr-asana2-masks RUNNING 0:04 N/A
+GresUsed=gpu:h100:4(IDX:0-3)
+0, 7905 MiB, 0 %
+1, 4319 MiB, 0 %
+2, 1727 MiB, 0 %
+3, 25149 MiB, 63 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+== main-v4f-iq3-083022 at 2026-10-16T08:30:23Z
+1556 transcreate-lama PENDING 0:00 gres:gpu:h100:1
+1951 tcsr-erase-chainB PENDING 0:00 gres:gpu:h100:1
+1451 transcreate-lama RUNNING 6:25:13 gres:gpu:h100:1
+1950 tcsr-erase-chain RUNNING 20:00 gres:gpu:h100:1
+1964 tcsr-databricks2-erase RUNNING 9:19 gres:gpu:h100:1
+1972 tcsr-asana2-erase RUNNING 1:31 gres:gpu:h100:1
+GresUsed=gpu:h100:4(IDX:0-3)
+0, 7905 MiB, 0 %
+1, 2975 MiB, 42 %
+2, 7721 MiB, 0 %
+3, 9913 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+== main-qwen235-q3-084626 at 2026-10-16T08:46:27Z
+1556 transcreate-lama PENDING 0:00 gres:gpu:h100:1
+1951 tcsr-erase-chainB PENDING 0:00 gres:gpu:h100:1
+1451 transcreate-lama RUNNING 6:41:17 gres:gpu:h100:1
+1950 tcsr-erase-chain RUNNING 36:04 gres:gpu:h100:1
+1964 tcsr-databricks2-erase RUNNING 25:23 gres:gpu:h100:1
+1982 tcsr-ex-datadog-45s-track RUNNING 3:55 N/A
+1984 tcsr-linear-releases2-erase RUNNING 2:03 gres:gpu:h100:1
+GresUsed=gpu:h100:4(IDX:0-3)
+0, 7905 MiB, 0 %
+1, 2129 MiB, 0 %
+2, 5297 MiB, 56 %
+3, 9945 MiB, 41 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %

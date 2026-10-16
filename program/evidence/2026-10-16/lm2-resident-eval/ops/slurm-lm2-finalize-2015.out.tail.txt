@@ -1,0 +1,7 @@
+{"rows": 756, "code_without_verdict": 0}
+{"rows": 768, "code_without_verdict": 0}
+{"rows": 737, "code_without_verdict": 0}
+6cff8c36194b3d941cdb80ef2571376df95ea3c09c81bab8ccd47cf6fb2dff60  /home/kevin/cotcodec-runs/stage0/lm2-resident-eval/grading/b4096/grades.jsonl
+3a25dcb3b453efb7da3c917b4c807625f8dd2b40db95d8898ca588c0b99d8193  /home/kevin/cotcodec-runs/stage0/lm2-resident-eval/grading/c16k/grades.jsonl
+046d7747655b2d951223a191964480ab7019897c2fa6eed5eb670c4e6ca3f854  /home/kevin/cotcodec-runs/stage0/lm2-resident-eval/grading/main/grades.jsonl
+cd0d3888dc30ad7ee749cf12bf38e6466287d4b2b0a6a689bbad9ffbb9d747f1  /home/kevin/cotcodec-runs/stage0/lm2-resident-eval/grading/code-verdicts.jsonl

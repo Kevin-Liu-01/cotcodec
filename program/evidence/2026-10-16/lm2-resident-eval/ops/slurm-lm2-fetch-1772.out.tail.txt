@@ -1,0 +1,41 @@
+d0744c0715c38ec8dc84da11f7474cd8b08b5e01315f6d0859bc137a4bde5b13  /home/kevin/cotcodec-runs/stage0/lm2-resident-eval/ops/fetch_lm2_datasets.py
+Downloading pyarrow (38.0MiB)
+Downloading numpy (16.0MiB)
+ Downloaded pyarrow
+ Downloaded numpy
+Installed 2 packages in 12ms
+{
+ "counts": {
+  "aime_2026": 30,
+  "hmmt_feb_2026": 33,
+  "arxivmath_0626": 48,
+  "arxivmath_0826": 57,
+  "lcb_v6": 175,
+  "supergpqa": 26529
+ },
+ "normalized": {
+  "math": {
+   "file": "math.jsonl",
+   "rows": 168,
+   "sha256": "97201a7edfb40d58a7592b0112fdad2ce7c55699f2e314d7b4efc6030d2649f6"
+  },
+  "code": {
+   "file": "code.jsonl",
+   "rows": 175,
+   "sha256": "49a20e04dbb73a15c34a0104a3d9c983209834e04c1432c4d378abf6b08f8123"
+  },
+  "knowledge": {
+   "file": "knowledge.jsonl",
+   "rows": 26529,
+   "sha256": "93f1cebde92b8574b2c707f6fc652e3a41df8e8d8820c584acbdcf37724640cb"
+  }
+ }
+}
+total 306064
+dr-xr-xr-x 3 kevin kevin      4096 Oct 16 05:58 .
+drwxrwxr-x 3 kevin kevin      4096 Oct 16 05:57 ..
+-r--r--r-- 1 kevin kevin 289906815 Oct 16 05:58 code.jsonl
+-r--r--r-- 1 kevin kevin  23334585 Oct 16 05:58 knowledge.jsonl
+-r--r--r-- 1 kevin kevin    145432 Oct 16 05:58 math.jsonl
+dr-xr-xr-x 8 kevin kevin      4096 Oct 16 05:58 raw
+-r--r--r-- 1 kevin kevin      3827 Oct 16 05:58 receipt.json

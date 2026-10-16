@@ -1,0 +1,9262 @@
+{
+  "already_done": 0,
+  "arm": "gptoss120",
+  "caps": {},
+  "completed_tokens": 496582,
+  "counts": {
+    "aborted": 0,
+    "error": 0,
+    "http_error": 0,
+    "ok": 478
+  },
+  "ctx_per_slot": 20480,
+  "diag_chat_mode": false,
+  "elapsed_s": 1420.2,
+  "experiment": "lm2-resident-eval-v1",
+  "extra_server_args": [],
+  "generation_s": 1406.2,
+  "generation_started_s": 13.3,
+  "job_id": "20261016T064613Z-1",
+  "order_len": 1758,
+  "peak_mib": {
+    "GPU-cb6c8040-84ce-500e-3ebb-927aacaff4b7": 78675
+  },
+  "phase": "main",
+  "plan_sha256": "6bce5970f0b0e7769f51927a21489c1f82dbdc21759f772e532b92670ad0a770",
+  "remaining_in_queue": 1279,
+  "schema_version": 1,
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "server": {
+    "gpus": [
+      {
+        "index": 0,
+        "total_mib": 81559,
+        "uuid": "GPU-cb6c8040-84ce-500e-3ebb-927aacaff4b7"
+      }
+    ],
+    "load_s": 12.05,
+    "peak_mib_after_load": {
+      "GPU-cb6c8040-84ce-500e-3ebb-927aacaff4b7": 78491
+    },
+    "probe_render": {
+      "chars": 336,
+      "http_status": 200,
+      "sha256": "55dd11f6721c31c00dbc6c7753299d33677d7e52a55b58b4281a7d5e0429edc9",
+      "tail_after_user": "<|end|><|start|>assistant"
+    },
+    "props": {
+      "build_info": "b11669-620d2225",
+      "chat_template_sha256": "b2215de6da8ba369957eece8c5aa18f4af94f6c4d311d85e691373a421d80e89",
+      "model_path_tail": "codec-models/gpt-oss-120b-mxfp4-gguf/gpt-oss-120b-MXFP4.gguf",
+      "n_ctx": 20480,
+      "total_slots": 24
+    },
+    "receipt": {
+      "artifact_root_sha256": "329ede2a5e5e773129c05d20b1a969923e706f0a0520c9b9702088692eee779f",
+      "files": 2,
+      "gguf_bytes": 63387346208,
+      "receipt_sha256": "dc5007aa56057007c80e8a364584d41dc24980d9f9a87770614245d2e1c38f8c",
+      "revision": "238abdd290bb874b90a5da1b4549881b7d05c091",
+      "sizes_match": true,
+      "total_bytes": 63387346665
+    },
+    "server_argv": [
+      "/opt/llama.cpp/llama-server",
+      "-m",
+      "<snapshot>/gpt-oss-120b-MXFP4.gguf",
+      "-ngl",
+      "all",
+      "--split-mode",
+      "layer",
+      "-fit",
+      "off",
+      "-c",
+      "491520",
+      "-np",
+      "24",
+      "--jinja",
+      "--metrics",
+      "--no-webui",
+      "-cram",
+      "0",
+      "-lv",
+      "4",
+      "-lm",
+      "none",
+      "-lzm",
+      "off",
+      "-bs",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "18941",
+      "-t",
+      "16"
+    ]
+  },
+  "server_exit_code": 0,
+  "server_log": {
+    "all_layers_offloaded": true,
+    "buffers": [
+      {
+        "buffer": "CUDA0",
+        "kind": "model",
+        "mib": 59851.68
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "model",
+        "mib": 586.82
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "KV",
+        "mib": 17280.0
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "KV",
+        "mib": 648.0
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.23
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.24
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.23
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.23
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.23
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.23
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.23
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.23
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.23
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.23
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.23
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.23
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.23
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.23
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.23
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      },
+      {
+        "buffer": "CUDA0",
+        "kind": "compute",
+        "mib": 114.23
+      },
+      {
+        "buffer": "CUDA_Host",
+        "kind": "compute",
+        "mib": 44.63
+      }
+    ],
+    "cpu_fallback_lines": 0,
+    "kv_lines": [
+      "0.11.864.682 I llama_kv_cache_iswa: creating non-SWA KV cache, size = 20480 cells",
+      "0.11.879.810 I llama_kv_cache:      CUDA0 KV buffer size = 17280.00 MiB",
+      "0.11.885.442 I llama_kv_cache_iswa: creating     SWA KV cache, size = 768 cells",
+      "0.11.886.525 I llama_kv_cache:      CUDA0 KV buffer size =   648.00 MiB"
+    ],
+    "offloaded_layers": [
+      "37/37"
+    ],
+    "sha256": "03d535a055d6c6f131c85aff461cd53260ef04970f2b164e4b6b217306afd51f"
+  },
+  "slots": 24,
+  "todo": 1758,
+  "visible_gpus": 1,
+  "vram_samples": 2717
+}

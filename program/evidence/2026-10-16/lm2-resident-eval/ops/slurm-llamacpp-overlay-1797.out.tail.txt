@@ -1,0 +1,1 @@
+{"overlay_image_id": "sha256:eb56b4a51ec2fbd74d523d593b71f605ff254a95076ae4660979ce6e0be35b2f", "status": "PASS"}

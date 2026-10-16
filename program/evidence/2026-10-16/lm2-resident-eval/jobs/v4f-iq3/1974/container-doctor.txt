@@ -1,0 +1,24 @@
+PASS command python: /usr/local/bin/python
+PASS output mount is writable: /outputs
+CoTCodec harness environment check
+================================
+
+Python modules
+- yaml     OK      native YAML parsing
+- rich     MISSING rich terminal output
+- tiktoken MISSING token fertility measurement
+- numpy    MISSING degradation statistics
+- scipy    MISSING McNemar/Fisher significance tests
+- pandas   MISSING trace analysis
+
+Executables
+- ruby     MISSING YAML fallback parser
+- pdflatex MISSING paper compilation
+
+Readiness
+- config parsing: ready
+- canary smoke runs: ready
+- full stats stack: blocked (missing: numpy, pandas, scipy, tiktoken)
+PASS command nvidia-smi: /usr/bin/nvidia-smi
+INFO visible_gpus=2 names=NVIDIA H100 80GB HBM3:NVIDIA H100 80GB HBM3
+STATUS PASS mode=container

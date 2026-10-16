@@ -1,0 +1,1 @@
+slurmstepd-fal-h100-01: error: *** JOB 1933 ON fal-h100-01 CANCELLED AT 2026-10-16T08:07:29 ***

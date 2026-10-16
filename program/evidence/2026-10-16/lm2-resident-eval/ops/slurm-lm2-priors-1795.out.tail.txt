@@ -1,0 +1,6 @@
+aime_2026 deepseek/deepseek_v32_dec {'model_name': 'DeepSeek-v3.2 (Think)', 'n': 120, 'mean_output_tokens': 14854, 'accuracy': 94.2}
+aime_2026 deepseek/deepseek_v4_flash {'model_name': 'DeepSeek-v4-Flash (Max)', 'n': 120, 'mean_output_tokens': 33588, 'accuracy': 95.8}
+aime_2026 deepseek/deepseek_v4_pro {'model_name': 'DeepSeek-v4-Pro (Max)', 'n': 120, 'mean_output_tokens': 23567, 'accuracy': 96.7}
+hmmt_feb_2026 deepseek/deepseek_v32_dec {'model_name': 'DeepSeek-v3.2 (Think)', 'n': 132, 'mean_output_tokens': 24288, 'accuracy': 84.1}
+hmmt_feb_2026 deepseek/deepseek_v4_flash {'model_name': 'DeepSeek-v4-Flash (Max)', 'n': 132, 'mean_output_tokens': 54365, 'accuracy': 93.9}
+hmmt_feb_2026 deepseek/deepseek_v4_pro {'model_name': 'DeepSeek-v4-Pro (Max)', 'n': 132, 'mean_output_tokens': 40696, 'accuracy': 93.9}

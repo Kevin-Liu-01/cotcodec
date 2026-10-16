@@ -1,0 +1,6 @@
+GPU-b23c3b4d-5413-4d75-cad3-74be85f8d058, 2626734, python, 7890 MiB
+GPU-34c1e8e2-bec3-3ce7-c1be-618cb05ca896, 515185, python, 22344 MiB
+GPU-34c1e8e2-bec3-3ce7-c1be-618cb05ca896, 524270, VLLM::EngineCore, 12716 MiB
+GPU-a485003c-eb56-c00a-5efc-ba2fb61d12d5, 508192, /home/kevin/tc-speedrun/.venv/bin/python, 3260 MiB
+GPU-0524ae85-a4b2-36bd-5769-d31e83c463e2, 525085, python, 2608 MiB
+GPU-843dc4cf-3b6b-5e3c-4dc9-75b0560cc86c, 529219, python, 3252 MiB
