@@ -12,6 +12,7 @@ of correct seeds; paired differences use the (item, seed) keys both arms have, w
 bootstrap over items (question clusters; 10,000 draws, seed 42). No multiplicity correction.
 """
 
+# ruff: noqa: E501  (table rows are written as single f-strings)
 from __future__ import annotations
 
 import argparse
@@ -144,9 +145,19 @@ def fmt_ci(ci: list[float] | None) -> str:
     return f"[{ci[0]:+.1f}, {ci[1]:+.1f}]" if ci else ""
 
 
-def analyze(args: argparse.Namespace) -> dict[str, Any]:
+def analyze(
+    args: argparse.Namespace, grades_path: Path | None = None, min_max_tokens: int | None = None
+) -> dict[str, Any]:
     plan = load_plan(args.plan)
-    grades = [g for g in load_jsonl(args.grades) if g.get("correct") is not None]
+    grades = [g for g in load_jsonl(grades_path or args.grades) if g.get("correct") is not None]
+    if min_max_tokens is not None:
+        # The completed-only reading at the run cap: rows run with a lower cap (re-run holes) and
+        # censored rows are left out, which favours arms whose long responses never finished.
+        grades = [
+            g
+            for g in grades
+            if (g.get("max_tokens") or 0) >= min_max_tokens and not g.get("censored")
+        ]
     caps = json.loads(args.caps.read_text()) if args.caps else {}
     if caps:
         # Only the registered prefix of each task's order enters the analysis.
@@ -312,6 +323,7 @@ def main(argv: list[str] | None = None) -> int:
         "--plan", type=Path, default=PROJECT_ROOT / "experiments/lm2/lm2-resident-eval-v1.json"
     )
     parser.add_argument("--grades", type=Path, required=True)
+    parser.add_argument("--grades-16k", type=Path, help="grades scored with no analysis cap")
     parser.add_argument("--caps", type=Path)
     parser.add_argument("--jobs", type=Path)
     parser.add_argument("--gpu-hours", type=Path)
@@ -319,8 +331,16 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--out-md", type=Path, required=True)
     args = parser.parse_args(argv)
     result = analyze(args)
+    md = tables(result)
+    if args.grades_16k:
+        secondary = analyze(args, args.grades_16k, 16384)
+        result["secondary_16k_completed_only"] = {
+            k: secondary[k] for k in ("accuracy", "paired", "by_source")
+        }
+        md += "\n# Secondary reading: completed responses at the 16,384 run cap only\n\n"
+        md += "\n".join(tables(secondary).splitlines()[2:]).split("## Throughput")[0]
     args.out_json.write_text(json.dumps(result, indent=1, sort_keys=True) + "\n")
-    args.out_md.write_text(tables(result))
+    args.out_md.write_text(md)
     return 0
 
 
