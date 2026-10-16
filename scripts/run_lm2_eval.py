@@ -187,6 +187,8 @@ class Runner:
         if args.ctx_per_slot is not None:
             self.arm["ctx_per_slot"] = args.ctx_per_slot
         longest = max(max_tokens(self.plan, args.arm, task) for task in self.plan["tasks"])
+        if args.max_tokens is not None:
+            longest = min(longest, args.max_tokens)
         if not 1 <= self.arm["slots"] <= 128 or self.arm["ctx_per_slot"] < longest + 1024:
             raise LM2Error("slot override out of range or context below max_tokens + 1,024")
         self.out = args.output_dir
