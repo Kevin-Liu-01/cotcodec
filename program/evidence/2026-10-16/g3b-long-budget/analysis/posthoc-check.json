@@ -1,0 +1,79 @@
+{
+  "gap_change_at_32768": {
+    "known": {
+      "ci95": [
+        -25.816993464052285,
+        -4.248366013071891
+      ],
+      "diff": -14.705882352941178
+    },
+    "unknown_solved": {
+      "ci95": [
+        -22.222222222222225,
+        1.1972993402820316e-15
+      ],
+      "diff": -11.111111111111112
+    },
+    "unknown_unsolved": {
+      "ci95": [
+        -26.1437908496732,
+        -4.575163398692808
+      ],
+      "diff": -15.032679738562091
+    }
+  },
+  "reached_81920_and_correct": [
+    {
+      "arm": "bf16",
+      "request_id": "m/q049/s44",
+      "thinking_closed": true
+    }
+  ],
+  "seed_contrast_same_questions": {
+    "g3": {
+      "ci95": [
+        -51.11111111111111,
+        -12.222222222222221
+      ],
+      "contrast": -32.22222222222222
+    },
+    "g3b_minus_g3": {
+      "ci95": [
+        10.0,
+        66.66666666666666
+      ],
+      "diff": 37.77777777777778
+    },
+    "g3b_unknown_solved": 0.9803921568627451,
+    "g3b_unknown_unsolved": 6.862745098039216,
+    "n_questions": 45
+  },
+  "seeds_42_43_at_81920": {
+    "bf16": 71.56862745098039,
+    "ci95": [
+      -30.392156862745097,
+      -9.803921568627452
+    ],
+    "diff": -19.607843137254903,
+    "fp32": 91.17647058823529,
+    "pairs": 102,
+    "pairs_dropped": 0,
+    "time_cut": 0
+  },
+  "tokens_per_solved_at_32768": {
+    "bf16": {
+      "known_pairs_solved": 36,
+      "known_pairs_tokens_within_cap": 4504274,
+      "tokens_per_solved_known_pairs": 125118.72222222222,
+      "unknown_partial_tokens": 150789,
+      "unknown_rollouts": 6
+    },
+    "fp32": {
+      "known_pairs_solved": 99,
+      "known_pairs_tokens_within_cap": 3776478,
+      "tokens_per_solved_known_pairs": 38146.242424242424,
+      "unknown_partial_tokens": 0,
+      "unknown_rollouts": 0
+    }
+  }
+}

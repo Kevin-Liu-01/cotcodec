@@ -6,6 +6,14 @@
 > GDN decode path). The GPU jobs ran 2026-10-16 02:30-04:15 UTC. **2.2369 physical GPU-h**
 > (8,053 GPU-s) of the 2.5 cap were used, image builds and the pilot included.
 >
+> **Revision of 2026-10-16 (CPU only, no new GPU job).** An independent check reproduced every
+> number and the analysis byte for byte. This revision applies its wording fixes: the 81,920
+> takeaway against the check's 15-point bar, seeds 42-43 as the cleanest 81,920 number, bounds for
+> the unknown pairs, the seed contrast on matching questions and what it can separate,
+> non-causal wording for the comparison with G3, both of the check's predictions, the cap
+> arithmetic and the tokens-per-solved caveat. The new figures are in
+> `analysis/posthoc-check.json`.
+>
 > **The 51 questions were selected on G3's own outcomes:** each had at least one rollout that
 > reached G3's 32,768-token cap. G3's numbers on these questions are biased by that selection,
 > and the gap rescored at 32,768 here is not an unbiased estimate of G3's 134-question gap.
@@ -21,11 +29,14 @@ depended on submission order under heavy preemption. G3b asks two things:
 
 ## Main takeaways (exploratory)
 
-- **(1) The bf16 gap survives at 81,920 tokens on these 51 questions. It is smaller than at
-  32,768, but it does not close.**
+- **(1) At 81,920 tokens the bf16 gap on these 51 questions shrinks from its 32,768 size but
+  stays below 0 in every treatment. Whether it clears the bar G3's independent check set in
+  advance for refuting "bf16 just takes longer" (a gap above about 15 points) depends on how the
+  13 time-cut rollouts are counted, and no interval clears it.**
 
   | Budget | Pairs | fp32 | bf16 | bf16 - fp32 [95%] |
   |---|---:|---:|---:|---|
+  | 81,920, seeds 42-43 only (no time-cut rollout) | 102 | 91.2 | 71.6 | -19.6 [-30.4, -9.8] |
   | 81,920, pairs with no time-cut rollout | 140 | 92.5 | 75.5 | -17.0 [-25.8, -8.8] |
   | 81,920, as run (13 time-cut bf16 rollouts count as unsolved) | 153 | 92.2 | 70.6 | -21.6 [-30.1, -13.7] |
   | 81,920, the 13 time-cut rollouts counted as solved (bound) | 153 | 92.2 | 79.1 | -13.1 [-20.3, -6.5] |
@@ -37,6 +48,14 @@ depended on submission order under heavy preemption. G3b asks two things:
   - The bf16 job did not finish: 13 seed-44 rollouts were still running when its time budget
     ended (Deviations). How those 13 are treated moves the 81,920 gap between -13.1 and -21.6
     points. Every treatment's interval stays below 0.
+  - Against the check's bar: as run (-21.6), with the cut pairs dropped (-17.0) and on seeds
+    42-43 (-19.6), the point estimate is beyond 15 points. With the cut rollouts counted as solved
+    (-13.1) it is not. Every interval includes -15.
+  - Seeds 42-43 pooled is the cleanest single number at 81,920: -19.6 [-30.4, -9.8], 102 pairs,
+    nothing missing (`analysis/posthoc-check.json`).
+  - bf16 is still converging at the top of the budget. From 65,536 to 81,920 tokens its
+    accuracy rises from 63.4 to 75.5 (+12.1 points), against +1.3 for fp32 (91.2 to 92.5). A
+    budget above 81,920 could narrow the gap further; this run cannot say how far.
   - **The loss is still rollouts that do not finish, now at 81,920.**
     - On the 140 complete pairs, 23.2% of bf16 rollouts reach 81,920, against 2.3% of fp32
       (+20.9 [+12.1, +30.4]).
@@ -51,15 +70,21 @@ depended on submission order under heavy preemption. G3b asks two things:
   - Of the rollouts still running at 32,768 tokens, 73 of 111 bf16 rollouts ended on their own
     by 81,920 (72 correct; 7 of the 111 were cut by the time budget), against 42 of 46 for fp32
     (38 correct). So the longer budget recovers many bf16 answers, but not all.
-  - Accuracy rises with the cap in both arms (correct and ended within L tokens): at 49,152 it is
-    86.6 against 51.3, and at 65,536 91.2 against 63.4.
+  - Accuracy rises with the cap in both arms (correct within L tokens): at 49,152 it is 86.6
+    against 51.3, and at 65,536 91.2 against 63.4. The tables label this "ended within L"; the
+    81,920 row also counts one bf16 rollout that reached 81,920 after giving a correct answer
+    (`m/q049/s44`, thinking closed).
   - Tokens per solved problem, as run: 32,605 (fp32) against 71,298 (bf16), about 2.2x. The
     bf16 figure includes the partial tokens of the 13 time-cut rollouts.
-- **(2) Without preemption, the bf16 gap rescored at 32,768 is larger than G3's on the same
-  questions, and it no longer depends on submission order.**
+- **(2) In a run with no preemption and 23 concurrent sequences (G3: 114-128), the bf16 gap
+  rescored at 32,768 is larger than G3's on the same questions and shows no seed-order pattern
+  (+5.6 [-10.0, +22.2]).**
   - fp32 rescored at 32,768 matches G3's fp32 on these questions: +0.3 [-7.5, +8.5] points
     (G3b minus G3, paired by question). bf16 is lower than in G3: -14.4 [-22.9, -6.5]. The gap
-    is 14.7 [4.2, 25.8] points larger than G3's.
+    is 14.7 [4.2, 25.8] points larger than G3's (with the 6 unknown pairs counted as unsolved,
+    15.0 [4.6, 26.1]; counted as solved, 11.1 [0.0, 22.2]).
+  - This level shift, bf16 down while fp32 is unchanged, is the evidence that separates the
+    runs. The seed-order contrast is not (below).
   - The selection on G3's capped rollouts should, if anything, make a fresh run look better
     than G3 on these questions (regression to the mean), not worse.
   - By seed (seed 42 submitted and admitted first), rescored at 32,768:
@@ -71,32 +96,45 @@ depended on submission order under heavy preemption. G3b asks two things:
     | 44 | 64.4 | 28.9 | -35.6 [-48.9, -22.2] | 66.7 | 51.0 | -15.7 [-29.4, -2.0] |
 
     The seed-order contrast (the seed-42 gap minus its mean at seeds 43-44, paired by question)
-    is +5.6 [-10.0, +22.2] in G3b (45 questions), against -33.3 [-51.0, -15.7] in G3 on the
-    same questions. G3b's seed-44 row at 32,768 has 45 pairs: 6 time-cut rollouts stopped
-    before 32,768 tokens.
+    is +5.6 [-10.0, +22.2] in G3b on 45 questions; with the 6 unknown pairs counted as unsolved
+    or solved it is +6.9 or +1.0 on all 51. G3's contrast is -33.3 [-51.0, -15.7] on 51
+    questions and -32.2 [-51.1, -12.2] on the same 45, so G3b minus G3 is +37.8 [+10.0, +66.7]
+    (`analysis/posthoc-check.json`). G3b's seed-44 row at 32,768 has 45 pairs: 6 time-cut
+    rollouts stopped before 32,768 tokens.
+  - What a null contrast can and cannot separate: in G3b nothing is preempted, so seed order
+    sets only when a request is admitted. A null contrast is expected there whether G3's seed
+    pattern came from preemption, from concurrency or by chance. It does not discriminate among
+    them.
   - At 81,920, seeds 42 and 43 (no time cuts) give -17.6 [-29.4, -5.9] and -21.6 [-33.3, -11.8].
     Seed 44's 81,920 gap cannot be read: as run it is -25.5, and with the 13 time-cut rollouts
     counted as solved it is 0.0.
-  - This is the pattern G3's preemption hypothesis predicts. A preempted request restarts from
+  - The level shift fits G3's preemption hypothesis. A preempted request restarts from
     prefill, which rebuilds its GDN state close to fp32 (G2b) and discards the rounding error
     accumulated over its decode steps. In G3 the last-submitted seeds were probably preempted
     most (they decoded at about half the per-request rate; per-request preemption was not
     recorded) and showed the smallest bf16 gap. In G3b nothing is preempted, and every seed's
     bf16 accuracy is near G3's seed 42 (the first submitted).
-  - G3's independent check predicted, before this run, a gap at 32,768 at least as large as G3's
-    seed-42 gap (-51.0 on these questions). The G3b gap, -43.5, lies between G3's pooled -28.8
-    and that value, closer to the latter; its interval includes -51.0.
+  - G3's independent check made two predictions before this run:
+    - (a) if bf16 only lengthens the reasoning, the 81,920 gap shrinks toward the 0-1 point gap
+      among finished rollouts. That is contradicted: every treatment gives -13 to -22 points.
+    - (c) under the preemption hypothesis, a gap at 32,768 at least as large as G3's seed-42 gap
+      (-51.0 on these questions). The point estimate, -43.5, falls short of -51.0, though its
+      interval [-54.6, -32.4] includes it.
+    - The check proposed seeds 42-43 only (102 requests per arm). This run used seeds 42-44, as
+      specified, and the added seed 44 is what ran into the time limit.
   - It does not isolate preemption. G3b also changes the concurrency (23 running against G3's
     114-128) and the batch composition, and each arm is one engine run.
 - **No preemption occurred.** vLLM's preemption counter stayed at 0 in both engines. At most 23
   sequences ran (peak KV use 30% for fp32, 60% for bf16), and 23 sequences of 82,944 tokens fit
   both block pools (23.7 and 24.1). Each worker checked the fit before submitting a request.
-- **Reading (exploratory).** On these 51 hard questions, the model card's longer budget does not
-  remove the cost of vLLM's stock bf16 GDN state on Qwen3.5-4B. bf16 rollouts run about 1.8x as
+- **Reading (exploratory).** On these 51 hard questions, the model card's 81,920-token budget does
+  not remove the cost of vLLM's stock bf16 GDN state on Qwen3.5-4B. bf16 rollouts run about 1.8x as
   long, about a fifth of them reach 81,920 without finishing (against 2-3% of fp32's), and
-  accuracy is 13-22 points lower. Without preemption, the 32,768-token gap on the same questions
-  is about 1.5x the gap G3 measured under heavy preemption. That suggests G3's pooled -10.7 understates the cost on a
-  server that does not preempt, but this run cannot say by how much on the full 134 questions.
+  accuracy is 13-22 points lower; bf16 was still gaining at the top of the budget. In this run
+  with no preemption and 23 concurrent sequences (G3: 114-128), the 32,768-token gap on the same
+  questions is about 1.5x the gap G3 measured under heavy preemption. That suggests G3's pooled
+  -10.7 may understate the cost under such serving conditions, but this run cannot say why or by
+  how much on the full 134 questions.
 
 ## Design as run
 
@@ -130,8 +168,12 @@ sizing only, not in the analysis; `pilot/pilot.json`):
 - A no-preemption FCFS simulation with G3's lengths on these questions (`ops/size_main.py`)
   continued each capped rollout with G3's late-ending hazard, or with 0.6 of it. It put the
   generation at 2,500-3,200 s for fp32 and 3,500-4,600 s for bf16.
-- The two main jobs got Slurm limits of 55 min (fp32) and 82 min (bf16), so the 2.5 GPU-h cap
-  held even if both were cut by time.
+- The two main jobs got Slurm limits of 55 min (fp32) and 82 min (bf16). The cap held because
+  each driver stops generating about 255 s before its Slurm limit and then saves and exits (the
+  bf16 job ended 242 s before its limit). It does not follow from the Slurm limits alone: 844
+  GPU-s before the main run plus 3,300 and 4,920 GPU-s of limits is 9,064 GPU-s, 2.518 GPU-h.
+  The config comment and `pilot/pilot.json` say the cap holds "even if both are cut by time";
+  that relied on the same early stop.
 - fp32 took 2,338 s, a little faster than simulated. bf16 generated 7.70M tokens against the
   simulated 5.9-6.6M, and 31 of its 153 rollouts ran to 81,920. Its time budget ended at 4,556 s
   with 13 rollouts unfinished.
@@ -217,7 +259,10 @@ In G3, 31.4% (fp32) and 60.1% (bf16) of rollouts on these questions reached 32,7
 
 - **Host-load window.** From about 04:05 to 04:08 UTC, another project's CPU-only run outside
   Slurm pushed the host's load average to about 17,600. It was killed at 04:08, and at 04:08:15
-  the load was 13,729 and falling (`ops/timing-windows.json`).
+  the load was 13,729 and falling. The note in `ops/timing-windows.json`, which the analysis uses
+  to flag affected engines, reads: "host load average about 17,600 from another project's
+  CPU-only run outside Slurm, 04:05-04:08 UTC (killed 04:08; load 13,729 and falling at
+  04:08:15)", for 04:05:00-04:08:15 UTC.
   - The bf16 job (generation 02:58:53-04:14:49 UTC) ran through the window. The fp32 job (ended
     03:37:58), the pilot and the builds did not.
   - The window cannot change accuracy, lengths, truncation at a cap or preemption counts.
@@ -232,7 +277,9 @@ In G3, 31.4% (fp32) and 60.1% (bf16) of rollouts on these questions reached 32,7
     about 73 tok/s per sequence). That cannot change any outcome at 32,768 except the 6 already
     counted as unknown there.
 - Tokens per solved problem do not depend on wall time. Rescored at 32,768 (tokens within the cap
-  over problems solved within it), they are 38,284 (fp32) and 129,307 (bf16) (`tables.md`).
+  over problems solved within it), they are 38,284 (fp32) and 129,307 (bf16) (`tables.md`). The
+  bf16 figure includes 150,789 partial tokens from the 6 rollouts with no outcome at 32,768. On
+  the 147 known pairs it is 38,146 against 125,119 (`analysis/posthoc-check.json`).
 
 ## Deviations and problems
 
@@ -244,9 +291,9 @@ In G3, 31.4% (fp32) and 60.1% (bf16) of rollouts on these questions reached 32,7
     complete pairs, counted as solved), and every interval for the gap stays below 0.
   - At 32,768, 7 of the 13 had passed 32,768 tokens and are scored there. 6 had not, and their
     pairs are dropped (147 pairs). Counting the 6 as solved or unsolved gives -39.9 and -43.8.
-  - The sizing simulation's late-ending hazard was too low for bf16 at these lengths. The budget
-    gave the bf16 job 82 min, the most the 2.5 GPU-h cap allowed with the fp32 job and the
-    pilot.
+  - The sizing simulation's late-ending hazard was too low for bf16 at these lengths. The bf16
+    job got 82 min, the most the cap allowed alongside the fp32 job and the pilot given the
+    drivers' early stop (Sizing).
 - **The host-load window** (Engines and timing).
 - **The partial A/A was not run.** Its phase was declared in the config while the bf16 job was
   running (a second fp32 engine on the 51 seed-42 requests, 25-min limit). It was to run only if
@@ -288,6 +335,8 @@ In G3, 31.4% (fp32) and 60.1% (bf16) of rollouts on these questions reached 32,7
   the runs is not attributable to preemption alone.
 - The 81,920 gap at seed 44, or a seed-order contrast at 81,920 that includes it. The 13
   time-cut pairs are all at seed 44.
+- Budgets above 81,920. bf16 was still gaining about 12 points per 16K tokens at the top of the
+  curve (fp32 about 1), so a larger budget could narrow the gap further.
 - Other budgets between 32,768 and 81,920 as separate runs (the by-cap table rescores this run),
   other rounding (stochastic rounding, ReplaySSM's separate precisions), fp16, the 9B or other
   models, other kernels, prefix caching or other engines.
@@ -299,12 +348,15 @@ In G3, 31.4% (fp32) and 60.1% (bf16) of rollouts on these questions reached 32,7
 | Path | Contents |
 |---|---|
 | `results.json`, `tables.md` | the numbers (`ops/build_results.py` from `analysis/`, the job records and `pilot/pilot.json`) |
-| `analysis/` | `results.json` and `tables.md` from `scripts/analyze_g3b_long_budget.py analyze` (host CPU job 1599, git `b066babd`), `SHA256SUMS.txt`, `workers.txt`; `posthoc-window.json` (`ops/posthoc_window.py`, Mac) and `posthoc-repetition.json` (`ops/posthoc_repetition.py`, host job 1601) |
+| `analysis/` | `results.json` and `tables.md` from `scripts/analyze_g3b_long_budget.py analyze` (host CPU job 1599, git `b066babd`), `SHA256SUMS.txt`, `workers.txt`; `posthoc-window.json` (`ops/posthoc_window.py`, Mac), `posthoc-repetition.json` (`ops/posthoc_repetition.py`, host job 1601) and `posthoc-check.json` (`ops/posthoc_check.py`, Mac, from the committed files: the independent check's figures) |
 | `data/per-request.jsonl.gz` | text-free per request (306 rows): ids, seed, lengths, finish reason, admission and finish times, checker-v2 verdicts at 81,920 and rescored at 32,768, the completion's SHA-256, first differing token against fp32 |
 | `pilot/pilot.json` | the pilot's engines, fit, step-time fit and the sizing simulation |
 | `jobs/<id>-<kind>/` | lane receipts (`job.env`, `termination.env`, `manifest.json`, `command.json`, model and provenance verification, GPU prolog, container doctor, compressed container log, `scontrol.txt`). Under `g3b/`: driver and worker summaries, engine records with the fit check, progress logs, per-request `records.json` (text-free), phase stats, and `raw-sha256.txt` for the outputs kept on the host |
 | `manifests/`, `builds/`, `selftests/` | every GPU job's manifest with its checks; build receipts and source capsules; CPU selftests and plans |
 | `ops/` | `jobs.log`, `preflight.log`, `guard.log`, the timing window, and the checkout, build, selftest, submit, manifest, sizing, A/A-gate, scontrol-capture, staging, analysis and post hoc scripts |
+
+The committed ops scripts, manifests and lane receipts keep the host's absolute run paths
+(`/home/kevin/cotcodec-runs/...`), as G3's merged evidence does; the records are not rewritten.
 
 Every completion (`texts.jsonl.gz`, with `text_at_32768` for rollouts past 32,768 tokens) and its
 token ids (`tokens.npz`) stay on the host under `~/cotcodec-runs/stage0/g3b-long-budget/`, with

@@ -18,6 +18,7 @@ CAP = 2.5
 def main() -> None:
     res = json.loads((HERE / "analysis" / "results.json").read_text())
     pilot = json.loads((HERE / "pilot" / "pilot.json").read_text())
+    check = json.loads((HERE / "analysis" / "posthoc-check.json").read_text())
     gpu = {k: round(sum(v.values()) / 3600, 4) for k, v in JOBS.items()}
     seconds = sum(sum(v.values()) for v in JOBS.values())
     out = {
@@ -34,6 +35,7 @@ def main() -> None:
         "jobs_gpu_seconds": JOBS,
         "partial_aa": "not run (the 2.5 GPU-h cap; README)",
         "pilot": pilot,
+        "posthoc_check": check,
         "analysis": res,
     }
     print(json.dumps(out, indent=2, sort_keys=True))
