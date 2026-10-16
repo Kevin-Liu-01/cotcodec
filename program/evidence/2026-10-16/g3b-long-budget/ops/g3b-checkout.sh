@@ -11,8 +11,8 @@ B="$R/bundles/g3b-${SHORT}.bundle"
 C="$R/checkout-$SHORT"
 mkdir -p "$R/ops"
 [[ ! -e "$C" ]] || { echo "$C exists"; exit 2; }
-git bundle verify -q "$B"
 git clone -q --no-checkout "$B" "$C"; cd "$C"
+git bundle verify -q "$B"
 git -c advice.detachedHead=false checkout -q "$G"
 [[ "$(git rev-parse HEAD)" == "$G" && -z "$(git status --porcelain)" ]] || { echo "not clean at $G"; exit 2; }
 A=$(git archive --format=tar "$G" | sha256sum | cut -d" " -f1)

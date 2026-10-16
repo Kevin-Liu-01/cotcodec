@@ -78,8 +78,9 @@ stats_interval_s: 0.5
 
 tasks:
   # G3's math task (same prompt file and digest, suffix, thinking, sampling and request seeds)
-  # at the model card's competition-math output length (README "Best Practices": "81,920 tokens"
-  # for highly complex problems such as math and programming competitions).
+  # at the model card's competition-math output length (Qwen/Qwen3.5-4B README @ 851bf6e8, "Best
+  # Practices": 32,768 tokens for most queries, 81,920 for benchmarking on math and programming
+  # competitions; https://huggingface.co/Qwen/Qwen3.5-4B, read 2026-10-16).
   math:
     prompts:
       file: experiments/g3/math500-l5-134.jsonl
@@ -108,6 +109,23 @@ pilot:
   arms: [fp32, bf16]
   seeds: [42, 43, 44]
   gen_seconds: 240
+
+# The main run, declared after the pilot (jobs 1562 fp32 and 1564 bf16, 240 s of generation each;
+# their outputs are not in the analysis). Pilot (ops/size_main.py): block pools 3,821 x 528 (fp32)
+# and 7,418 x 272 (bf16), so 23 sequences of 82,944 tokens fit (23.7 and 24.1; vLLM's own figure
+# agrees); 23 running throughout, 0 preemptions, about 2,520 output tok/s at up to 0.5M context
+# tokens; step time about 6 ms + 12 ms per million context tokens. A no-preemption FCFS
+# simulation with G3's lengths on these questions (capped rollouts continued with G3's late-ending
+# hazard, or 0.6 of it) puts the generation at 2,500-3,200 s (fp32) and 3,500-4,600 s (bf16).
+# Budget: 0.205 GPU-h used by the first build and the pilot, about 0.02 for the main build, so the
+# two main jobs get Slurm limits of 56 min (fp32) and 83 min (bf16): at most about 2.47 GPU-h in
+# all even if both are cut by time (each driver stops generating 255 s before its limit). The
+# partial A/A (fp32_aa) does not fit the 2.5 GPU-h cap and is not run. gen_seconds is an upper
+# bound; each job's allocation deadline binds first.
+main:
+  arms: [fp32, bf16]
+  seeds: [42, 43, 44]
+  gen_seconds: 4800
 
 analysis:
   bootstrap_reps: 10000

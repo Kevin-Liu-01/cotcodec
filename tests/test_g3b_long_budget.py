@@ -105,6 +105,9 @@ def test_plans_requests_and_seeds_match_g3() -> None:
     for r in reqs:
         assert (r["request_id"], r["seed"], r["question_index"]) in g3_ids
         assert r["request_seed"] == 100000 * r["seed"] + r["question_index"]
+    main = g3b.phase_plan(config, "main")
+    assert main["arms"] == ["fp32", "bf16"]
+    assert g3b.math_requests(main) == reqs
     # A subset phase keeps the order and the seeds.
     sub = dict(
         config, aa={"arms": ["fp32_aa"], "seeds": [42], "questions": [9, 17], "gen_seconds": 5}
