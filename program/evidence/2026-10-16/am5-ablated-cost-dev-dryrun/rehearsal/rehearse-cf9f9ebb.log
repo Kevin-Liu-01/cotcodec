@@ -1,0 +1,3 @@
+PASS bootstrap checkout at cf9f9ebb, clean
+PASS a bootstrap copy that differs from the commit's is refused
+program/evidence/2026-10-16/am5-ablated-cost-dev-dryrun/rehearsal/am5r-rehearse.sh: line 96: BUILD_SHORT: unbound variable

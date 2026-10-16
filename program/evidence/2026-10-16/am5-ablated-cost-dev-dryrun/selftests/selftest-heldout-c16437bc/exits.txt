@@ -1,0 +1,3 @@
+image sha256:a16f70c1bc732961f1c9dd44bc13767a8ec292df2000206cdaafaafa8a328ab8 population heldout
+am5r selftest exit 0
+am5r plan exit 0

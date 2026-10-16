@@ -12,6 +12,7 @@ from __future__ import annotations
 import ast
 import copy
 import gzip
+import hashlib
 import importlib.util
 import json
 import random
@@ -441,9 +442,32 @@ def test_gated_populations_are_refused_before_the_freeze(tmp_path, monkeypatch, 
 
 
 def test_gate_opens_with_a_scratch_ledger_row_and_matching_pins(tmp_path):
+    """Before the freeze, the gate opens on a scratch ledger row when the working tree matches
+    section 16. Once the real ledger holds this registration's row (the run is complete), the
+    working tree legitimately moves on (D122 changed models/registry.yaml), so section 16's pins
+    are checked against the files at the freeze commit (the row's git_head_at_freeze), never
+    against today's tree; the registration file must still be the frozen one. Either way a
+    tampered pin is refused."""
+
     reg, ledger = _scratch(tmp_path, frozen=True)
-    record = g.gate("heldout", ledger=ledger, registration=reg)
-    assert record["registration_frozen"] and record["code_pins"]["all_match"]
+    rows = [json.loads(line) for line in (ROOT / g.LEDGER).read_text().splitlines() if line.strip()]
+    row = next((x for x in rows if x.get("experiment_id") == g.EXPERIMENT), None)
+    if row is None:
+        record = g.gate("heldout", ledger=ledger, registration=reg)
+        assert record["registration_frozen"] and record["code_pins"]["all_match"]
+    else:
+        assert row["sha256"] == g.sha256_file(ROOT / g.REGISTRATION)
+        commit = row["git_head_at_freeze"]
+        pins = ks.code_pins(ROOT / g.REGISTRATION)
+        assert pins and str(g.REGISTRATION) not in pins
+
+        def at_freeze(path: str) -> str:
+            blob = subprocess.run(["git", "-C", str(ROOT), "show", f"{commit}:{path}"],
+                                  capture_output=True, check=True).stdout  # fmt: skip
+            return hashlib.sha256(blob).hexdigest()
+
+        assert [path for path, digest in sorted(pins.items()) if at_freeze(path) != digest] == []
+        assert at_freeze(str(g.REGISTRATION)) == row["sha256"]
     tampered = tmp_path / "tampered.md"
     good = ks.code_pins(reg)["scripts/memcredit_am3g.py"]
     tampered.write_text(reg.read_text().replace(good, "0" * 64))

@@ -1,0 +1,51 @@
+{
+  "chunk_size": 60,
+  "chunks": 1,
+  "features_sha256": "753ea702ce4ef66203f26524a984e1de46da21e288f86c0408a99cc2e233d64c",
+  "instructions_sha256": "ee50ff258129e6cee2b7b89b6cebec0857dd3678e88312274417e3b84d30c760",
+  "items": 34,
+  "labeller_model": "claude-opus-5-5",
+  "labeller_prompt_sha256": "98c35ceac9710033b095f01abe4a5fc98f6ed3a597b461e12a98ac213a7ae096",
+  "plan_sha256": "2bcd07af44ae049a6d145de9c506373edaa6a1aa5f988e8050c5895121e64126",
+  "population": "development",
+  "readers": {
+    "olmo-2-1124-7b-instruct": {
+      "distractor_items": 12,
+      "distractor_shortfall": 0,
+      "switched_judged_correct": 1,
+      "switched_judged_wrong_beyond_primary_cap": 4,
+      "switched_judged_wrong_beyond_sampled": 2,
+      "switched_judged_wrong_within_primary_cap": 5,
+      "target_items": 12,
+      "top4_answers": 4
+    },
+    "qwen3-8b": {
+      "distractor_items": 3,
+      "distractor_shortfall": 0,
+      "switched_judged_correct": 1,
+      "switched_judged_wrong_beyond_primary_cap": 1,
+      "switched_judged_wrong_beyond_sampled": 1,
+      "switched_judged_wrong_within_primary_cap": 0,
+      "target_items": 3,
+      "top4_answers": 1
+    },
+    "qwen3.5-9b": {
+      "distractor_items": 3,
+      "distractor_shortfall": 0,
+      "switched_judged_correct": 0,
+      "switched_judged_wrong_beyond_primary_cap": 0,
+      "switched_judged_wrong_beyond_sampled": 0,
+      "switched_judged_wrong_within_primary_cap": 3,
+      "target_items": 3,
+      "top4_answers": 0
+    }
+  },
+  "sample_sha256": "e0b77ed67238ffa73e93ab4cd925274f1a0fb13ca611a8491b8e353e166ebb04",
+  "uses_by_role": {
+    "distractor": 18,
+    "switched-judged-correct": 2,
+    "switched-judged-wrong-primary": 8,
+    "switched-judged-wrong-secondary": 3,
+    "top4-answers": 5
+  }
+}

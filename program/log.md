@@ -6078,3 +6078,21 @@ they say so.)
   owner call; admission of the full study is Kevin's (D24, D92).
 - Audit row 1 of `program/gauntlet/2026-10-16-g2-kimi-expert-streaming.jsonl`, row hash
   `071cc2a885cdcbc798f6bd4cb9f027d4a0643c075390b05e59b9db653b3ed51c`.
+
+## 2026-10-16 — `am5-ablated-cost-v2` (CONFIRMATORY, frozen, ledger row 27; GPU 0.35 h): the rule's cost when evidence is absent is below its gain for Qwen3-8B and Qwen3.5-9B; verified
+
+- History. v1 (row 26) was frozen with a stale pin and voided before running (D123). v2 is the
+  same design. Fill `83ba8f8d`, freeze `6578e0f0`.
+- Run. Build 1548, selftest 1549, GPU job 1552. The blind hand-label receipt `9d68966b` came
+  before analyze.
+- K = 8 (cost / gain, of 347):
+  - Qwen3-8B 6 / 31, COST_BELOW_GAIN;
+  - OLMo-2 22 / 27, NOT_SEPARATED;
+  - Qwen3.5-9B 6 / 26, COST_BELOW_GAIN;
+  - the hand labels agree;
+  - break-even unanswerable shares are 0.84, 0.55 and 0.81.
+- K = 70 is secondary: 11/39, 39/35 and 16/31.
+- Deviation: a path-guard test failed in reg mode. It is environmental, and the outputs are
+  unchanged.
+- Verification. A fresh verifier reproduced the run byte for byte and recomputed it independently.
+- Evidence: `program/evidence/2026-10-16/am5-ablated-cost-v2/RESULTS.md`.

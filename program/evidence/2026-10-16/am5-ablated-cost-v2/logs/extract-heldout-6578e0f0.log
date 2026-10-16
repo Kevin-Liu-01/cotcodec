@@ -1,0 +1,4 @@
+start 2026-10-16T00:42:38Z commit 6578e0f0110eef16b4214cb15aa4a8161c3e125b population heldout job 1552
+extract exit 0
+7ea8584e043ed3bc59bdd89c0a2f75a33d71e8fd805d97ddd729e870d68c4710  ~/cotcodec-runs/stage0/am5-ablated-cost-v2/private/features-heldout.json.gz
+end 2026-10-16T00:42:40Z

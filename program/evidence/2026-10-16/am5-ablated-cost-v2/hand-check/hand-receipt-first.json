@@ -1,0 +1,249 @@
+{
+ "chunks": [
+  {
+   "agent_ids": [
+    "a3b7ecc41da12e4aa"
+   ],
+   "audit_pass": true,
+   "chunk": "hand-first-chunk-01.jsonl",
+   "chunk_sha256": "7971b0a2eedc3bf71df886f16c583ab87121d89e78a390f8c12b6e690650d85c",
+   "first_prompt_sha256": "f949019cefef2dd6a32a0cad6514f0c19c35e473420363f230805d45c9345882",
+   "first_timestamp": "2026-10-16T00:45:56.243000Z",
+   "items": 60,
+   "models": [
+    "claude-opus-5-5"
+   ],
+   "output": "hand-labels-first-01.jsonl"
+  },
+  {
+   "agent_ids": [
+    "aa72f11a8000accc3"
+   ],
+   "audit_pass": true,
+   "chunk": "hand-first-chunk-02.jsonl",
+   "chunk_sha256": "df5b0144a8976274b018a6a313c2eb9375f683a0028c6a6046a38726e7466cf9",
+   "first_prompt_sha256": "61436f40899ce20827dbff30b4513816ed04baa2f9adb51ff635deb236b64df7",
+   "first_timestamp": "2026-10-16T00:47:26.355000Z",
+   "items": 60,
+   "models": [
+    "claude-opus-5-5"
+   ],
+   "output": "hand-labels-first-02.jsonl"
+  },
+  {
+   "agent_ids": [
+    "a5bfbb8f648d38d50"
+   ],
+   "audit_pass": true,
+   "chunk": "hand-first-chunk-03.jsonl",
+   "chunk_sha256": "ade0f0b1fad22e24985b78949af7438970af4e87b430850021afc5c63bae60bb",
+   "first_prompt_sha256": "b0ae99a06b4dd7bd7290c4b7eab320571548471ee6be78cbb658165b16b79fb5",
+   "first_timestamp": "2026-10-16T00:49:10.291000Z",
+   "items": 60,
+   "models": [
+    "claude-opus-5-5"
+   ],
+   "output": "hand-labels-first-03.jsonl"
+  },
+  {
+   "agent_ids": [
+    "afbbe87f201fce932"
+   ],
+   "audit_pass": true,
+   "chunk": "hand-first-chunk-04.jsonl",
+   "chunk_sha256": "2471c820665aa379cbe34a7fb67476c7fde5ec6410d93ae7492b17e2bf7a6cf6",
+   "first_prompt_sha256": "7f2b644893b1b441be2df9b54d28859f110196fdf6ba174183508b31cb329853",
+   "first_timestamp": "2026-10-16T00:51:16.250000Z",
+   "items": 15,
+   "models": [
+    "claude-opus-5-5"
+   ],
+   "output": "hand-labels-first-04.jsonl"
+  }
+ ],
+ "cli_error_sha256": "39ac28b35b7ba7b8d0b299d281078fd903e64d44ac422e529bd04b158fd2698a",
+ "cli_failed_at": "2026-10-16T00:45:20Z",
+ "context_instruction_files": [
+  [
+   "AutoMem",
+   "MEMORY.md"
+  ],
+  [
+   "Project",
+   "CLAUDE.md"
+  ],
+  [
+   "User",
+   "CLAUDE.md"
+  ]
+ ],
+ "experiment_id": "am5-ablated-cost-v2",
+ "final_labels_sha256": "9e95cc87721272cef61cd30e9b7dbb65f798b5a294477034a370d697bc9c2350",
+ "instructions_sha256": "1fd34a5d4616c0d5511afdde2b43fc3a927bd7dc70010c0b2b098903910e0d60",
+ "joined": false,
+ "labeller": "an isolated Claude agent per chunk, blind to every judge label, rule identity, reader and outcome (D9: agent labels, not human)",
+ "labeller_launch": "subagent",
+ "labeller_model": "claude-opus-5-5",
+ "labeller_prompt_sha256": "98c35ceac9710033b095f01abe4a5fc98f6ed3a597b461e12a98ac213a7ae096",
+ "labelling_attempts": {
+  "01": 1,
+  "02": 1,
+  "03": 1,
+  "04": 1
+ },
+ "matching_subagent_transcripts": 4,
+ "merge": {
+  "chunks": 4,
+  "chunks_failing_the_transcript_audit": [],
+  "final_complete": true,
+  "final_rows": 195,
+  "final_sha256": "9e95cc87721272cef61cd30e9b7dbb65f798b5a294477034a370d697bc9c2350",
+  "items_lacking_a_valid_row": 0,
+  "labelling_attempts": 4,
+  "launch": "subagent",
+  "malformed_rows": 0,
+  "missing_chunk_outputs": [],
+  "raw_sha256": "9e95cc87721272cef61cd30e9b7dbb65f798b5a294477034a370d697bc9c2350",
+  "repeated_items": 0,
+  "stage": "first",
+  "transcript_audit": {
+   "hand-labels-first-01.jsonl": {
+    "agent_ids": [
+     "a3b7ecc41da12e4aa"
+    ],
+    "assistant_lines": 6,
+    "attempts": 1,
+    "first_prompt_sha256": "f949019cefef2dd6a32a0cad6514f0c19c35e473420363f230805d45c9345882",
+    "first_timestamp": "2026-10-16T00:45:56.243000Z",
+    "instruction_files": [
+     [
+      "User",
+      "CLAUDE.md"
+     ],
+     [
+      "Project",
+      "CLAUDE.md"
+     ],
+     [
+      "AutoMem",
+      "MEMORY.md"
+     ]
+    ],
+    "last_timestamp": "2026-10-16T00:46:55.347000Z",
+    "models": [
+     "claude-opus-5-5"
+    ],
+    "pass": true,
+    "session_ids": [],
+    "tool_calls": 3,
+    "transcript_sha256": "e550380ffbc631de3943a9a8096066e416a829feb91630a8e30a420d0b1326bb"
+   },
+   "hand-labels-first-02.jsonl": {
+    "agent_ids": [
+     "aa72f11a8000accc3"
+    ],
+    "assistant_lines": 6,
+    "attempts": 1,
+    "first_prompt_sha256": "61436f40899ce20827dbff30b4513816ed04baa2f9adb51ff635deb236b64df7",
+    "first_timestamp": "2026-10-16T00:47:26.355000Z",
+    "instruction_files": [
+     [
+      "User",
+      "CLAUDE.md"
+     ],
+     [
+      "Project",
+      "CLAUDE.md"
+     ],
+     [
+      "AutoMem",
+      "MEMORY.md"
+     ]
+    ],
+    "last_timestamp": "2026-10-16T00:48:34.635000Z",
+    "models": [
+     "claude-opus-5-5"
+    ],
+    "pass": true,
+    "session_ids": [],
+    "tool_calls": 3,
+    "transcript_sha256": "fb78270c7168bdd9ff9deb9becf0d050974ed6a59a67c3dbe605b42fdc580676"
+   },
+   "hand-labels-first-03.jsonl": {
+    "agent_ids": [
+     "a5bfbb8f648d38d50"
+    ],
+    "assistant_lines": 6,
+    "attempts": 1,
+    "first_prompt_sha256": "b0ae99a06b4dd7bd7290c4b7eab320571548471ee6be78cbb658165b16b79fb5",
+    "first_timestamp": "2026-10-16T00:49:10.291000Z",
+    "instruction_files": [
+     [
+      "User",
+      "CLAUDE.md"
+     ],
+     [
+      "Project",
+      "CLAUDE.md"
+     ],
+     [
+      "AutoMem",
+      "MEMORY.md"
+     ]
+    ],
+    "last_timestamp": "2026-10-16T00:50:57.192000Z",
+    "models": [
+     "claude-opus-5-5"
+    ],
+    "pass": true,
+    "session_ids": [],
+    "tool_calls": 3,
+    "transcript_sha256": "858295fd0209ac910a1721f4c4834e91b1a320de5197800fade7bc72e08e3279"
+   },
+   "hand-labels-first-04.jsonl": {
+    "agent_ids": [
+     "afbbe87f201fce932"
+    ],
+    "assistant_lines": 6,
+    "attempts": 1,
+    "first_prompt_sha256": "7f2b644893b1b441be2df9b54d28859f110196fdf6ba174183508b31cb329853",
+    "first_timestamp": "2026-10-16T00:51:16.250000Z",
+    "instruction_files": [
+     [
+      "User",
+      "CLAUDE.md"
+     ],
+     [
+      "Project",
+      "CLAUDE.md"
+     ],
+     [
+      "AutoMem",
+      "MEMORY.md"
+     ]
+    ],
+    "last_timestamp": "2026-10-16T00:51:55.260000Z",
+    "models": [
+     "claude-opus-5-5"
+    ],
+    "pass": true,
+    "session_ids": [],
+    "tool_calls": 3,
+    "transcript_sha256": "f21ab566f0f8b9f4379d9a3753852267b638f0b0060fce32eae034351ab94f06"
+   }
+  },
+  "valid_rows": 195
+ },
+ "plan_sha256": "25019896f948b4f5c3ada506a2939581044c61b611b844a9e1e414059c062f40",
+ "raw_labels_sha256": "9e95cc87721272cef61cd30e9b7dbb65f798b5a294477034a370d697bc9c2350",
+ "sample_sha256": "bcfe5b1252d6cb83392e1dc3415eecf0ce106bdb753d4902098ffa96095f3bdc",
+ "stage": "first",
+ "subagent_transcripts_scanned": 51,
+ "transcripts_sha256": {
+  "first-01.jsonl": "e550380ffbc631de3943a9a8096066e416a829feb91630a8e30a420d0b1326bb",
+  "first-02.jsonl": "fb78270c7168bdd9ff9deb9becf0d050974ed6a59a67c3dbe605b42fdc580676",
+  "first-03.jsonl": "858295fd0209ac910a1721f4c4834e91b1a320de5197800fade7bc72e08e3279",
+  "first-04.jsonl": "f21ab566f0f8b9f4379d9a3753852267b638f0b0060fce32eae034351ab94f06"
+ },
+ "void": null
+}

@@ -1,0 +1,166 @@
+{
+  "features_sha256": "0f6984d4452103275da3f6a96f126a6374dc9b9e19ae5235c7ea6a86e5e9f249",
+  "job_id": "1507",
+  "population": "development",
+  "readers": {
+    "olmo-2-1124-7b-instruct": {
+      "batch_invariant": true,
+      "enforce_eager": true,
+      "finish": {
+        "stop": 4473
+      },
+      "missing_logprobs": 0,
+      "pass_sha256": {
+        "sessions/rd-olmo2/all.json": "58bec33bef77f307c39b0659b048ee596a4d84c72cf7b6de2ae5cb6a90b86c76",
+        "sessions/rd-olmo2/all.npz": "02cd025e128b1665c9bb75ea7d4a3e2466c30e3307d833ce36502e4bd5b014a3",
+        "sessions/rd-olmo2/all.texts.jsonl.gz": "fccf175f32095e734b58297d4752a3f0adb9533d25670c34d4a3274e43eaec16"
+      },
+      "pools_complete_primary": 63,
+      "requests": 4473,
+      "step": "rd-olmo2"
+    },
+    "qwen3-8b": {
+      "batch_invariant": true,
+      "enforce_eager": true,
+      "finish": {
+        "stop": 4473
+      },
+      "missing_logprobs": 0,
+      "pass_sha256": {
+        "sessions/rd-qwen3-8b/all.json": "c8dc8058b5fd6bebf4514796a1e23638051a3916bd8fcab557365c090ecb68b6",
+        "sessions/rd-qwen3-8b/all.npz": "4e5dab115ee96bf1133cd4dc44182986ff810684f3ee8a48a73137dbaad81bf1",
+        "sessions/rd-qwen3-8b/all.texts.jsonl.gz": "a9631764bb6f6ffac799a174d834b5eb719b9325961902b33d01df96fb08d2ab"
+      },
+      "pools_complete_primary": 63,
+      "requests": 4473,
+      "step": "rd-qwen3-8b"
+    },
+    "qwen3.5-9b": {
+      "batch_invariant": false,
+      "enforce_eager": true,
+      "finish": {
+        "stop": 4473
+      },
+      "missing_logprobs": 0,
+      "pass_sha256": {
+        "sessions/rd-qwen35-9b-default/all.json": "25d009652b31b4e63f78b2c8e6687748528c9f23fc181ad72337a70eef475012",
+        "sessions/rd-qwen35-9b-default/all.npz": "e6ae1525e11c121bcb6df603ce54ebda06ec99f54ed5fcc703659c09b1fb44bf",
+        "sessions/rd-qwen35-9b-default/all.texts.jsonl.gz": "1df53e78f087c390962917c16ab980bd74af731bb204d4b0a6884dbe5ce9f948"
+      },
+      "pools_complete_primary": 63,
+      "requests": 4473,
+      "step": "rd-qwen35-9b-default"
+    }
+  },
+  "replay": {
+    "anchor_r1": true,
+    "anchor_r2": true,
+    "control_cells": 4473,
+    "control_questions": 63,
+    "judge_item_replay": {
+      "primary": {
+        "compared": 460,
+        "same": 460
+      }
+    },
+    "judge_items_identical_to_1487": true,
+    "pass": true,
+    "readers": {
+      "olmo-2-1124-7b-instruct": {
+        "cells": 4473,
+        "compared": 4473,
+        "identical_bits": 4473,
+        "identical_text": 4473,
+        "identical_tokens": 4473,
+        "label_compared_identical_reply_primary": 4473,
+        "label_compared_identical_reply_secondary": 0,
+        "label_compared_primary": 4473,
+        "label_compared_secondary": 0,
+        "label_same_identical_reply_primary": 4473,
+        "label_same_identical_reply_secondary": 0,
+        "label_same_primary": 4473,
+        "label_same_secondary": 0,
+        "r1": true,
+        "r2": true
+      },
+      "qwen3-8b": {
+        "cells": 4473,
+        "compared": 4473,
+        "identical_bits": 4473,
+        "identical_text": 4473,
+        "identical_tokens": 4473,
+        "label_compared_identical_reply_primary": 4473,
+        "label_compared_identical_reply_secondary": 0,
+        "label_compared_primary": 4473,
+        "label_compared_secondary": 0,
+        "label_same_identical_reply_primary": 4473,
+        "label_same_identical_reply_secondary": 0,
+        "label_same_primary": 4473,
+        "label_same_secondary": 0,
+        "r1": true,
+        "r2": true
+      },
+      "qwen3.5-9b": {
+        "cells": 4473,
+        "compared": 4473,
+        "identical_bits": 4473,
+        "identical_text": 4473,
+        "identical_tokens": 4473,
+        "label_compared_identical_reply_primary": 4473,
+        "label_compared_identical_reply_secondary": 0,
+        "label_compared_primary": 4473,
+        "label_compared_secondary": 0,
+        "label_same_identical_reply_primary": 4473,
+        "label_same_identical_reply_secondary": 0,
+        "label_same_primary": 4473,
+        "label_same_secondary": 0,
+        "r1": true,
+        "r2": true
+      }
+    },
+    "reference": "job 1487 (AM5): rd-qwen3-8b, rd-olmo2, rd-qwen35-9b-default; judge32",
+    "reference_sha256": {
+      "judge-items.json": "4bbb7f5c6d333f1e5f1b5c2108078276a8d200a04f9543458161458d45d77c7a",
+      "sessions/judge32/all.json": "2b9b7861aff80d845ed5500169daed5f9feac2701562d15eef23943ddd6c93d4",
+      "sessions/judge32/all.npz": "50c8ed52f100d3491d43bad2c5184902776c4fff83dda556e10599c9a77d8973",
+      "sessions/judge32/all.texts.jsonl.gz": "ddeeddb55081535e4fc2440f0545d4987e679754e34d57e415113c66780a71f8",
+      "sessions/rd-olmo2/all.json": "738c43bbf7edd1ece9367decd761a53a8b5a197063c5c274027a6326a0b39790",
+      "sessions/rd-olmo2/all.npz": "02cd025e128b1665c9bb75ea7d4a3e2466c30e3307d833ce36502e4bd5b014a3",
+      "sessions/rd-olmo2/all.texts.jsonl.gz": "51cd722a5ccd3add5153792c39905572537c5a594fc71193652a7760878aa7d6",
+      "sessions/rd-qwen3-8b/all.json": "b7d000af47c894d12548c033f4ebc4aaf6b25c738374bb031ab8f06877b2e3c3",
+      "sessions/rd-qwen3-8b/all.npz": "4e5dab115ee96bf1133cd4dc44182986ff810684f3ee8a48a73137dbaad81bf1",
+      "sessions/rd-qwen3-8b/all.texts.jsonl.gz": "eae016a8229eef668913d30e3ccba03ae68b854a3b07676b55b064f819b09300",
+      "sessions/rd-qwen35-9b-default/all.json": "9c9fd63cd50ada6623bcca5e5530b0d496c655fe6af148ac1a4189902f2b9dd1",
+      "sessions/rd-qwen35-9b-default/all.npz": "e6ae1525e11c121bcb6df603ce54ebda06ec99f54ed5fcc703659c09b1fb44bf",
+      "sessions/rd-qwen35-9b-default/all.texts.jsonl.gz": "27a8b16c8597baacc5caacf1b8927d81f9ce5334ee563fcf451969555ccac430"
+    }
+  },
+  "validation": {
+    "judge_items": 460,
+    "judge_items_reader": 272,
+    "judge_items_sha256": "4bbb7f5c6d333f1e5f1b5c2108078276a8d200a04f9543458161458d45d77c7a",
+    "judge_pass_sha256": {
+      "sessions/judge32/all.json": "e0b92e1034750ab48d2be8d2df81e8d470870cf848ae5df790e6fc1d48f2060d",
+      "sessions/judge32/all.npz": "50c8ed52f100d3491d43bad2c5184902776c4fff83dda556e10599c9a77d8973",
+      "sessions/judge32/all.texts.jsonl.gz": "f25acfdc28c37a939dd6dfc24d32c61067be0ff6de5374a79a5fa0a8f05b1d04"
+    },
+    "judge_validation": {
+      "validation:idk": {
+        "items": 63,
+        "missing": 0,
+        "yes": 0
+      },
+      "validation:other-answer": {
+        "items": 62,
+        "missing": 0,
+        "yes": 4
+      },
+      "validation:reference": {
+        "items": 58,
+        "missing": 0,
+        "yes": 58
+      }
+    },
+    "labelled": 460
+  }
+}

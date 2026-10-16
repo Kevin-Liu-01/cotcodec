@@ -1,0 +1,119 @@
+{
+  "architectures": {
+    "Olmo2ForCausalLM": {
+      "in_transformers": true,
+      "reader": "olmo-2-1124-7b-instruct",
+      "supported": true,
+      "transformers_backend": true
+    },
+    "Qwen3ForCausalLM": {
+      "in_transformers": true,
+      "reader": "qwen3-8b",
+      "supported": true,
+      "transformers_backend": false
+    },
+    "Qwen3_5ForConditionalGeneration": {
+      "in_transformers": true,
+      "reader": "qwen3.5-9b",
+      "supported": true,
+      "transformers_backend": false
+    }
+  },
+  "judge": {
+    "answer_templates_sha256": "2e27234d4c7d50a1fd99da3e8d3c97704a1f10cc9d52185924b6d8ece3ef71d4",
+    "fits": true,
+    "items": 1638,
+    "len_max": 349,
+    "model_id": "qwen3-32b"
+  },
+  "ok": true,
+  "plan": {
+    "arms": [
+      "retrieved"
+    ],
+    "experiment_id": "am5-ablated-cost-v2",
+    "gpus": 1,
+    "job_minutes": 80,
+    "parts": {
+      "control": [
+        347,
+        410
+      ],
+      "main": [
+        0,
+        347
+      ]
+    },
+    "population": "heldout",
+    "questions": 410,
+    "readers": [
+      "qwen3-8b",
+      "olmo-2-1124-7b-instruct",
+      "qwen3.5-9b"
+    ],
+    "requests_per_pool": 71,
+    "requests_per_reader": 29110,
+    "steps": [
+      "rd-qwen3-8b",
+      "rd-olmo2",
+      "rd-olmo2-default",
+      "rd-qwen35-9b-default",
+      "judge32"
+    ]
+  },
+  "readers": {
+    "olmo-2-1124-7b-instruct": {
+      "architectures": [
+        "Olmo2ForCausalLM"
+      ],
+      "fits": true,
+      "len_max": 1699,
+      "len_mean": 397.7437993816558,
+      "len_min": 198,
+      "no_think_tag_when_unmarked": true,
+      "ok": true,
+      "prompt_ids_sha256": "67a787b7e138b636d068039ed490ac203f94d734fbbf7ae3a31c55641e0ed280",
+      "requests": 29110,
+      "stop_token_error": null,
+      "stop_token_id": 100257,
+      "thinking_marker_ok": true,
+      "tokens_total": 11578322
+    },
+    "qwen3-8b": {
+      "architectures": [
+        "Qwen3ForCausalLM"
+      ],
+      "fits": true,
+      "len_max": 1778,
+      "len_mean": 430.9030573686019,
+      "len_min": 229,
+      "no_think_tag_when_unmarked": true,
+      "ok": true,
+      "prompt_ids_sha256": "b1a1fe94d427bc44305718a2f515a70970f50a633f272e2b459a1dc31ef9c509",
+      "requests": 29110,
+      "stop_token_error": null,
+      "stop_token_id": 151645,
+      "thinking_marker_ok": true,
+      "tokens_total": 12543588
+    },
+    "qwen3.5-9b": {
+      "architectures": [
+        "Qwen3_5ForConditionalGeneration"
+      ],
+      "fits": true,
+      "len_max": 1803,
+      "len_mean": 437.94527653727243,
+      "len_min": 233,
+      "no_think_tag_when_unmarked": true,
+      "ok": true,
+      "prompt_ids_sha256": "22f77ce938715e63eecc8cb28bf1950d8d9248a5e1b2b099a96ef72c560c237f",
+      "requests": 29110,
+      "stop_token_error": null,
+      "stop_token_id": 248046,
+      "thinking_marker_ok": true,
+      "tokens_total": 12748587
+    }
+  },
+  "transformers_version": "5.17.0",
+  "vllm_version": "0.31.0"
+}

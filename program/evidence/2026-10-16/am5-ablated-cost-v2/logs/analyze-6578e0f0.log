@@ -1,0 +1,11 @@
+start 2026-10-16T00:54:34Z commit 6578e0f0110eef16b4214cb15aa4a8161c3e125b mode reg population heldout
+hand-label receipt commit 9d68966b1624355bcdb4fcc294490bfc1bfb6732; labels 9e95cc87721272ce; plan 25019896f948b4f5
+analyze a exit 0
+analyze b exit 0
+analyze outputs byte-identical
+7038fc45c0b7d26c10cdfedbbf454905ec3fbbec53f5a536205b85ec46ca8ea6  results.json
+7ebbac35f5f6ca6d3831644c15a33b30a7bff6c09e5aa50258ca4ebf121c265a  per-table.json.gz
+88ac662631c13d5e6659fe65e3b48d74774b4e46b3c09b01fa66feb093d0e59f  tables.md
+7ea8584e043ed3bc59bdd89c0a2f75a33d71e8fd805d97ddd729e870d68c4710  ~/cotcodec-runs/stage0/am5-ablated-cost-v2/private/features-heldout.json.gz
+pytest exit 1 (1 failed, 230 passed in 10.79s)
+end 2026-10-16T00:54:50Z

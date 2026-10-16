@@ -1,0 +1,557 @@
+{
+ "chunk_size": 60,
+ "instructions_sha256": "1745340a5e05ebb149aaffee4beba23d2c13dc42b33d1872731defd09359a5c5",
+ "items": [
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0000",
+   "question_id": "gpt4_68e94288",
+   "reply_digest": "a83e1a04b0b32a66a6faf3084a902eace802e34bfa29af8aa2b8689ff7043ec3",
+   "uses": [
+    {
+     "judge_primary": 0,
+     "mask": 23,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "distractor"
+    }
+   ]
+  },
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0001",
+   "question_id": "caf03d32",
+   "reply_digest": "6fbb36e2b0bd8902d8533da8227248d4e7f390bbc8389f52da6639773966e54f",
+   "uses": [
+    {
+     "judge_primary": 0,
+     "mask": 156,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "distractor"
+    }
+   ]
+  },
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0002",
+   "question_id": "gpt4_b0863698",
+   "reply_digest": "1004389c6c9de1f4157130cd438be3263e3a13e034e791aa20843c12b31d6388",
+   "uses": [
+    {
+     "judge_primary": 1,
+     "mask": 53,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "distractor"
+    }
+   ]
+  },
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0003",
+   "question_id": "8ebdbe50",
+   "reply_digest": "d3492fb19ecb7ca2fd43455b344037ece78b79274273dddb74f24cc4c27ab65b",
+   "uses": [
+    {
+     "judge_primary": 0,
+     "mask": 149,
+     "position": 63,
+     "reader": "qwen3-8b",
+     "role": "switched-judged-wrong-secondary",
+     "within_primary_cap": false
+    },
+    {
+     "judge_primary": 0,
+     "mask": 216,
+     "position": 4,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "switched-judged-wrong-primary",
+     "within_primary_cap": true
+    },
+    {
+     "judge_primary": 0,
+     "mask": 106,
+     "position": 8,
+     "reader": "qwen3.5-9b",
+     "role": "switched-judged-wrong-primary",
+     "within_primary_cap": true
+    }
+   ]
+  },
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0004",
+   "question_id": "caf03d32",
+   "reply_digest": "1e90d655361565398ecc923905484fc2af886360c2484f35a34285496a9fceb0",
+   "uses": [
+    {
+     "judge_primary": 0,
+     "mask": 198,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "distractor"
+    }
+   ]
+  },
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0005",
+   "question_id": "caf03d32",
+   "reply_digest": "cba051a1dd3a6bb5c381b9761d0b90f4fc92b58e120003b4235554f98d8a3157",
+   "uses": [
+    {
+     "judge_primary": 0,
+     "mask": 240,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "top4-answers"
+    }
+   ]
+  },
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0006",
+   "question_id": "gpt4_68e94288",
+   "reply_digest": "5d2e2f8cb86dca71dc7f6aaf91a7e3719063a3366ecaf2b7d8f7ddde5bfa43da",
+   "uses": [
+    {
+     "judge_primary": 0,
+     "mask": 150,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "top4-answers"
+    }
+   ]
+  },
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0007",
+   "question_id": "gpt4_b0863698",
+   "reply_digest": "6c88eabbd478621ef901b455f1211bfffb5b134575540a7eddad4c0b60bd0733",
+   "uses": [
+    {
+     "judge_primary": 0,
+     "mask": 153,
+     "position": 3,
+     "reader": "qwen3.5-9b",
+     "role": "switched-judged-wrong-primary",
+     "within_primary_cap": true
+    }
+   ]
+  },
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0008",
+   "question_id": "b6025781",
+   "reply_digest": "835f4e46d6e3decd85cb6b7c1b4d4bf989a0ae6fd0ff57f4c0be7f2a2683fd61",
+   "uses": [
+    {
+     "judge_primary": 0,
+     "mask": 212,
+     "position": 3,
+     "reader": "qwen3.5-9b",
+     "role": "switched-judged-wrong-primary",
+     "within_primary_cap": true
+    }
+   ]
+  },
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0009",
+   "question_id": "0bb5a684",
+   "reply_digest": "f6467a7ba27073b4639383e9ecfc90e1a67e50776e8952bdd06d805ea5961a23",
+   "uses": [
+    {
+     "judge_primary": 0,
+     "mask": 166,
+     "position": 3,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "switched-judged-wrong-primary",
+     "within_primary_cap": true
+    }
+   ]
+  },
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0010",
+   "question_id": "caf03d32",
+   "reply_digest": "9b96727f10c60d89c3677aeeae5007518a285f64ec5a41291d73ec17583e99b8",
+   "uses": [
+    {
+     "judge_primary": 0,
+     "mask": 169,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "distractor"
+    }
+   ]
+  },
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0011",
+   "question_id": "gpt4_b0863698",
+   "reply_digest": "0ea55f57009726fc0a995e0d437665f758bd88ef8d105afa89a9aef6554aa5af",
+   "uses": [
+    {
+     "judge_primary": 1,
+     "mask": 216,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "top4-answers"
+    }
+   ]
+  },
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0012",
+   "question_id": "f523d9fe",
+   "reply_digest": "4c88ed2b6cc0d444722ded2ec68856a5f02597e4404c83b78dbbab8837fc995c",
+   "uses": [
+    {
+     "judge_primary": 0,
+     "mask": 101,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "distractor"
+    }
+   ]
+  },
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0013",
+   "question_id": "b6025781",
+   "reply_digest": "e15ca70152fb666d78a134c37b801ab2da6c4d8447cec2dfb81844939a79f321",
+   "uses": [
+    {
+     "judge_primary": 0,
+     "mask": 83,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "distractor"
+    }
+   ]
+  },
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0014",
+   "question_id": "b6025781",
+   "reply_digest": "bc7f2854e5ef47aab8c92d67c53ad931437f3b1cc2b06800475f14429e8f319b",
+   "uses": [
+    {
+     "judge_primary": 0,
+     "mask": 75,
+     "reader": "qwen3-8b",
+     "role": "distractor"
+    }
+   ]
+  },
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0015",
+   "question_id": "a06e4cfe",
+   "reply_digest": "290a8619b6aedf7fbe04cfbba79841f7dbc4aff436746a4b371f2a99c8733de4",
+   "uses": [
+    {
+     "judge_primary": 1,
+     "mask": 228,
+     "position": 3,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "switched-judged-correct",
+     "within_primary_cap": true
+    }
+   ]
+  },
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0016",
+   "question_id": "b6025781",
+   "reply_digest": "1ab22b4bb25d04e851a022d95d5eb741259b54091df8fa7be2202e1b717892fe",
+   "uses": [
+    {
+     "judge_primary": 0,
+     "mask": 177,
+     "reader": "qwen3.5-9b",
+     "role": "distractor"
+    }
+   ]
+  },
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0017",
+   "question_id": "gpt4_b0863698",
+   "reply_digest": "abd59a1dec3c21f924d31575e309002aba6a1ecdf56f92ef259ec814760059d3",
+   "uses": [
+    {
+     "judge_primary": 0,
+     "mask": 216,
+     "reader": "qwen3-8b",
+     "role": "top4-answers"
+    }
+   ]
+  },
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0018",
+   "question_id": "b6025781",
+   "reply_digest": "c4bd2176edac9ab8af06f04915a5d94f8f14838236e3bd1572fa7d55a68ed3c5",
+   "uses": [
+    {
+     "judge_primary": 1,
+     "mask": 60,
+     "reader": "qwen3-8b",
+     "role": "distractor"
+    }
+   ]
+  },
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0019",
+   "question_id": "caf03d32",
+   "reply_digest": "ec24d55ad0ee1754a5ddfcd4ab52b6782f7d9248e294e6202691bc1b8491d065",
+   "uses": [
+    {
+     "judge_primary": 0,
+     "mask": 89,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "distractor"
+    }
+   ]
+  },
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0020",
+   "question_id": "b6025781",
+   "reply_digest": "dab16a15d217b52aa5de219cc93f1cef2e5424e10a287077a95c16b8cfd3efca",
+   "uses": [
+    {
+     "judge_primary": 0,
+     "mask": 46,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "distractor"
+    }
+   ]
+  },
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0021",
+   "question_id": "gpt4_b0863698",
+   "reply_digest": "58a1fb5fe1a74281b0f266f79b8076a058a11bee91040b725e569ca24725fe79",
+   "uses": [
+    {
+     "judge_primary": 0,
+     "mask": 57,
+     "reader": "qwen3.5-9b",
+     "role": "distractor"
+    }
+   ]
+  },
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0022",
+   "question_id": "8a137a7f",
+   "reply_digest": "bd14c8772dc710488661f93be5a33a892d92332c39f213e12a1b305e61c94c98",
+   "uses": [
+    {
+     "judge_primary": 0,
+     "mask": 114,
+     "position": 38,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "switched-judged-wrong-secondary",
+     "within_primary_cap": false
+    }
+   ]
+  },
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0023",
+   "question_id": "b6025781",
+   "reply_digest": "7377fe5a0b9eb379b3a7aa2d7fc7c68593141396e7e1dcebe0eaeefca1f03915",
+   "uses": [
+    {
+     "judge_primary": 0,
+     "mask": 105,
+     "reader": "qwen3.5-9b",
+     "role": "distractor"
+    }
+   ]
+  },
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0024",
+   "question_id": "f523d9fe",
+   "reply_digest": "edab1a222c3427d2d518f4372489a30378a324e0311b1c0db6774037cec017f6",
+   "uses": [
+    {
+     "judge_primary": 0,
+     "mask": 27,
+     "position": 2,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "switched-judged-wrong-primary",
+     "within_primary_cap": true
+    }
+   ]
+  },
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0025",
+   "question_id": "0bc8ad93",
+   "reply_digest": "41aebc7f7297735a005c74e56eb6d4ef2ff5e68f036173f95520a7c4840bb1b8",
+   "uses": [
+    {
+     "judge_primary": 0,
+     "mask": 53,
+     "position": 3,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "switched-judged-wrong-primary",
+     "within_primary_cap": true
+    }
+   ]
+  },
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0026",
+   "question_id": "b6025781",
+   "reply_digest": "55bafb5c96208cfb6b3c98f4fe3247a884907406de1b6a9bcfbd9e3fac4748b8",
+   "uses": [
+    {
+     "judge_primary": 1,
+     "mask": 149,
+     "position": 5,
+     "reader": "qwen3-8b",
+     "role": "switched-judged-correct",
+     "within_primary_cap": true
+    }
+   ]
+  },
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0027",
+   "question_id": "b6025781",
+   "reply_digest": "9e70cdbb13acc67d20d542701bf548aee4bc95c5165a8fce1ec81412fecef1de",
+   "uses": [
+    {
+     "judge_primary": 0,
+     "mask": 150,
+     "position": 2,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "switched-judged-wrong-primary",
+     "within_primary_cap": true
+    }
+   ]
+  },
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0028",
+   "question_id": "a346bb18",
+   "reply_digest": "1caf02248d1e03156504e2bdfef0a8188e805728937254a40e2af615f8c1c703",
+   "uses": [
+    {
+     "judge_primary": 0,
+     "mask": 156,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "top4-answers"
+    }
+   ]
+  },
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0029",
+   "question_id": "b6025781",
+   "reply_digest": "84a254f9643261339b776e822406b85f1ab27b5ca8c0e7b1adfd69f9da66fdd9",
+   "uses": [
+    {
+     "judge_primary": 1,
+     "mask": 89,
+     "reader": "qwen3-8b",
+     "role": "distractor"
+    }
+   ]
+  },
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0030",
+   "question_id": "3c1045c8",
+   "reply_digest": "19a597f2257e87189ceb14ebe0f9bf99769afe8b7b663d16fa0aaa20a7004b05",
+   "uses": [
+    {
+     "judge_primary": 0,
+     "mask": 116,
+     "position": 22,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "switched-judged-wrong-secondary",
+     "within_primary_cap": false
+    }
+   ]
+  },
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0031",
+   "question_id": "caf03d32",
+   "reply_digest": "c1e2e703416362a3e7792f468ac750d83f4a96396fe808fcb9e21a88cda7c20e",
+   "uses": [
+    {
+     "judge_primary": 0,
+     "mask": 46,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "distractor"
+    }
+   ]
+  },
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0032",
+   "question_id": "caf03d32",
+   "reply_digest": "dfd1b60a04db4a278861aa65aaf48f3734daaaca1098dd2d86f63d51ac807512",
+   "uses": [
+    {
+     "judge_primary": 0,
+     "mask": 228,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "distractor"
+    }
+   ]
+  },
+  {
+   "check": "answer-or-decline",
+   "item_id": "r0033",
+   "question_id": "0bb5a684",
+   "reply_digest": "1f6fd76f65801ffbfd7aa7834f783c3a3a4356a72810229967ff4c22ee4b574c",
+   "uses": [
+    {
+     "judge_primary": 0,
+     "mask": 154,
+     "reader": "olmo-2-1124-7b-instruct",
+     "role": "distractor"
+    }
+   ]
+  }
+ ],
+ "labeller_model": "claude-opus-5-5",
+ "labeller_prompt_sha256": "98c35ceac9710033b095f01abe4a5fc98f6ed3a597b461e12a98ac213a7ae096",
+ "plan_sha256": "2bcd07af44ae049a6d145de9c506373edaa6a1aa5f988e8050c5895121e64126",
+ "readers": {
+  "olmo-2-1124-7b-instruct": {
+   "distractor_items": 12,
+   "distractor_shortfall": 0,
+   "switched_judged_correct": 1,
+   "switched_judged_wrong_beyond_primary_cap": 4,
+   "switched_judged_wrong_beyond_sampled": 2,
+   "switched_judged_wrong_within_primary_cap": 5,
+   "target_items": 12,
+   "top4_answers": 4
+  },
+  "qwen3-8b": {
+   "distractor_items": 3,
+   "distractor_shortfall": 0,
+   "switched_judged_correct": 1,
+   "switched_judged_wrong_beyond_primary_cap": 1,
+   "switched_judged_wrong_beyond_sampled": 1,
+   "switched_judged_wrong_within_primary_cap": 0,
+   "target_items": 3,
+   "top4_answers": 1
+  },
+  "qwen3.5-9b": {
+   "distractor_items": 3,
+   "distractor_shortfall": 0,
+   "switched_judged_correct": 0,
+   "switched_judged_wrong_beyond_primary_cap": 0,
+   "switched_judged_wrong_beyond_sampled": 0,
+   "switched_judged_wrong_within_primary_cap": 3,
+   "target_items": 3,
+   "top4_answers": 0
+  }
+ },
+ "secondary_fraction": 0.5,
+ "seed": 44
+}

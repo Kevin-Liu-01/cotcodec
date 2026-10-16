@@ -1,0 +1,13 @@
+start 2026-10-15T21:14:18Z commit fc355d109a6a8677d93ca438e53729d35da20921 mode dev population development
+hand-label receipt commit 21eb121092bd0f393dd3d335540dc3e3cdf0ceac; labels d21c25b990241e98; plan 2bcd07af44ae049a
+analyze a exit 0
+analyze b exit 0
+analyze outputs byte-identical
+8e3a090ee5444c116cf351c576802ea02377bd19503c12335c346e1a83fcfc79  results.json
+fe2612ea150102739a12fa234ed90644476290fe45310299ead4939bf2a4f3e9  per-table.json.gz
+c7a6043d025863031678b3fc33785795fd1d37c90ef158b0e9c65b910bb28a28  tables.md
+0f6984d4452103275da3f6a96f126a6374dc9b9e19ae5235c7ea6a86e5e9f249  ~/cotcodec-runs/stage0/am5r-dev-dryrun/private/features-development.json.gz
+dryrun-compare exit 0 ({"all_pass":true,"passed":24,"sha256":"50317af33a02c7eb40a49771de3ec8408f847fbe4d1735ce69a931aa9111f4ec","total":24})
+power exit 0
+pytest exit 0 (227 passed in 10.11s)
+end 2026-10-15T21:14:33Z

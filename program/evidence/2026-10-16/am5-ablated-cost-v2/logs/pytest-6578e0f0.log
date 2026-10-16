@@ -1,0 +1,40 @@
+Installed 10 packages in 27ms
+........................F............................................... [ 31%]
+........................................................................ [ 62%]
+........................................................................ [ 93%]
+...............                                                          [100%]
+=================================== FAILURES ===================================
+____________ test_the_development_gain_side_is_am5s_original_block _____________
+
+    def test_the_development_gain_side_is_am5s_original_block():
+        config = r.load_config()
+        committed = json.loads((AM5_EVIDENCE / "results.json").read_text())
+>       rows = r.load_gain_rows(config, "development")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_memcredit_am5r.py:184: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/memcredit_am5r.py:1423: in load_gain_rows
+    check_dev_path(path)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = PosixPath('~/cotcodec-runs/stage0/am5-ablated-cost-v2/checkout/program/evidence/2026-10-16/am3-reader-replication/per-table.json.gz')
+
+    def check_dev_path(path: Path | str | None) -> None:
+        """The development dry run never opens held-out inputs (symlinks resolved)."""
+    
+        if path is None:
+            return
+        texts = [str(path)]
+        with contextlib.suppress(OSError):
+            texts.append(str(Path(path).resolve()))
+        for text in texts:
+            for part in FORBIDDEN_DEV_PARTS:
+                if part in text:
+>                   raise Am5rError(f"the development population refuses {path}")
+E                   memcredit_am5r.Am5rError: the development population refuses ~/cotcodec-runs/stage0/am5-ablated-cost-v2/checkout/program/evidence/2026-10-16/am3-reader-replication/per-table.json.gz
+
+scripts/memcredit_am5r.py:225: Am5rError
+=========================== short test summary info ============================
+FAILED tests/test_memcredit_am5r.py::test_the_development_gain_side_is_am5s_original_block
+1 failed, 230 passed in 10.79s
