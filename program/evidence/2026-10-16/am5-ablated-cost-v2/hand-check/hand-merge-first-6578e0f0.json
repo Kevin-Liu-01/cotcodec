@@ -1,0 +1,142 @@
+{
+  "chunks": 4,
+  "chunks_failing_the_transcript_audit": [],
+  "final_complete": true,
+  "final_rows": 195,
+  "final_sha256": "9e95cc87721272cef61cd30e9b7dbb65f798b5a294477034a370d697bc9c2350",
+  "items_lacking_a_valid_row": 0,
+  "labelling_attempts": 4,
+  "launch": "subagent",
+  "malformed_rows": 0,
+  "missing_chunk_outputs": [],
+  "raw_sha256": "9e95cc87721272cef61cd30e9b7dbb65f798b5a294477034a370d697bc9c2350",
+  "repeated_items": 0,
+  "stage": "first",
+  "transcript_audit": {
+    "hand-labels-first-01.jsonl": {
+      "agent_ids": [
+        "a3b7ecc41da12e4aa"
+      ],
+      "assistant_lines": 6,
+      "attempts": 1,
+      "first_prompt_sha256": "f949019cefef2dd6a32a0cad6514f0c19c35e473420363f230805d45c9345882",
+      "first_timestamp": "2026-10-16T00:45:56.243000Z",
+      "instruction_files": [
+        [
+          "User",
+          "CLAUDE.md"
+        ],
+        [
+          "Project",
+          "CLAUDE.md"
+        ],
+        [
+          "AutoMem",
+          "MEMORY.md"
+        ]
+      ],
+      "last_timestamp": "2026-10-16T00:46:55.347000Z",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "pass": true,
+      "session_ids": [],
+      "tool_calls": 3,
+      "transcript_sha256": "e550380ffbc631de3943a9a8096066e416a829feb91630a8e30a420d0b1326bb"
+    },
+    "hand-labels-first-02.jsonl": {
+      "agent_ids": [
+        "aa72f11a8000accc3"
+      ],
+      "assistant_lines": 6,
+      "attempts": 1,
+      "first_prompt_sha256": "61436f40899ce20827dbff30b4513816ed04baa2f9adb51ff635deb236b64df7",
+      "first_timestamp": "2026-10-16T00:47:26.355000Z",
+      "instruction_files": [
+        [
+          "User",
+          "CLAUDE.md"
+        ],
+        [
+          "Project",
+          "CLAUDE.md"
+        ],
+        [
+          "AutoMem",
+          "MEMORY.md"
+        ]
+      ],
+      "last_timestamp": "2026-10-16T00:48:34.635000Z",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "pass": true,
+      "session_ids": [],
+      "tool_calls": 3,
+      "transcript_sha256": "fb78270c7168bdd9ff9deb9becf0d050974ed6a59a67c3dbe605b42fdc580676"
+    },
+    "hand-labels-first-03.jsonl": {
+      "agent_ids": [
+        "a5bfbb8f648d38d50"
+      ],
+      "assistant_lines": 6,
+      "attempts": 1,
+      "first_prompt_sha256": "b0ae99a06b4dd7bd7290c4b7eab320571548471ee6be78cbb658165b16b79fb5",
+      "first_timestamp": "2026-10-16T00:49:10.291000Z",
+      "instruction_files": [
+        [
+          "User",
+          "CLAUDE.md"
+        ],
+        [
+          "Project",
+          "CLAUDE.md"
+        ],
+        [
+          "AutoMem",
+          "MEMORY.md"
+        ]
+      ],
+      "last_timestamp": "2026-10-16T00:50:57.192000Z",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "pass": true,
+      "session_ids": [],
+      "tool_calls": 3,
+      "transcript_sha256": "858295fd0209ac910a1721f4c4834e91b1a320de5197800fade7bc72e08e3279"
+    },
+    "hand-labels-first-04.jsonl": {
+      "agent_ids": [
+        "afbbe87f201fce932"
+      ],
+      "assistant_lines": 6,
+      "attempts": 1,
+      "first_prompt_sha256": "7f2b644893b1b441be2df9b54d28859f110196fdf6ba174183508b31cb329853",
+      "first_timestamp": "2026-10-16T00:51:16.250000Z",
+      "instruction_files": [
+        [
+          "User",
+          "CLAUDE.md"
+        ],
+        [
+          "Project",
+          "CLAUDE.md"
+        ],
+        [
+          "AutoMem",
+          "MEMORY.md"
+        ]
+      ],
+      "last_timestamp": "2026-10-16T00:51:55.260000Z",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "pass": true,
+      "session_ids": [],
+      "tool_calls": 3,
+      "transcript_sha256": "f21ab566f0f8b9f4379d9a3753852267b638f0b0060fce32eae034351ab94f06"
+    }
+  },
+  "valid_rows": 195
+}
