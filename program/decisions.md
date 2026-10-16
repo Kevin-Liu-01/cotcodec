@@ -3210,3 +3210,36 @@ of the resident models on real tasks, to settle which model to run on a
     quality-against-memory frontier for a 128 GB machine.
   - Kimi TQ1_0 is optional, only if GPUs and budget allow, and reported
     descriptively.
+
+**D130. LM2 (exploratory): among the models that fit on a 128 GB machine, no
+accuracy difference is resolved at 20 items per task. DeepSeek V4 Flash at
+2 bits loses about 13 points on code against its 8-bit reference. The
+local-giant-model line pauses here.**
+- LM2 used 7.74 GPU-h (`program/evidence/2026-10-16/lm2-resident-eval/README.md`).
+  An independent check reproduced it, and its corrections are applied,
+  including the 5,120-token rule for cancelled requests.
+- Setup: 20 items per task × 3 seeds, chat or least-deliberating modes, a
+  5,120-token scoring budget chosen after the runs; math, code with unit
+  tests, and knowledge.
+- Results:
+  - V4 Flash UD-IQ3_XXS (104 GB) shows no resolved loss against Q8 (task mean
+    +0.6 [−6.1, +7.2]).
+  - ds4 Q2 (87 GB) loses on code: −13.3 [−26.7, 0.0], consistent from 2,048
+    to 5,120 tokens. Most of it is finished but wrong programs, not
+    truncation.
+  - gpt-oss-120b (63 GB) is not distinguished from V4 Flash. The minimum
+    detectable difference between models is about 16-30 points.
+  - Qwen3-235B is not resolved: its answers ran past the budget.
+- Provisional advice to Kevin for a 128 GB Mac (exploratory):
+  - gpt-oss-120b as the default, chosen on memory and speed, not on LM2
+    accuracy;
+  - V4 Flash UD-IQ3_XXS if V4 Flash is wanted;
+  - avoid ds4 Q2 for code.
+  - Kimi-class models only stream, at about 2-3 tok/s (D125, D129).
+- Host sharing: LM2 broke D127's 3-GPU research share for 42 min 57 s, at up
+  to 7 GPUs, until the orchestrator cancelled job 1900. Agent prompts now give
+  hard GPU caps that count pending jobs.
+- The line pauses because a decisive version needs thinking modes and larger
+  suites. With llama.cpp's V4 Flash decode on H100 (about 3 tok/s per slot),
+  that is tens of GPU-h per arm. Kevin can reopen it; the assets stay on the
+  host.

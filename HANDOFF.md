@@ -92,12 +92,21 @@ for whatever gains actual results"; D80). Under that delegation:
     (`program/evidence/2026-10-16/local-frontier-moe-sweep/DOSSIER.md`).
   - Kimi-K2.6 (595 GB) is on the host.
   - G2 (streaming emulator) is closed after gauntlet wave 1 (53).
-  - Next is LM1: quality at matched memory, a 1T model at about 1.8 bits
-    against smaller models near native precision. Host prep (llama.cpp
-    image and GGUFs) is running.
-- **G3 (D124):** a 16-bit GDN state costs about 10 points of long-reasoning
-  math accuracy (bf16) on Qwen3.5. G3b, a test at the full output budget, is
-  running.
+  - LM1 (matched memory against a streamed 1.8-bit Kimi) was closed after
+    gauntlet wave 1, which scored 56 (D129).
+  - LM2 (exploratory, D130) compared the resident models. No difference is
+    resolved at 20 items. V4 Flash at 2 bits loses about 13 points on code
+    against its 8-bit reference.
+  - Provisional advice for a 128 GB Mac: gpt-oss-120b as the default; V4
+    Flash UD-IQ3_XXS if V4 Flash is wanted.
+  - The line is paused.
+- **G3 and G3b (D124, D128):** a bf16 GDN state costs about 10 points of
+  long-reasoning math accuracy on Qwen3.5. The loss survives at 81,920 tokens
+  (−13 to −22 on hard items) and is larger without preemption. Keep the state
+  at fp32. The line is complete.
+- **Host sharing (D127):** the transcreate speedrun holds up to 4 GPUs and
+  128 CPUs through 2026-10-20, under Kevin's R570 risk acceptance. LaMa is on
+  job 1451.
   - G2-RL is closed at an honest exit (gauntlet 63; D114).
   - The node also hosts LaMa and ROSE inference for another of Kevin's
     projects through 2026-10-20 (D110).
@@ -116,8 +125,8 @@ See `pending_decisions_for_kevin` in `program/state.json`.
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
 `uv run python scripts/preregister.py check-chain`, 27 rows). Decisions taken
-on Kevin's behalf are D1-D126 in `program/decisions.md`. GPU-hours are in
-`program/state.json` (`gpu_hours_ledger`, physical hours): 32.69 in total.
+on Kevin's behalf are D1-D130 in `program/decisions.md`. GPU-hours are in
+`program/state.json` (`gpu_hours_ledger`, physical hours): 43.11 in total.
 
 | Registration | Outcome | Evidence |
 |---|---|---|
