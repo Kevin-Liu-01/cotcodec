@@ -40,6 +40,7 @@ from harness import g3_state_precision as g3  # noqa: E402
 
 MATH_CAP_REASON = "length"
 CAPS = (8192, 16384, 24576, 32768)
+TAIL_FROM = 28672  # 28K tokens
 
 
 # --------------------------------------------------------------------------- loading
@@ -184,7 +185,9 @@ def bootstrap(per_q: np.ndarray, reps: int, seed: int) -> dict[str, Any]:
     idx = rng.integers(0, n, size=(reps, n))
     draws = per_q[idx].mean(axis=1)
     out = {"point": point.tolist(), "n_questions": int(n)}
-    for level, (lo, hi) in {"95": (2.5, 97.5), "90": (5.0, 95.0)}.items():
+    # 98.75%: a Bonferroni level for the four primary contrasts (2 models x fp16, bf16).
+    levels = {"95": (2.5, 97.5), "90": (5.0, 95.0), "98_75": (0.625, 99.375)}
+    for level, (lo, hi) in levels.items():
         out[f"ci{level}"] = [
             np.percentile(draws, lo, axis=0).tolist(),
             np.percentile(draws, hi, axis=0).tolist(),
@@ -217,6 +220,7 @@ def paired_summary(
             "diff": stats["point"][j],
             "ci95": [stats["ci95"][0][j], stats["ci95"][1][j]],
             "ci90": [stats["ci90"][0][j], stats["ci90"][1][j]],
+            "ci98_75": [stats["ci98_75"][0][j], stats["ci98_75"][1][j]],
         }
         if margin is not None:
             d["within_margin_90"] = bool(-margin < d["ci90"][0] and d["ci90"][1] < margin)
@@ -250,6 +254,79 @@ def half_width(m: float, questions: int, samples: int, z: float = 1.96) -> float
     given the question: z * sqrt(2 m / (Q k))."""
 
     return z * math.sqrt(2.0 * m / (questions * samples))
+
+
+def per_question_seed_matrix(
+    rows: list[dict[str, Any]], key: str, arm: str, seeds: list[int]
+) -> dict[Any, list[float]]:
+    out: dict[Any, list[float]] = {}
+    for row in rows:
+        if row["arm"] != arm or row.get(key) is None or row["seed"] not in seeds:
+            continue
+        out.setdefault(row["question_index"], [float("nan")] * len(seeds))[
+            seeds.index(row["seed"])
+        ] = float(row[key])
+    return {q: v for q, v in out.items() if not any(math.isnan(x) for x in v)}
+
+
+def seed_heterogeneity(
+    rows: list[dict[str, Any]], key: str, reps: int, seed: int
+) -> dict[str, Any]:
+    """Per 16-bit arm: (arm - fp32 at the first seed) - mean(arm - fp32 at the later seeds),
+    paired by question, with a question bootstrap. The first seed was submitted first."""
+
+    seeds = sorted({r["seed"] for r in rows})
+    if len(seeds) < 2:
+        return {}
+    ref = per_question_seed_matrix(rows, key, "fp32", seeds)
+    out: dict[str, Any] = {"seeds": seeds}
+    for arm in ("fp16", "bf16"):
+        m = per_question_seed_matrix(rows, key, arm, seeds)
+        qs = sorted(set(ref) & set(m))
+        d = np.array([m[q] for q in qs]) - np.array([ref[q] for q in qs])
+        h = d[:, :1] - d[:, 1:].mean(axis=1, keepdims=True)
+        b = bootstrap(h, reps, seed)
+        out[arm] = {
+            "n_questions": len(qs),
+            "contrast": b["point"][0],
+            "ci95": [b["ci95"][0][0], b["ci95"][1][0]],
+        }
+    return out
+
+
+def pooled_over_models(
+    rows: list[dict[str, Any]], key: str, models: list[str], reps: int, seed: int
+) -> dict[str, Any]:
+    """Per 16-bit arm: the paired difference against fp32 averaged over the models question by
+    question (questions resampled jointly for all models)."""
+
+    arms = list(g3.ARM_NAMES)
+    per_model = {}
+    for model in models:
+        qs, sums, counts = cluster_matrix([r for r in rows if r["model"] == model], key, arms)
+        means = sums / counts
+        per_model[model] = {q: means[i, 1:] - means[i, 0] for i, q in enumerate(qs)}
+    shared = sorted(set.intersection(*(set(v) for v in per_model.values())))
+    pooled = np.array([np.mean([per_model[m][q] for m in models], axis=0) for q in shared])
+    b = bootstrap(pooled, reps, seed)
+    out: dict[str, Any] = {"models": models, "n_questions": len(shared)}
+    for j, arm in enumerate(arms[1:]):
+        out[f"{arm}_minus_fp32"] = {
+            "diff": b["point"][j],
+            "ci95": [b["ci95"][0][j], b["ci95"][1][j]],
+            "ci98_75": [b["ci98_75"][0][j], b["ci98_75"][1][j]],
+        }
+    return out
+
+
+def distinct_ngram_share(tokens: np.ndarray, n: int = 16, window: int = 8192) -> float | None:
+    """Distinct n-grams over all n-grams in the last ``window`` tokens (1.0: no repeat)."""
+
+    t = tokens[-window:]
+    if len(t) < n:
+        return None
+    grams = {tuple(t[i : i + n].tolist()) for i in range(len(t) - n + 1)}
+    return len(grams) / (len(t) - n + 1)
 
 
 # --------------------------------------------------------------------------- tables
@@ -381,6 +458,18 @@ def analyze(
                         else None,
                         "median_len": float(np.median([r["completion_len"] for r in ar])),
                         "p90_len": float(np.percentile([r["completion_len"] for r in ar], 90)),
+                        "wrong_answer_given": sum(
+                            1 for r in ar if r["has_answer"] and not r["correct"]
+                        ),
+                        "capped_after_thinking_closed": sum(
+                            1 for r in ar if r["cap_hit"] and r["thinking_closed"]
+                        ),
+                        # Rollouts still running at 28K tokens, and the share that then ended
+                        # on their own before the 32,768 cap.
+                        "running_at_28k": sum(1 for r in ar if r["completion_len"] > TAIL_FROM),
+                        "ended_after_28k": sum(
+                            1 for r in ar if r["completion_len"] > TAIL_FROM and r["ended_eos"]
+                        ),
                     }
                 cell["by_arm"] = ended
                 # Accuracy under a shorter output cap: correct and ended within L tokens (the
@@ -393,6 +482,7 @@ def analyze(
                         sub, "correct_cap", arms, reps, seed, None
                     )
                 # By seed (submission order: seed 42 first; descriptive).
+                cell["seed_heterogeneity"] = seed_heterogeneity(sub, "correct", reps, seed)
                 cell["by_seed"] = {
                     str(s): paired_summary(
                         [r for r in sub if r["seed"] == s], "correct", arms, reps, seed, None
@@ -400,6 +490,11 @@ def analyze(
                     for s in sorted({r["seed"] for r in sub})
                 }
             results["cells"][f"{model}/{task}"] = cell
+    math_models = sorted({r["model"] for r in main if r["task"] == "math"})
+    if len(math_models) > 1:
+        results["pooled_math"] = pooled_over_models(
+            [r for r in main if r["task"] == "math"], "correct", math_models, reps, seed
+        )
     results["throughput"] = [t for t in throughput if t["phase"] in ("main", "lme_extra")]
     for t in results["throughput"]:
         if t["task"] != "math":
@@ -450,6 +545,46 @@ def tables_md(results: dict[str, Any]) -> str:
                 d = c[f"{a}_minus_fp32"]
                 row += [f"{100 * d['diff']:+.1f} {fmt_ci(d['ci95'])}", fmt_ci(d["ci90"])]
             lines.append("| " + " | ".join(row) + " |")
+    primary = [(n, c) for n, c in results["cells"].items() if n.endswith("/math")]
+    if primary:
+        lines += [
+            "",
+            "## Primary math contrasts (checker): 95%, Bonferroni 98.75% (4 contrasts) and 90%",
+            "",
+            "| Model | Contrast | Difference | 95% | 98.75% | 90% |",
+            "|---|---|---:|---|---|---|",
+        ]
+        for name, cell in primary:
+            for a in arms[1:]:
+                d = cell["correct"][f"{a}_minus_fp32"]
+                lines.append(
+                    f"| {name.split('/')[0]} | {a} - fp32 | {100 * d['diff']:+.1f} | "
+                    f"{fmt_ci(d['ci95'])} | {fmt_ci(d['ci98_75'])} | {fmt_ci(d['ci90'])} |"
+                )
+        pooled = results.get("pooled_math")
+        if pooled:
+            for a in arms[1:]:
+                d = pooled[f"{a}_minus_fp32"]
+                lines.append(
+                    f"| pooled over models | {a} - fp32 | {100 * d['diff']:+.1f} | "
+                    f"{fmt_ci(d['ci95'])} | {fmt_ci(d['ci98_75'])} | |"
+                )
+        lines += [
+            "",
+            "## Seed-order heterogeneity (math, checker): (arm - fp32 at seed 42) minus the mean "
+            "at seeds 43-44, paired by question",
+            "",
+            "| Model | Arm | Contrast | 95% |",
+            "|---|---|---:|---|",
+        ]
+        for name, cell in primary:
+            het = cell.get("seed_heterogeneity") or {}
+            for a in arms[1:]:
+                if a in het:
+                    lines.append(
+                        f"| {name.split('/')[0]} | {a} | {100 * het[a]['contrast']:+.1f} | "
+                        f"{fmt_ci(het[a]['ci95'])} |"
+                    )
     lines += [
         "",
         "## Length and truncation",
@@ -500,18 +635,24 @@ def tables_md(results: dict[str, Any]) -> str:
             "",
             "## Math rollouts by arm",
             "",
-            "| Model | Arm | Rollouts | Ended (EOS) | Accuracy among EOS | Median length "
-            "| p90 length |",
-            "|---|---|---:|---:|---:|---:|---:|",
+            "| Model | Arm | Rollouts | Ended (EOS) | Accuracy among EOS | Wrong answer given "
+            "| Median length | p90 length | Running at 28K: ended by the cap |",
+            "|---|---|---:|---:|---:|---:|---:|---:|---|",
         ]
         for name, cell in results["cells"].items():
             if "by_arm" not in cell:
                 continue
             for arm, v in cell["by_arm"].items():
+                tail = (
+                    f"{v['ended_after_28k']} of {v['running_at_28k']} "
+                    f"({fmt_pct(v['ended_after_28k'] / v['running_at_28k'], 0)}%)"
+                    if v.get("running_at_28k")
+                    else "n/a"
+                )
                 lines.append(
                     f"| {name.split('/')[0]} | {arm} | {v['requests']} | {v['ended_eos']} | "
-                    f"{fmt_pct(v['accuracy_among_eos'])} | {v['median_len']:.0f} | "
-                    f"{v['p90_len']:.0f} |"
+                    f"{fmt_pct(v['accuracy_among_eos'])} | {v.get('wrong_answer_given', 'n/a')} | "
+                    f"{v['median_len']:.0f} | {v['p90_len']:.0f} | {tail} |"
                 )
     if any("by_cap" in c for c in results["cells"].values()):
         lines += [
@@ -582,9 +723,11 @@ def tables_md(results: dict[str, Any]) -> str:
 
 
 def write_jsonl_gz(path: Path, rows: list[dict[str, Any]]) -> None:
-    with gzip.open(path, "wt", encoding="utf-8") as handle:
+    """Deterministic gzip (mtime 0, no file name), so the file reproduces byte for byte."""
+
+    with path.open("wb") as raw, gzip.GzipFile(filename="", mode="wb", fileobj=raw, mtime=0) as gz:
         for row in rows:
-            handle.write(json.dumps(row, sort_keys=True) + "\n")
+            gz.write((json.dumps(row, sort_keys=True) + "\n").encode("utf-8"))
 
 
 def read_jsonl_gz(path: Path) -> list[dict[str, Any]]:
@@ -693,6 +836,124 @@ def cmd_analyze(args: argparse.Namespace) -> int:
     return 0
 
 
+def longer_shorter(a_rows: list[dict[str, Any]], b_rows: list[dict[str, Any]]) -> dict[str, int]:
+    """Pairs where a ran longer / shorter than b (a rollout cut at the cap counts as longer;
+    both cut is a tie)."""
+
+    longer = shorter = tie = 0
+    for a, b in zip(a_rows, b_rows, strict=True):
+        ca, cb = a["finish_reason"] != "stop", b["finish_reason"] != "stop"
+        if ca and cb:
+            tie += 1
+        elif ca or (not cb and a["completion_len"] > b["completion_len"]):
+            longer += 1
+        elif cb or a["completion_len"] < b["completion_len"]:
+            shorter += 1
+        else:
+            tie += 1
+    return {"longer": longer, "shorter": shorter, "ties": tie}
+
+
+def divergence(a: dict[str, np.ndarray], b: dict[str, np.ndarray], ids: list[str]) -> dict:
+    firsts = [first_difference(a[i], b[i]) for i in ids]
+    found = [f for f in firsts if f is not None]
+    return {
+        "pairs": len(ids),
+        "identical": sum(1 for f in firsts if f is None),
+        "first_diff_median": float(np.median(found)) if found else None,
+        "first_diff_p10_p90": [float(np.percentile(found, 10)), float(np.percentile(found, 90))]
+        if found
+        else None,
+    }
+
+
+def cmd_extras(args: argparse.Namespace) -> int:
+    """Host only (reads token ids): the pilot's fp32 rollouts as a partial A/A for the main fp32
+    arm on the shared request seeds; the long-context A/A; and a repetition measure (distinct
+    16-gram share of the last 8K tokens) for capped math rollouts. Text-free output."""
+
+    config = g3.load_config()
+    a = config["analysis"]
+    reps, seed = int(a["bootstrap_reps"]), int(a["bootstrap_seed"])
+    rows = read_jsonl_gz(Path(args.scored))
+    by = {(r["phase"], r["model"], r["arm"], r["task"], r["request_id"]): r for r in rows}
+    tokens: dict[tuple[str, str, str, str], dict[str, np.ndarray]] = {}
+    for path in args.workers:
+        w = load_worker(Path(path))
+        rec = w["records"]
+        tokens[(rec["phase"], rec["model_id"], rec["arm"], rec["task"])] = w["tokens"]
+    out: dict[str, Any] = {"aa_math": {}, "aa_lme": {}, "repetition": {}}
+    arms = list(g3.ARM_NAMES)
+    for model in sorted({k[1] for k in tokens}):
+        pilot = tokens.get(("pilot", model, "fp32", "math"))
+        if pilot is not None and ("main", model, "fp32", "math") in tokens:
+            main = {arm: tokens[("main", model, arm, "math")] for arm in arms}
+            ids = sorted(set(pilot) & set(main["fp32"]))
+
+            def get(
+                phase: str, arm: str, ids: list[str] = ids, model: str = model
+            ) -> list[dict[str, Any]]:
+                return [by[(phase, model, arm, "math", i)] for i in ids]
+
+            aa_rows = [dict(r, arm="pilot_fp32") for r in get("pilot", "fp32")]
+            aa_rows += [dict(r, arm="main_fp32") for r in get("main", "fp32")]
+            entry: dict[str, Any] = {
+                "shared_requests": len(ids),
+                "questions": len({by[("main", model, "fp32", "math", i)]["question_index"]
+                                  for i in ids}),
+                "seeds": sorted({by[("main", model, "fp32", "math", i)]["seed"] for i in ids}),
+            }  # fmt: skip
+            for key in ("correct", "completion_len"):
+                ps = paired_summary(aa_rows, key, ["pilot_fp32", "main_fp32"], reps, seed, None)
+                entry[f"main_fp32_minus_pilot_fp32_{key}"] = ps.pop("main_fp32_minus_fp32")
+                entry[f"means_{key}"] = {k: v["mean"] for k, v in ps.items() if isinstance(v, dict)}
+            entry["main_fp32_vs_pilot_fp32_lengths"] = longer_shorter(
+                get("main", "fp32"), get("pilot", "fp32")
+            )
+            entry["main_fp32_vs_pilot_fp32_tokens"] = divergence(main["fp32"], pilot, ids)
+            same = [dict(r, arm=arm) for arm in arms for r in get("main", arm)]
+            for key in ("correct", "completion_len"):
+                ps = paired_summary(same, key, arms, reps, seed, None)
+                entry[f"main_arms_on_shared_{key}"] = ps
+            for arm in arms[1:]:
+                entry[f"main_{arm}_vs_main_fp32_tokens"] = divergence(main[arm], main["fp32"], ids)
+                entry[f"main_{arm}_vs_main_fp32_lengths"] = longer_shorter(
+                    get("main", arm), get("main", "fp32")
+                )
+            out["aa_math"][model] = entry
+        lme_pilot = tokens.get(("pilot", model, "fp32", "lme"))
+        lme_ref = tokens.get(("main", model, "fp32", "lme")) or tokens.get(
+            ("lme_extra", model, "fp32", "lme")
+        )
+        if lme_pilot is not None and lme_ref is not None:
+            ids = sorted(set(lme_pilot) & set(lme_ref))
+            out["aa_lme"][model] = divergence(lme_pilot, lme_ref, ids)
+        for arm in arms:
+            key = ("main", model, arm, "math")
+            if key not in tokens:
+                continue
+            capped, late = [], []
+            for rid, ids_ in tokens[key].items():
+                r = by[("main", model, arm, "math", rid)]
+                share = distinct_ngram_share(ids_)
+                if share is None:
+                    continue
+                if r["finish_reason"] == MATH_CAP_REASON:
+                    capped.append(share)
+                elif r["finish_reason"] == "stop" and r["completion_len"] > 24576:
+                    late.append(share)
+            out["repetition"][f"{model}/{arm}"] = {
+                "capped": len(capped),
+                "capped_median_distinct_16gram_share": float(np.median(capped)) if capped else None,
+                "capped_below_0_5": sum(1 for x in capped if x < 0.5),
+                "ended_past_24k": len(late),
+                "ended_past_24k_median": float(np.median(late)) if late else None,
+            }
+    Path(args.output).write_text(json.dumps(out, indent=2, sort_keys=True) + "\n")
+    print(json.dumps({"models": list(out["aa_math"]), "output": args.output}))
+    return 0
+
+
 def cmd_pilot(args: argparse.Namespace) -> int:
     rows = [r for r in read_jsonl_gz(Path(args.scored)) if r["phase"] == "pilot"]
     throughput = [
@@ -763,6 +1024,10 @@ def main() -> int:
     a.add_argument("--judge-input", default=None)
     a.add_argument("--summaries", nargs="+", required=True)
     a.add_argument("--output-dir", required=True)
+    x = sub.add_parser("extras", allow_abbrev=False)
+    x.add_argument("--scored", required=True)
+    x.add_argument("--workers", nargs="+", required=True)
+    x.add_argument("--output", required=True)
     p = sub.add_parser("pilot", allow_abbrev=False)
     p.add_argument("--scored", required=True)
     p.add_argument("--summaries", nargs="+", required=True)
@@ -773,6 +1038,7 @@ def main() -> int:
         "judge-input": cmd_judge_input,
         "analyze": cmd_analyze,
         "pilot": cmd_pilot,
+        "extras": cmd_extras,
     }
     return handlers[args.command](args)
 

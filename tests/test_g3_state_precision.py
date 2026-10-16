@@ -138,6 +138,24 @@ CASES = [
     ("0", "", False),
     ("8n^2 + 4n + 1", "8n^2+4n+1", True),
     ("-\\frac{24}{25}", "-0.96", True),
+    # Checker v2 (independent check of 2026-10-15): the four kinds of equivalent answer that v1
+    # missed on the main run, and guards that must stay wrong.
+    ("1 \\pm \\sqrt{19}", "1-\\sqrt{19}, 1+\\sqrt{19}", True),  # a +- reference, unordered
+    ("\\{1\\pm\\sqrt{5},-2\\}", "\\{-2, 1-\\sqrt{5}, 1+\\sqrt{5}\\}", True),  # set braces
+    (
+        "\\begin{pmatrix} 1/5 \\\\ -18/5 \\end{pmatrix}",
+        "\\begin{pmatrix} 0.2 \\\\ -3.6 \\end{pmatrix}",
+        True,
+    ),  # matrix entries by value
+    ("(3,4]", "3 < \\lambda \\le 4", True),  # a two-sided inequality as an interval
+    ("(3,4]", "3 \\le \\lambda < 4", False),
+    ("1 \\pm \\sqrt{19}", "1+\\sqrt{19}", False),
+    ("3 \\pm 2 \\sqrt{2}", "3+2\\sqrt{2}, 3-2\\sqrt{2}, -3+2\\sqrt{2}, -3-2\\sqrt{2}", False),
+    (
+        "\\begin{pmatrix} 1/5 \\\\ -18/5 \\end{pmatrix}",
+        "\\begin{pmatrix} 0.2 \\\\ 3.6 \\end{pmatrix}",
+        False,
+    ),
 ]
 
 
@@ -266,16 +284,18 @@ def test_paired_bootstrap_recovers_injected_difference() -> None:
     )
 
 
-def _worker(root: Path, arm: str, task: str, rows: list[tuple[dict, str, list[int]]]) -> Path:
+def _worker(
+    root: Path, arm: str, task: str, rows: list[tuple[dict, str, list[int]]], phase: str = "main"
+) -> Path:
     import gzip
 
-    path = root / f"qwen3.5-4b-{arm}-{task}"
+    path = root / (f"qwen3.5-4b-{arm}-{task}" + ("" if phase == "main" else f"-{phase}"))
     path.mkdir(parents=True)
     requests = [r for r, _, _ in rows]
     (path / "records.json").write_text(
         json.dumps(
             {
-                "phase": "main",
+                "phase": phase,
                 "model_id": "qwen3.5-4b",
                 "arm": arm,
                 "task": task,
@@ -392,3 +412,56 @@ def test_lme_extra_phase_is_long_context_only() -> None:
     extra = g3.lme_requests(config, plan, order)
     main = g3.lme_requests(config, g3.phase_plan(config, "main"), order)
     assert extra == main[: len(extra)]  # same ids, indices and request seeds
+
+
+def test_extras_pilot_aa_and_repetition(tmp_path: Path) -> None:
+    import argparse
+
+    prompts = g3.load_math_prompts(g3.load_config())
+    workers = []
+    for phase, arms in (("main", g3.ARM_NAMES), ("pilot", ("fp32",))):
+        for arm in arms:
+            rows = []
+            for q in range(3):
+                for seed in (42, 43):
+                    right = not (phase == "pilot" and q == 2)
+                    answer = prompts[q]["answer"] if right else "wrong"
+                    capped = arm == "bf16" and q == 1
+                    length = 40 if capped else 20
+                    req = {
+                        "request_id": f"m/q{q:03d}/s{seed}",
+                        "question_index": q,
+                        "seed": seed,
+                        "prompt_len": 5,
+                        "completion_len": length,
+                        "sum_logp": -1.0,
+                        "finish_reason": "length" if capped else "stop",
+                    }
+                    tokens = list(range(length)) if phase == "main" else [7] + list(range(1, 20))
+                    text = "<think>x</think>" + ("" if capped else f"\\boxed{{{answer}}}")
+                    rows.append((req, text, tokens))
+            workers.append(_worker(tmp_path, arm, "math", rows, phase))
+    scored = analysis.score_workers(workers)
+    path = tmp_path / "scored.jsonl.gz"
+    analysis.write_jsonl_gz(path, scored)
+    first = path.read_bytes()
+    analysis.write_jsonl_gz(path, scored)
+    assert path.read_bytes() == first and first[4:8] == b"\x00\x00\x00\x00"  # mtime 0
+    out = tmp_path / "extras.json"
+    args = argparse.Namespace(scored=str(path), workers=[str(w) for w in workers], output=str(out))
+    assert analysis.cmd_extras(args) == 0
+    extras = json.loads(out.read_text())
+    aa = extras["aa_math"]["qwen3.5-4b"]
+    assert aa["shared_requests"] == 6 and aa["questions"] == 3 and aa["seeds"] == [42, 43]
+    # main fp32 is right on q2, the pilot wrong: +1/3 over 3 questions.
+    assert aa["main_fp32_minus_pilot_fp32_correct"]["diff"] == pytest.approx(1 / 3)
+    assert aa["main_fp32_vs_pilot_fp32_tokens"] == {
+        "pairs": 6,
+        "identical": 0,
+        "first_diff_median": 0.0,
+        "first_diff_p10_p90": [0.0, 0.0],
+    }
+    assert aa["main_bf16_vs_main_fp32_lengths"]["longer"] == 2
+    rep = extras["repetition"]["qwen3.5-4b/bf16"]
+    assert rep["capped"] == 2 and rep["capped_median_distinct_16gram_share"] == 1.0
+    assert analysis.distinct_ngram_share(np.array([1, 2] * 20), n=4) == pytest.approx(2 / 37)

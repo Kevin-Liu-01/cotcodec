@@ -7,7 +7,9 @@ or numpy at import), so the vLLM image, the CPU selftest and the host analysis a
 * config loading and validation, and each phase's plan (pilot, main);
 * the math task: MATH-500 level-5 prompts, paired request seeds, and a deterministic
   final-answer checker (last ``\\boxed{}`` after the thinking block; MATH-style normalization,
-  then exact rational/real evaluation of simple LaTeX arithmetic, then string equality);
+  exact rational/real evaluation of simple LaTeX arithmetic, matrices entry by entry, two-sided
+  inequalities against intervals, unordered lists with set braces stripped and \\pm expanded,
+  then string equality);
 * the long-context task: LongMemEval-S question order and the full-haystack prompt;
 * the judge items (AM1's primary judge prompt, ``harness.memcredit_study``).
 """
@@ -497,10 +499,107 @@ def _atom_equiv(a: str, b: str) -> bool:
     return va is not None and vb is not None and _values_equal(va, vb)
 
 
+#: A matrix after normalization (row breaks are "\\cr", columns "&").
+_MATRIX = re.compile(r"^\\begin\{([pbBvV]?matrix)\}(.*)\\end\{\1\}$")
+#: A variable in a two-sided inequality: one letter or a command such as \lambda.
+_VAR = r"(?:[a-zA-Z]|\\[a-zA-Z]+)"
+_INEQ_UP = re.compile(rf"^(.+?)(<|\\leq){_VAR}(<|\\leq)(.+)$")
+_INEQ_DOWN = re.compile(rf"^(.+?)(>|\\geq){_VAR}(>|\\geq)(.+)$")
+
+
+def _strip_set_braces(s: str) -> str:
+    """Drop one pair of outer set braces ("\\{...\\}" is "{...}" after normalization)."""
+
+    s = s.replace("\\lbrace", "{").replace("\\rbrace", "}")
+    if len(s) > 2 and s[0] == "{" and s[-1] == "}" and _balanced(s[1:-1]):
+        s = s[1:-1]
+    return s
+
+
+def _expand_pm(item: str) -> list[str]:
+    """An item with exactly one \\pm (or \\mp) as its two values, the sign put in place:
+    "1\\pm\\sqrt{19}" -> ["1+\\sqrt{19}", "1-\\sqrt{19}"]; anything else unchanged."""
+
+    if item.count("\\pm") + item.count("\\mp") != 1:
+        return [item]
+    token, signs = ("\\pm", ("+", "-")) if "\\pm" in item else ("\\mp", ("-", "+"))
+    left, right = item.split(token)
+    if not right:
+        return [item]
+    if not left:
+        return [
+            right if signs[0] == "+" else "-" + right,
+            "-" + right if signs[1] == "-" else right,
+        ]
+    return [left + signs[0] + right, left + signs[1] + right]
+
+
+def _list_items(s: str) -> list[str]:
+    """An unbracketed answer as its items: set braces stripped, split at top-level commas, and
+    each item with one \\pm expanded into its two values."""
+
+    items: list[str] = []
+    for part in _split_top_level(_strip_set_braces(s)):
+        items.extend(_expand_pm(part))
+    return items
+
+
+def _multiset_equiv(pa: list[str], pb: list[str]) -> bool:
+    if len(pa) != len(pb):
+        return False
+    remaining = list(pb)
+    for item in pa:
+        match = next((j for j, other in enumerate(remaining) if _atom_equiv(item, other)), None)
+        if match is None:
+            return False
+        remaining.pop(match)
+    return True
+
+
+def _matrix(s: str) -> list[list[str]] | None:
+    m = _MATRIX.match(s)
+    if m is None:
+        return None
+    rows = m.group(2).split("\\cr")
+    if rows and rows[-1] == "":
+        rows.pop()
+    return [row.split("&") for row in rows]
+
+
+def _interval(s: str) -> tuple[str, str, str, str] | None:
+    """A bracketed pair "(a,b]" as (left bracket, a, b, right bracket)."""
+
+    if len(s) >= 5 and s[0] in "([" and s[-1] in ")]":
+        parts = _split_top_level(s[1:-1])
+        if len(parts) == 2 and all(parts):
+            return (s[0], parts[0], parts[1], s[-1])
+    return None
+
+
+def _inequality_interval(s: str) -> tuple[str, str, str, str] | None:
+    """A two-sided inequality as an interval: "3<\\lambda\\leq4" -> ("(", "3", "4", "]");
+    "4\\geqx>3" -> ("(", "3", "4", "]")."""
+
+    m = _INEQ_UP.match(s)
+    if m is not None:
+        a, op1, op2, b = m.groups()
+        return ("(" if op1 == "<" else "[", a, b, ")" if op2 == "<" else "]")
+    m = _INEQ_DOWN.match(s)
+    if m is not None:
+        b, op1, op2, a = m.groups()
+        return ("(" if op2 == ">" else "[", a, b, ")" if op1 == ">" else "]")
+    return None
+
+
 def math_equiv(prediction: str | None, reference: str) -> bool:
-    """Whether a final answer matches the reference: normalized string equality, exact value
-    equality for plain arithmetic, or, for an unbracketed comma list (all solutions), equality
-    as multisets. Tuples, intervals and expressions with variables compare as strings."""
+    """Whether a final answer matches the reference (checker v2).
+
+    In order: normalized string equality or exact value equality for plain arithmetic; matrices
+    entry by entry; a two-sided inequality against an interval (bracket types and end points);
+    for an unbracketed reference, the answers as unordered lists after stripping set braces and
+    expanding one \\pm per item into its two values. Other tuples, intervals and expressions with
+    variables compare as strings. (Checker v1 lacked the matrix, inequality, set-brace and \\pm
+    steps; program/evidence/2026-10-16/g3-state-precision-accuracy/checker-v1/.)"""
 
     if prediction is None:
         return False
@@ -509,20 +608,32 @@ def math_equiv(prediction: str | None, reference: str) -> bool:
         return False
     if _atom_equiv(a, b):
         return True
+    ma, mb = _matrix(a), _matrix(b)
+    if ma is not None or mb is not None:
+        if ma is None or mb is None or [len(r) for r in ma] != [len(r) for r in mb]:
+            return False
+        return all(
+            _atom_equiv(x, y)
+            for ra, rb in zip(ma, mb, strict=True)
+            for x, y in zip(ra, rb, strict=True)
+        )
+    qa, qb = _inequality_interval(a), _inequality_interval(b)
+    if qa is not None or qb is not None:
+        ia = qa if qa is not None else _interval(a)
+        ib = qb if qb is not None else _interval(b)
+        if ia is None or ib is None:
+            return False
+        return (
+            ia[0] == ib[0]
+            and ia[3] == ib[3]
+            and _atom_equiv(ia[1], ib[1])
+            and _atom_equiv(ia[2], ib[2])
+        )
     bracketed = b[:1] in ("(", "[") and b[-1:] in (")", "]")
-    unbracketed = not bracketed and not b.startswith("\\begin")
-    if unbracketed and ("," in a or "," in b):
-        pa, pb = _split_top_level(a), _split_top_level(b)
-        if len(pa) == len(pb) > 1:
-            remaining = list(pb)
-            for item in pa:
-                match = next(
-                    (j for j, other in enumerate(remaining) if _atom_equiv(item, other)), None
-                )
-                if match is None:
-                    return False
-                remaining.pop(match)
-            return True
+    if not bracketed:
+        pa, pb = _list_items(a), _list_items(b)
+        if len(pa) > 1 or len(pb) > 1:
+            return _multiset_equiv(pa, pb)
     return False
 
 
