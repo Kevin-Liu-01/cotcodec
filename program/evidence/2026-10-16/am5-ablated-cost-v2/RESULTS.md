@@ -161,3 +161,14 @@ equals gain. Its break-even point estimate is 55%.
   records.
 - `jobs/`, `logs/`, `manifests/`, `builds/`, `selftests/` and `ops/`: the operations records.
 - Run outputs stay on the host under `~/cotcodec-runs/stage0/am5-ablated-cost-v2/`.
+
+## Post-run test maintenance (2026-10-16)
+
+D125's LM1 host prep added candidate models to `models/registry.yaml`, a file section 16 pins.
+- **The test changed:** `test_the_gate_opens_with_a_scratch_ledger_row_and_matching_pins` now
+  checks the pins against the files at the freeze commit (the ledger row's `git_head_at_freeze`)
+  once the real ledger holds this registration's row. It no longer compares them with today's
+  working tree. am3g's test got the same change under D122.
+- **Pre-freeze cases are unchanged:** before the freeze it still checks the working tree, and a
+  tampered pin is still refused.
+- **Nothing else changed:** the registration, the frozen code and every output are untouched.
