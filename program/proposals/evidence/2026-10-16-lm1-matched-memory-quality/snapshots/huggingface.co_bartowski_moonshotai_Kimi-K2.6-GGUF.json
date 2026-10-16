@@ -1,0 +1,13 @@
+{
+ "url": "https://huggingface.co/bartowski/moonshotai_Kimi-K2.6-GGUF",
+ "fetched_at": "2026-10-16T04:56:25Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 309864,
+ "raw_sha256": "daebb9d33e377bd3103b76784aa6aa339e164324effc15523128909f2ecf5d1d",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "html_title": "bartowski/moonshotai_Kimi-K2.6-GGUF · Hugging Face"
+ }
+}

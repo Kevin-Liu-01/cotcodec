@@ -1,0 +1,346 @@
+{
+ "name": "Design",
+ "status": "PASS",
+ "self_assessed": true,
+ "protocol": "K-Dense experimental-design and statistical-power (design before data; minimum effect = the 5-point practical margin; operating characteristics by simulation)",
+ "evidence": {
+  "matched_memory": "RAM-matched eligibility tiers R-Y, R-T, S; strict-fit view reported",
+  "decision_rule": "NOT_WORTH by Bonferroni non-superiority at +5 points over four resident arms; LEADS by intersection-union superiority with min point >= +5, index and per-benchmark conditions; SPLIT across two benchmarks with opposite contamination exposure",
+  "gates": [
+   "G1 assay sensitivity",
+   "G2 judge",
+   "G3 template fidelity",
+   "G4 mode conformance",
+   "G5 placement"
+  ],
+  "kill_criteria": [
+   "KC1-KC5 (registration section 7.2)"
+  ],
+  "falsifiers": [
+   "H1",
+   "H2",
+   "H3",
+   "H4",
+   "H5"
+  ],
+  "operating_characteristics_base_1600": [
+   {
+    "setting": "base",
+    "primary_items": 1600,
+    "delta_min_points": -15.0,
+    "P_NOT_WORTH": 1.0,
+    "P_NOT_WORTH_seed_range": [
+     1.0,
+     1.0
+    ],
+    "P_LEADS": 0.0,
+    "P_LEADS_seed_range": [
+     0.0,
+     0.0
+    ],
+    "P_UNRESOLVED": 0.0,
+    "P_UNRESOLVED_seed_range": [
+     0.0,
+     0.0
+    ],
+    "P_SPLIT": 0.0,
+    "P_SPLIT_seed_range": [
+     0.0,
+     0.0
+    ],
+    "coverage_95_kimi_minus_R1": 0.9467,
+    "coverage_95_kimi_minus_R1_seed_range": [
+     0.943,
+     0.952
+    ],
+    "mean_se_points": 1.003,
+    "mean_se_points_seed_range": [
+     1.003,
+     1.003
+    ]
+   },
+   {
+    "setting": "base",
+    "primary_items": 1600,
+    "delta_min_points": -10.0,
+    "P_NOT_WORTH": 1.0,
+    "P_NOT_WORTH_seed_range": [
+     1.0,
+     1.0
+    ],
+    "P_LEADS": 0.0,
+    "P_LEADS_seed_range": [
+     0.0,
+     0.0
+    ],
+    "P_UNRESOLVED": 0.0,
+    "P_UNRESOLVED_seed_range": [
+     0.0,
+     0.0
+    ],
+    "P_SPLIT": 0.0,
+    "P_SPLIT_seed_range": [
+     0.0,
+     0.0
+    ],
+    "coverage_95_kimi_minus_R1": 0.949,
+    "coverage_95_kimi_minus_R1_seed_range": [
+     0.946,
+     0.954
+    ],
+    "mean_se_points": 1.0083,
+    "mean_se_points_seed_range": [
+     1.008,
+     1.009
+    ]
+   },
+   {
+    "setting": "base",
+    "primary_items": 1600,
+    "delta_min_points": -5.0,
+    "P_NOT_WORTH": 1.0,
+    "P_NOT_WORTH_seed_range": [
+     1.0,
+     1.0
+    ],
+    "P_LEADS": 0.0,
+    "P_LEADS_seed_range": [
+     0.0,
+     0.0
+    ],
+    "P_UNRESOLVED": 0.0,
+    "P_UNRESOLVED_seed_range": [
+     0.0,
+     0.0
+    ],
+    "P_SPLIT": 0.0,
+    "P_SPLIT_seed_range": [
+     0.0,
+     0.0
+    ],
+    "coverage_95_kimi_minus_R1": 0.95,
+    "coverage_95_kimi_minus_R1_seed_range": [
+     0.946,
+     0.957
+    ],
+    "mean_se_points": 1.02,
+    "mean_se_points_seed_range": [
+     1.02,
+     1.02
+    ]
+   },
+   {
+    "setting": "base",
+    "primary_items": 1600,
+    "delta_min_points": -2.0,
+    "P_NOT_WORTH": 1.0,
+    "P_NOT_WORTH_seed_range": [
+     1.0,
+     1.0
+    ],
+    "P_LEADS": 0.0,
+    "P_LEADS_seed_range": [
+     0.0,
+     0.0
+    ],
+    "P_UNRESOLVED": 0.0,
+    "P_UNRESOLVED_seed_range": [
+     0.0,
+     0.0
+    ],
+    "P_SPLIT": 0.0,
+    "P_SPLIT_seed_range": [
+     0.0,
+     0.0
+    ],
+    "coverage_95_kimi_minus_R1": 0.9507,
+    "coverage_95_kimi_minus_R1_seed_range": [
+     0.939,
+     0.961
+    ],
+    "mean_se_points": 1.029,
+    "mean_se_points_seed_range": [
+     1.029,
+     1.029
+    ]
+   },
+   {
+    "setting": "base",
+    "primary_items": 1600,
+    "delta_min_points": 0.0,
+    "P_NOT_WORTH": 0.9887,
+    "P_NOT_WORTH_seed_range": [
+     0.986,
+     0.992
+    ],
+    "P_LEADS": 0.0,
+    "P_LEADS_seed_range": [
+     0.0,
+     0.0
+    ],
+    "P_UNRESOLVED": 0.0113,
+    "P_UNRESOLVED_seed_range": [
+     0.008,
+     0.014
+    ],
+    "P_SPLIT": 0.0003,
+    "P_SPLIT_seed_range": [
+     0.0,
+     0.001
+    ],
+    "coverage_95_kimi_minus_R1": 0.954,
+    "coverage_95_kimi_minus_R1_seed_range": [
+     0.95,
+     0.962
+    ],
+    "mean_se_points": 1.0343,
+    "mean_se_points_seed_range": [
+     1.033,
+     1.036
+    ]
+   },
+   {
+    "setting": "base",
+    "primary_items": 1600,
+    "delta_min_points": 2.0,
+    "P_NOT_WORTH": 0.649,
+    "P_NOT_WORTH_seed_range": [
+     0.646,
+     0.652
+    ],
+    "P_LEADS": 0.0003,
+    "P_LEADS_seed_range": [
+     0.0,
+     0.001
+    ],
+    "P_UNRESOLVED": 0.3507,
+    "P_UNRESOLVED_seed_range": [
+     0.348,
+     0.354
+    ],
+    "P_SPLIT": 0.0173,
+    "P_SPLIT_seed_range": [
+     0.016,
+     0.02
+    ],
+    "coverage_95_kimi_minus_R1": 0.9553,
+    "coverage_95_kimi_minus_R1_seed_range": [
+     0.95,
+     0.96
+    ],
+    "mean_se_points": 1.042,
+    "mean_se_points_seed_range": [
+     1.041,
+     1.043
+    ]
+   },
+   {
+    "setting": "base",
+    "primary_items": 1600,
+    "delta_min_points": 5.0,
+    "P_NOT_WORTH": 0.0073,
+    "P_NOT_WORTH_seed_range": [
+     0.006,
+     0.009
+    ],
+    "P_LEADS": 0.4953,
+    "P_LEADS_seed_range": [
+     0.479,
+     0.509
+    ],
+    "P_UNRESOLVED": 0.4973,
+    "P_UNRESOLVED_seed_range": [
+     0.485,
+     0.514
+    ],
+    "P_SPLIT": 0.0047,
+    "P_SPLIT_seed_range": [
+     0.002,
+     0.007
+    ],
+    "coverage_95_kimi_minus_R1": 0.9567,
+    "coverage_95_kimi_minus_R1_seed_range": [
+     0.951,
+     0.963
+    ],
+    "mean_se_points": 1.052,
+    "mean_se_points_seed_range": [
+     1.051,
+     1.053
+    ]
+   },
+   {
+    "setting": "base",
+    "primary_items": 1600,
+    "delta_min_points": 8.0,
+    "P_NOT_WORTH": 0.0,
+    "P_NOT_WORTH_seed_range": [
+     0.0,
+     0.0
+    ],
+    "P_LEADS": 0.998,
+    "P_LEADS_seed_range": [
+     0.996,
+     0.999
+    ],
+    "P_UNRESOLVED": 0.002,
+    "P_UNRESOLVED_seed_range": [
+     0.001,
+     0.004
+    ],
+    "P_SPLIT": 0.0,
+    "P_SPLIT_seed_range": [
+     0.0,
+     0.0
+    ],
+    "coverage_95_kimi_minus_R1": 0.9563,
+    "coverage_95_kimi_minus_R1_seed_range": [
+     0.952,
+     0.961
+    ],
+    "mean_se_points": 1.0623,
+    "mean_se_points_seed_range": [
+     1.061,
+     1.063
+    ]
+   },
+   {
+    "setting": "base",
+    "primary_items": 1600,
+    "delta_min_points": 12.0,
+    "P_NOT_WORTH": 0.0,
+    "P_NOT_WORTH_seed_range": [
+     0.0,
+     0.0
+    ],
+    "P_LEADS": 1.0,
+    "P_LEADS_seed_range": [
+     1.0,
+     1.0
+    ],
+    "P_UNRESOLVED": 0.0,
+    "P_UNRESOLVED_seed_range": [
+     0.0,
+     0.0
+    ],
+    "P_SPLIT": 0.0,
+    "P_SPLIT_seed_range": [
+     0.0,
+     0.0
+    ],
+    "coverage_95_kimi_minus_R1": 0.9513,
+    "coverage_95_kimi_minus_R1_seed_range": [
+     0.943,
+     0.961
+    ],
+    "mean_se_points": 1.0757,
+    "mean_se_points_seed_range": [
+     1.075,
+     1.076
+    ]
+   }
+  ],
+  "simulation": "compute/sim-lm1.json"
+ },
+ "remediation": "Identification refuter; pre-freeze audit of the registration"
+}

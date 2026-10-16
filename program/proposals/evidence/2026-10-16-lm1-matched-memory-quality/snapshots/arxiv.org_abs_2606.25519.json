@@ -1,0 +1,35 @@
+{
+ "url": "https://arxiv.org/abs/2606.25519",
+ "fetched_at": "2026-10-16T04:56:19Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 43055,
+ "raw_sha256": "427f1c7295636e0d327ce346bf2fa9e0095d246202c6291e49227de927e82f92",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "Quantization Inflates Reasoning: Token Inflation as a Hidden Cost of Low-Bit Reasoning Models",
+  "authors": [
+   "Lian, Xinyu",
+   "Krichene, Walid",
+   "Huang, Beichen",
+   "Tanaka, Masahiro",
+   "Ruwase, Olatunji",
+   "Zhang, Li",
+   "Zhang, Minjia"
+  ],
+  "citation_date": "2026/06/24",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 24 Jun 2026 07:54:55 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Mon, 29 Jun 2026 20:25:31 UTC"
+   }
+  ],
+  "abstract": "Quantization is widely used to reduce the inference cost of large language models, but its effect on reasoning models is not fully captured by final-answer accuracy or per-token latency. We show that low-bit post-training quantization can introduce a hidden test-time compute cost: quantized reasoning models often generate longer chains of thought even when they still answer correctly. Across mathematical reasoning, code generation, scientific question answering, and agentic tool-use benchmarks, we find that INT4/INT3 quantization can preserve accuracy but increase reasoning-token usage, offsetting the expected per-token speedup. To measure this effect, we introduce the CoT Token Inflation Ratio, which compares reasoning length between quantized and full-precision models averaged across all evaluation benchmarks. We further show that token inflation is accompanied by behavioral changes in the reasoning trace, including more intermediate steps and greater semantic repetition. These changes translate into measurable end-to-end real-world serving penalties. Finally, we evaluate mitigation strategies and find that prompting and decoding-time sampling offer inconsistent accuracy-length trade-offs, while quantization-aware training shows more promise in reducing both accuracy degradation and token inflation. Our results suggest that reasoning-token usage should be reported alongside accuracy when evaluating quantized reasoning models.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

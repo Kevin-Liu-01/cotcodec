@@ -1,0 +1,46 @@
+{
+ "name": "Source",
+ "status": "PASS",
+ "protocol": "K-Dense literature-review (PRISMA counts); orx retrieval rule (six or more discover queries per cell, title-phrase queries for closest priors, closest priors read in full)",
+ "evidence": {
+  "backends_reached": [
+   "orx alphaXiv keyword and embedding",
+   "OpenAlex",
+   "GitHub search",
+   "Hugging Face API",
+   "web search"
+  ],
+  "counts": {
+   "frontier": 41,
+   "kill_shot": 8,
+   "cross_domain": 24,
+   "asset_cost": 13,
+   "synthesis": 6,
+   "total_counted": 92,
+   "declared": 150,
+   "reserved_for_refuters": 30,
+   "remaining_after_synthesis": 58,
+   "orx_discover_records": 52
+  },
+  "prisma": {
+   "ids_returned": 641,
+   "unique_ids": 467,
+   "read_beyond_abstract_approx": 35,
+   "direct_priors": 0,
+   "closest_or_narrowing": [
+    "2509.25689",
+    "2504.02010",
+    "2604.18556",
+    "2610.15372"
+   ]
+  },
+  "cutoff": "2026-10-15",
+  "degraded": [
+   "orx 0.2.2 outdated against 0.2.18 (ranking may differ)",
+   "the asset cell's 13 counted searches were reported without query strings",
+   "AA-Omniscience per-model accuracy values render client-side and were not read; only the comparison page's index values",
+   "not searched: X, Reddit (one snapshot mirror only), Hacker News, OpenReview, ACL Anthology, patents, Chinese-language sources beyond one web search, Semantic Scholar or Google Scholar forward citations"
+  ]
+ },
+ "remediation": "A Semantic Scholar citer pass for 2509.25689, 2504.02010 and 2604.18556 through the host relay"
+}

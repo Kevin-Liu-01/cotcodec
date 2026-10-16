@@ -1,0 +1,27 @@
+{
+ "url": "https://arxiv.org/abs/2609.12111",
+ "fetched_at": "2026-10-16T04:56:20Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42045,
+ "raw_sha256": "55dc856f14ce13f5d85b5214f8e38b4f78cb995519fd6e3fd54e82b104625cef",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "The Cost of Compression: A Rate-Distortion Limit on Factual Hallucination",
+  "authors": [
+   "Wang, Xi",
+   "Xu, Shijia",
+   "Guo, Rongfeng"
+  ],
+  "citation_date": "2026/09/10",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Thu, 10 Sep 2026 18:37:44 UTC"
+   }
+  ],
+  "abstract": "Factual hallucination in closed-book question answering is often treated as a coverage problem: a model fails because the relevant fact is absent from its internal memory. This view misses a second source of error. Even when a fact has been observed, finite memory may force it to be stored only approximately. We study this effect through a simple coverage--compression model of factual recall. We consider an unstructured question-answering task with $N$ possible queries and $K$ possible answers. A learner observes $M$ training facts, compresses them into at most $B$ bits, and answers uniformly drawn test queries without retrieval. For a uniformly random ground-truth mapping, we prove $\\mathcal{E} \\geq \\frac{M}{N}\\delta^\\star\\!\\left(\\frac{B}{M}\\right) + \\left(1-\\frac{M}{N}\\right)\\left(1-\\frac{1}{K}\\right)$, where $\\delta^\\star(r)$ is the inverse rate-distortion function of a uniform $K$-ary source under zero-one loss. The two terms separate compression distortion on observed facts from missing coverage on unobserved facts. The bound gives a compact way to reason about selective memory, forced compression, structure, retrieval, abstention, and long-context organization. We study the predicted signatures with theory-implied simulations and controlled fact-injection probes in modern language models that vary fact load and effective trainable memory. The result is not a complete theory of hallucination, but an information-theoretic account of a separable failure mode: lossy recall of observed facts under finite memory.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

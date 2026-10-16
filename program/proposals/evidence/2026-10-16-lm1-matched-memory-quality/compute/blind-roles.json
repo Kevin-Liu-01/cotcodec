@@ -1,0 +1,18 @@
+{
+ "note": "recorder only; never shown to the critic",
+ "proposal": {
+  "artifact": "blind/paragraph-b473fdff.txt",
+  "sha256": "b473fdff08880e44078853d1576f01874b2c4b827a95cb45887e28f8890e0b94"
+ },
+ "closest_prior": {
+  "artifact": "blind/paragraph-83cf9efb.txt",
+  "sha256": "83cf9efbc2a7647de98d34159aa077bd56abf5d2e7037e7544fa8562532b568f"
+ },
+ "closest_prior_identity": "CC-MoE, Collaborative Compression for Large-Scale MoE Deployment on Edge, arXiv 2509.25689 (sections 3-4, Tables 1-2), read in full with orx paper --full by the frontier cell and the synthesis owner",
+ "critic_order_seeded": [
+  "closest_prior",
+  "proposal"
+ ],
+ "order_rule": "numpy.random.default_rng(42).permutation(['proposal','closest_prior']); the workflow may use its own order bit and must record which it used",
+ "name_check": "neither paragraph names a model, vendor, engine, benchmark, paper, project or machine; family words only (mixture-of-experts, edge laptop, consumer machine)"
+}

@@ -1,0 +1,429 @@
+{
+ "name": "Citation",
+ "status": "PASS",
+ "protocol": "ARS academic-pipeline claim_verification_protocol (claim registry, locators, verdicts, first-party labels)",
+ "claims": [
+  {
+   "claim_id": "C01",
+   "claim": "Kimi K2.5: instant and thinking modes; thinking T = 1.0, instant T = 0.6, top-p 0.95; instant via `chat_template_kwargs {\"thinking\": false}`; HLE, AIME25, HMMT25 and GPQA-D at a 96K completion budget; native INT4 as K2-Thinking; modified MIT; ungated",
+   "source": "https://huggingface.co/moonshotai/Kimi-K2.5",
+   "date": "rev 4d01dfe0, read 2026-10-16",
+   "read_level": "repository, code, model or dataset record at a pinned revision",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C02",
+   "claim": "Unsloth K2.5 UD-TQ1_0: 239,537,678,077 bytes in 5 shards at rev 386fed8b; no TQ1_0 tensors (a mix of IQ1_S, IQ2_XXS, IQ3_XXS, IQ4_NL, Q4_K, Q8_0 and others); receipt `c198cdd5`",
+   "source": "https://huggingface.co/unsloth/Kimi-K2.5-GGUF",
+   "date": "2026-10-16 (host prep)",
+   "read_level": "this program's committed measurement",
+   "verdict": "COMMITTED-MEASUREMENT",
+   "snapshot_http_status": 200,
+   "note": "committed in this repository (D127 host prep)"
+  },
+  {
+   "claim_id": "C03",
+   "claim": "Host smoke test, job 1582: all six GGUFs load on 4 H100s in llama.cpp b11669; Kimi 55.5 tokens/s single-stream, peaks 64.5 / 56.9 / 51.6 / 54.4 GiB at `-c 4096`; Kimi spent its whole 128-token chat budget reasoning",
+   "source": "program/evidence/2026-10-16/lm1-host-prep/README.md",
+   "date": "2026-10-16",
+   "read_level": "this program's committed measurement",
+   "verdict": "COMMITTED-MEASUREMENT",
+   "snapshot_http_status": null,
+   "note": "committed in this repository (D127 host prep)"
+  },
+  {
+   "claim_id": "C04",
+   "claim": "Anemll fork on an M5 Max 128 GB: Kimi-K2.5 UD-TQ1_0 at 2.2 tokens/s (top-8), 3.3 (top-4), 4.7 (top-2), `-c 256`; no prefill or quality numbers for reduced top-k",
+   "source": "https://github.com/Anemll/anemll-flash-llama.cpp",
+   "date": "README at a809594f, accessed 2026-10-15",
+   "read_level": "first-party page, README, vendor card or index",
+   "verdict": "FIRST-PARTY",
+   "snapshot_http_status": 200,
+   "note": "first-party; not replicated"
+  },
+  {
+   "claim_id": "C05",
+   "claim": "GSQ Table 14: Kimi K2.5 AgentBench (OS/DB/KG/ALFWorld/WS), mean of 3 runs: base 50/69/57/53/52; Unsloth UD-IQ1_M (2.4 bit) 40/61/39/41/47; GSQ (2.37 bit) 43/63/45/42/49",
+   "source": "https://arxiv.org/abs/2604.18556",
+   "date": "2026-04-20 (v2 2026-05-15)",
+   "read_level": "full text read by a discovery cell and re-read by the synthesis owner",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C06",
+   "claim": "GSQ Table 3, K2.5 base against GSQ 2.13 bpp: AIME25 95.33 / 93.00; GPQA-D 89.29 / 76.57; LCB 61.37 / 69.37; MATH500 96.68 / 97.32; single quantization run",
+   "source": "https://arxiv.org/abs/2604.18556",
+   "date": "2026-04-20",
+   "read_level": "full text read by a discovery cell and re-read by the synthesis owner",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C07",
+   "claim": "GSQ Appendix K: GGUF \"Templating often failed, and evaluating Kimi-K2.5 became extremely slow and impractical\"",
+   "source": "https://arxiv.org/abs/2604.18556",
+   "date": "2026-04-20",
+   "read_level": "full text read by a discovery cell and re-read by the synthesis owner",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C08",
+   "claim": "CC-MoE: DeepSeek-V3 to 103 GB under \"a strict 128GB memory limit\", over 5 tokens/s on a Strix Halo laptop; compared at that tier only with the same model's IQ1_M and Q2_K_L; Table 2: R1 quant 210 GB against Qwen3-235B 8-bit 233 GB, AIME24 86.67/86.67, GPQA-D 74.24/68.18, GSM8K 96.51/84.99",
+   "source": "https://arxiv.org/abs/2509.25689",
+   "date": "2025-09-30",
+   "read_level": "full text read by a discovery cell and re-read by the synthesis owner",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C09",
+   "claim": "2504.02010 Table 1: R1 1.58-bit avg 78.7 (AIME24 66.7, FOLIO 75.4, Temporal 94.0), MuSiQue EM/F1 14.0/22.34, single pass; R1-Distill-Llama-70B avg 81.8, MuSiQue 13.3/21.57, three passes; MuSiQue has 100 items; Finding 1",
+   "source": "https://arxiv.org/abs/2504.02010",
+   "date": "2025-04-02 (ICLR 2026)",
+   "read_level": "full text read by a discovery cell and re-read by the synthesis owner",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C10",
+   "claim": "Fewer Bits, More Tries: verified retry recovers coding accuracy under memory budgets; one-bit Qwen3.6-27B at K = 4 runs 0.83-0.87x (M3 Max) and 1.58-1.67x (M5 Pro) the speed of bf16; 10,000 paired task-bootstrap resamples",
+   "source": "https://arxiv.org/abs/2610.15372",
+   "date": "2026-10-11",
+   "read_level": "full text read by a discovery cell and re-read by the synthesis owner",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C11",
+   "claim": "Knowledge capacity is 2 bits per parameter, unchanged by int8; post-training int4 reduces it to 0.7 bits per parameter; MoE with 32 experts costs only 1.3x in capacity (controlled synthetic data, GPT-2-scale models)",
+   "source": "https://arxiv.org/abs/2404.05405",
+   "date": "2024-04-08",
+   "read_level": "full text read with orx paper --full by the synthesis owner",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C12",
+   "claim": "AA comparison, index v4.3.2: V4 Flash 0731 / Kimi K2.6: Intelligence Index 34 / 27; AA-Omniscience −14 / 5; AA-LCR 80 / 81; SciCode 50 / 52; AutomationBench 54 / 13; Terminal-Bench 4.0 12 / 1; GDPval 1,434 / 1,038; CritPt 17 / 8; output tokens per task 62k / 47k",
+   "source": "https://artificialanalysis.ai/models/comparisons/deepseek-v4-flash-vs-kimi-k2-6",
+   "date": "accessed 2026-10-16",
+   "read_level": "first-party page, README, vendor card or index",
+   "verdict": "FIRST-PARTY",
+   "snapshot_http_status": 200,
+   "note": "first-party; not replicated"
+  },
+  {
+   "claim_id": "C13",
+   "claim": "AA Kimi K2.5 page: Intelligence Index 23, \"Estimate (independent evaluation forthcoming)\"; K2.5 and K2.6 listed as deprecated",
+   "source": "https://artificialanalysis.ai/models/kimi-k2-5",
+   "date": "accessed 2026-10-16",
+   "read_level": "first-party page, README, vendor card or index",
+   "verdict": "FIRST-PARTY",
+   "snapshot_http_status": 200,
+   "note": "first-party; not replicated"
+  },
+  {
+   "claim_id": "C14",
+   "claim": "AA Qwen3.8 27B (Xhigh): Intelligence Index 33.68, `intelligenceIndexIsEstimated: false`",
+   "source": "https://artificialanalysis.ai/models/qwen3-8-27b",
+   "date": "accessed 2026-10-16",
+   "read_level": "first-party page, README, vendor card or index",
+   "verdict": "FIRST-PARTY",
+   "snapshot_http_status": 200,
+   "note": "first-party; not replicated"
+  },
+  {
+   "claim_id": "C15",
+   "claim": "AA-Omniscience-Public: 600 questions, 100 in each of 6 domains (Finance, Health, Humanities and Social Sciences, Law, Science Engineering and Mathematics, Software Engineering); Apache-2.0; created 2025-11-17; answer prompt asks for \"JUST the answer\" and allows abstention; grader template with CORRECT / INCORRECT / PARTIAL_ANSWER / NOT_ATTEMPTED; AA's grader is Gemini 2.5 Flash",
+   "source": "https://huggingface.co/datasets/ArtificialAnalysis/AA-Omniscience-Public",
+   "date": "rev e4883edb, read 2026-10-16",
+   "read_level": "repository, code, model or dataset record at a pinned revision",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C16",
+   "claim": "AA-Omniscience paper",
+   "source": "https://arxiv.org/abs/2511.13029",
+   "date": "2025-11",
+   "read_level": "abstract or report only",
+   "verdict": "VERIFIED-ABSTRACT",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C17",
+   "claim": "SimpleQA-Verified: 1,000 prompts; MIT; created 2025-09-22; columns include topic, answer_type, multi_step, requires_reasoning; graded by a GPT-4.1 autorater",
+   "source": "https://huggingface.co/datasets/google/simpleqa-verified",
+   "date": "rev 0dc97e0d, read 2026-10-16",
+   "read_level": "repository, code, model or dataset record at a pinned revision",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C18",
+   "claim": "SimpleQA Verified paper",
+   "source": "https://arxiv.org/abs/2509.07968",
+   "date": "2025-09",
+   "read_level": "abstract or report only",
+   "verdict": "VERIFIED-ABSTRACT",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C19",
+   "claim": "SuperGPQA: 285 graduate disciplines, 10-option multiple choice; ODC-BY; fields `is_calculation`, `difficulty`, `discipline`",
+   "source": "https://huggingface.co/datasets/m-a-p/SuperGPQA",
+   "date": "rev 4430d445, read 2026-10-16",
+   "read_level": "repository, code, model or dataset record at a pinned revision",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C20",
+   "claim": "SuperGPQA paper",
+   "source": "https://arxiv.org/abs/2502.14739",
+   "date": "2025-02-20",
+   "read_level": "abstract or report only",
+   "verdict": "VERIFIED-ABSTRACT",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C21",
+   "claim": "Qwen3-235B-A22B-Instruct-2507 card: non-thinking only; SimpleQA 54.3 against Kimi K2 31.0 and Qwen3-235B-A22B non-thinking 12.2; sampling T 0.7, top-p 0.8, top-k 20, min-p 0; Apache-2.0",
+   "source": "https://huggingface.co/Qwen/Qwen3-235B-A22B-Instruct-2507",
+   "date": "rev ac9c66cc, read 2026-10-16",
+   "read_level": "first-party page, README, vendor card or index",
+   "verdict": "FIRST-PARTY",
+   "snapshot_http_status": 200,
+   "note": "first-party; not replicated"
+  },
+  {
+   "claim_id": "C22",
+   "claim": "DeepSeek-V4-Flash-0731 card: no Jinja template (an `encoding` folder instead); `reasoning_effort` low / high / max; T = 1.0, top-p 1.0 (0.95 agentic); 384K output at high and max; MIT",
+   "source": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731",
+   "date": "rev 7872f01b, read 2026-10-16",
+   "read_level": "repository, code, model or dataset record at a pinned revision",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C23",
+   "claim": "gpt-oss model card: knowledge cutoff June 2024; AIME25 (no tools) 50.4 / 80.0 / 92.5 at low / medium / high; gpt-oss-120b SimpleQA accuracy 0.168, hallucination rate 0.782",
+   "source": "https://arxiv.org/abs/2508.10925",
+   "date": "2025-08-05",
+   "read_level": "full text read with orx paper --full by the synthesis owner",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C24",
+   "claim": "Qwen3.8-27B: dense 27B vision-language model, thinking on by default and switchable; non-thinking sampling T 0.7, top-p 0.8, top-k 20, presence penalty 1.5; Apache-2.0; created 2026-08-05",
+   "source": "https://huggingface.co/Qwen/Qwen3.8-27B",
+   "date": "rev 1d4bf0f2, read 2026-10-16",
+   "read_level": "repository, code, model or dataset record at a pinned revision",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C25",
+   "claim": "bartowski Kimi K2.6: IQ1_M 232.43 GB, IQ1_S 207.40 GB, mainline types only",
+   "source": "https://huggingface.co/bartowski/moonshotai_Kimi-K2.6-GGUF",
+   "date": "rev ed96b238, read 2026-10-16 (host prep)",
+   "read_level": "repository, code, model or dataset record at a pinned revision",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C26",
+   "claim": "llama.cpp b11669 server: defaults T 0.80, top-k 40, min-p 0.05; `--n-cpu-moe N` keeps the first N layers' expert weights on the CPU; `-fit` on by default with 1,024 MiB margin; per-request `chat_template_kwargs`, `reasoning_effort`, `id_slot`; `cache_prompt` logits \"not guaranteed\" identical; `--reasoning-budget N`",
+   "source": "https://github.com/ggml-org/llama.cpp/blob/620d2225cc436ab0b001e3200e590e3b286ef9ab/tools/server/README.md",
+   "date": "2026-10-15",
+   "read_level": "repository, code, model or dataset record at a pinned revision",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C27",
+   "claim": "llama.cpp b11669 multi-GPU: `tensor` split EXPERIMENTAL and not implemented for DeepSeek2; `row` deprecated; `layer` default",
+   "source": "https://github.com/ggml-org/llama.cpp/blob/620d2225cc436ab0b001e3200e590e3b286ef9ab/docs/multi-gpu.md",
+   "date": "2026-10-15",
+   "read_level": "repository, code, model or dataset record at a pinned revision",
+   "verdict": "VERIFIED-RECORD",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C28",
+   "claim": "ds4 Q2 V4 Flash on an M5 Max 128 GB: 39.35 tokens/s decode and 790 prefill at 2K; 34.36 / 557 at 32K",
+   "source": "https://github.com/antirez/ds4/blob/main/docs/PERFORMANCE.md",
+   "date": "refreshed 2026-08-05 (dossier S95)",
+   "read_level": "first-party page, README, vendor card or index",
+   "verdict": "FIRST-PARTY",
+   "snapshot_http_status": 200,
+   "note": "first-party; not replicated"
+  },
+  {
+   "claim_id": "C29",
+   "claim": "AtomicChat V4 Flash 0731 fidelity ladder against BF16 (WikiText-2, context 5,632): ds4 Q2 KLD 0.408, 78.98% same top token; UD-IQ3_XXS 0.261, 83.46%; no task results",
+   "source": "https://huggingface.co/datasets/AtomicChat/dsv4-eval-artifacts",
+   "date": "2026-08-03",
+   "read_level": "first-party page, README, vendor card or index",
+   "verdict": "FIRST-PARTY",
+   "snapshot_http_status": 200,
+   "note": "first-party; not replicated"
+  },
+  {
+   "claim_id": "C30",
+   "claim": "Unsloth Aider Polyglot: DeepSeek-V3.1 TQ1_0 (170 GB) 50.7, IQ1_M (206 GB) 55.7, full 71.6; full-precision Qwen3-235B 59.6",
+   "source": "https://unsloth.ai/docs/basics/dynamic-3.0-ggufs/unsloth-dynamic-ggufs-on-aider-polyglot",
+   "date": "2025-09-10",
+   "read_level": "first-party page, README, vendor card or index",
+   "verdict": "FIRST-PARTY",
+   "snapshot_http_status": 200,
+   "note": "first-party; not replicated"
+  },
+  {
+   "claim_id": "C31",
+   "claim": "MoE-XBench: matched-memory comparisons within one model, mostly on perplexity, 30B-235B; IQ1_M raises perplexity sharply against Q4 prune+quant at the same memory",
+   "source": "https://arxiv.org/abs/2608.21693",
+   "date": "2026-08-22",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C32",
+   "claim": "k-bit inference scaling laws: 4 bits almost universally optimal for fixed total model bits (zero-shot, dense, 19M-176B)",
+   "source": "https://arxiv.org/abs/2212.09720",
+   "date": "2022-12-19",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C33",
+   "claim": "Paired evaluation: report the difference, its SE and the correlation; sample size from the paired variance",
+   "source": "https://arxiv.org/abs/2411.00640",
+   "date": "2024-11-01",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C34",
+   "claim": "Paired total variance ≈ E[A](1−E[A]) per single sample; prediction noise usually exceeds data noise",
+   "source": "https://arxiv.org/abs/2512.21326",
+   "date": "2025-12-24",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C35",
+   "claim": "An exact intersection-union non-inferiority gate needs no Bonferroni penalty; a no-detected-harm gate is not non-inferiority",
+   "source": "https://arxiv.org/abs/2609.13714",
+   "date": "2026-08-28",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C36",
+   "claim": "Token budgets reverse rankings; truncation differs sharply by model; three-tier truncation analysis",
+   "source": "https://arxiv.org/abs/2608.12150",
+   "date": "2026-08-12",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C37",
+   "claim": "Low-bit PTQ inflates chain-of-thought length (INT3 +276-292% on one model)",
+   "source": "https://arxiv.org/abs/2606.25519",
+   "date": "2026-06-24",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C38",
+   "claim": "Same model across vendors: 3.1% of MMLU answers differ, aggregate accuracy moves about 0.2 points",
+   "source": "https://arxiv.org/abs/2610.05458",
+   "date": "2026-10-04",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C39",
+   "claim": "For reasoning models, memory spent on KV can beat memory spent on weight precision above an effective 8-bit 4B size",
+   "source": "https://arxiv.org/abs/2510.10964",
+   "date": "2025-10-13",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C40",
+   "claim": "Near-tied cross-family rankings reverse under low-DIF recomposition in 30.9-47.1% of pairs",
+   "source": "https://arxiv.org/abs/2609.00482",
+   "date": "2026-08-31",
+   "read_level": "full text read with orx paper --full (or targeted grep) by a discovery cell",
+   "verdict": "VERIFIED",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C41",
+   "claim": "A rate-distortion lower bound links forced compression of observed facts to closed-book factual error",
+   "source": "https://arxiv.org/abs/2609.12111",
+   "date": "2026-09",
+   "read_level": "abstract read by the synthesis owner",
+   "verdict": "VERIFIED-ABSTRACT",
+   "snapshot_http_status": 200
+  },
+  {
+   "claim_id": "C42",
+   "claim": "Kimi K2.5 file: 1.867 bpw over 1,026.4B parameters; file information 1.92 Tbit against 0.69 (ds4 Q2), 0.83 (IQ3_XXS), 0.83 (Qwen Q3) and 0.51 (gpt-oss) Tbit",
+   "source": "compute/caps-lm1.json (arithmetic in this proposal)",
+   "date": "2026-10-16",
+   "read_level": "this synthesis's arithmetic on published numbers, committed in the bundle",
+   "verdict": "DESK-ARITHMETIC",
+   "snapshot_http_status": null,
+   "note": "arithmetic on published numbers; reproducible from the named bundle file"
+  },
+  {
+   "claim_id": "C43",
+   "claim": "Kimi's Mac time per short item: 22-68 s to stream the routed pool once for prefill at 3.4-10.6 GB/s plus 13.6 s for 30 tokens at 2.2 tokens/s = 36-82 s; a resident V4 Flash Q2 decodes 1,400-3,227 tokens in that time at 39.35 tokens/s",
+   "source": "compute/caps-lm1.json",
+   "date": "2026-10-16",
+   "read_level": "this synthesis's arithmetic on published numbers, committed in the bundle",
+   "verdict": "DESK-ARITHMETIC",
+   "snapshot_http_status": null,
+   "note": "arithmetic on published numbers; reproducible from the named bundle file"
+  },
+  {
+   "claim_id": "C44",
+   "claim": "Decision-rule operating characteristics (simulated, seeds 42-44)",
+   "source": "compute/sim-lm1.json",
+   "date": "2026-10-16",
+   "read_level": "this synthesis's arithmetic on published numbers, committed in the bundle",
+   "verdict": "DESK-ARITHMETIC",
+   "snapshot_http_status": null,
+   "note": "arithmetic on published numbers; reproducible from the named bundle file"
+  }
+ ],
+ "summary": {
+  "claims": 44,
+  "first_party": 8,
+  "desk": 3,
+  "with_snapshot": 40,
+  "snapshots_http_200": 40
+ },
+ "corrections_after_rereading": [
+  "1.87 bpw (K2.5 UD-TQ1_0, 239.5 GB over 1,026.4B parameters) and the dossier's 1.92 bits (K2-Thinking TQ1_0, 246.8 GB) describe different files",
+  "cloud finding (a): GSQ's AgentBench model is 2.37 bits, not Table 3's 2.13",
+  "the V4 Flash Q8_K_XL reference moved from the asset cell's pilot to the full study"
+ ],
+ "remediation": "Replace first-party speeds (Anemll, ds4) and AA indices when replicated"
+}

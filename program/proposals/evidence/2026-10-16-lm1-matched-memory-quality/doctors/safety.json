@@ -1,0 +1,12 @@
+{
+ "name": "Safety",
+ "status": "PASS",
+ "evidence": {
+  "licences": "Kimi K2.5 modified MIT; V4 Flash 0731 MIT; Qwen3 Apache-2.0; gpt-oss Apache-2.0; datasets Apache-2.0, MIT, ODC-BY; all ungated; GPQA-Diamond excluded (gated)",
+  "r570": "stock llama.cpp at a pinned tag in a digest-pinned image; CPU-side harness only; no GPU kernel; model outputs graded, never executed",
+  "host": "GPUs among 1-7 only, at most 3 before 2026-10-21; GPU 0, ~/cotcodec, ~/tc-speedrun and transcreate, tcsr and g3b jobs untouched; no sudo",
+  "public_repo": "ids, hashes, grades and aggregates only; no host addresses, credentials, raw responses or benchmark text",
+  "outward_actions": "none; full-study downloads await Kevin's go-ahead"
+ },
+ "remediation": "none"
+}

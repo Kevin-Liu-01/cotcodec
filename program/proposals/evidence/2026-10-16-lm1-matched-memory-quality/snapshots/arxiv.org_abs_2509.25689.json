@@ -1,0 +1,33 @@
+{
+ "url": "https://arxiv.org/abs/2509.25689",
+ "fetched_at": "2026-10-16T04:56:18Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42307,
+ "raw_sha256": "abcf4132f21c36877ada69369632379d24ab6a46f18aeece1eda0521c3d43693",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "Collaborative Compression for Large-Scale MoE Deployment on Edge",
+  "authors": [
+   "Chen, Yixiao",
+   "Xie, Yanyue",
+   "Yang, Ruining",
+   "Jiang, Wei",
+   "Wang, Wei",
+   "He, Yong",
+   "Chen, Yue",
+   "Zhao, Pu",
+   "Wang, Yanzhi"
+  ],
+  "citation_date": "2025/09/30",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 30 Sep 2025 02:46:03 UTC"
+   }
+  ],
+  "abstract": "The Mixture of Experts (MoE) architecture is an important method for scaling Large Language Models (LLMs). It increases model capacity while keeping computation cost low. However, the ultra-large MoE models still have hundreds of billions of parameters, requiring massive memory/storage and leading to difficulties for deployment on resource-constrained edge platforms. Pruning or quantization alone can hardly address the issue, because of the super-aggressive compression ratio with significantly degraded accuracy and output quality. To facilitate the deployment of ultra-large MoEs on edge platforms, we propose a collaborative compression framework by combining expert pruning, mixed-precision quantization, and activation optimization. It can effectively reduce the storage footprint of the ultra-large MoE DeepSeek-V3 from 1.3TB to 103GB, while preserving high output quality with better accuracy than traditional uniform low-bit quantization methods. To the best of our knowledge, we are the first to deploy a compressed model from the ultra-large DeepSeek-V3 on the platform with a strict 128GB total memory limit. Our comprehensive experiments on multiple benchmarks under various memory constraints demonstrate the effectiveness of our method with smaller model sizes and higher accuracy than uniform low-bit quantization methods.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

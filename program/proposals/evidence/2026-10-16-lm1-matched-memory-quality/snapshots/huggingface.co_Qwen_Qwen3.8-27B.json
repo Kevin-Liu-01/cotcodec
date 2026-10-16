@@ -1,0 +1,13 @@
+{
+ "url": "https://huggingface.co/Qwen/Qwen3.8-27B",
+ "fetched_at": "2026-10-16T04:56:25Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 594089,
+ "raw_sha256": "7356defd9d4bf45512cc78fec0232ea501ada8bef0b961d8058b93ed76a24762",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "html_title": "Qwen/Qwen3.8-27B · Hugging Face"
+ }
+}

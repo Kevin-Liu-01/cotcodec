@@ -1,0 +1,13 @@
+{
+ "url": "https://huggingface.co/datasets/m-a-p/SuperGPQA",
+ "fetched_at": "2026-10-16T04:56:27Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 1124786,
+ "raw_sha256": "a05b589f4d0a65f620e554fdd3325b1e063dd08f071110bc5899d465750e1b64",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "html_title": "m-a-p/SuperGPQA · Datasets at Hugging Face"
+ }
+}

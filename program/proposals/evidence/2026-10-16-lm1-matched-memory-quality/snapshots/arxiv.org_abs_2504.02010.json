@@ -1,0 +1,38 @@
+{
+ "url": "https://arxiv.org/abs/2504.02010",
+ "fetched_at": "2026-10-16T04:56:17Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 45336,
+ "raw_sha256": "34c43624e9297346c14e3d37bea34fb57a3724c668b1c6e95ffe35775df6e360",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "When Reasoning Meets Compression: Understanding the Effects of LLMs Compression on Large Reasoning Models",
+  "authors": [
+   "Zhang, Nan",
+   "Kwek, Eugene",
+   "Zhang, Yusen",
+   "Nguyen, Ngoc-Hieu",
+   "Mitra, Prasenjit",
+   "Zhang, Rui"
+  ],
+  "citation_date": "2025/04/02",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 2 Apr 2025 05:17:46 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Thu, 2 Oct 2025 02:39:53 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Mon, 2 Mar 2026 06:53:34 UTC"
+   }
+  ],
+  "abstract": "Compression methods, including quantization, distillation, and pruning, improve the computational efficiency of large reasoning models (LRMs). However, existing studies either fail to sufficiently compare all three compression methods on LRMs or lack in-depth interpretation analysis. In this paper, we investigate how the reasoning capabilities of LRMs are compromised during compression, through performance benchmarking and mechanistic interpretation. To uncover the effects of compression on reasoning performance, we benchmark quantized, distilled, and pruned DeepSeek-R1 models on four reasoning datasets (AIME 2024, FOLIO, Temporal Sequences, and MuSiQue). To precisely locate compression effects on model weights, we adapt difference of means and attribution patching techniques, focusing on the activation of every linear component in compressed LRMs, to interpret fine-grained causal relationships between weights and various reasoning capabilities. This fine-grained interpretation addresses a fundamental question of compression: which weights are the most important for reasoning? Overall, we find dynamically quantized 2.51-bit R1 reaches close-to-R1 performance. With empirical verification, we present three main findings that generalize across both R1 and non-R1 LRMs: (1) Weight count has a greater impact on LRMs' knowledge memorization than reasoning, highlighting the risks of pruning and distillation; (2) The MLP up projection in the final layer of distilled LRMs is one of the most important components, offering a new perspective on locating critical weights - a fundamental problem in model compression; and (3) Current quantization methods overly compress the final-layer modules and MLP gate projections, so protecting just 2% of all weights that are excessively compressed can raise average accuracy by 6.57%, greatly surpassing the state-of-the-art.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
