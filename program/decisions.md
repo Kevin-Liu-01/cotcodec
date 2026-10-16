@@ -3106,3 +3106,41 @@ not separated for OLMo-2. The memory line is complete for now.**
 - The memory line is complete for now. Next: the program's effort goes to
   Kevin's local-giant-model direction (D122, D125: LM1 matched-memory
   quality) and to G3b.
+
+**D127. Host sharing through 2026-10-20: Kevin accepts the R570 risk for the
+gt-transcreate speedrun, capped at 4 GPUs. LM1 host prep is done.**
+- Request. The gt-transcreate session asked to speedrun on the H100s through
+  2026-10-20, with Slurm jobs named `tcsr-*`, one GPU each, in its own
+  workspace (`~/tc-speedrun`), venv and HF cache.
+- Kevin decided, answering this session's question on 2026-10-16:
+  - "I accept the risk": transcreate may run its model-written GPU code on the
+    unpatched R570 host through 2026-10-20 without per-job review or SHA
+    pinning;
+  - a cap of 4 GPUs at once.
+- What still holds for transcreate: Slurm only; unprivileged (no sudo, no use
+  of docker-group membership to change the host); no listeners beyond
+  127.0.0.1; finished by 2026-10-20; none of its code or data in this
+  repository.
+- Scope. The acceptance covers the transcreate speedrun only. This program's
+  own rule is unchanged: model-generated code gets GPU access only after review
+  and pinning, or under the frozen-registration process (D7, D110).
+- LaMa. It is served by job 1451 on the reviewed code `8b80aeed`, with
+  successor 1556 queued. ROSE is stopped. SAM 3.1 waits on Kevin's licence.
+- LM1 host prep (D125), done (`program/evidence/2026-10-16/lm1-host-prep/README.md`):
+  - a digest-pinned llama.cpp b11669 CUDA 12.8 image, built from stock
+    upstream code;
+  - six candidate GGUFs with receipts, 759.9 GB in total:
+    - Kimi K2.5 UD-TQ1_0, 239.5 GB;
+    - DeepSeek V4 Flash 0731 ds4 Q2 (86.7 GB), UD-IQ3_XXS (104.2 GB) and
+      UD-Q8_K_XL (161.9 GB, the reference);
+    - Qwen3-235B-2507 UD-Q3_K_XL, 104.2 GB;
+    - gpt-oss-120b, 63.4 GB;
+  - a smoke test that passed for 6 of 6, using 0.3744 GPU-h.
+- Open questions for LM1's design:
+  - how "matched memory" is defined: the Kimi file is 1.9 times 128 GB, so it
+    can only stream;
+  - the full-precision Kimi reference needs all 8 GPUs, so it waits until
+    after 2026-10-20;
+  - fixed reasoning modes and token budgets;
+  - a throughput pilot with parallel slots before GPU-hours are budgeted.
+- Next: an LM1 gauntlet wave on the H100 host's prepared assets.
