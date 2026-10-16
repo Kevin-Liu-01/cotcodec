@@ -1,0 +1,65 @@
+{
+ "b11669_ref": "620d2225cc436ab0b001e3200e590e3b286ef9ab",
+ "cuda_bases": {
+  "nvidia/cuda:12.8.1-devel-ubuntu24.04": {
+   "index_digest": "sha256:520292dbb4f755fd360766059e62956e9379485d9e073bbd2f6e3c20c270ed66",
+   "linux_amd64_manifest": "sha256:4b9ed5fa8361736996499f64ecebf25d4ec37ff56e4d11323ccde10aa36e0c43"
+  },
+  "nvidia/cuda:12.8.1-runtime-ubuntu24.04": {
+   "index_digest": "sha256:ebef3c171eeef0298e4eb2e4be843105edf3b8b0ac45e0b43acee358e8046867",
+   "linux_amd64_manifest": "sha256:828c4d878adcaa4265d80c95d8ec877149b49bb2419a4cf3bb6aa889bbb7ca2e"
+  }
+ },
+ "queried": "2026-10-16, https://api.github.com/repos/ggml-org/llama.cpp/releases?per_page=15 (anonymous)",
+ "releases": [
+  {
+   "html_url": "https://github.com/ggml-org/llama.cpp/releases/tag/v0.7.0",
+   "prerelease": false,
+   "published_at": "2026-10-15T17:13:19Z",
+   "tag": "v0.7.0",
+   "target_commitish": "620d2225cc436ab0b001e3200e590e3b286ef9ab"
+  },
+  {
+   "html_url": "https://github.com/ggml-org/llama.cpp/releases/tag/b11671",
+   "prerelease": true,
+   "published_at": "2026-10-16T00:18:22Z",
+   "tag": "b11671",
+   "target_commitish": "ba3c05f71da85cd0439e84ba42b0478b24d5db16"
+  },
+  {
+   "html_url": "https://github.com/ggml-org/llama.cpp/releases/tag/b11669",
+   "prerelease": true,
+   "published_at": "2026-10-15T16:10:46Z",
+   "tag": "b11669",
+   "target_commitish": "620d2225cc436ab0b001e3200e590e3b286ef9ab"
+  },
+  {
+   "html_url": "https://github.com/ggml-org/llama.cpp/releases/tag/b11662",
+   "prerelease": true,
+   "published_at": "2026-10-15T15:40:13Z",
+   "tag": "b11662",
+   "target_commitish": "c0cb53ac4e34a0c16cbb4bdc963f0b5f3e60eacf"
+  },
+  {
+   "html_url": "https://github.com/ggml-org/llama.cpp/releases/tag/b11658",
+   "prerelease": true,
+   "published_at": "2026-10-15T13:11:15Z",
+   "tag": "b11658",
+   "target_commitish": "3e4dfa8f39f904e681737d9f512a6e6338d848aa"
+  },
+  {
+   "html_url": "https://github.com/ggml-org/llama.cpp/releases/tag/b11655",
+   "prerelease": true,
+   "published_at": "2026-10-15T12:45:18Z",
+   "tag": "b11655",
+   "target_commitish": "47f5a64ae12833b9092c6c47b54aa9f310c4f6f1"
+  }
+ ],
+ "source_archive": {
+  "bytes": 181032960,
+  "command": "git archive --format=tar --prefix=llama.cpp/ 620d2225cc436ab0b001e3200e590e3b286ef9ab (git 2.55.0, depth-1 clone of tag b11669)",
+  "sha256": "622f13ebf8a733003c9ae70ffe96a55c5d09bf2e0e6212ed212efcaca71bf066",
+  "tree": "6868e0a538a05e9a253a0b86ccb71b4e06a64684"
+ },
+ "v0.7.0_tag_object": "757cad021b357f417065ddbc41a6e8f87c1f8136 -> commit 620d2225cc436ab0b001e3200e590e3b286ef9ab"
+}

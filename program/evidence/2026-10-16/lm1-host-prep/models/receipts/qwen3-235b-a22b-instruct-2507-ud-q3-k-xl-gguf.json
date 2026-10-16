@@ -1,0 +1,39 @@
+{
+  "allow_patterns": [
+    "README.md",
+    "UD-Q3_K_XL/*"
+  ],
+  "artifact_root_sha256": "78fcdc166c9ff6d7a35728e3d2e9555c853bb8d0dbfb444e6f54edfa83c55b7e",
+  "backend": "huggingface",
+  "files": [
+    {
+      "bytes": 11985,
+      "path": "README.md",
+      "sha256": "8cd13370d19c6398c9b142c3cd0903d2222954e9c42b3f1b4b30eadaf3fb6028"
+    },
+    {
+      "bytes": 49696044032,
+      "path": "UD-Q3_K_XL/Qwen3-235B-A22B-Instruct-2507-UD-Q3_K_XL-00001-of-00003.gguf",
+      "sha256": "fdc97b81e974822bd6a086be65edbaaa5aeb7f9ca5d75beb4ea8520ffa48ea00"
+    },
+    {
+      "bytes": 49961779264,
+      "path": "UD-Q3_K_XL/Qwen3-235B-A22B-Instruct-2507-UD-Q3_K_XL-00002-of-00003.gguf",
+      "sha256": "c3e2f552b584a6a5132a772d7f6f1eeb89fa4cbd71c824e2cdfcd6d37e5e3984"
+    },
+    {
+      "bytes": 4495103648,
+      "path": "UD-Q3_K_XL/Qwen3-235B-A22B-Instruct-2507-UD-Q3_K_XL-00003-of-00003.gguf",
+      "sha256": "9d4f0e396eb1e437e37516b1d50f1e4c026e930cf8c64c195e00bb2e8ef9301a"
+    }
+  ],
+  "mode": "full",
+  "model_id": "qwen3-235b-a22b-instruct-2507-ud-q3-k-xl-gguf",
+  "publication_eligible": true,
+  "registry_sha256": "91619e85543240b0cb37ddb5c5da0587c27edeeefd3b19d3ef9db7df7cc320e4",
+  "repo_id": "unsloth/Qwen3-235B-A22B-Instruct-2507-GGUF",
+  "revision": "437d6915c5c512869e4cf8b16b840bbe3fb172bc",
+  "schema_version": 1,
+  "total_bytes": 104152938929,
+  "trust_remote_code": false
+}

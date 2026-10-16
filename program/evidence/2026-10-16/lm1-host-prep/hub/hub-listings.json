@@ -1,0 +1,272 @@
+{
+ "deepseek-v4-flash-0731-ds4-q2-gguf": {
+  "allow_patterns": [
+   "README.md",
+   "DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf"
+  ],
+  "card_license": "mit",
+  "card_license_name": null,
+  "files": [
+   {
+    "blobId": "cbc0eeabe2a47bfb1e7dac49a42925a23d3c5636",
+    "lfs_sha256": "ca22ae2f838e14077c22bc1c1417b71b45b5e5a3687bd96c2ac6e17fdb6261c0",
+    "path": "DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf",
+    "size": 86720111488
+   },
+   {
+    "blobId": "581ecfcaac1ed587ccfc41ad347fb0e59af0e4fa",
+    "lfs_sha256": null,
+    "path": "README.md",
+    "size": 3528
+   }
+  ],
+  "gated": false,
+  "lastModified": "2026-08-31T18:47:37.000Z",
+  "license_tags": [
+   "license:mit"
+  ],
+  "private": false,
+  "queried": "2026-10-16, anonymous, https://huggingface.co/api/models/<repo>?blobs=true",
+  "repo_id": "antirez/deepseek-v4-gguf",
+  "revision": "f71f23d552d664e523b422157b2befbf74040380",
+  "total_bytes": 86720115016
+ },
+ "deepseek-v4-flash-0731-ud-iq3-xxs-gguf": {
+  "allow_patterns": [
+   "README.md",
+   "UD-IQ3_XXS/*"
+  ],
+  "card_license": "mit",
+  "card_license_name": null,
+  "files": [
+   {
+    "blobId": "44826d2f881805f6a498dc1596a21b2b634f54f9",
+    "lfs_sha256": null,
+    "path": "README.md",
+    "size": 5826
+   },
+   {
+    "blobId": "6a1e760b4118935c92bfb4bb3a6e781f450c5eee",
+    "lfs_sha256": "dec1cee704800267d9d836d5a61aefc33705be939bbb3058fa9006d98191576d",
+    "path": "UD-IQ3_XXS/DeepSeek-V4-Flash-0731-UD-IQ3_XXS-00001-of-00004.gguf",
+    "size": 5257696
+   },
+   {
+    "blobId": "47ef640b4074888dd31099436a6a724bcbe8df20",
+    "lfs_sha256": "3064d3c4c1d6363e9f9ad88e90a3e2c5fb2d6f7ae16ca72135c3ce6a5c984da5",
+    "path": "UD-IQ3_XXS/DeepSeek-V4-Flash-0731-UD-IQ3_XXS-00002-of-00004.gguf",
+    "size": 49910532416
+   },
+   {
+    "blobId": "34bcff77f9b66f1793433711d5dd84cdfd408d11",
+    "lfs_sha256": "2e9b2732eca7da8324f731653624a4f5c9846258926fd9f468cc703afb51a019",
+    "path": "UD-IQ3_XXS/DeepSeek-V4-Flash-0731-UD-IQ3_XXS-00003-of-00004.gguf",
+    "size": 49257859456
+   },
+   {
+    "blobId": "07fa0b81279769c8f1bd9f31875e65b55052cf69",
+    "lfs_sha256": "4ca79d8e5107dd1b9bb57b176a7c09948837425dee49f0f1dfd6547a3769fea7",
+    "path": "UD-IQ3_XXS/DeepSeek-V4-Flash-0731-UD-IQ3_XXS-00004-of-00004.gguf",
+    "size": 5034198464
+   }
+  ],
+  "gated": false,
+  "lastModified": "2026-08-06T14:54:45.000Z",
+  "license_tags": [
+   "license:mit"
+  ],
+  "private": false,
+  "queried": "2026-10-16, anonymous, https://huggingface.co/api/models/<repo>?blobs=true",
+  "repo_id": "unsloth/DeepSeek-V4-Flash-0731-GGUF",
+  "revision": "fbbb5b93fb787c21338159b0af3318bb3f4d9768",
+  "total_bytes": 104207853858
+ },
+ "deepseek-v4-flash-0731-ud-q8-k-xl-gguf": {
+  "allow_patterns": [
+   "README.md",
+   "UD-Q8_K_XL/*"
+  ],
+  "card_license": "mit",
+  "card_license_name": null,
+  "files": [
+   {
+    "blobId": "44826d2f881805f6a498dc1596a21b2b634f54f9",
+    "lfs_sha256": null,
+    "path": "README.md",
+    "size": 5826
+   },
+   {
+    "blobId": "36349f88d874aebef3f27ddf7cba10c36d25ec62",
+    "lfs_sha256": "d13ce8f90855547bdaebe7312f531a1f2c4f822178d3103951f27fe884395cfa",
+    "path": "UD-Q8_K_XL/DeepSeek-V4-Flash-0731-UD-Q8_K_XL-00001-of-00005.gguf",
+    "size": 5257408
+   },
+   {
+    "blobId": "a8639243520c2d4b2fa7c8680c0eb8b0706f949f",
+    "lfs_sha256": "3da2f2443063f83635986f9b67fa7e8e3d03c53b81a9a08d2007936612423610",
+    "path": "UD-Q8_K_XL/DeepSeek-V4-Flash-0731-UD-Q8_K_XL-00002-of-00005.gguf",
+    "size": 49215492960
+   },
+   {
+    "blobId": "b79938fb1caf6051f6839ec87b2ad54f5be204c0",
+    "lfs_sha256": "7d622a7760d359ec9257b3493ad531e3bf0bfbe6f6533267e16e6dde8153ddce",
+    "path": "UD-Q8_K_XL/DeepSeek-V4-Flash-0731-UD-Q8_K_XL-00003-of-00005.gguf",
+    "size": 49700372160
+   },
+   {
+    "blobId": "91c1baac2c204deac58636749fdbb9089342e446",
+    "lfs_sha256": "6ed2bce452214f156b85e7c5f7d4fc242a3052f409d1b90a61422f60669c2de3",
+    "path": "UD-Q8_K_XL/DeepSeek-V4-Flash-0731-UD-Q8_K_XL-00004-of-00005.gguf",
+    "size": 49466495968
+   },
+   {
+    "blobId": "d26c0804ae06cf6e19095cfc27dc4da5aed871a0",
+    "lfs_sha256": "ea4727af4888fdca0fff796ec81ac2f3ebb43c310b2feb4798f41d82744b42ea",
+    "path": "UD-Q8_K_XL/DeepSeek-V4-Flash-0731-UD-Q8_K_XL-00005-of-00005.gguf",
+    "size": 13481997024
+   }
+  ],
+  "gated": false,
+  "lastModified": "2026-08-06T14:54:45.000Z",
+  "license_tags": [
+   "license:mit"
+  ],
+  "private": false,
+  "queried": "2026-10-16, anonymous, https://huggingface.co/api/models/<repo>?blobs=true",
+  "repo_id": "unsloth/DeepSeek-V4-Flash-0731-GGUF",
+  "revision": "fbbb5b93fb787c21338159b0af3318bb3f4d9768",
+  "total_bytes": 161869621346
+ },
+ "gpt-oss-120b-mxfp4-gguf": {
+  "allow_patterns": [
+   "README.md",
+   "gpt-oss-120b-MXFP4.gguf"
+  ],
+  "card_license": "apache-2.0",
+  "card_license_name": null,
+  "files": [
+   {
+    "blobId": "7fe089b3503ceac9b64ffdf0c1d9dbcc9eee3b28",
+    "lfs_sha256": null,
+    "path": "README.md",
+    "size": 457
+   },
+   {
+    "blobId": "1f041127be6ec5b9af7f427865c751d13c296469",
+    "lfs_sha256": "582bd40f6886200101f4c4ed9f25f3fe80cc14c86e9e2b37746cd8904a0c622d",
+    "path": "gpt-oss-120b-MXFP4.gguf",
+    "size": 63387346208
+   }
+  ],
+  "gated": false,
+  "lastModified": "2026-07-28T08:34:41.000Z",
+  "license_tags": [
+   "license:apache-2.0"
+  ],
+  "private": false,
+  "queried": "2026-10-16, anonymous, https://huggingface.co/api/models/<repo>?blobs=true",
+  "repo_id": "ggml-org/gpt-oss-120b-GGUF",
+  "revision": "238abdd290bb874b90a5da1b4549881b7d05c091",
+  "total_bytes": 63387346665
+ },
+ "kimi-k2.5-ud-tq1-0-gguf": {
+  "allow_patterns": [
+   "README.md",
+   "UD-TQ1_0/*"
+  ],
+  "card_license": "other",
+  "card_license_name": "modified-mit",
+  "files": [
+   {
+    "blobId": "d120a290ee20b3925daafb4b601fc7c5b46efa94",
+    "lfs_sha256": null,
+    "path": "README.md",
+    "size": 35741
+   },
+   {
+    "blobId": "b6a3c8edd3a99cbc6b8aa090ca16058082eb5093",
+    "lfs_sha256": "c5634e7fb3c4b9e16744442b42946fee8bca2da1aa0d2759323b734142679674",
+    "path": "UD-TQ1_0/Kimi-K2.5-UD-TQ1_0-00001-of-00005.gguf",
+    "size": 49933365600
+   },
+   {
+    "blobId": "b60a37cc019694cc4fb99d448558956c43357555",
+    "lfs_sha256": "63b99eb3416eed69d1fcf84e4ac1c69d6ae0be8327f9b4273a2db52102e68b87",
+    "path": "UD-TQ1_0/Kimi-K2.5-UD-TQ1_0-00002-of-00005.gguf",
+    "size": 49071652704
+   },
+   {
+    "blobId": "6f9e3047ae93c232594c8636a2251de10cdfb740",
+    "lfs_sha256": "0fbc6005b4e8cbe19196168c0930a99985f3383622b26c9ac42f0da283dbeea3",
+    "path": "UD-TQ1_0/Kimi-K2.5-UD-TQ1_0-00003-of-00005.gguf",
+    "size": 49439992704
+   },
+   {
+    "blobId": "a66e98ca03ed41836113d24efda074d0449ef568",
+    "lfs_sha256": "c357352ec16a8a6c0610a2a82efac7f4a48928e4acc2da98d7b4688478d9d34f",
+    "path": "UD-TQ1_0/Kimi-K2.5-UD-TQ1_0-00004-of-00005.gguf",
+    "size": 49970380288
+   },
+   {
+    "blobId": "b2c3d1e385f0aea7933e7dfe39b203796202d9e1",
+    "lfs_sha256": "89d8c9b12444da48313fd3064becca9a0cc7a453ebf2e5bf343c212f1be3cd7c",
+    "path": "UD-TQ1_0/Kimi-K2.5-UD-TQ1_0-00005-of-00005.gguf",
+    "size": 41122251040
+   }
+  ],
+  "gated": false,
+  "lastModified": "2026-01-28T23:05:21.000Z",
+  "license_tags": [
+   "license:other"
+  ],
+  "private": false,
+  "queried": "2026-10-16, anonymous, https://huggingface.co/api/models/<repo>?blobs=true",
+  "repo_id": "unsloth/Kimi-K2.5-GGUF",
+  "revision": "386fed8b054275941d6a495a9a7010fbf31b560d",
+  "total_bytes": 239537678077
+ },
+ "qwen3-235b-a22b-instruct-2507-ud-q3-k-xl-gguf": {
+  "allow_patterns": [
+   "README.md",
+   "UD-Q3_K_XL/*"
+  ],
+  "card_license": "apache-2.0",
+  "card_license_name": null,
+  "files": [
+   {
+    "blobId": "1630e280d9e632a4f737eb9b236e264ee0c9dc14",
+    "lfs_sha256": null,
+    "path": "README.md",
+    "size": 11985
+   },
+   {
+    "blobId": "b5e82e06f893d8435d2891783e20f585b2e1986f",
+    "lfs_sha256": "fdc97b81e974822bd6a086be65edbaaa5aeb7f9ca5d75beb4ea8520ffa48ea00",
+    "path": "UD-Q3_K_XL/Qwen3-235B-A22B-Instruct-2507-UD-Q3_K_XL-00001-of-00003.gguf",
+    "size": 49696044032
+   },
+   {
+    "blobId": "7b078554632e9d3d649e0371eb5a7e0aa9f4bd0a",
+    "lfs_sha256": "c3e2f552b584a6a5132a772d7f6f1eeb89fa4cbd71c824e2cdfcd6d37e5e3984",
+    "path": "UD-Q3_K_XL/Qwen3-235B-A22B-Instruct-2507-UD-Q3_K_XL-00002-of-00003.gguf",
+    "size": 49961779264
+   },
+   {
+    "blobId": "0bb4870de8f94134e1611a6b45e5cf2cfc7654f1",
+    "lfs_sha256": "9d4f0e396eb1e437e37516b1d50f1e4c026e930cf8c64c195e00bb2e8ef9301a",
+    "path": "UD-Q3_K_XL/Qwen3-235B-A22B-Instruct-2507-UD-Q3_K_XL-00003-of-00003.gguf",
+    "size": 4495103648
+   }
+  ],
+  "gated": false,
+  "lastModified": "2025-07-29T04:43:47.000Z",
+  "license_tags": [
+   "license:apache-2.0"
+  ],
+  "private": false,
+  "queried": "2026-10-16, anonymous, https://huggingface.co/api/models/<repo>?blobs=true",
+  "repo_id": "unsloth/Qwen3-235B-A22B-Instruct-2507-GGUF",
+  "revision": "437d6915c5c512869e4cf8b16b840bbe3fb172bc",
+  "total_bytes": 104152938929
+ }
+}

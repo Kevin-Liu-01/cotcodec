@@ -1,0 +1,18 @@
+{
+  "job_id": "1567",
+  "lane": "fetch-model-cpu",
+  "batch_sha256": "22685e5e4dc9f88cd9d6ba7aec7189a89500a4f80d2464b8df86e08e76e33c6d",
+  "image_id": "sha256:ba360ea13ea50e77e4900cb258c4dc73156060295abd381899f90f9991cedd10",
+  "source_dir": "/home/kevin/cotcodec-runs/stage0/lm1-host-prep/src/a3e0a495",
+  "source_git_sha": "a3e0a4955918d6002ca22c7e0b752f18337b02e2",
+  "fetch_script_sha256": "56e84a09f2ce62f968cf4747fe8a489fab31b64c2470eaccffab49ef32aeecbd",
+  "registry_sha256": "91619e85543240b0cb37ddb5c5da0587c27edeeefd3b19d3ef9db7df7cc320e4",
+  "model_ids": "gpt-oss-120b-mxfp4-gguf qwen3-235b-a22b-instruct-2507-ud-q3-k-xl-gguf",
+  "receipt_dir": "cotcodec-receipts",
+  "gres_requested": "none",
+  "job_tres": "TRES=cpu=8,mem=16G,node=1,billing=8 ",
+  "docker_default_runtime": "runc",
+  "container_dev_nvidia": [],
+  "network": "host (download only)",
+  "finished_at": "2026-10-16T03:11:03Z"
+}

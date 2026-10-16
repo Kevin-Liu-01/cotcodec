@@ -1,0 +1,29 @@
+{
+  "allow_patterns": [
+    "README.md",
+    "DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf"
+  ],
+  "artifact_root_sha256": "0d60a7ac567eed483b206def3aee470a9023a5a75bc62fff7edd2b99bce8389e",
+  "backend": "huggingface",
+  "files": [
+    {
+      "bytes": 86720111488,
+      "path": "DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf",
+      "sha256": "ca22ae2f838e14077c22bc1c1417b71b45b5e5a3687bd96c2ac6e17fdb6261c0"
+    },
+    {
+      "bytes": 3528,
+      "path": "README.md",
+      "sha256": "28bb4b5e24b33f1bb4e2b045ddda5b8677e877039fcbc1908561f66eb0fd0a5f"
+    }
+  ],
+  "mode": "full",
+  "model_id": "deepseek-v4-flash-0731-ds4-q2-gguf",
+  "publication_eligible": true,
+  "registry_sha256": "91619e85543240b0cb37ddb5c5da0587c27edeeefd3b19d3ef9db7df7cc320e4",
+  "repo_id": "antirez/deepseek-v4-gguf",
+  "revision": "f71f23d552d664e523b422157b2befbf74040380",
+  "schema_version": 1,
+  "total_bytes": 86720115016,
+  "trust_remote_code": false
+}

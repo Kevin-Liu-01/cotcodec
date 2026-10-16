@@ -1,0 +1,27 @@
+JobId=1579 JobName=lm1-verify
+   UserId=kevin(1004) GroupId=kevin(1004) MCS_label=N/A
+   Priority=4294900181 Nice=0 Account=(null) QOS=(null)
+   JobState=PENDING Reason=None Dependency=(null)
+   Requeue=0 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=00:00:00 TimeLimit=01:00:00 TimeMin=N/A
+   SubmitTime=2026-10-16T03:26:14 EligibleTime=2026-10-16T03:26:14
+   AccrueTime=Unknown
+   StartTime=Unknown EndTime=Unknown Deadline=N/A
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2026-10-16T03:26:14 Scheduler=Main
+   Partition=research AllocNode:Sid=fal-h100-01:2733957
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=(null)
+   NumNodes=1-1 NumCPUs=16 NumTasks=1 CPUs/Task=16 ReqB:S:C:T=0:0:*:*
+   TRES=cpu=16,mem=32G,node=1,billing=16
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   MinCPUsNode=16 MinMemoryNode=32G MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+   Command=/home/kevin/cotcodec-runs/stage0/lm1-host-prep/src/982ee1e6/infra/slurm/host-single-node/verify-models-cpu.sbatch
+   WorkDir=/home/kevin/cotcodec-runs/stage0/lm1-host-prep/ops
+   StdErr=/home/kevin/cotcodec-runs/stage0/lm1-host-prep/ops/slurm-lm1-verify-1579.out
+   StdIn=/dev/null
+   StdOut=/home/kevin/cotcodec-runs/stage0/lm1-host-prep/ops/slurm-lm1-verify-1579.out
+   Power=
+   
+

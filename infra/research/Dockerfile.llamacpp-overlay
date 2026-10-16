@@ -1,0 +1,46 @@
+# Discovery-only llama.cpp serving overlay for the docker-research lane (LM1, D125).
+#
+# Base: the stock llama.cpp CUDA image (infra/research/Dockerfile.llamacpp; upstream b11669 =
+# v0.7.0, commit 620d2225, CUDA 12.8.1, sm_90), pinned by its local-registry manifest digest. The
+# builder (scripts/build_llamacpp_overlay_on_h100.sh) asserts the local base image ID before
+# building with --pull=false --network=none, so nothing is fetched here.
+#
+# The base cannot run in the lane as it is: it has no `python` executable, no cotcodec source and
+# no /etc/cotcodec-provenance.json. This overlay adds the cotcodec source capsule and provenance,
+# links `python` to the base's python3 and relabels the image with the cotcodec revision. llama.cpp
+# itself is untouched. It is used locally and never pushed.
+ARG LLAMACPP_BASE_IMAGE=127.0.0.1:5000/cotcodec-llamacpp@sha256:d445e09f9f0167cbce65be9fecd0f38c539b243ea321ee281ebeea259e904131
+FROM ${LLAMACPP_BASE_IMAGE}
+
+ARG LLAMACPP_BASE_IMAGE
+ARG GIT_SHA=unknown
+ARG GIT_TREE=unknown
+ARG SOURCE_TREE_SHA256=unknown
+ARG BASE_IMAGE_ID=unknown
+
+LABEL org.opencontainers.image.title="cotcodec-llamacpp-overlay" \
+      org.opencontainers.image.revision="${GIT_SHA}" \
+      org.opencontainers.image.version="cotcodec-llamacpp-overlay-b11669" \
+      org.opencontainers.image.url="https://github.com/Kevin-Liu-01/cotcodec" \
+      org.opencontainers.image.source="https://github.com/Kevin-Liu-01/cotcodec" \
+      org.opencontainers.image.cotcodec-git-sha="${GIT_SHA}" \
+      org.opencontainers.image.cotcodec-git-tree="${GIT_TREE}" \
+      org.opencontainers.image.source-tree-sha256="${SOURCE_TREE_SHA256}" \
+      org.opencontainers.image.cotcodec-runtime-profile="llamacpp-overlay" \
+      org.opencontainers.image.cotcodec-base-image="${LLAMACPP_BASE_IMAGE}" \
+      org.opencontainers.image.cotcodec-base-image-id="${BASE_IMAGE_ID}" \
+      org.opencontainers.image.cotcodec-dev-dependencies="false"
+
+ENTRYPOINT []
+CMD ["python", "scripts/check_harness_env.py"]
+WORKDIR /workspace/cotcodec
+COPY . /workspace/cotcodec
+
+RUN ln -sf /usr/bin/python3 /usr/local/bin/python \
+    && python -c "import yaml" \
+    && llama-server --version > /dev/null 2>&1 \
+    && python scripts/check_harness_env.py > /dev/null \
+    && python scripts/run_lm1_smoke.py check-plan --plan experiments/lm1/lm1-host-smoke-v1.json > /dev/null \
+    && GIT_SHA_VALUE="${GIT_SHA}" SOURCE_SHA_VALUE="${SOURCE_TREE_SHA256}" \
+       python infra/research/write_provenance.py /etc/cotcodec-provenance.json \
+    && chmod -R a+rX /workspace/cotcodec /etc/cotcodec-provenance.json

@@ -1,0 +1,123 @@
+2026-10-16T02:42:40Z kimi-k2.5-ud-tq1-0-gguf                           23566933067 /   239537678077 (  9.8%) -
+2026-10-16T02:42:40Z deepseek-v4-flash-0731-ds4-q2-gguf                10409536723 /    86720115016 ( 12.0%) -
+2026-10-16T02:43:32Z kimi-k2.5-ud-tq1-0-gguf                           31694565172 /   239537678077 ( 13.2%) -
+2026-10-16T02:43:32Z deepseek-v4-flash-0731-ds4-q2-gguf                13896689678 /    86720115016 ( 16.0%) -
+2026-10-16T02:43:32Z deepseek-v4-flash-0731-ud-iq3-xxs-gguf                      0 /   104207853858 (  0.0%) -
+2026-10-16T02:43:32Z deepseek-v4-flash-0731-ud-q8-k-xl-gguf                      0 /   161869621346 (  0.0%) -
+2026-10-16T02:43:32Z qwen3-235b-a22b-instruct-2507-ud-q3-k-xl-gguf               0 /   104152938929 (  0.0%) -
+2026-10-16T02:43:32Z gpt-oss-120b-mxfp4-gguf                           18771325560 /    63387346665 ( 29.6%) -
+  job 1565 [RUNNING 4:19]
+  job 1566 [RUNNING 4:16]
+  job 1567 [RUNNING 4:16]
+  job 1568 [RUNNING 3:40]
+2026-10-16T02:49:47Z kimi-k2.5-ud-tq1-0-gguf                           92311312715 /   239537678077 ( 38.5%) -
+2026-10-16T02:49:47Z deepseek-v4-flash-0731-ds4-q2-gguf                37035881174 /    86720115016 ( 42.7%) -
+2026-10-16T02:49:47Z deepseek-v4-flash-0731-ud-iq3-xxs-gguf                      0 /   104207853858 (  0.0%) -
+2026-10-16T02:49:47Z deepseek-v4-flash-0731-ud-q8-k-xl-gguf                      0 /   161869621346 (  0.0%) -
+2026-10-16T02:49:47Z qwen3-235b-a22b-instruct-2507-ud-q3-k-xl-gguf               0 /   104152938929 (  0.0%) -
+2026-10-16T02:49:47Z gpt-oss-120b-mxfp4-gguf                           44995829375 /    63387346665 ( 71.0%) -
+  job 1565 [RUNNING 10:34]
+  job 1566 [RUNNING 10:31]
+  job 1567 [RUNNING 10:31]
+  job 1568 [not in queue]
+2026-10-16T02:52:42Z kimi-k2.5-ud-tq1-0-gguf                          117504028379 /   239537678077 ( 49.1%) -
+2026-10-16T02:52:42Z deepseek-v4-flash-0731-ds4-q2-gguf                49376288713 /    86720115016 ( 56.9%) -
+2026-10-16T02:52:42Z deepseek-v4-flash-0731-ud-iq3-xxs-gguf                      0 /   104207853858 (  0.0%) -
+2026-10-16T02:52:42Z deepseek-v4-flash-0731-ud-q8-k-xl-gguf                      0 /   161869621346 (  0.0%) -
+2026-10-16T02:52:42Z qwen3-235b-a22b-instruct-2507-ud-q3-k-xl-gguf               0 /   104152938929 (  0.0%) -
+2026-10-16T02:52:42Z gpt-oss-120b-mxfp4-gguf                           60021687574 /    63387346665 ( 94.7%) -
+  job 1565 [RUNNING 13:29]
+  job 1566 [RUNNING 13:26]
+  job 1567 [RUNNING 13:26]
+2026-10-16T02:57:08Z kimi-k2.5-ud-tq1-0-gguf                          161862594739 /   239537678077 ( 67.6%) -
+2026-10-16T02:57:08Z deepseek-v4-flash-0731-ds4-q2-gguf                69226321477 /    86720115016 ( 79.8%) -
+2026-10-16T02:57:08Z deepseek-v4-flash-0731-ud-iq3-xxs-gguf                      0 /   104207853858 (  0.0%) -
+2026-10-16T02:57:08Z deepseek-v4-flash-0731-ud-q8-k-xl-gguf                      0 /   161869621346 (  0.0%) -
+2026-10-16T02:57:08Z qwen3-235b-a22b-instruct-2507-ud-q3-k-xl-gguf     14122896401 /   104152938929 ( 13.6%) -
+2026-10-16T02:57:08Z gpt-oss-120b-mxfp4-gguf                           63387368936 /    63387346665 (100.0%) receipt
+  job 1565 [RUNNING 17:55]
+  job 1566 [RUNNING 17:52]
+  job 1567 [RUNNING 17:52]
+2026-10-16T02:57:54Z kimi-k2.5-ud-tq1-0-gguf                          169381515575 /   239537678077 ( 70.7%) -
+2026-10-16T02:57:54Z deepseek-v4-flash-0731-ds4-q2-gguf                72981832742 /    86720115016 ( 84.2%) -
+2026-10-16T02:57:54Z deepseek-v4-flash-0731-ud-iq3-xxs-gguf                      0 /   104207853858 (  0.0%) -
+2026-10-16T02:57:54Z deepseek-v4-flash-0731-ud-q8-k-xl-gguf                      0 /   161869621346 (  0.0%) -
+2026-10-16T02:57:54Z qwen3-235b-a22b-instruct-2507-ud-q3-k-xl-gguf     17945373388 /   104152938929 ( 17.2%) -
+2026-10-16T02:57:54Z gpt-oss-120b-mxfp4-gguf                           63387368936 /    63387346665 (100.0%) receipt
+  job 1565 [RUNNING 18:41]
+  job 1566 [RUNNING 18:38]
+  job 1567 [RUNNING 18:38]
+2026-10-16T03:00:04Z kimi-k2.5-ud-tq1-0-gguf                          189127342050 /   239537678077 ( 79.0%) -
+2026-10-16T03:00:04Z deepseek-v4-flash-0731-ds4-q2-gguf                83821005125 /    86720115016 ( 96.7%) -
+2026-10-16T03:00:04Z deepseek-v4-flash-0731-ud-iq3-xxs-gguf                      0 /   104207853858 (  0.0%) -
+2026-10-16T03:00:04Z deepseek-v4-flash-0731-ud-q8-k-xl-gguf                      0 /   161869621346 (  0.0%) -
+2026-10-16T03:00:04Z qwen3-235b-a22b-instruct-2507-ud-q3-k-xl-gguf     27670349425 /   104152938929 ( 26.6%) -
+2026-10-16T03:00:04Z gpt-oss-120b-mxfp4-gguf                           63387368936 /    63387346665 (100.0%) receipt
+  job 1565 [RUNNING 20:51]
+  job 1566 [RUNNING 20:48]
+  job 1567 [RUNNING 20:48]
+2026-10-16T03:01:38Z kimi-k2.5-ud-tq1-0-gguf                          206561464651 /   239537678077 ( 86.2%) -
+2026-10-16T03:01:38Z deepseek-v4-flash-0731-ds4-q2-gguf                86720144529 /    86720115016 (100.0%) -
+2026-10-16T03:01:38Z deepseek-v4-flash-0731-ud-iq3-xxs-gguf                      0 /   104207853858 (  0.0%) -
+2026-10-16T03:01:38Z deepseek-v4-flash-0731-ud-q8-k-xl-gguf                      0 /   161869621346 (  0.0%) -
+2026-10-16T03:01:38Z qwen3-235b-a22b-instruct-2507-ud-q3-k-xl-gguf     39524288573 /   104152938929 ( 37.9%) -
+2026-10-16T03:01:38Z gpt-oss-120b-mxfp4-gguf                           63387368936 /    63387346665 (100.0%) receipt
+  job 1565 [RUNNING 22:25]
+  job 1566 [RUNNING 22:22]
+  job 1567 [RUNNING 22:22]
+2026-10-16T03:02:38Z kimi-k2.5-ud-tq1-0-gguf                          218412957132 /   239537678077 ( 91.2%) -
+2026-10-16T03:02:38Z deepseek-v4-flash-0731-ds4-q2-gguf                86720144529 /    86720115016 (100.0%) receipt
+2026-10-16T03:02:38Z deepseek-v4-flash-0731-ud-iq3-xxs-gguf              781675758 /   104207853858 (  0.8%) -
+2026-10-16T03:02:38Z deepseek-v4-flash-0731-ud-q8-k-xl-gguf                      0 /   161869621346 (  0.0%) -
+2026-10-16T03:02:38Z qwen3-235b-a22b-instruct-2507-ud-q3-k-xl-gguf     45359087633 /   104152938929 ( 43.6%) -
+2026-10-16T03:02:38Z gpt-oss-120b-mxfp4-gguf                           63387368936 /    63387346665 (100.0%) receipt
+2026-10-16T03:07:58Z kimi-k2.5-ud-tq1-0-gguf                          239537829892 /   239537678077 (100.0%) -
+2026-10-16T03:07:58Z deepseek-v4-flash-0731-ds4-q2-gguf                86720144529 /    86720115016 (100.0%) receipt
+2026-10-16T03:07:58Z deepseek-v4-flash-0731-ud-iq3-xxs-gguf            43795524954 /   104207853858 ( 42.0%) -
+2026-10-16T03:07:58Z deepseek-v4-flash-0731-ud-q8-k-xl-gguf                      0 /   161869621346 (  0.0%) -
+2026-10-16T03:07:58Z qwen3-235b-a22b-instruct-2507-ud-q3-k-xl-gguf     87215826056 /   104152938929 ( 83.7%) -
+2026-10-16T03:07:58Z gpt-oss-120b-mxfp4-gguf                           63387368936 /    63387346665 (100.0%) receipt
+  job 1565 [RUNNING 28:45]
+  job 1566 [RUNNING 28:42]
+  job 1567 [RUNNING 28:42]
+2026-10-16T03:09:31Z kimi-k2.5-ud-tq1-0-gguf                          239537829892 /   239537678077 (100.0%) receipt
+2026-10-16T03:09:31Z deepseek-v4-flash-0731-ds4-q2-gguf                86720144529 /    86720115016 (100.0%) receipt
+2026-10-16T03:09:31Z deepseek-v4-flash-0731-ud-iq3-xxs-gguf            59507921960 /   104207853858 ( 57.1%) -
+2026-10-16T03:09:31Z deepseek-v4-flash-0731-ud-q8-k-xl-gguf                      0 /   161869621346 (  0.0%) -
+2026-10-16T03:09:31Z qwen3-235b-a22b-instruct-2507-ud-q3-k-xl-gguf    104152995701 /   104152938929 (100.0%) -
+2026-10-16T03:09:31Z gpt-oss-120b-mxfp4-gguf                           63387368936 /    63387346665 (100.0%) receipt
+  job 1565 [not in queue]
+  job 1566 [RUNNING 30:15]
+  job 1567 [RUNNING 30:15]
+2026-10-16T03:09:42Z kimi-k2.5-ud-tq1-0-gguf                          239537829892 /   239537678077 (100.0%) receipt
+2026-10-16T03:09:42Z deepseek-v4-flash-0731-ds4-q2-gguf                86720144529 /    86720115016 (100.0%) receipt
+2026-10-16T03:09:42Z deepseek-v4-flash-0731-ud-iq3-xxs-gguf            63396369408 /   104207853858 ( 60.8%) -
+2026-10-16T03:09:42Z deepseek-v4-flash-0731-ud-q8-k-xl-gguf                      0 /   161869621346 (  0.0%) -
+2026-10-16T03:09:42Z qwen3-235b-a22b-instruct-2507-ud-q3-k-xl-gguf    104152995701 /   104152938929 (100.0%) -
+2026-10-16T03:09:42Z gpt-oss-120b-mxfp4-gguf                           63387368936 /    63387346665 (100.0%) receipt
+  job 1565 [not in queue]
+  job 1566 [RUNNING 30:26]
+  job 1567 [RUNNING 30:26]
+2026-10-16T03:13:23Z kimi-k2.5-ud-tq1-0-gguf                          239537829892 /   239537678077 (100.0%) receipt
+2026-10-16T03:13:23Z deepseek-v4-flash-0731-ds4-q2-gguf                86720144529 /    86720115016 (100.0%) receipt
+2026-10-16T03:13:23Z deepseek-v4-flash-0731-ud-iq3-xxs-gguf           104207901487 /   104207853858 (100.0%) receipt
+2026-10-16T03:13:23Z deepseek-v4-flash-0731-ud-q8-k-xl-gguf             6554539863 /   161869621346 (  4.0%) -
+2026-10-16T03:13:23Z qwen3-235b-a22b-instruct-2507-ud-q3-k-xl-gguf    104152995701 /   104152938929 (100.0%) receipt
+2026-10-16T03:13:23Z gpt-oss-120b-mxfp4-gguf                           63387368936 /    63387346665 (100.0%) receipt
+  job 1565 [not in queue]
+  job 1566 [RUNNING 34:07]
+  job 1567 [not in queue]
+2026-10-16T03:15:02Z kimi-k2.5-ud-tq1-0-gguf                          239537829892 /   239537678077 (100.0%) receipt
+2026-10-16T03:15:02Z deepseek-v4-flash-0731-ds4-q2-gguf                86720144529 /    86720115016 (100.0%) receipt
+2026-10-16T03:15:02Z deepseek-v4-flash-0731-ud-iq3-xxs-gguf           104207901487 /   104207853858 (100.0%) receipt
+2026-10-16T03:15:02Z deepseek-v4-flash-0731-ud-q8-k-xl-gguf            40434427419 /   161869621346 ( 25.0%) -
+2026-10-16T03:15:02Z qwen3-235b-a22b-instruct-2507-ud-q3-k-xl-gguf    104152995701 /   104152938929 (100.0%) receipt
+2026-10-16T03:15:02Z gpt-oss-120b-mxfp4-gguf                           63387368936 /    63387346665 (100.0%) receipt
+  job 1566 [RUNNING 35:46]
+2026-10-16T03:20:14Z kimi-k2.5-ud-tq1-0-gguf                          239537829892 /   239537678077 (100.0%) receipt
+2026-10-16T03:20:14Z deepseek-v4-flash-0731-ds4-q2-gguf                86720144529 /    86720115016 (100.0%) receipt
+2026-10-16T03:20:14Z deepseek-v4-flash-0731-ud-iq3-xxs-gguf           104207901487 /   104207853858 (100.0%) receipt
+2026-10-16T03:20:14Z deepseek-v4-flash-0731-ud-q8-k-xl-gguf           146559764290 /   161869621346 ( 90.5%) -
+2026-10-16T03:20:14Z qwen3-235b-a22b-instruct-2507-ud-q3-k-xl-gguf    104152995701 /   104152938929 (100.0%) receipt
+2026-10-16T03:20:14Z gpt-oss-120b-mxfp4-gguf                           63387368936 /    63387346665 (100.0%) receipt
+  job 1566 [RUNNING 40:58]

@@ -1,0 +1,26 @@
+{
+  "artifacts": {
+    "image-id.txt": "ed8c530b042547f06c943dc8b6ba54ad28fc04d8fb3d21f652b163736f507657",
+    "image-inspect.json": "9977eaba41531be3e5093db625a1bcae6bc5245fe1b9381f448c182f887653ed",
+    "llama-server-version.txt": "0fe01406befda4fc8be5805e1585dd3059da8cfe38886a92e69a281bf6c96643",
+    "plan-check.json": "2a80ac1318dc06016dd90cb0c246d8239a1c623206fb01bca487ef1f6cfc44cf",
+    "provenance-verification.json": "64e29909bf29c3d5b0322bd1fbf8038a94411baf480c76e501bf2327c0b22f03",
+    "source-validation.json": "6593a70b1c49ded951f6b877b585f1187e999dea2ff13efbb78362157c076d1e"
+  },
+  "base_image": "127.0.0.1:5000/cotcodec-llamacpp@sha256:d445e09f9f0167cbce65be9fecd0f38c539b243ea321ee281ebeea259e904131",
+  "base_image_id": "sha256:fb8600d96560412d65ec9c269b555c8db6ed4bcfd86a3556658b1c108073e848",
+  "builder_sha256": "c657bededbd2eb459f66bb0fd1bcbd91a919cb61a9bbe854be0434cc352863d1",
+  "built_at": "2026-10-16T03:26:39Z",
+  "extractor_sha256": "9b4d21a83beac8913dc06a946cf43ea31d77326e65d04957fad66d7b97d8c3cb",
+  "git_sha": "982ee1e660249b0360aa0f4c92743da157e8f14d",
+  "git_tree": "6e0056406b3c999144beef9c33be951216396b32",
+  "gpu": "none",
+  "kind": "llamacpp-overlay-build",
+  "llama_cpp_commit": "620d2225cc436ab0b001e3200e590e3b286ef9ab",
+  "llama_cpp_release": "b11669",
+  "overlay_image_id": "sha256:db2dcbf11a004efbe981493a637c87d2250afa3405d19cf1d097cb08ebbf290c",
+  "overlay_tag": "cotcodec-llamacpp:4c8e7f36-b11669-overlay",
+  "schema_version": 1,
+  "slurm_job_id": "1578",
+  "source_sha256": "4c8e7f361733c72d53e20563c0fb55069fc9b7752959f393edbf7de308e36d62"
+}

@@ -1,0 +1,102 @@
+== fetch kimi a3e0a495 at 2026-10-16T02:39:12Z
+-- squeue
+1556 transcreate-lama PENDING 0:00 gres:gpu:h100:1
+1451 transcreate-lama RUNNING 34:02 gres:gpu:h100:1
+1562 g3b-pilot-q35-4b-fp32 RUNNING 5:01 gres:gpu:h100:1
+1564 g3b-pilot-q35-4b-bf16 RUNNING 4:58 gres:gpu:h100:1
+-- slurm gres
+   Gres=gpu:h100:8
+   GresUsed=gpu:h100:3(IDX:0-2)
+-- gpus
+0, 897 MiB, 0 %
+1, 73047 MiB, 100 %
+2, 73047 MiB, 100 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+-- disk (model cache)
+20442221617152 23443440275456
+no Hugging Face token in the environment or the known token files; 20442 GB free
+== fetch v4flash a3e0a495 at 2026-10-16T02:39:13Z
+-- squeue
+1556 transcreate-lama PENDING 0:00 gres:gpu:h100:1
+1565 lm1-fetch-kimi PENDING 0:00 N/A
+1451 transcreate-lama RUNNING 34:03 gres:gpu:h100:1
+1562 g3b-pilot-q35-4b-fp32 RUNNING 5:02 gres:gpu:h100:1
+1564 g3b-pilot-q35-4b-bf16 RUNNING 4:59 gres:gpu:h100:1
+-- slurm gres
+   Gres=gpu:h100:8
+   GresUsed=gpu:h100:3(IDX:0-2)
+-- gpus
+0, 897 MiB, 0 %
+1, 73047 MiB, 100 %
+2, 73047 MiB, 100 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+-- disk (model cache)
+20442221412352 23443440275456
+no Hugging Face token in the environment or the known token files; 20442 GB free
+== fetch ossqwen a3e0a495 at 2026-10-16T02:39:13Z
+-- squeue
+1556 transcreate-lama PENDING 0:00 gres:gpu:h100:1
+1566 lm1-fetch-v4flash PENDING 0:00 N/A
+1451 transcreate-lama RUNNING 34:03 gres:gpu:h100:1
+1562 g3b-pilot-q35-4b-fp32 RUNNING 5:02 gres:gpu:h100:1
+1564 g3b-pilot-q35-4b-bf16 RUNNING 4:59 gres:gpu:h100:1
+1565 lm1-fetch-kimi RUNNING 0:00 N/A
+-- slurm gres
+   Gres=gpu:h100:8
+   GresUsed=gpu:h100:3(IDX:0-2)
+-- gpus
+0, 897 MiB, 0 %
+1, 73047 MiB, 100 %
+2, 73047 MiB, 100 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+-- disk (model cache)
+20442221252608 23443440275456
+no Hugging Face token in the environment or the known token files; 20442 GB free
+== llama.cpp image build a3e0a495 at 2026-10-16T02:39:51Z
+-- squeue
+1556 transcreate-lama PENDING 0:00 gres:gpu:h100:1
+1451 transcreate-lama RUNNING 34:41 gres:gpu:h100:1
+1565 lm1-fetch-kimi RUNNING 0:38 N/A
+1566 lm1-fetch-v4flash RUNNING 0:35 N/A
+1567 lm1-fetch-ossqwen RUNNING 0:35 N/A
+-- slurm gres
+   Gres=gpu:h100:8
+   GresUsed=gpu:h100:1(IDX:0)
+-- gpus
+0, 897 MiB, 0 %
+1, 0 MiB, 0 %
+2, 0 MiB, 0 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %
+-- disk (model cache)
+20439181361152 23443440275456
+no Hugging Face token in the environment or the known token files; 20439 GB free
+== smoke 982ee1e6 at 2026-10-16T03:30:02Z
+1556 transcreate-lama PENDING 0:00 gres:gpu:h100:1
+1451 transcreate-lama RUNNING 1:24:52 gres:gpu:h100:1
+1574 g3b-main-q35-4b-fp32 RUNNING 33:02 gres:gpu:h100:1
+1576 g3b-main-q35-4b-bf16 RUNNING 32:59 gres:gpu:h100:1
+GresUsed=gpu:h100:3(IDX:0-2)
+0, 897 MiB, 0 %
+1, 73087 MiB, 100 %
+2, 73087 MiB, 100 %
+3, 0 MiB, 0 %
+4, 0 MiB, 0 %
+5, 0 MiB, 0 %
+6, 0 MiB, 0 %
+7, 0 MiB, 0 %

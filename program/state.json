@@ -468,7 +468,7 @@
     "Gauntleted packages that ended at honest exits and can advance only by your ruling (D24, D70, D76). S2 v3 (65) continues as S2 v4 under your delegation (D80 (iv)); its images are built and its registration is in a repair round before the freeze (D84). C5 Phase 1 (70-97 GPU-h) stays yours; its identification defect stands",
     "Shelved by Kevin (D101), not to be raised unless he asks: the outward items (disclosures, licence requests, host-admin request, publication, the GitHub Support request), key rotation and account items. Drafts are in the private archive."
   ],
-  "gpu_hours_spent_this_program": 32.6945,
+  "gpu_hours_spent_this_program": 33.0689,
   "frozen_registrations": [
     "q3-k1-localization-screen-v1",
     "q2-holo3-rerun-audit-v1-posthoc",
@@ -500,7 +500,8 @@
   ],
   "infrastructure": {
     "serving_probe": "v1 and v2 done (1.15 GPU-h): cu129 vLLM works on R570; Q1 sampling within cap; Q2 ladder needs rescoping",
-    "lane": "hardened discovery lane; container lifetime bounded by a hard stop 30 s before the job limit (2026-10-07)"
+    "lane": "hardened discovery lane; container lifetime bounded by a hard stop 30 s before the job limit (2026-10-07)",
+    "llamacpp_image": "stock llama.cpp b11669 (= v0.7.0, commit 620d2225), CUDA 12.8.1, sm_90: cotcodec-llamacpp:b11669-cu128 sha256:fb8600d96560412d65ec9c269b555c8db6ed4bcfd86a3556658b1c108073e848 (local registry 127.0.0.1:5000/cotcodec-llamacpp@sha256:d445e09f9f0167cbce65be9fecd0f38c539b243ea321ee281ebeea259e904131; build job 1568, CPU only); lane overlay per commit via scripts/build_llamacpp_overlay_on_h100.sh (2026-10-16, LM1 host prep)"
   },
   "gpu_hours_ledger": [
     {
@@ -1645,6 +1646,15 @@
       ],
       "outcome": "rerun rule: complete (every essential step; OLMo-2's fallback not needed); V3 replay control passes (anchor R1 and R2 at 4,473 of 4,473 cells); G-J1 passes (reference yes 322 of 322, \"I don't know.\" no 347 of 347; decoys yes 3 of 346); primary at K = 8: Qwen3-8B COST_BELOW_GAIN (cost 6 vs gain 31, Holm p 1.2e-4), OLMo-2 NOT_SEPARATED (22 vs 27, p 0.57), Qwen3.5-9B COST_BELOW_GAIN (6 vs 26, Holm p 0.0011), the directional readings confirmed by the blind hand check (receipt 9d68966b, committed before the join) (program/evidence/2026-10-16/am5-ablated-cost-v2/)",
       "basis": "physical (scontrol RunTime 00:19:40 on 1 H100); Slurm limit 80 min (1.34 GPU-h cap); registration total 0.3461 of the 1.42 cap; submitted with no other GPU job of this program queued or running and 7 of 8 H100 free (D110's job on GPU 0)"
+    },
+    {
+      "experiment": "LM1 host prep (infrastructure, D125): smoke test of the six GGUF candidates (Kimi K2.5 UD-TQ1_0, DeepSeek V4 Flash 0731 ds4 Q2 / UD-IQ3_XXS / UD-Q8_K_XL, Qwen3-235B-A22B-Instruct-2507 UD-Q3_K_XL, gpt-oss-120b MXFP4) in the stock llama.cpp b11669 CUDA 12.8 image (base sha256:fb8600d9..., lane overlay sha256:db2dcbf1...), every layer on 4 H100s (-ngl all, --split-mode layer, -fit off), one greedy prefill, decode and chat request per model",
+      "gpu_hours": 0.3744,
+      "jobs": [
+        "1582 lm1-host-smoke (4 H100, GPUs 3-6; COMPLETED 0:0, 00:05:37)"
+      ],
+      "outcome": "6 of 6 loaded and answered; all weights on the GPUs (per-GPU peak memory sums exceed each file's bytes); single-stream decode 189 tok/s (gpt-oss-120b), 55.5 (Kimi K2.5 UD-TQ1_0, load 49 s, peak 52,825-66,015 MiB per GPU), 61.8 / 60.0 / 54.6 (V4 Flash ds4 Q2 / UD-IQ3_XXS / UD-Q8_K_XL), 60.0 (Qwen3-235B UD-Q3_K_XL); outputs coherent on the operator's read (hashes only committed). Infrastructure only, no quality claim; the image builds (1568, 1578), the fetches (1565-1567) and the receipt verification (1579) were CPU-only jobs, 0 GPU-h (program/evidence/2026-10-16/lm1-host-prep/README.md)",
+      "basis": "physical (scontrol RunTime 00:05:37 = 337 s on 4 H100 = 1,348 GPU-s; 14-minute limit, 0.933 GPU-h cap; reason=completed); submitted with D110's job holding GPU 0 (GresUsed IDX:0-2, G3b's two jobs on GPUs 1-2) and the driver refusing GPU 0's UUID; allocation gpu_devices=3,4,5,6"
     }
   ],
   "results": [

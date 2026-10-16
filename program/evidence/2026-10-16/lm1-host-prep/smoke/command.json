@@ -1,0 +1,13 @@
+[
+  "python",
+  "scripts/run_lm1_smoke.py",
+  "run",
+  "--plan",
+  "experiments/lm1/lm1-host-smoke-v1.json",
+  "--expected-plan-sha256",
+  "5e36ae33dfe6999a250e9e117e2ee7a18f26811f0859f45c6cd2af9ff3d39791",
+  "--output-dir",
+  "/outputs/lm1smoke",
+  "--allocation-minutes",
+  "10"
+]

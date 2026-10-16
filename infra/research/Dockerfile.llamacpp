@@ -1,0 +1,119 @@
+# Stock llama.cpp CUDA image for the LM1 matched-memory line (D125).
+#
+# Upstream code only, no patches: ggml-org/llama.cpp at release b11669, commit
+# 620d2225cc436ab0b001e3200e590e3b286ef9ab, which is also the stable release v0.7.0 (annotated tag
+# 757cad02 points at the same commit). The source arrives as `git archive --prefix=llama.cpp/` of
+# that commit (git tree 6868e0a538a05e9a253a0b86ccb71b4e06a64684), checked against its SHA-256
+# below before it is unpacked.
+#
+# Bases: NVIDIA's CUDA 12.8.1 Ubuntu 24.04 devel and runtime images, pinned by their linux/amd64
+# manifest digests (the host's R570 driver supports CUDA 12.8 and lower). Upstream's
+# .devops/cuda.Dockerfile at this commit uses the same CUDA 12.8.1 / Ubuntu 24.04 / gcc-14 stack;
+# this file follows its build flags (GGML_NATIVE=OFF, GGML_CUDA=ON, GGML_BACKEND_DL=ON,
+# GGML_CPU_ALL_VARIANTS=ON) with three build-configuration choices that change no code:
+#   - CMAKE_CUDA_ARCHITECTURES=90 (H100 only) instead of every supported architecture;
+#   - no embedded web UI (LLAMA_BUILD_UI=OFF, LLAMA_USE_PREBUILT_UI=OFF), so the build neither runs
+#     npm nor downloads the prebuilt UI;
+#   - the build number and commit are passed in, because the archive carries no .git directory.
+# The runtime stage keeps llama-server, llama-cli, llama-bench and llama-perplexity with the
+# shared libraries and dynamically loaded backends they need, plus python3 and PyYAML from Ubuntu
+# so the program's lane can run its provenance and receipt checks in an overlay of this image.
+#
+# Built by infra/slurm/host-single-node/build-llamacpp-image.sbatch (CPU-only Slurm job).
+ARG CUDA_DEVEL_IMAGE=docker.io/nvidia/cuda@sha256:4b9ed5fa8361736996499f64ecebf25d4ec37ff56e4d11323ccde10aa36e0c43
+ARG CUDA_RUNTIME_IMAGE=docker.io/nvidia/cuda@sha256:828c4d878adcaa4265d80c95d8ec877149b49bb2419a4cf3bb6aa889bbb7ca2e
+
+FROM ${CUDA_DEVEL_IMAGE} AS build
+
+ARG LLAMA_CPP_COMMIT=620d2225cc436ab0b001e3200e590e3b286ef9ab
+ARG LLAMA_CPP_COMMIT_SHORT=620d2225
+ARG LLAMA_CPP_BUILD_NUMBER=11669
+ARG LLAMA_CPP_SOURCE_SHA256=622f13ebf8a733003c9ae70ffe96a55c5d09bf2e0e6212ed212efcaca71bf066
+ARG CUDA_ARCHITECTURES=90
+ARG BUILD_JOBS=32
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends gcc-14 g++-14 build-essential cmake libssl-dev libgomp1 \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV CC=gcc-14 CXX=g++-14 CUDAHOSTCXX=g++-14
+
+COPY llama.cpp-source.tar /src/llama.cpp-source.tar
+RUN echo "${LLAMA_CPP_SOURCE_SHA256}  /src/llama.cpp-source.tar" | sha256sum -c - \
+    && tar -xf /src/llama.cpp-source.tar -C /src \
+    && rm /src/llama.cpp-source.tar \
+    && test -f /src/llama.cpp/CMakeLists.txt
+
+WORKDIR /src/llama.cpp
+RUN cmake -B build \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DGGML_NATIVE=OFF \
+      -DGGML_CUDA=ON \
+      -DGGML_BACKEND_DL=ON \
+      -DGGML_CPU_ALL_VARIANTS=ON \
+      -DCMAKE_CUDA_ARCHITECTURES="${CUDA_ARCHITECTURES}" \
+      -DLLAMA_BUILD_TESTS=OFF \
+      -DLLAMA_BUILD_EXAMPLES=OFF \
+      -DLLAMA_BUILD_UI=OFF \
+      -DLLAMA_USE_PREBUILT_UI=OFF \
+      -DLLAMA_BUILD_NUMBER="${LLAMA_CPP_BUILD_NUMBER}" \
+      -DLLAMA_BUILD_COMMIT="${LLAMA_CPP_COMMIT_SHORT}" \
+      -DCMAKE_EXE_LINKER_FLAGS=-Wl,--allow-shlib-undefined \
+    && cmake --build build --config Release -j "${BUILD_JOBS}"
+
+RUN mkdir -p /out \
+    && for tool in llama-server llama-cli llama-bench llama-perplexity; do \
+         cp -P "build/bin/${tool}" /out/; \
+       done \
+    && find build -name "*.so*" -exec cp -P {} /out/ \; \
+    && cp LICENSE /out/LICENSE.llama.cpp \
+    && (cd /out && sha256sum $(find . -maxdepth 1 -type f ! -name MANIFEST.sha256 -printf '%f\n' | sort)) > /out/MANIFEST.sha256
+
+FROM ${CUDA_RUNTIME_IMAGE}
+
+ARG CUDA_DEVEL_IMAGE
+ARG CUDA_RUNTIME_IMAGE
+ARG LLAMA_CPP_COMMIT=620d2225cc436ab0b001e3200e590e3b286ef9ab
+ARG LLAMA_CPP_BUILD_NUMBER=11669
+ARG LLAMA_CPP_SOURCE_SHA256=622f13ebf8a733003c9ae70ffe96a55c5d09bf2e0e6212ed212efcaca71bf066
+ARG CUDA_ARCHITECTURES=90
+ARG COTCODEC_GIT_SHA=unknown
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libgomp1 libssl3t64 python3 python3-yaml \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=build /out/ /opt/llama.cpp/
+
+ENV PATH=/opt/llama.cpp:${PATH} \
+    LD_LIBRARY_PATH=/opt/llama.cpp:${LD_LIBRARY_PATH}
+
+LABEL org.opencontainers.image.title="cotcodec-llamacpp" \
+      org.opencontainers.image.description="Stock upstream llama.cpp b11669 (v0.7.0), CUDA 12.8.1, sm_90" \
+      org.opencontainers.image.version="b${LLAMA_CPP_BUILD_NUMBER}" \
+      org.opencontainers.image.revision="${LLAMA_CPP_COMMIT}" \
+      org.opencontainers.image.source="https://github.com/ggml-org/llama.cpp" \
+      org.opencontainers.image.licenses="MIT" \
+      org.opencontainers.image.cotcodec-llama-cpp-commit="${LLAMA_CPP_COMMIT}" \
+      org.opencontainers.image.cotcodec-llama-cpp-release="b${LLAMA_CPP_BUILD_NUMBER} v0.7.0" \
+      org.opencontainers.image.cotcodec-llama-cpp-source-sha256="${LLAMA_CPP_SOURCE_SHA256}" \
+      org.opencontainers.image.cotcodec-cuda-architectures="${CUDA_ARCHITECTURES}" \
+      org.opencontainers.image.cotcodec-cuda-devel-image="${CUDA_DEVEL_IMAGE}" \
+      org.opencontainers.image.cotcodec-cuda-runtime-image="${CUDA_RUNTIME_IMAGE}" \
+      org.opencontainers.image.cotcodec-dockerfile-git-sha="${COTCODEC_GIT_SHA}" \
+      org.opencontainers.image.cotcodec-runtime-profile="llamacpp-base"
+
+# The four tools must start and print their build; no GPU is visible during the build, so the
+# CUDA backend is not exercised here (the lane's smoke test does that).
+RUN for tool in llama-server llama-cli llama-bench llama-perplexity; do \
+      "/opt/llama.cpp/${tool}" --version > "/tmp/${tool}.version" 2>&1 \
+        || { cat "/tmp/${tool}.version"; exit 1; }; \
+      grep -q "${LLAMA_CPP_BUILD_NUMBER}" "/tmp/${tool}.version" \
+        || { cat "/tmp/${tool}.version"; exit 1; }; \
+    done \
+    && python3 -c "import yaml" \
+    && (cd /opt/llama.cpp && sha256sum -c MANIFEST.sha256 > /dev/null) \
+    && rm -f /tmp/*.version
+
+ENTRYPOINT []
+CMD ["llama-server", "--version"]

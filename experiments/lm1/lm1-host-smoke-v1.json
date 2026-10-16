@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "experiment": "lm1-host-smoke-v1",
+  "purpose": "LM1 host prep (D125) smoke test: each GGUF candidate loads in stock llama.cpp b11669 with every layer on the allocated H100s (layer split); one greedy prefill request, one greedy decode request and one chat-template request per model. Infrastructure only: no quality claim.",
+  "refuse_gpu_uuids_reason": "physical GPU 0 of the host, held by another project's job (D110); the driver stops before loading anything if it is in the allocation",
+  "refuse_gpu_uuids": [
+    "GPU-b23c3b4d-5413-4d75-cad3-74be85f8d058"
+  ],
+  "llama_server": "/opt/llama.cpp/llama-server",
+  "server_args": [
+    "-c",
+    "4096",
+    "-np",
+    "1",
+    "-lm",
+    "none",
+    "-lzm",
+    "off",
+    "--no-webui"
+  ],
+  "requests": {
+    "seed": 42,
+    "prefill_prompt": "Water moves through the environment in a continuous cycle. Heat from the sun warms oceans, lakes and rivers, and some of the surface water turns into vapour that rises into the air. Plants add more vapour through their leaves, a process called transpiration. As the moist air climbs it cools, and the vapour condenses on tiny particles of dust and salt to form the droplets that make up clouds. When the droplets merge and grow heavy enough, they fall back to the ground as rain, snow, sleet or hail. Some of that water runs off the land into streams and rivers that carry it back to the sea. Some soaks into the soil and moves slowly downward until it reaches layers of rock and gravel that hold groundwater, which can stay underground for days or for thousands of years before it seeps into a spring or a riverbed. Snow that settles in the mountains may stay frozen through the winter and melt in spring, feeding rivers during the dry months. Glaciers and ice sheets store a large share of the fresh water on the planet and release it only very slowly. Lakes act as reservoirs that smooth out the seasons, and wetlands filter the water that passes through them. Human activity changes every stage of the cycle: dams hold back rivers, irrigation moves water onto fields, cities cover the ground with surfaces that shed rain quickly, and wells draw groundwater to the surface faster than it can be replaced. Because the total amount of water stays almost constant, what matters for people and ecosystems is where the water is, in what form, and how quickly it moves from one store to the next. Water moves through the environment in a continuous cycle. Heat from the sun warms oceans, lakes and rivers, and some of the surface water turns into vapour that rises into the air. Plants add more vapour through their leaves, a process called transpiration. As the moist air climbs it cools, and the vapour condenses on tiny particles of dust and salt to form the droplets that make up clouds. When the droplets merge and grow heavy enough, they fall back to the ground as rain, snow, sleet or hail. Some of that water runs off the land into streams and rivers that carry it back to the sea. Some soaks into the soil and moves slowly downward until it reaches layers of rock and gravel that hold groundwater, which can stay underground for days or for thousands of years before it seeps into a spring or a riverbed. Snow that settles in the mountains may stay frozen through the winter and melt in spring, feeding rivers during the dry months. Glaciers and ice sheets store a large share of the fresh water on the planet and release it only very slowly. Lakes act as reservoirs that smooth out the seasons, and wetlands filter the water that passes through them. Human activity changes every stage of the cycle: dams hold back rivers, irrigation moves water onto fields, cities cover the ground with surfaces that shed rain quickly, and wells draw groundwater to the surface faster than it can be replaced. Because the total amount of water stays almost constant, what matters for people and ecosystems is where the water is, in what form, and how quickly it moves from one store to the next. Water moves through the environment in a continuous cycle. Heat from the sun warms oceans, lakes and rivers, and some of the surface water turns into vapour that rises into the air. Plants add more vapour through their leaves, a process called transpiration. As the moist air climbs it cools, and the vapour condenses on tiny particles of dust and salt to form the droplets that make up clouds. When the droplets merge and grow heavy enough, they fall back to the ground as rain, snow, sleet or hail. Some of that water runs off the land into streams and rivers that carry it back to the sea. Some soaks into the soil and moves slowly downward until it reaches layers of rock and gravel that hold groundwater, which can stay underground for days or for thousands of years before it seeps into a spring or a riverbed. Snow that settles in the mountains may stay frozen through the winter and melt in spring, feeding rivers during the dry months. Glaciers and ice sheets store a large share of the fresh water on the planet and release it only very slowly. Lakes act as reservoirs that smooth out the seasons, and wetlands filter the water that passes through them. Human activity changes every stage of the cycle: dams hold back rivers, irrigation moves water onto fields, cities cover the ground with surfaces that shed rain quickly, and wells draw groundwater to the surface faster than it can be replaced. Because the total amount of water stays almost constant, what matters for people and ecosystems is where the water is, in what form, and how quickly it moves from one store to the next. Water moves through the environment in a continuous cycle. Heat from the sun warms oceans, lakes and rivers, and some of the surface water turns into vapour that rises into the air. Plants add more vapour through their leaves, a process called transpiration. As the moist air climbs it cools, and the vapour condenses on tiny particles of dust and salt to form the droplets that make up clouds. When the droplets merge and grow heavy enough, they fall back to the ground as rain, snow, sleet or hail. Some of that water runs off the land into streams and rivers that carry it back to the sea. Some soaks into the soil and moves slowly downward until it reaches layers of rock and gravel that hold groundwater, which can stay underground for days or for thousands of years before it seeps into a spring or a riverbed. Snow that settles in the mountains may stay frozen through the winter and melt in spring, feeding rivers during the dry months. Glaciers and ice sheets store a large share of the fresh water on the planet and release it only very slowly. Lakes act as reservoirs that smooth out the seasons, and wetlands filter the water that passes through them. Human activity changes every stage of the cycle: dams hold back rivers, irrigation moves water onto fields, cities cover the ground with surfaces that shed rain quickly, and wells draw groundwater to the surface faster than it can be replaced. Because the total amount of water stays almost constant, what matters for people and ecosystems is where the water is, in what form, and how quickly it moves from one store to the next.\n\nSummarize the passage above in one sentence.",
+    "completion_prompt": "Question: Why does the sky look blue during the day but red or orange at sunset? Answer in three sentences.\nAnswer:",
+    "completion_tokens": 128,
+    "chat_message": "Name the capital of Australia and give one fact about it, in one sentence.",
+    "chat_tokens": 128,
+    "request_timeout_s": 90
+  },
+  "models": [
+    {
+      "model_id": "gpt-oss-120b-mxfp4-gguf",
+      "gguf": "gpt-oss-120b-MXFP4.gguf",
+      "receipt_sha256": "dc5007aa56057007c80e8a364584d41dc24980d9f9a87770614245d2e1c38f8c",
+      "artifact_root_sha256": "329ede2a5e5e773129c05d20b1a969923e706f0a0520c9b9702088692eee779f",
+      "load_timeout_s": 120
+    },
+    {
+      "model_id": "kimi-k2.5-ud-tq1-0-gguf",
+      "gguf": "UD-TQ1_0/Kimi-K2.5-UD-TQ1_0-00001-of-00005.gguf",
+      "receipt_sha256": "c198cdd577ebc20da713cebdd76066a9677597512fb6f24e25a287579bb32460",
+      "artifact_root_sha256": "03266411926593722a2ac4f995c8d42ad84c51e395a2b28064f3d6b92ca92096",
+      "load_timeout_s": 300
+    },
+    {
+      "model_id": "deepseek-v4-flash-0731-ds4-q2-gguf",
+      "gguf": "DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf",
+      "receipt_sha256": "415e09ea35bbbfa60c75586e91fec5299855dcfe6dcd62b5faddf46f3124a3fc",
+      "artifact_root_sha256": "0d60a7ac567eed483b206def3aee470a9023a5a75bc62fff7edd2b99bce8389e",
+      "load_timeout_s": 180
+    },
+    {
+      "model_id": "deepseek-v4-flash-0731-ud-iq3-xxs-gguf",
+      "gguf": "UD-IQ3_XXS/DeepSeek-V4-Flash-0731-UD-IQ3_XXS-00001-of-00004.gguf",
+      "receipt_sha256": "22ef49169d1eaa02a438235e440a34727cfc5ff4e6fb66238ab9bec9cb04f9b3",
+      "artifact_root_sha256": "c2c4ce4fe186166b4808167e4093edea488658a0fc30e2f86c354496e2a62113",
+      "load_timeout_s": 180
+    },
+    {
+      "model_id": "qwen3-235b-a22b-instruct-2507-ud-q3-k-xl-gguf",
+      "gguf": "UD-Q3_K_XL/Qwen3-235B-A22B-Instruct-2507-UD-Q3_K_XL-00001-of-00003.gguf",
+      "receipt_sha256": "32e64cd077c3d5c07b408fffbd67aaea93673b1d853b2c33f162b7d83f3f1357",
+      "artifact_root_sha256": "78fcdc166c9ff6d7a35728e3d2e9555c853bb8d0dbfb444e6f54edfa83c55b7e",
+      "load_timeout_s": 180
+    },
+    {
+      "model_id": "deepseek-v4-flash-0731-ud-q8-k-xl-gguf",
+      "gguf": "UD-Q8_K_XL/DeepSeek-V4-Flash-0731-UD-Q8_K_XL-00001-of-00005.gguf",
+      "receipt_sha256": "a06fc7c2393fe5204f66c799140380c7a095ffd126459e1c00c3d84852ba31e3",
+      "artifact_root_sha256": "29ff486fb13e372b256c4084ce2166de1ef83f4757f4e560da4fe511a461badc",
+      "load_timeout_s": 240
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "allow_patterns": [
+    "README.md",
+    "gpt-oss-120b-MXFP4.gguf"
+  ],
+  "artifact_root_sha256": "329ede2a5e5e773129c05d20b1a969923e706f0a0520c9b9702088692eee779f",
+  "backend": "huggingface",
+  "files": [
+    {
+      "bytes": 457,
+      "path": "README.md",
+      "sha256": "ae3f9bbafb266910837676f70a0c1951d603c5c9c2c97549de1a79f111a1ab2a"
+    },
+    {
+      "bytes": 63387346208,
+      "path": "gpt-oss-120b-MXFP4.gguf",
+      "sha256": "582bd40f6886200101f4c4ed9f25f3fe80cc14c86e9e2b37746cd8904a0c622d"
+    }
+  ],
+  "mode": "full",
+  "model_id": "gpt-oss-120b-mxfp4-gguf",
+  "publication_eligible": true,
+  "registry_sha256": "91619e85543240b0cb37ddb5c5da0587c27edeeefd3b19d3ef9db7df7cc320e4",
+  "repo_id": "ggml-org/gpt-oss-120b-GGUF",
+  "revision": "238abdd290bb874b90a5da1b4549881b7d05c091",
+  "schema_version": 1,
+  "total_bytes": 63387346665,
+  "trust_remote_code": false
+}
