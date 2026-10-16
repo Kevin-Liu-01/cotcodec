@@ -1,0 +1,49 @@
+{
+  "allow_patterns": [
+    "README.md",
+    "UD-TQ1_0/*"
+  ],
+  "artifact_root_sha256": "03266411926593722a2ac4f995c8d42ad84c51e395a2b28064f3d6b92ca92096",
+  "backend": "huggingface",
+  "files": [
+    {
+      "bytes": 35741,
+      "path": "README.md",
+      "sha256": "cb06ca503c35398fe500e6e0127dc3a02712dcfc8356eb699bf74d3efb1d9c5f"
+    },
+    {
+      "bytes": 49933365600,
+      "path": "UD-TQ1_0/Kimi-K2.5-UD-TQ1_0-00001-of-00005.gguf",
+      "sha256": "c5634e7fb3c4b9e16744442b42946fee8bca2da1aa0d2759323b734142679674"
+    },
+    {
+      "bytes": 49071652704,
+      "path": "UD-TQ1_0/Kimi-K2.5-UD-TQ1_0-00002-of-00005.gguf",
+      "sha256": "63b99eb3416eed69d1fcf84e4ac1c69d6ae0be8327f9b4273a2db52102e68b87"
+    },
+    {
+      "bytes": 49439992704,
+      "path": "UD-TQ1_0/Kimi-K2.5-UD-TQ1_0-00003-of-00005.gguf",
+      "sha256": "0fbc6005b4e8cbe19196168c0930a99985f3383622b26c9ac42f0da283dbeea3"
+    },
+    {
+      "bytes": 49970380288,
+      "path": "UD-TQ1_0/Kimi-K2.5-UD-TQ1_0-00004-of-00005.gguf",
+      "sha256": "c357352ec16a8a6c0610a2a82efac7f4a48928e4acc2da98d7b4688478d9d34f"
+    },
+    {
+      "bytes": 41122251040,
+      "path": "UD-TQ1_0/Kimi-K2.5-UD-TQ1_0-00005-of-00005.gguf",
+      "sha256": "89d8c9b12444da48313fd3064becca9a0cc7a453ebf2e5bf343c212f1be3cd7c"
+    }
+  ],
+  "mode": "full",
+  "model_id": "kimi-k2.5-ud-tq1-0-gguf",
+  "publication_eligible": true,
+  "registry_sha256": "91619e85543240b0cb37ddb5c5da0587c27edeeefd3b19d3ef9db7df7cc320e4",
+  "repo_id": "unsloth/Kimi-K2.5-GGUF",
+  "revision": "386fed8b054275941d6a495a9a7010fbf31b560d",
+  "schema_version": 1,
+  "total_bytes": 239537678077,
+  "trust_remote_code": false
+}

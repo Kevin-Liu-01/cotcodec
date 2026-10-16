@@ -6,7 +6,7 @@ set -Eeuo pipefail
 source "$(dirname "$0")/lm1-env.sh"
 {
   for id in $LM1_IDS; do
-    b=$(du -sb "$MODELS/$id" 2>/dev/null | cut -f1); b=${b:-0}
+    b=$(du -sb "$MODELS/$id" 2>/dev/null | cut -f1 || true); b=${b:-0}
     t=$(expected_bytes "$id")
     r="-"; [[ -f "$RECEIPTS/$id.json" ]] && r="receipt"
     printf '%s %-46s %14s / %14s (%5.1f%%) %s\n' "$(date -u +%FT%TZ)" "$id" "$b" "$t" \
