@@ -2999,3 +2999,40 @@ of a freeze error. The same design is re-frozen as `am5-ablated-cost-v2`.**
 - Process change: before any freeze, the orchestrator runs the registration's
   tests and checks pytest's own exit code, with no pipe, and re-pins after
   any merge.
+
+**D124. G3 (exploratory): a 16-bit GDN recurrent state is not free for long
+reasoning. bf16 costs about 10 points of MATH accuracy on Qwen3.5. Next: G3b,
+a test of the same at the model card's full output budget.**
+- G3 used 3.84 GPU-h. Two independent checks reproduced every number
+  (`program/evidence/2026-10-16/g3-state-precision-accuracy/README.md`); one
+  found a checker gap, now fixed.
+- Setup: MATH-500 level 5, 134 questions × seeds 42-44, thinking on, a
+  32,768-token cap. Accuracy (fp32 / fp16 / bf16):
+  - 4B: 87.1 / 83.3 / 76.4. bf16 −10.7 [−14.9, −6.7].
+  - 9B: 91.5 / 88.8 / 81.6. bf16 −10.0 [−13.9, −6.5].
+  - fp16 is marginal and not replicated: −3.7 (4B, reaches 0 after
+    Bonferroni) and −2.7 (9B, interval includes 0); −3.2 [−6.0, −0.7]
+    pooled.
+- Why accuracy falls:
+  - Nearly all of the loss is rollouts that reach the cap without an answer.
+    16-bit state lengthens reasoning by about 0.9K tokens (fp16) and 2.9K
+    (bf16).
+  - Among finished rollouts, accuracy is about 99% in every arm.
+  - Capped rollouts are not repetition loops.
+- Throughput rose only 3-6% in output tok/s, which is not fixed work.
+  Solved problems per engine-second fell. Long-context QA, with about 20
+  decode steps, showed no change.
+- Caveats:
+  - One engine run per arm.
+  - The pooled bf16 estimate is specific to one submission order under heavy
+    preemption: the bf16 gap differs by seed order.
+  - The mechanism is already documented in 2026 work (the Nemotron 3 Ultra
+    report, Table 16; ReplaySSM). G3 adds the accuracy number for vLLM's
+    stock per-step round-to-nearest cast on GDN hybrids.
+- Practical reading: for long reasoning on GDN hybrids in vLLM, keep the
+  state at fp32 (the default, "auto"). The 16-bit throughput lever measured
+  in G2b mostly disappears there and costs accuracy.
+- Next: G3b, exploratory, about 2 GPU-h. On the 4B, compare fp32 and bf16 on
+  the 51 questions with a capped rollout, at max_tokens 81,920 (the model
+  card's math budget), without preemption. Rescoring at 32K replicates the
+  main gap and tests the preemption hypothesis.
