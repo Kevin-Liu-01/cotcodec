@@ -191,7 +191,17 @@ class Runner:
             raise LM2Error("slot override out of range or context below max_tokens + 1,024")
         self.out = args.output_dir
         self.out.mkdir(parents=True, exist_ok=True)
-        self.job_id = os.environ.get("SLURM_JOB_ID") or os.environ.get("COTCODEC_JOB_ID", "local")
+        # The lane does not pass the Slurm job id into the container; a run id names this run's
+        # files (the host run directory is named by the job id).
+        self.job_id = os.environ.get("SLURM_JOB_ID") or (
+            time.strftime("%Y%m%dT%H%M%SZ", time.gmtime()) + f"-{os.getpid()}"
+        )
+        if args.phase == "diag" and args.diag_chat_mode:
+            # Diagnostic only (never analysed): the V4 template's chat mode, to size output lengths.
+            self.arm["chat_template_kwargs"] = {"thinking": False}
+            self.arm.pop("reasoning_effort", None)
+        elif args.diag_chat_mode:
+            raise LM2Error("--diag-chat-mode is only allowed in phase diag")
         root = Path(self.plan["datasets"]["root"])
         self.items: dict[str, list[dict[str, Any]]] = {}
         for task in self.plan["order"]["interleave"]:
@@ -231,6 +241,12 @@ class Runner:
         gguf = args.model_root / self.arm["model_id"] / self.arm["gguf"]
         threads = len(os.sched_getaffinity(0)) if hasattr(os, "sched_getaffinity") else 16
         argv = server_argv(self.plan, args.arm, gguf, args.port, threads, args.server_log_verbosity)
+        # Extra stock llama-server flags from the manifest (e.g. -bs, backend sampling); the
+        # driver-owned flags may not be overridden.
+        extra = list(args.extra_server_arg or [])
+        if set(extra) & {"-m", "-ngl", "--split-mode", "-fit", "-c", "-np", "--port", "--host"}:
+            raise LM2Error("--extra-server-arg may not set driver-owned flags")
+        argv = argv[: argv.index("--host")] + extra + argv[argv.index("--host") :]
         info["server_argv"] = [
             a if a != str(gguf) else f"<snapshot>/{self.arm['gguf']}" for a in argv
         ]
@@ -267,6 +283,8 @@ class Runner:
         status, props = http_json(f"{base}/props", None, 30)
         if status == 200 and isinstance(props, dict):
             template = props.get("chat_template") or ""
+            # The active template (not model output) is kept so it can be compared and committed.
+            (self.out / f"active-chat-template-{self.job_id}.jinja").write_text(template)
             info["props"] = {
                 "total_slots": props.get("total_slots"),
                 "n_ctx": (props.get("default_generation_settings") or {}).get("n_ctx"),
@@ -422,6 +440,8 @@ class Runner:
             "visible_gpus": len(visible),
             "slots": self.arm["slots"],
             "ctx_per_slot": self.arm["ctx_per_slot"],
+            "extra_server_args": list(args.extra_server_arg or []),
+            "diag_chat_mode": bool(args.diag_chat_mode),
         }
         summary_path = self.out / f"summary-{self.job_id}.json"
         if not visible or refused:
@@ -514,7 +534,9 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--plan", type=Path, required=True)
     p.add_argument("--expected-plan-sha256")
     p.add_argument("--arm", required=True)
-    p.add_argument("--phase", choices=("pilot", "main"), required=True)
+    p.add_argument("--phase", choices=("pilot", "main", "diag"), required=True)
+    p.add_argument("--extra-server-arg", action="append", help="a stock llama-server flag")
+    p.add_argument("--diag-chat-mode", action="store_true", help="phase diag only")
     p.add_argument("--seeds", type=int, nargs="+", required=True)
     p.add_argument("--cap", action="append", help="task=N: keep the first N items of a task")
     p.add_argument("--output-dir", type=Path, required=True)

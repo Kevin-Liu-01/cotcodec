@@ -287,3 +287,27 @@ def test_driver_helpers(plan: dict, tmp_path: Path) -> None:
         + "\n{broken"
     )
     assert set(drv.completed_keys([path])) == {"a"}
+
+
+def test_driver_rejects_owned_flags_and_diag_mode_outside_diag(plan: dict, tmp_path: Path) -> None:
+    args = drv.build_parser().parse_args(
+        [
+            "run",
+            "--plan",
+            str(lm2.PLAN_PATH),
+            "--arm",
+            "v4f-q2",
+            "--phase",
+            "main",
+            "--seeds",
+            "42",
+            "--output-dir",
+            str(tmp_path),
+            "--allocation-minutes",
+            "5",
+            "--diag-chat-mode",
+        ]
+    )
+    runner = drv.Runner(args)
+    with pytest.raises(lm2.LM2Error):
+        runner.setup()
