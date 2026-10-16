@@ -1,0 +1,15 @@
+{
+  "lane": {
+    "COTCODEC_GIT_SHA": "78471b75cd60bc9c3c110183d284e103453a03ee",
+    "COTCODEC_MODEL_ID": "qwen3.5-4b",
+    "COTCODEC_SOURCE_SHA256": "18aea6e1898bf41f03d324277bd9c88facb48923fafa219d91ad5fe3f91d7be7",
+    "CUDA_VISIBLE_DEVICES": null
+  },
+  "nvidia_smi": "name, uuid, driver_version, memory.total [MiB], clocks.max.sm [MHz]\nNVIDIA H100 80GB HBM3, GPU-a485003c-eb56-c00a-5efc-ba2fb61d12d5, 570.148.08, 81559 MiB, 1980 MHz\n",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "torch": "2.13.0+cu129",
+  "torch_cuda": "12.9",
+  "transformers": "5.17.0",
+  "utc": "2026-10-16T02:34:23Z",
+  "vllm": "0.31.0"
+}

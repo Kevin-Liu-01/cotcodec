@@ -1,0 +1,121 @@
+{
+  "allocation_minutes": 12.0,
+  "arm": "fp32",
+  "claim_level": "exploratory",
+  "deadline_source": "job.env started_at",
+  "deadline_utc": "2026-10-16T02:42:42Z",
+  "experiment_id": "g3b-long-budget-v1",
+  "finished_at": "2026-10-16T02:39:42Z",
+  "job": "long-budget",
+  "model": "qwen3.5-4b",
+  "phase": "pilot",
+  "plan": {
+    "arms": [
+      "fp32",
+      "bf16"
+    ],
+    "math_gen_seconds": 240.0,
+    "math_questions": [
+      9,
+      17,
+      21,
+      24,
+      25,
+      32,
+      33,
+      34,
+      37,
+      38,
+      39,
+      40,
+      43,
+      44,
+      45,
+      46,
+      47,
+      49,
+      50,
+      51,
+      52,
+      58,
+      59,
+      60,
+      61,
+      64,
+      65,
+      68,
+      69,
+      73,
+      74,
+      77,
+      78,
+      79,
+      81,
+      83,
+      84,
+      86,
+      87,
+      88,
+      89,
+      90,
+      101,
+      103,
+      104,
+      106,
+      115,
+      122,
+      124,
+      130,
+      131
+    ],
+    "math_seeds": [
+      42,
+      43,
+      44
+    ],
+    "phase": "pilot"
+  },
+  "signal": null,
+  "started_at": "2026-10-16T02:34:20Z",
+  "verification": {
+    "artifact_root_sha256": "3b8a075149bffe4dea784db5b4b37bc0896688cba0b3de7d8d0f6e8ae6157b9e",
+    "mode": "full",
+    "model_id": "qwen3.5-4b",
+    "receipt": "/model-cache/cotcodec-receipts/qwen3.5-4b.json",
+    "receipt_sha256": "75ebfc531acdcbc0c39bbf83ee7bf5267a3ddf02c4fafdf6181624612a0d3082",
+    "repo_id": "Qwen/Qwen3.5-4B",
+    "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+    "total_bytes": 9342907469,
+    "verified_by": "lane (model-verification.txt)"
+  },
+  "workers": {
+    "math": {
+      "argv": [
+        "/usr/local/bin/python",
+        "/workspace/cotcodec/scripts/run_g3b_long_budget.py",
+        "worker",
+        "--phase",
+        "pilot",
+        "--model",
+        "qwen3.5-4b",
+        "--arm",
+        "fp32",
+        "--output-dir",
+        "/outputs/g3b",
+        "--deadline",
+        "1792118562.000"
+      ],
+      "exit": 3,
+      "gpu_memory_after_mib": [
+        0
+      ],
+      "started_at": "2026-10-16T02:34:23Z",
+      "status": "partial",
+      "wall_s": 319.1,
+      "worker_done": {
+        "exit": 3,
+        "utc": "2026-10-16T02:39:38Z"
+      }
+    }
+  }
+}

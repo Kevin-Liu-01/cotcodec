@@ -1,0 +1,146 @@
+# G3b (EXPLORATORY): does G3's bf16 GDN-state accuracy loss on Qwen3.5-4B survive the model
+# card's 81,920-token budget for competition math, and does it depend on preemption? (D124;
+# program/evidence/2026-10-16/g3-state-precision-accuracy/README.md and its independent checks.)
+#
+# G3 found that a bfloat16 GDN recurrent state (vLLM 0.31.0 --mamba-ssm-cache-dtype bfloat16,
+# rounding to nearest at every decode step) costs Qwen3.5-4B about 10.7 points of MATH-500
+# level-5 accuracy at a 32,768-token cap, nearly all of it rollouts that reach the cap without an
+# answer, and that the bf16 gap depended on submission order under heavy preemption. G3b reruns
+# fp32 (auto) and bf16 on the 51 questions that had a capped rollout in G3, with everything of
+# G3's math arm kept (prompts, chat template, thinking, sampling, request seeds, engine settings)
+# except: max_tokens 81,920; max_model_len 82,944; max_num_seqs 23, so that every running
+# sequence fits the block pool at its longest and vLLM never preempts (asserted at engine start;
+# the preemption counter is recorded and must stay 0).
+#
+# EXPLORATORY. Not a registered experiment: no preregistration, no hypothesis test, no decision
+# rule. Cap: 2.5 physical GPU-h in all, image builds and the pilot included. The 51 questions were
+# selected on G3's own outcomes (a capped rollout in any arm), so G3's numbers on them are biased
+# by that selection, and the G3b 32K-rescored gap on them is not an unbiased estimate of G3's
+# population gap.
+#
+# Jobs (docker-research lane, one H100 each, digest-pinned cotcodec-vllm cu129 overlay built
+# from this branch with G3's build route):
+#   pilot  scripts/run_g3b_long_budget.py run --phase pilot --arm A: both arms side by side for a
+#          short generation budget (sizing: block pool and fit, step time at 23 running,
+#          preemptions); its outputs are not in the analysis.
+#   main   scripts/run_g3b_long_budget.py run --phase main --arm A: one engine per arm, side by
+#          side on separate GPUs, every request submitted at once in G3's order (seed, then
+#          question), FCFS admission at 23 running.
+# scripts/analyze_g3b_long_budget.py (CPU, on the host, where the texts stay) scores and joins.
+schema_version: 1
+experiment_id: g3b-long-budget-v1
+claim_level: exploratory
+seeds: [42, 43, 44]
+
+models:
+  qwen3.5-4b:
+    revision: "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a"
+    receipt_root: cotcodec-receipts
+
+# fp32 and bf16 as in G3 ("auto" resolves to the checkpoint's float32; recorded per engine).
+# fp32_aa is a second fp32 engine on the same requests (a partial A/A), run only if the budget
+# allows; it is declared here so that its arm name and dtype are fixed before any job.
+arms:
+  fp32: auto
+  bf16: bfloat16
+  fp32_aa: auto
+
+# The questions: every MATH-500 level-5 question (G3's 134-question file, by prompt index) with
+# at least one rollout that reached G3's 32,768-token cap (finish_reason "length") in any arm
+# and seed of the Qwen3.5-4B main run, read from G3's committed per-request data (checker v2).
+questions:
+  source: program/evidence/2026-10-16/g3-state-precision-accuracy/data/per-request.jsonl.gz
+  source_sha256: "683c6ceb1b4a88ad6ff412e4a7adf528dd543784b8c28a1ff424e611990d8d3d"
+  rule: "phase main, model qwen3.5-4b, task math, finish_reason length, any arm and seed"
+  # SHA-256 of the indices, one per line in ascending order, each line ending in a newline.
+  indices_sha256: "af3837b92c065b76a5bcd5c38738e628a6a02d87034f08e337b72b14572c3237"
+  indices: [9, 17, 21, 24, 25, 32, 33, 34, 37, 38, 39, 40, 43, 44, 45, 46, 47, 49, 50, 51, 52,
+            58, 59, 60, 61, 64, 65, 68, 69, 73, 74, 77, 78, 79, 81, 83, 84, 86, 87, 88, 89, 90,
+            101, 103, 104, 106, 115, 122, 124, 130, 131]
+
+# G3's rollout engine (experiments/g3/g3-state-precision-accuracy-v1.yaml, engine) except
+# max_num_seqs: 23 sequences of max_model_len tokens fit G3's block pools (4B: 3,733 x 528 for
+# fp32, 7,248 x 272 for bf16; ceil(82,944 / block) attention blocks plus one block in each of the
+# 3 GDN groups per sequence, one block reserved by vLLM), so no request is ever preempted. The
+# worker checks the fit against the engine's own block pool before it submits anything.
+engine:
+  dtype: bfloat16
+  seed: 42
+  gpu_memory_utilization: 0.90
+  max_num_seqs: 23
+  max_num_batched_tokens: 8192
+  enable_prefix_caching: false
+  logprobs_mode: raw_logprobs
+  limit_mm_per_prompt: {image: 0, video: 0}
+  disable_log_stats: false
+  gdn_groups: 3
+stats_interval_s: 0.5
+
+tasks:
+  # G3's math task (same prompt file and digest, suffix, thinking, sampling and request seeds)
+  # at the model card's competition-math output length (Qwen/Qwen3.5-4B README @ 851bf6e8, "Best
+  # Practices": 32,768 tokens for most queries, 81,920 for benchmarking on math and programming
+  # competitions; https://huggingface.co/Qwen/Qwen3.5-4B, read 2026-10-16).
+  math:
+    prompts:
+      file: experiments/g3/math500-l5-134.jsonl
+      sha256: "04154d6474b60dc8e2134cabfe5d43aca08756c3e153c49e8cf9133b9a81891e"
+      count: 134
+    user_suffix: "\nPlease reason step by step, and put your final answer within \\boxed{}."
+    enable_thinking: true
+    # 81,920 + 1,024: the longest of the 51 prompts is 857 tokens (G3 per-request prompt_len).
+    max_model_len: 82944
+    sampling:
+      temperature: 1.0
+      top_p: 0.95
+      top_k: 20
+      min_p: 0.0
+      presence_penalty: 1.5
+      repetition_penalty: 1.0
+      max_tokens: 81920
+      logprobs: 0
+    # Each rollout is also scored as if capped at these lengths: its first L generated tokens
+    # (decoded in the worker) go through G3's checker v2. 32,768 is G3's cap.
+    rescore_caps: [32768]
+
+# Sizing pilot: both arms, side by side, the main request list in the main order for a short
+# generation budget. Not part of the analysis.
+pilot:
+  arms: [fp32, bf16]
+  seeds: [42, 43, 44]
+  gen_seconds: 240
+
+# The main run, declared after the pilot (jobs 1562 fp32 and 1564 bf16, 240 s of generation each;
+# their outputs are not in the analysis). Pilot (ops/size_main.py): block pools 3,821 x 528 (fp32)
+# and 7,418 x 272 (bf16), so 23 sequences of 82,944 tokens fit (23.7 and 24.1; vLLM's own figure
+# agrees); 23 running throughout, 0 preemptions, about 2,520 output tok/s at up to 0.5M context
+# tokens; step time about 6 ms + 12 ms per million context tokens. A no-preemption FCFS
+# simulation with G3's lengths on these questions (capped rollouts continued with G3's late-ending
+# hazard, or 0.6 of it) puts the generation at 2,500-3,200 s (fp32) and 3,500-4,600 s (bf16).
+# Budget: 0.205 GPU-h used by the first build and the pilot, about 0.02 for the main build, so the
+# two main jobs get Slurm limits of 56 min (fp32) and 83 min (bf16): at most about 2.47 GPU-h in
+# all even if both are cut by time (each driver stops generating 255 s before its limit). The
+# partial A/A (fp32_aa) does not fit the 2.5 GPU-h cap and is not run. gen_seconds is an upper
+# bound; each job's allocation deadline binds first.
+main:
+  arms: [fp32, bf16]
+  seeds: [42, 43, 44]
+  gen_seconds: 4800
+
+# Partial A/A, declared after the main fp32 job (1574: 153 of 153 in 2,338 s, RunTime 00:40:58, 0
+# preemptions; its seed-42 requests had all finished by 1,110 s) and while the main bf16 job
+# (1576, limit 82 min) was still running. A second fp32 engine on the 51 seed-42 requests (the
+# main run's first-admitted wave; same request seeds and order), Slurm limit 25 min. It runs only
+# if, once job 1576 has ended, the GPU-h used so far (builds, pilot, main) leave at least 25 min
+# of the 2.5 GPU-h cap; otherwise it is not run. gen_seconds is an upper bound.
+aa:
+  arms: [fp32_aa]
+  seeds: [42]
+  gen_seconds: 1200
+
+analysis:
+  bootstrap_reps: 10000
+  bootstrap_seed: 42
+
+budget:
+  total_physical_gpu_hours: 2.5

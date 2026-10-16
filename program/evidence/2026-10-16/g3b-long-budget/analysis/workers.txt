@@ -1,0 +1,2 @@
+/home/kevin/cotcodec-runs/stage0/g3b-long-budget/runs/main/1574/g3b/qwen3.5-4b-fp32-math
+/home/kevin/cotcodec-runs/stage0/g3b-long-budget/runs/main/1576/g3b/qwen3.5-4b-bf16-math

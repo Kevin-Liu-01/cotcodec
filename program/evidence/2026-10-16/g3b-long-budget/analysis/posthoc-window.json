@@ -1,0 +1,249 @@
+{
+  "bins_60s": [
+    {
+      "in_window": false,
+      "mean_running": 23.0,
+      "phase_s": [
+        3367.0,
+        3427.0
+      ],
+      "steps": 4691,
+      "tok_per_s": 1798.2,
+      "tokens": 107892
+    },
+    {
+      "in_window": false,
+      "mean_running": 22.983193277310924,
+      "phase_s": [
+        3427.0,
+        3487.0
+      ],
+      "steps": 4836,
+      "tok_per_s": 1853.7166666666667,
+      "tokens": 111223
+    },
+    {
+      "in_window": false,
+      "mean_running": 23.0,
+      "phase_s": [
+        3487.0,
+        3547.0
+      ],
+      "steps": 5092,
+      "tok_per_s": 1951.9,
+      "tokens": 117114
+    },
+    {
+      "in_window": false,
+      "mean_running": 23.0,
+      "phase_s": [
+        3547.0,
+        3607.0
+      ],
+      "steps": 4727,
+      "tok_per_s": 1812.0166666666667,
+      "tokens": 108721
+    },
+    {
+      "in_window": false,
+      "mean_running": 23.0,
+      "phase_s": [
+        3607.0,
+        3667.0
+      ],
+      "steps": 4517,
+      "tok_per_s": 1731.4666666666667,
+      "tokens": 103888
+    },
+    {
+      "in_window": false,
+      "mean_running": 23.0,
+      "phase_s": [
+        3667.0,
+        3727.0
+      ],
+      "steps": 4469,
+      "tok_per_s": 1713.0833333333333,
+      "tokens": 102785
+    },
+    {
+      "in_window": false,
+      "mean_running": 23.0,
+      "phase_s": [
+        3727.0,
+        3787.0
+      ],
+      "steps": 4356,
+      "tok_per_s": 1669.7833333333333,
+      "tokens": 100187
+    },
+    {
+      "in_window": false,
+      "mean_running": 23.0,
+      "phase_s": [
+        3787.0,
+        3847.0
+      ],
+      "steps": 4333,
+      "tok_per_s": 1660.95,
+      "tokens": 99657
+    },
+    {
+      "in_window": false,
+      "mean_running": 23.0,
+      "phase_s": [
+        3847.0,
+        3907.0
+      ],
+      "steps": 4570,
+      "tok_per_s": 1751.8,
+      "tokens": 105108
+    },
+    {
+      "in_window": false,
+      "mean_running": 23.0,
+      "phase_s": [
+        3907.0,
+        3967.0
+      ],
+      "steps": 4335,
+      "tok_per_s": 1661.7333333333333,
+      "tokens": 99704
+    },
+    {
+      "in_window": true,
+      "mean_running": 23.0,
+      "phase_s": [
+        3967.0,
+        4027.0
+      ],
+      "steps": 3984,
+      "tok_per_s": 1527.1833333333334,
+      "tokens": 91631
+    },
+    {
+      "in_window": true,
+      "mean_running": 22.991525423728813,
+      "phase_s": [
+        4027.0,
+        4087.0
+      ],
+      "steps": 3898,
+      "tok_per_s": 1494.2,
+      "tokens": 89652
+    },
+    {
+      "in_window": true,
+      "mean_running": 23.0,
+      "phase_s": [
+        4087.0,
+        4147.0
+      ],
+      "steps": 4111,
+      "tok_per_s": 1575.85,
+      "tokens": 94551
+    },
+    {
+      "in_window": true,
+      "mean_running": 23.0,
+      "phase_s": [
+        4147.0,
+        4207.0
+      ],
+      "steps": 4016,
+      "tok_per_s": 1539.45,
+      "tokens": 92367
+    },
+    {
+      "in_window": false,
+      "mean_running": 23.0,
+      "phase_s": [
+        4207.0,
+        4267.0
+      ],
+      "steps": 3932,
+      "tok_per_s": 1507.2333333333333,
+      "tokens": 90434
+    },
+    {
+      "in_window": false,
+      "mean_running": 22.714285714285715,
+      "phase_s": [
+        4267.0,
+        4327.0
+      ],
+      "steps": 4275,
+      "tok_per_s": 1617.85,
+      "tokens": 97071
+    },
+    {
+      "in_window": false,
+      "mean_running": 20.637931034482758,
+      "phase_s": [
+        4327.0,
+        4387.0
+      ],
+      "steps": 4208,
+      "tok_per_s": 1448.4166666666667,
+      "tokens": 86905
+    },
+    {
+      "in_window": false,
+      "mean_running": 18.640350877192983,
+      "phase_s": [
+        4387.0,
+        4447.0
+      ],
+      "steps": 4254,
+      "tok_per_s": 1318.2166666666667,
+      "tokens": 79093
+    },
+    {
+      "in_window": false,
+      "mean_running": 15.584745762711865,
+      "phase_s": [
+        4447.0,
+        4507.0
+      ],
+      "steps": 4985,
+      "tok_per_s": 1294.9,
+      "tokens": 77694
+    },
+    {
+      "in_window": false,
+      "mean_running": 13.229166666666666,
+      "phase_s": [
+        4507.0,
+        4567.0
+      ],
+      "steps": 4435,
+      "tok_per_s": 977.1166666666667,
+      "tokens": 58627
+    },
+    {
+      "in_window": false,
+      "mean_running": null,
+      "phase_s": [
+        4567.0,
+        4627.0
+      ],
+      "steps": 0,
+      "tok_per_s": 0.0,
+      "tokens": 0
+    }
+  ],
+  "generation_seconds_lost_estimate": 17.85349429785927,
+  "phase_start_utc": "2026-10-16T02:58:53Z",
+  "phase_wall_s": 4555.1174,
+  "rate_before_tok_per_s": 1691.47,
+  "rate_during_tok_per_s": 1536.6051282051283,
+  "window": {
+    "end_utc": "2026-10-16T04:08:15Z",
+    "note": "host load average about 17,600 from another project's CPU-only run outside Slurm, 04:05-04:08 UTC (killed 04:08; load 13,729 and falling at 04:08:15)",
+    "start_utc": "2026-10-16T04:05:00Z"
+  },
+  "window_phase_s": [
+    3967.0,
+    4162.0
+  ]
+}

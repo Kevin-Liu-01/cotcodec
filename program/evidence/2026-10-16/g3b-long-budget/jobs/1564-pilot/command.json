@@ -1,0 +1,19 @@
+[
+  "python",
+  "scripts/run_g3b_long_budget.py",
+  "run",
+  "--phase",
+  "pilot",
+  "--model",
+  "qwen3.5-4b",
+  "--arm",
+  "bf16",
+  "--seeds",
+  "42",
+  "43",
+  "44",
+  "--output-dir",
+  "/outputs/g3b",
+  "--allocation-minutes",
+  "12"
+]

@@ -1,0 +1,30 @@
+2026-10-16T02:30:23Z clean checkout of 78471b75cd60bc9c3c110183d284e103453a03ee (tree 776e93c4) from bundle a4ceb733; git archive sha256 c7a6ceb95727ad34256a79a6fd28c71b69ad5166e3c24d35cd2f48ba9ea1420a
+2026-10-16T02:30:50Z vLLM overlay build job 1557 submitted (git 78471b75, archive 18aea6e1, 1 H100, limit 5 min)
+2026-10-16T02:32:59Z build done: 1557 vLLM overlay e9950f79 (git 78471b75, RunTime 00:01:14, PASS)
+2026-10-16T02:33:07Z post-build CPU selftest submitted: 1558 (image e9950f79; no GRES)
+2026-10-16T02:33:58Z post-build CPU selftest 1558 done: selftest exit 0 (ok true; prompt 857 + 81,920 <= 82,944; 23 sequences fit both of G3 4B pools), plan pilot exit 0 (153 requests)
+2026-10-16T02:34:11Z pilot-q35-4b-fp32 submitted: 1562 (pilot-q35-4b-fp32.yaml)
+2026-10-16T02:34:11Z pilot-q35-4b-bf16 submitted: 1564 (pilot-q35-4b-bf16.yaml)
+2026-10-16T02:53:22Z pilot done: 1562 fp32 FAILED 3:0 by design (time budget) RunTime 00:05:32 (240 s, 14 of 153 finished, 609,513 tokens, 2,538 tok/s, 23 running, 0 preemptions, blocks 3821 x 528); 1564 bf16 FAILED 3:0 by design RunTime 00:05:32 (240 s, 4 of 153 finished, 603,888 tokens, 2,514 tok/s, 23 running, 0 preemptions, blocks 7418 x 272)
+2026-10-16T02:53:26Z clean checkout of 8ba1898acf3ad6267dbec0b5ec1a84aefc92baf5 (tree 195ee894) from bundle 8e6b13dc; git archive sha256 bf88f09e77775fd8f486ec74580b24b2cd77337bce47491c0309af1edb6ef0e8
+2026-10-16T02:53:54Z vLLM overlay build job 1569 submitted (git 8ba1898a, archive 69ec1a76, 1 H100, limit 5 min)
+2026-10-16T02:56:13Z build done: 1569 vLLM overlay (git 8ba1898a, RunTime 00:01:46)
+2026-10-16T02:56:21Z post-build CPU selftest submitted: 1570 (image cd9170d5; no GRES)
+2026-10-16T02:56:59Z post-build CPU selftest 1570 done: selftest exit 0 (ok true), plans pilot and main exit 0 (main: fp32 and bf16, 153 requests each)
+2026-10-16T02:57:00Z main-q35-4b-fp32 submitted: 1574 (main-q35-4b-fp32.yaml)
+2026-10-16T02:57:00Z main-q35-4b-bf16 submitted: 1576 (main-q35-4b-bf16.yaml)
+2026-10-16T02:59:35Z CPU scoring check on the pilot workers (score only; not in the analysis) submitted: 1577 (no GRES)
+2026-10-16T03:40:03Z main fp32 done: 1574 COMPLETED 0:0 RunTime 00:40:58 (153 of 153, 2,338 s, 4,597,287 tokens, 0 preemptions, peak running 23, peak KV 30%)
+2026-10-16T03:40:06Z clean checkout of 063273d157b29c96e70006dbcba7a64d149fbedf (tree f4ac969e) from bundle 299be96a; git archive sha256 14bbbb68054cbb84a5e01813981525e03bb3aa40a0a4d7bb780b4307ba3268a1
+2026-10-16T03:40:22Z vLLM overlay build job 1583 submitted (git 063273d1, archive 5e34e986, 1 H100, limit 5 min)
+2026-10-16T03:42:05Z build done: 1583 vLLM overlay 34f01e3a (git 063273d1, RunTime 00:01:13, PASS)
+2026-10-16T03:42:05Z post-build CPU selftest submitted: 1584 (image 34f01e3a; no GRES)
+2026-10-16T03:42:23Z post-build CPU selftest 1584 done: selftest exit 0 (ok true), plans pilot, main and aa exit 0 (aa: fp32_aa, 51 seed-42 requests)
+2026-10-16T04:15:10Z aa gate: 1576 RunTime 01:17:58 (4678 s); used 3375 + 4678 = 8053 of 9000 GPU-s, 947 left < 1560: the partial A/A is not run
+2026-10-16T04:20:03Z main bf16 done: 1576 FAILED 3:0 by design RunTime 01:17:58 (140 of 153 finished, 13 seed-44 rollouts cut by the time budget at 4,556 s, 7,700,200 tokens, 0 preemptions); the job overlapped the host-load window 04:05-04:08 UTC (another project's CPU run outside Slurm)
+2026-10-16T04:20:07Z clean checkout of b066babd95bb15ba435c56757b47f5be585dca1d (tree 4ea9f117) from bundle 9f0e669d; git archive sha256 d3be8e1f43f6fe3eb6b8ca42018ea4006eb1a9a7933a135eecbac6ed10bff94c
+2026-10-16T04:20:13Z CPU scoring and analysis (git b066babd; main 1574, 1576) submitted: 1599 (no GRES)
+2026-10-16T04:21:30Z CPU analysis 1599 done (git b066babd): 306 rows; at 81,920 fp32 92.2 / bf16 70.6 as run (13 bf16 rollouts time-cut), complete pairs 92.5 / 75.5; rescored at 32,768 67.0 / 23.5; preemptions 0 and 0; outputs staged into the evidence analysis/ and data/
+2026-10-16T04:23:57Z post hoc (no job, Mac): bf16 decode rate around the host-load window from the staged phase-stats (ops/posthoc_window.py): 1,691 tok/s in the 5 min before, 1,537 during, about 18 s of generation lost
+2026-10-16T04:24:40Z CPU post hoc repetition measure (token ids only; ops/posthoc_repetition.py) submitted: 1600 (no GRES)
+2026-10-16T04:24:55Z CPU post hoc repetition rerun with the committed (reformatted, same logic) script: 1601 (no GRES); 1600 used the unformatted draft

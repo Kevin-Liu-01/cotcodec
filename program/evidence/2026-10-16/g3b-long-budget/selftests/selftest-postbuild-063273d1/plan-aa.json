@@ -1,0 +1,107 @@
+{
+  "claim_level": "exploratory",
+  "engine_kwargs": {
+    "fp32_aa": {
+      "disable_log_stats": false,
+      "dtype": "bfloat16",
+      "enable_prefix_caching": false,
+      "gpu_memory_utilization": 0.9,
+      "limit_mm_per_prompt": {
+        "image": 0,
+        "video": 0
+      },
+      "logprobs_mode": "raw_logprobs",
+      "mamba_ssm_cache_dtype": "auto",
+      "max_model_len": 82944,
+      "max_num_batched_tokens": 8192,
+      "max_num_seqs": 23,
+      "model": "/model-cache/cotcodec-models/qwen3.5-4b",
+      "seed": 42,
+      "tokenizer": "/model-cache/cotcodec-models/qwen3.5-4b",
+      "trust_remote_code": false
+    }
+  },
+  "experiment_id": "g3b-long-budget-v1",
+  "first_requests": [
+    "m/q009/s42",
+    "m/q017/s42",
+    "m/q021/s42"
+  ],
+  "math_requests": 51,
+  "phase": {
+    "arms": [
+      "fp32_aa"
+    ],
+    "math_gen_seconds": 1200.0,
+    "math_questions": [
+      9,
+      17,
+      21,
+      24,
+      25,
+      32,
+      33,
+      34,
+      37,
+      38,
+      39,
+      40,
+      43,
+      44,
+      45,
+      46,
+      47,
+      49,
+      50,
+      51,
+      52,
+      58,
+      59,
+      60,
+      61,
+      64,
+      65,
+      68,
+      69,
+      73,
+      74,
+      77,
+      78,
+      79,
+      81,
+      83,
+      84,
+      86,
+      87,
+      88,
+      89,
+      90,
+      101,
+      103,
+      104,
+      106,
+      115,
+      122,
+      124,
+      130,
+      131
+    ],
+    "math_seeds": [
+      42
+    ],
+    "phase": "aa"
+  },
+  "rescore_caps": [
+    32768
+  ],
+  "sampling": {
+    "logprobs": 0,
+    "max_tokens": 81920,
+    "min_p": 0.0,
+    "presence_penalty": 1.5,
+    "repetition_penalty": 1.0,
+    "temperature": 1.0,
+    "top_k": 20,
+    "top_p": 0.95
+  }
+}
