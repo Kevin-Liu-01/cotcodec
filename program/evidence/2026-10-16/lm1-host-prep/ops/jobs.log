@@ -1,0 +1,16 @@
+2026-10-16T02:39:13Z LM1 fetch kimi job 1565 submitted (CPU lane, no GRES, limit 8 h; source a3e0a495; ids: kimi-k2.5-ud-tq1-0-gguf)
+2026-10-16T02:39:13Z LM1 fetch v4flash job 1566 submitted (CPU lane, no GRES, limit 8 h; source a3e0a495; ids: deepseek-v4-flash-0731-ds4-q2-gguf deepseek-v4-flash-0731-ud-iq3-xxs-gguf deepseek-v4-flash-0731-ud-q8-k-xl-gguf)
+2026-10-16T02:39:13Z LM1 fetch ossqwen job 1567 submitted (CPU lane, no GRES, limit 8 h; source a3e0a495; ids: gpt-oss-120b-mxfp4-gguf qwen3-235b-a22b-instruct-2507-ud-q3-k-xl-gguf)
+2026-10-16T02:39:51Z llama.cpp base image build job 1568 submitted (CPU only, no GRES; source a3e0a495; root llamacpp-base-a3e0a495)
+2026-10-16T02:44:21Z llama.cpp base image build job 1568 JobState=COMPLETED ExitCode=0:0 RunTime=00:04:19 AllocTRES=
+2026-10-16T03:09:35Z LM1 fetch-kimi job 1565 JobState=COMPLETED ExitCode=0:0 RunTime=00:30:03 AllocTRES=
+2026-10-16T03:11:05Z LM1 fetch-ossqwen job 1567 JobState=COMPLETED ExitCode=0:0 RunTime=00:31:47 AllocTRES=
+2026-10-16T03:23:06Z LM1 fetch-v4flash job 1566 JobState=COMPLETED ExitCode=0:0 RunTime=00:43:39 AllocTRES=
+2026-10-16T03:25:31Z clean checkout of 982ee1e660249b0360aa0f4c92743da157e8f14d (tree 6e005640) from bundle d91ce06a; git archive sha256 578419403e3e4d47a39612ab2ff09039c4ce06227189722fbb4b511024abe368
+2026-10-16T03:26:00Z capsule 4c8e7f361733c72d53e20563c0fb55069fc9b7752959f393edbf7de308e36d62 (git 982ee1e6)
+2026-10-16T03:26:00Z llama.cpp overlay build job 1578 submitted (git 982ee1e6, archive 4c8e7f36, CPU only, no GRES, limit 10 min)
+2026-10-16T03:26:14Z LM1 receipt verification job 1579 submitted (CPU only, no GRES, no network; source 982ee1e6; ids: kimi-k2.5-ud-tq1-0-gguf deepseek-v4-flash-0731-ds4-q2-gguf deepseek-v4-flash-0731-ud-iq3-xxs-gguf deepseek-v4-flash-0731-ud-q8-k-xl-gguf qwen3-235b-a22b-instruct-2507-ud-q3-k-xl-gguf gpt-oss-120b-mxfp4-gguf)
+2026-10-16T03:26:44Z llama.cpp overlay build job 1578 JobState=COMPLETED ExitCode=0:0 RunTime=00:00:39 AllocTRES=
+2026-10-16T03:29:45Z LM1 receipt verification job 1579 JobState=COMPLETED ExitCode=0:0 RunTime=00:03:21 AllocTRES=
+2026-10-16T03:30:02Z LM1 smoke test job 1582 submitted (4 H100, limit 14 min = 0.933 GPU-h cap; overlay sha256:db2dcbf11a004efbe981493a637c87d2250afa3405d19cf1d097cb08ebbf290c; smoke-982ee1e6.yaml)
+2026-10-16T03:35:49Z LM1 smoke test job 1582 JobState=COMPLETED ExitCode=0:0 RunTime=00:05:37 AllocTRES=

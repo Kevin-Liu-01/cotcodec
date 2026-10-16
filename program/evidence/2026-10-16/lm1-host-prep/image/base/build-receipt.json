@@ -1,0 +1,50 @@
+{
+  "artifacts": {
+    "base-devel-inspect.json": "7f52e7f3c8dea9e05c93907614420962b2da6548e94348aa1304cb090a7b66f0",
+    "base-runtime-inspect.json": "822780774667d87b863cb08cf552584229e0cde13e5bd0a4789508fd5f6fdde0",
+    "docker-build.log": "6b1ce29cecb74fcd2f38064274fff52a4084e195ed216ddc2ccae86f7ac563a7",
+    "image-id.txt": "00315e0dcd4481fd36bc1e2ee5418d191a90f48e91f1151c85766d99f214f8d6",
+    "image-inspect.json": "b1500002c668237e6a8973973278ebd2c54a6aa8b4fd6bd8f10ea3a8dac101ad",
+    "ldd-missing.txt": "bd1d731270fe863a6a69842f041e955ec9e274c7a582c00a59d361803b292e39",
+    "manifest.txt": "79f500da5457f0efc9572b741ba689db5eeebd8ef583ac720e4a6fe60905d947",
+    "runtime-env.txt": "d3fc41de552108b63d762de786eebff2531dd8f17eb4cb7cecab94ee3e8516cd",
+    "versions.txt": "370afb3e64d723b23e28d4e979820d233a0c041fd077f6e1b96d0193eccae4ea"
+  },
+  "build_jobs": 64,
+  "builder_sha256": "ac8a27928e97596acaba987e8a1f6107e4afe1bd7492451378f2999fcfc2db1d",
+  "cotcodec_git_sha": "a3e0a4955918d6002ca22c7e0b752f18337b02e2",
+  "cuda_devel_image": "docker.io/nvidia/cuda@sha256:4b9ed5fa8361736996499f64ecebf25d4ec37ff56e4d11323ccde10aa36e0c43",
+  "cuda_devel_image_id": "sha256:154bd2b08b4ccf152598c633958f4da7426d27a160d877fd8ccecb266285e35a",
+  "cuda_devel_image_tag": "nvidia/cuda:12.8.1-devel-ubuntu24.04",
+  "cuda_runtime_image": "docker.io/nvidia/cuda@sha256:828c4d878adcaa4265d80c95d8ec877149b49bb2419a4cf3bb6aa889bbb7ca2e",
+  "cuda_runtime_image_id": "sha256:011c9490f10163aa06e8fbeab37f948f9025ca8fc7e407c514ff0127684cbbd8",
+  "cuda_runtime_image_tag": "nvidia/cuda:12.8.1-runtime-ubuntu24.04",
+  "dockerfile_sha256": "235f7f5a0b62d79bd4422763a9921f44fc10601a47b8541f0c501da7da655233",
+  "finished_at": "2026-10-16T02:44:05Z",
+  "gres_requested": "none",
+  "image_id": "sha256:fb8600d96560412d65ec9c269b555c8db6ed4bcfd86a3556658b1c108073e848",
+  "image_tag": "cotcodec-llamacpp:b11669-cu128",
+  "job_tres": "TRES=cpu=64,mem=128G,node=1,billing=64",
+  "kind": "llamacpp-base-build",
+  "llama_cpp": {
+    "commit": "620d2225cc436ab0b001e3200e590e3b286ef9ab",
+    "cuda_architectures": "90",
+    "patches": [],
+    "release": "b11669",
+    "repository": "https://github.com/ggml-org/llama.cpp",
+    "source_archive_sha256": "622f13ebf8a733003c9ae70ffe96a55c5d09bf2e0e6212ed212efcaca71bf066",
+    "stable_tag": "v0.7.0",
+    "tools": [
+      "llama-server",
+      "llama-cli",
+      "llama-bench",
+      "llama-perplexity"
+    ],
+    "tree": "6868e0a538a05e9a253a0b86ccb71b4e06a64684"
+  },
+  "network_during_build": "host (apt only)",
+  "registry_repo_digest": "127.0.0.1:5000/cotcodec-llamacpp@sha256:d445e09f9f0167cbce65be9fecd0f38c539b243ea321ee281ebeea259e904131",
+  "schema_version": 1,
+  "slurm_job_id": "1568",
+  "started_at": "2026-10-16T02:39:57Z"
+}

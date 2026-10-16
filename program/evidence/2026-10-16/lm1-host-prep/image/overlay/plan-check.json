@@ -1,0 +1,1 @@
+{"experiment": "lm1-host-smoke-v1", "models": ["gpt-oss-120b-mxfp4-gguf", "kimi-k2.5-ud-tq1-0-gguf", "deepseek-v4-flash-0731-ds4-q2-gguf", "deepseek-v4-flash-0731-ud-iq3-xxs-gguf", "qwen3-235b-a22b-instruct-2507-ud-q3-k-xl-gguf", "deepseek-v4-flash-0731-ud-q8-k-xl-gguf"], "plan_sha256": "5e36ae33dfe6999a250e9e117e2ee7a18f26811f0859f45c6cd2af9ff3d39791", "status": "PASS"}

@@ -1,0 +1,13 @@
+== llama-server
+version: 0.7.0-dev (build 11669, commit 620d2225)
+built with GNU 14.2.0 for Linux x86_64
+== llama-cli
+version: 0.7.0-dev (build 11669, commit 620d2225)
+built with GNU 14.2.0 for Linux x86_64
+== llama-bench
+load_backend: loaded CPU backend from /opt/llama.cpp/libggml-cpu-zen4.so
+version: 0.7.0-dev (build 11669, commit 620d2225)
+built with GNU 14.2.0 for Linux x86_64
+== llama-perplexity
+version: 0.7.0-dev (build 11669, commit 620d2225)
+built with GNU 14.2.0 for Linux x86_64

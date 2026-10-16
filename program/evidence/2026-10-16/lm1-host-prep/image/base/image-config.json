@@ -1,0 +1,61 @@
+{
+ "Architecture": "amd64",
+ "Config": {
+  "Cmd": [
+   "llama-server",
+   "--version"
+  ],
+  "Entrypoint": null,
+  "Env": [
+   "PATH=/opt/llama.cpp:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+   "NVARCH=x86_64",
+   "NVIDIA_REQUIRE_CUDA=cuda>=12.8 brand=unknown,driver>=470,driver<471 brand=grid,driver>=470,driver<471 brand=tesla,driver>=470,driver<471 brand=nvidia,driver>=470,driver<471 brand=quadro,driver>=470,driver<471 brand=quadrortx,driver>=470,driver<471 brand=nvidiartx,driver>=470,driver<471 brand=vapps,driver>=470,driver<471 brand=vpc,driver>=470,driver<471 brand=vcs,driver>=470,driver<471 brand=vws,driver>=470,driver<471 brand=cloudgaming,driver>=470,driver<471 brand=unknown,driver>=535,driver<536 brand=grid,driver>=535,driver<536 brand=tesla,driver>=535,driver<536 brand=nvidia,driver>=535,driver<536 brand=quadro,driver>=535,driver<536 brand=quadrortx,driver>=535,driver<536 brand=nvidiartx,driver>=535,driver<536 brand=vapps,driver>=535,driver<536 brand=vpc,driver>=535,driver<536 brand=vcs,driver>=535,driver<536 brand=vws,driver>=535,driver<536 brand=cloudgaming,driver>=535,driver<536 brand=unknown,driver>=550,driver<551 brand=grid,driver>=550,driver<551 brand=tesla,driver>=550,driver<551 brand=nvidia,driver>=550,driver<551 brand=quadro,driver>=550,driver<551 brand=quadrortx,driver>=550,driver<551 brand=nvidiartx,driver>=550,driver<551 brand=vapps,driver>=550,driver<551 brand=vpc,driver>=550,driver<551 brand=vcs,driver>=550,driver<551 brand=vws,driver>=550,driver<551 brand=cloudgaming,driver>=550,driver<551 brand=unknown,driver>=560,driver<561 brand=grid,driver>=560,driver<561 brand=tesla,driver>=560,driver<561 brand=nvidia,driver>=560,driver<561 brand=quadro,driver>=560,driver<561 brand=quadrortx,driver>=560,driver<561 brand=nvidiartx,driver>=560,driver<561 brand=vapps,driver>=560,driver<561 brand=vpc,driver>=560,driver<561 brand=vcs,driver>=560,driver<561 brand=vws,driver>=560,driver<561 brand=cloudgaming,driver>=560,driver<561 brand=unknown,driver>=565,driver<566 brand=grid,driver>=565,driver<566 brand=tesla,driver>=565,driver<566 brand=nvidia,driver>=565,driver<566 brand=quadro,driver>=565,driver<566 brand=quadrortx,driver>=565,driver<566 brand=nvidiartx,driver>=565,driver<566 brand=vapps,driver>=565,driver<566 brand=vpc,driver>=565,driver<566 brand=vcs,driver>=565,driver<566 brand=vws,driver>=565,driver<566 brand=cloudgaming,driver>=565,driver<566",
+   "NV_CUDA_CUDART_VERSION=12.8.90-1",
+   "CUDA_VERSION=12.8.1",
+   "LD_LIBRARY_PATH=/opt/llama.cpp:/usr/local/cuda/lib64",
+   "NVIDIA_VISIBLE_DEVICES=all",
+   "NVIDIA_DRIVER_CAPABILITIES=compute,utility",
+   "NV_CUDA_LIB_VERSION=12.8.1-1",
+   "NV_NVTX_VERSION=12.8.90-1",
+   "NV_LIBNPP_VERSION=12.3.3.100-1",
+   "NV_LIBNPP_PACKAGE=libnpp-12-8=12.3.3.100-1",
+   "NV_LIBCUSPARSE_VERSION=12.5.8.93-1",
+   "NV_LIBCUBLAS_PACKAGE_NAME=libcublas-12-8",
+   "NV_LIBCUBLAS_VERSION=12.8.4.1-1",
+   "NV_LIBCUBLAS_PACKAGE=libcublas-12-8=12.8.4.1-1",
+   "NV_LIBNCCL_PACKAGE_NAME=libnccl2",
+   "NV_LIBNCCL_PACKAGE_VERSION=2.25.1-1",
+   "NCCL_VERSION=2.25.1-1",
+   "NV_LIBNCCL_PACKAGE=libnccl2=2.25.1-1+cuda12.8",
+   "NVIDIA_PRODUCT_NAME=CUDA"
+  ],
+  "Labels": {
+   "maintainer": "NVIDIA CORPORATION <cudatools@nvidia.com>",
+   "org.opencontainers.image.cotcodec-cuda-architectures": "90",
+   "org.opencontainers.image.cotcodec-cuda-devel-image": "docker.io/nvidia/cuda@sha256:4b9ed5fa8361736996499f64ecebf25d4ec37ff56e4d11323ccde10aa36e0c43",
+   "org.opencontainers.image.cotcodec-cuda-runtime-image": "docker.io/nvidia/cuda@sha256:828c4d878adcaa4265d80c95d8ec877149b49bb2419a4cf3bb6aa889bbb7ca2e",
+   "org.opencontainers.image.cotcodec-dockerfile-git-sha": "a3e0a4955918d6002ca22c7e0b752f18337b02e2",
+   "org.opencontainers.image.cotcodec-llama-cpp-commit": "620d2225cc436ab0b001e3200e590e3b286ef9ab",
+   "org.opencontainers.image.cotcodec-llama-cpp-release": "b11669 v0.7.0",
+   "org.opencontainers.image.cotcodec-llama-cpp-source-sha256": "622f13ebf8a733003c9ae70ffe96a55c5d09bf2e0e6212ed212efcaca71bf066",
+   "org.opencontainers.image.cotcodec-runtime-profile": "llamacpp-base",
+   "org.opencontainers.image.description": "Stock upstream llama.cpp b11669 (v0.7.0), CUDA 12.8.1, sm_90",
+   "org.opencontainers.image.licenses": "MIT",
+   "org.opencontainers.image.ref.name": "ubuntu",
+   "org.opencontainers.image.revision": "620d2225cc436ab0b001e3200e590e3b286ef9ab",
+   "org.opencontainers.image.source": "https://github.com/ggml-org/llama.cpp",
+   "org.opencontainers.image.title": "cotcodec-llamacpp",
+   "org.opencontainers.image.version": "b11669"
+  },
+  "WorkingDir": ""
+ },
+ "Created": "2026-10-16T02:44:05.176453533Z",
+ "Id": "sha256:fb8600d96560412d65ec9c269b555c8db6ed4bcfd86a3556658b1c108073e848",
+ "Os": "linux",
+ "RepoDigests": [],
+ "RepoTags": [
+  "cotcodec-llamacpp:b11669-cu128"
+ ],
+ "RootFS_layers": 12,
+ "Size": 3563242598
+}

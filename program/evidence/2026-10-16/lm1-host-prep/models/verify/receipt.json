@@ -1,0 +1,15 @@
+{
+  "job_id": "1579",
+  "lane": "verify-models-cpu",
+  "batch_sha256": "2f2d7dc6dd4b57b5311c435b75e9ee316b6f53204b6364521e61225400257f33",
+  "image_id": "sha256:ba360ea13ea50e77e4900cb258c4dc73156060295abd381899f90f9991cedd10",
+  "source_dir": "/home/kevin/cotcodec-runs/stage0/lm1-host-prep/src/982ee1e6",
+  "source_git_sha": "982ee1e660249b0360aa0f4c92743da157e8f14d",
+  "fetch_script_sha256": "56e84a09f2ce62f968cf4747fe8a489fab31b64c2470eaccffab49ef32aeecbd",
+  "registry_sha256": "91619e85543240b0cb37ddb5c5da0587c27edeeefd3b19d3ef9db7df7cc320e4",
+  "model_ids": "kimi-k2.5-ud-tq1-0-gguf deepseek-v4-flash-0731-ds4-q2-gguf deepseek-v4-flash-0731-ud-iq3-xxs-gguf deepseek-v4-flash-0731-ud-q8-k-xl-gguf qwen3-235b-a22b-instruct-2507-ud-q3-k-xl-gguf gpt-oss-120b-mxfp4-gguf",
+  "receipt_dir": "cotcodec-receipts",
+  "gres_requested": "none",
+  "network": "none",
+  "finished_at": "2026-10-16T03:29:36Z"
+}
