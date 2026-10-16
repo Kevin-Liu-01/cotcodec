@@ -492,7 +492,11 @@
     "q2-zinv-reserve-validation-v1",
     "am1-memory-credit-v1",
     "am1-keepset-search-v1",
-    "am3-nonabstain-generality-v1"
+    "am3-nonabstain-generality-v1",
+    "s2-arabic-cua-locale-v4",
+    "s2-arabic-cua-locale-v5",
+    "am5-ablated-cost-v1",
+    "am5-ablated-cost-v2"
   ],
   "infrastructure": {
     "serving_probe": "v1 and v2 done (1.15 GPU-h): cu129 vLLM works on R570; Q1 sampling within cap; Q2 ladder needs rescoping",
@@ -1668,6 +1672,13 @@
       "label": "COMPLETE, CONFIRMATORY, VERIFIED (fresh verifier: analyze byte-identical from a new export, extract digests reproduced, independent recomputation exact; no gauntlet score, D118; agent hand labels, D9): H1 NONABSTAIN_HELPS for OLMo-2 and Qwen3.5-9B, hand-confirmed; H2 descriptive, JUDGE_QUALIFIED (G-J2 26/30)",
       "outcome": "jobs 1475 (build), 1480 (held-out, 33:01), 1482 (abstention, 06:13): 0.6722 GPU-h. Anchor Qwen3-8B replayed job 1458 token for token on 49,274 of 49,274 and reproduced 39 vs 0. H1 retrieved, Qwen3-32B: OLMo-2 0.329 -> 0.429 (35 vs 0, Holm p 1.2e-10), Qwen3.5-9B 0.464 -> 0.553 (31 vs 0, Holm p 9.3e-10); blind hand check confirms both (35/0, 31/0; agreement 274/278, kappa 0.967). H2 on LongMemEval-S's 30 abstention questions (descriptive, judge-qualified): cost rates Qwen3-8B 5/30, OLMo-2 8/30, Qwen3.5-9B 1/30 (hand 0/30); natural-mix net +0.096, +0.079, +0.082; break-even unanswerable share 0.40, 0.27, 0.73. Unanswerable questions cost a median of 70 reads",
       "evidence": "program/evidence/2026-10-15/am3-nonabstain-generality-v1/RESULTS.md"
+    },
+    {
+      "registration": "am5-ablated-cost-v2",
+      "date": "2026-10-16",
+      "label": "COMPLETE, CONFIRMATORY, VERIFIED (fresh verifier: analyze and extract byte-identical from a new clone, independent recomputation exact; no gauntlet score, D121; agent hand labels, D9; v1 row 26 void before running, D123): K = 8 COST_BELOW_GAIN for Qwen3-8B and Qwen3.5-9B, NOT_SEPARATED for OLMo-2",
+      "outcome": "job 1552 (0.3461 GPU-h incl. build 1548). Held-out 347 questions with evidence sessions removed; cost = switch away from an abstaining top 4 to a judge-rejected reply; gain = same question's original pool (am3g, known before, K chosen post hoc). K = 8: Qwen3-8B 6/31 (Holm p 1.2e-4, break-even 0.84), OLMo-2 22/27 (p 0.568, 0.55), Qwen3.5-9B 6/26 (Holm p 1.1e-3, 0.81); hand-based labels agree (6/31, 20/27, 6/26). K = 70 secondary: 11/39 COST_BELOW_GAIN, 39/35 and 16/31 NOT_SEPARATED. V3 replay passes (4,473/4,473); G-J1 passes; hand vs judge 186/195 (kappa 0.72). Deviation: one host test failed from a path guard (environmental; passes outside the v2 root; outputs unchanged)",
+      "evidence": "program/evidence/2026-10-16/am5-ablated-cost-v2/RESULTS.md"
     }
   ]
 }
