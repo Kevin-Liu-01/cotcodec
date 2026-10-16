@@ -247,7 +247,15 @@ def finalize(args: argparse.Namespace) -> int:
         if not line.strip():
             continue
         grade = json.loads(line)
-        if grade["task"] == "code":
+        if args.max_rank is not None and grade["rank"] >= args.max_rank:
+            continue  # beyond the evaluated prefix (an arm that ran further than the cap)
+        if grade["task"] == "code" and not grade.get("has_answer"):
+            # No program to run (no fenced block, or over the budget): not correct, no sandbox.
+            grade["correct"] = False
+            grade["code_failure"] = (
+                "no_code" if not grade.get("over_analysis_cap") else "over_budget"
+            )
+        elif grade["task"] == "code":
             verdict = verdicts.get(grade["key"])
             if verdict is None:
                 missing += 1
@@ -289,6 +297,7 @@ def main(argv: list[str] | None = None) -> int:
     f.add_argument("--verdicts", type=Path, nargs="+", required=True)
     f.add_argument("--out", type=Path, required=True)
     f.add_argument("--censored", type=Path, nargs="*", default=[])
+    f.add_argument("--max-rank", type=int, help="keep items whose rank in the order is below N")
     c = sub.add_parser("censor")
     c.add_argument(
         "--plan", type=Path, default=PROJECT_ROOT / "experiments/lm2/lm2-resident-eval-v1.json"
