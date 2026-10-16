@@ -105,7 +105,12 @@ def prepare(args: argparse.Namespace) -> int:
             item = items[row["item_id"]]
             text, how = final_text(row, bool(arm.get("thinking")))
             tokens = int(row.get("completion_tokens") or 0)
-            over_cap = args.analysis_cap is not None and tokens > args.analysis_cap
+            # "Answered within the budget": a response longer than the cap, or one stopped by an
+            # output cap equal to it, did not finish within the budget.
+            over_cap = args.analysis_cap is not None and (
+                tokens > args.analysis_cap
+                or (tokens >= args.analysis_cap and row.get("finish_reason") == "length")
+            )
             if over_cap:
                 # The analysis cap (8,192): a response longer than the cap is scored as cut there.
                 # Its text within the first 8,192 tokens is not recovered, so it counts as having no
@@ -165,6 +170,70 @@ def prepare(args: argparse.Namespace) -> int:
     return 0
 
 
+def censor(args: argparse.Namespace) -> int:
+    """Rows for requests that were still running when a job's budget ended.
+
+    In continuous batching every running request gains one token per decode step. When all the
+    holes of a top-up job start together, each one still running at the end has generated at least
+    ``--min-tokens`` (from the job's metrics) without stopping. If that is at or above the
+    analysis cap, the request did not finish within the budget, which is its outcome under the
+    cap (``correct: false``, ``censored: true``). Keys come from the plan's order and caps minus
+    the keys any of ``--runs`` completed.
+    """
+
+    from harness.lm2_resident_eval import request_key, request_order, select_items
+
+    plan = load_plan(args.plan)
+    if args.min_tokens < args.analysis_cap:
+        raise SystemExit("censored requests must have passed the analysis cap")
+    items = {}
+    for task in plan["order"]["interleave"]:
+        entry = plan["datasets"][task]
+        rows = load_items(args.data / entry["file"], entry["sha256"])
+        items[task] = select_items(task, plan["tasks"][task], rows)
+    caps = dict(spec.split("=") for spec in args.cap)
+    order = request_order(
+        items,
+        plan["order"]["interleave"],
+        plan["seeds"],
+        plan["order"]["rng_seed"],
+        {k: int(v) for k, v in caps.items()},
+    )
+    done = load_responses(args.runs)
+    out = []
+    for task, item, rank, seed in order:
+        key = request_key(args.arm, task, item["id"], seed)
+        if key in done:
+            continue
+        out.append(
+            {
+                "key": key,
+                "arm": args.arm,
+                "task": task,
+                "item_id": item["id"],
+                "source": item.get("source"),
+                "seed": seed,
+                "rank": rank,
+                "job_id": args.job,
+                "finish_reason": "length",
+                "finish_reason_raw": None,
+                "completion_tokens": args.min_tokens,
+                "censored": True,
+                "over_analysis_cap": True,
+                "has_final": False,
+                "has_answer": False,
+                "correct": False,
+                "final_found": "unfinished_at_abort",
+                "max_tokens": args.max_tokens,
+            }
+        )
+    with args.out.open("w", encoding="utf-8") as handle:
+        for row in out:
+            handle.write(json.dumps(row, sort_keys=True) + "\n")
+    print(json.dumps({"censored_rows": len(out)}))
+    return 0
+
+
 def finalize(args: argparse.Namespace) -> int:
     verdicts: dict[str, dict[str, Any]] = {}
     for path in args.verdicts:
@@ -189,6 +258,14 @@ def finalize(args: argparse.Namespace) -> int:
             grade["passed_tests"] = verdict.get("passed_tests")
             grade["grade_s"] = verdict.get("elapsed_s")
         out_rows.append(grade)
+    keys = {g["key"] for g in out_rows}
+    for path in args.censored:
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                row = json.loads(line)
+                if row["key"] not in keys:
+                    out_rows.append(row)
+                    keys.add(row["key"])
     with args.out.open("w", encoding="utf-8") as handle:
         for grade in out_rows:
             handle.write(json.dumps(grade, sort_keys=True) + "\n")
@@ -206,12 +283,28 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--data", type=Path, required=True)
     p.add_argument("--runs", type=Path, nargs="+", required=True)
     p.add_argument("--out", type=Path, required=True)
-    p.add_argument("--analysis-cap", type=int, default=8192)
+    p.add_argument("--analysis-cap", type=int, default=5120)
     f = sub.add_parser("finalize")
     f.add_argument("--pre", type=Path, required=True)
     f.add_argument("--verdicts", type=Path, nargs="+", required=True)
     f.add_argument("--out", type=Path, required=True)
+    f.add_argument("--censored", type=Path, nargs="*", default=[])
+    c = sub.add_parser("censor")
+    c.add_argument(
+        "--plan", type=Path, default=PROJECT_ROOT / "experiments/lm2/lm2-resident-eval-v1.json"
+    )
+    c.add_argument("--data", type=Path, required=True)
+    c.add_argument("--runs", type=Path, nargs="+", required=True)
+    c.add_argument("--arm", required=True)
+    c.add_argument("--job", required=True)
+    c.add_argument("--cap", action="append", required=True)
+    c.add_argument("--min-tokens", type=int, required=True)
+    c.add_argument("--max-tokens", type=int, required=True)
+    c.add_argument("--analysis-cap", type=int, default=5120)
+    c.add_argument("--out", type=Path, required=True)
     args = parser.parse_args(argv)
+    if args.command == "censor":
+        return censor(args)
     return prepare(args) if args.command == "prepare" else finalize(args)
 
 
