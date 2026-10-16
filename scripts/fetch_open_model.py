@@ -12,6 +12,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from fnmatch import fnmatchcase
 from pathlib import Path
 from typing import Any
 
@@ -96,6 +97,7 @@ def validate_entry(model_id: str, entry: dict[str, Any]) -> None:
                 isinstance(value, str) and value for value in values
             ):
                 raise ModelRegistryError(f"{model_id}: {field} must be a string list")
+        validate_allow_patterns(model_id, entry)
     else:
         if not isinstance(entry.get("model_ref"), str) or ":" not in entry["model_ref"]:
             raise ModelRegistryError(f"{model_id}: Ollama model_ref must include a tag")
@@ -111,6 +113,34 @@ def validate_entry(model_id: str, entry: dict[str, Any]) -> None:
             raise ModelRegistryError(
                 f"{model_id}: unresolved license blocks publication eligibility"
             )
+
+
+def validate_allow_patterns(model_id: str, entry: dict[str, Any]) -> None:
+    """Check the optional full-fetch file filter of a Hugging Face entry.
+
+    A repository that publishes many quantizations (a GGUF repository holds terabytes) is fetched
+    as a subset: ``allow_patterns`` lists the Hub glob patterns of the files to download. Every
+    required file must match a pattern, so the filter cannot silently drop one.
+    """
+
+    if "allow_patterns" not in entry:
+        return
+    patterns = entry["allow_patterns"]
+    if (
+        not isinstance(patterns, list)
+        or not patterns
+        or not all(
+            isinstance(value, str) and value and value.strip() == value for value in patterns
+        )
+    ):
+        raise ModelRegistryError(f"{model_id}: allow_patterns must be a non-empty string list")
+    uncovered = sorted(
+        path
+        for path in entry["required_files"]
+        if not any(fnmatchcase(path, pattern) for pattern in patterns)
+    )
+    if uncovered:
+        raise ModelRegistryError(f"{model_id}: allow_patterns exclude required files {uncovered}")
 
 
 def snapshot_files(snapshot: Path) -> list[dict[str, Any]]:
@@ -159,7 +189,8 @@ def fetch_huggingface(
 
     target = model_root / model_id
     target.mkdir(parents=True, exist_ok=True)
-    allow_patterns = entry["metadata_files"] if metadata_only else None
+    # A metadata fetch takes the metadata files; a full fetch takes the optional subset filter.
+    allow_patterns = entry["metadata_files"] if metadata_only else entry.get("allow_patterns")
     snapshot_download(
         repo_id=entry["repo_id"],
         revision=revision,
@@ -187,6 +218,9 @@ def fetch_huggingface(
         "total_bytes": sum(item["bytes"] for item in files),
         "artifact_root_sha256": artifact_root(files),
     }
+    # Only a filtered full fetch records its filter, so every earlier receipt keeps its shape.
+    if not metadata_only and "allow_patterns" in entry:
+        receipt["allow_patterns"] = list(entry["allow_patterns"])
     atomic_json(receipt_path(receipt_root, model_id), receipt)
     return receipt
 

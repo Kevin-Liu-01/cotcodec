@@ -1152,3 +1152,194 @@ models:
       before any execution, and run it only in a container with no network. Its 595 GB of
       weights exceed seven H100s (560 GB), so a GPU-resident load needs all eight, and GPU 0 is
       held by another project until 2026-10-21; any GPU run needs its own approval.
+  kimi-k2.5-ud-tq1-0-gguf:
+    backend: huggingface
+    repo_id: unsloth/Kimi-K2.5-GGUF
+    revision: 386fed8b054275941d6a495a9a7010fbf31b560d
+    runtime: llama.cpp
+    architecture_family: deepseek-v3-mla-moe-gguf
+    license: other
+    license_note: >-
+      Hub card license other, license_name modified-mit; the GGUF header says the same. The base
+      model's LICENSE (moonshotai/Kimi-K2.5 at 4d01dfe0, SHA-256 c524b416...) is the MIT grant
+      plus one clause: a commercial product or service above 100 million monthly active users or
+      20 million US dollars in monthly revenue must prominently display "Kimi K2.5" in its user
+      interface. The Hub API reports gated false; no acceptance or credential is needed.
+    access: public
+    trust_remote_code: false
+    publication_eligible: true
+    roles:
+    - lm1-matched-memory-candidate
+    allow_patterns:
+    - README.md
+    - UD-TQ1_0/*
+    metadata_files:
+    - README.md
+    required_files:
+    - README.md
+    - UD-TQ1_0/Kimi-K2.5-UD-TQ1_0-00001-of-00005.gguf
+    - UD-TQ1_0/Kimi-K2.5-UD-TQ1_0-00002-of-00005.gguf
+    - UD-TQ1_0/Kimi-K2.5-UD-TQ1_0-00003-of-00005.gguf
+    - UD-TQ1_0/Kimi-K2.5-UD-TQ1_0-00004-of-00005.gguf
+    - UD-TQ1_0/Kimi-K2.5-UD-TQ1_0-00005-of-00005.gguf
+    source_url: https://huggingface.co/unsloth/Kimi-K2.5-GGUF
+    registered_at: '2026-10-16'
+    registered_for: >-
+      LM1 (D125): the 1T-class candidate at about 1.9 bits for the matched-memory question. Kimi
+      K2.5 (deepseek2 arch in llama.cpp: 61 layers, MLA, 384 routed experts, 8 active), Unsloth
+      dynamic quant labelled UD-TQ1_0: 239,537,642,336 bytes in five shards. Despite its label it
+      holds no TQ1_0 tensors; the headers (read by range request on 2026-10-16) list IQ1_S,
+      IQ2_XXS, IQ3_XXS, IQ3_S, IQ4_NL, IQ4_XS, Q2_K, Q4_K, Q5_K, Q6_K, Q8_0, F16 and F32 only, all
+      of which stock llama.cpp CUDA runs. The smallest mainline-llama.cpp Kimi file in the dossier.
+    blocker: >-
+      239.5 GB exceeds a 128 GB machine, so on the Mac it can only be streamed; on the host it
+      needs at least four H100s. Its INT4 reference (moonshotai/Kimi-K2.5, about 595 GB) needs all
+      eight H100s or CPU offload.
+  deepseek-v4-flash-0731-ds4-q2-gguf:
+    backend: huggingface
+    repo_id: antirez/deepseek-v4-gguf
+    revision: f71f23d552d664e523b422157b2befbf74040380
+    runtime: llama.cpp
+    architecture_family: deepseek-v4-moe-gguf
+    license: mit
+    license_note: Hub card license mit (DeepSeek V4 Flash is MIT); gated false.
+    access: public
+    trust_remote_code: false
+    publication_eligible: true
+    roles:
+    - lm1-matched-memory-candidate
+    allow_patterns:
+    - README.md
+    - DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf
+    metadata_files:
+    - README.md
+    required_files:
+    - README.md
+    - DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf
+    source_url: https://huggingface.co/antirez/deepseek-v4-gguf
+    registered_at: '2026-10-16'
+    registered_for: >-
+      LM1 (D125) and dossier gap G4: DeepSeek V4 Flash 0731 at about 2 bits, the ds4 Q2 file
+      (routed experts IQ2_XXS gate/up and Q2_K down; attention, shared expert and output Q8_0),
+      86,720,111,488 bytes. ds4 is its own engine; this file is used only because its header
+      matches stock llama.cpp's deepseek4 loader at b11669 (arch deepseek4, 43 trunk blocks, no
+      MTP tensors, every tensor name the loader asks for and no other, tokenizer pre joyai-llm,
+      sqrt-softplus gating), checked statically on 2026-10-16 and by the LM1 host smoke test.
+  deepseek-v4-flash-0731-ud-iq3-xxs-gguf:
+    backend: huggingface
+    repo_id: unsloth/DeepSeek-V4-Flash-0731-GGUF
+    revision: fbbb5b93fb787c21338159b0af3318bb3f4d9768
+    runtime: llama.cpp
+    architecture_family: deepseek-v4-moe-gguf
+    license: mit
+    license_note: Hub card license mit; gated false.
+    access: public
+    trust_remote_code: false
+    publication_eligible: true
+    roles:
+    - lm1-matched-memory-candidate
+    allow_patterns:
+    - README.md
+    - UD-IQ3_XXS/*
+    metadata_files:
+    - README.md
+    required_files:
+    - README.md
+    - UD-IQ3_XXS/DeepSeek-V4-Flash-0731-UD-IQ3_XXS-00001-of-00004.gguf
+    - UD-IQ3_XXS/DeepSeek-V4-Flash-0731-UD-IQ3_XXS-00002-of-00004.gguf
+    - UD-IQ3_XXS/DeepSeek-V4-Flash-0731-UD-IQ3_XXS-00003-of-00004.gguf
+    - UD-IQ3_XXS/DeepSeek-V4-Flash-0731-UD-IQ3_XXS-00004-of-00004.gguf
+    source_url: https://huggingface.co/unsloth/DeepSeek-V4-Flash-0731-GGUF
+    registered_at: '2026-10-16'
+    registered_for: >-
+      LM1 (D125) and gap G4: DeepSeek V4 Flash 0731 at about 3 bits (Unsloth UD-IQ3_XXS),
+      104,207,848,032 bytes in four shards; the dossier's Tight-fit option (row F2).
+  deepseek-v4-flash-0731-ud-q8-k-xl-gguf:
+    backend: huggingface
+    repo_id: unsloth/DeepSeek-V4-Flash-0731-GGUF
+    revision: fbbb5b93fb787c21338159b0af3318bb3f4d9768
+    runtime: llama.cpp
+    architecture_family: deepseek-v4-moe-gguf
+    license: mit
+    license_note: Hub card license mit; gated false.
+    access: public
+    trust_remote_code: false
+    publication_eligible: true
+    roles:
+    - lm1-higher-precision-reference
+    allow_patterns:
+    - README.md
+    - UD-Q8_K_XL/*
+    metadata_files:
+    - README.md
+    required_files:
+    - README.md
+    - UD-Q8_K_XL/DeepSeek-V4-Flash-0731-UD-Q8_K_XL-00001-of-00005.gguf
+    - UD-Q8_K_XL/DeepSeek-V4-Flash-0731-UD-Q8_K_XL-00002-of-00005.gguf
+    - UD-Q8_K_XL/DeepSeek-V4-Flash-0731-UD-Q8_K_XL-00003-of-00005.gguf
+    - UD-Q8_K_XL/DeepSeek-V4-Flash-0731-UD-Q8_K_XL-00004-of-00005.gguf
+    - UD-Q8_K_XL/DeepSeek-V4-Flash-0731-UD-Q8_K_XL-00005-of-00005.gguf
+    source_url: https://huggingface.co/unsloth/DeepSeek-V4-Flash-0731-GGUF
+    registered_at: '2026-10-16'
+    registered_for: >-
+      LM1 (D125) and gap G4: the higher-precision reference for the two V4 Flash 0731 quants
+      (Unsloth UD-Q8_K_XL, 161,869,615,520 bytes in five shards), against which their task cost is
+      measured. Fits three to four H100s.
+  qwen3-235b-a22b-instruct-2507-ud-q3-k-xl-gguf:
+    backend: huggingface
+    repo_id: unsloth/Qwen3-235B-A22B-Instruct-2507-GGUF
+    revision: 437d6915c5c512869e4cf8b16b840bbe3fb172bc
+    runtime: llama.cpp
+    architecture_family: qwen3-moe-gguf
+    license: apache-2.0
+    license_note: Hub card license apache-2.0; gated false.
+    access: public
+    trust_remote_code: false
+    publication_eligible: true
+    roles:
+    - lm1-matched-memory-candidate
+    allow_patterns:
+    - README.md
+    - UD-Q3_K_XL/*
+    metadata_files:
+    - README.md
+    required_files:
+    - README.md
+    - UD-Q3_K_XL/Qwen3-235B-A22B-Instruct-2507-UD-Q3_K_XL-00001-of-00003.gguf
+    - UD-Q3_K_XL/Qwen3-235B-A22B-Instruct-2507-UD-Q3_K_XL-00002-of-00003.gguf
+    - UD-Q3_K_XL/Qwen3-235B-A22B-Instruct-2507-UD-Q3_K_XL-00003-of-00003.gguf
+    source_url: https://huggingface.co/unsloth/Qwen3-235B-A22B-Instruct-2507-GGUF
+    registered_at: '2026-10-16'
+    registered_for: >-
+      LM1 (D125): Qwen3-235B-A22B-Instruct-2507 at about 3.5 bits (Unsloth UD-Q3_K_XL),
+      104,152,926,944 bytes in three shards; the dossier's row Q2. The Instruct (non-thinking)
+      variant, as in the dossier's tensor tables; the Thinking-2507 variant of the same size exists
+      and LM1 must choose between them when it pins reasoning modes.
+  gpt-oss-120b-mxfp4-gguf:
+    backend: huggingface
+    repo_id: ggml-org/gpt-oss-120b-GGUF
+    revision: 238abdd290bb874b90a5da1b4549881b7d05c091
+    runtime: llama.cpp
+    architecture_family: gpt-oss-moe-mxfp4-gguf
+    license: apache-2.0
+    license_note: >-
+      Hub card license apache-2.0; gated false. The base model's usage policy
+      (openai/gpt-oss-120b, registered as gpt-oss-120b) applies to the weights.
+    access: public
+    trust_remote_code: false
+    publication_eligible: true
+    roles:
+    - lm1-matched-memory-candidate
+    allow_patterns:
+    - README.md
+    - gpt-oss-120b-MXFP4.gguf
+    metadata_files:
+    - README.md
+    required_files:
+    - README.md
+    - gpt-oss-120b-MXFP4.gguf
+    source_url: https://huggingface.co/ggml-org/gpt-oss-120b-GGUF
+    registered_at: '2026-10-16'
+    registered_for: >-
+      LM1 (D125): gpt-oss-120b in its native MXFP4 (ggml-org conversion, 63,387,346,208 bytes, one
+      file); no quantization cost, so it is its own reference.
