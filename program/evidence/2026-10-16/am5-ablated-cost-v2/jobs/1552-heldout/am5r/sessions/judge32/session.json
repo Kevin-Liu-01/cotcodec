@@ -1,0 +1,66 @@
+{
+  "engine_kwargs": {
+    "dtype": "bfloat16",
+    "enable_prefix_caching": true,
+    "enforce_eager": true,
+    "gpu_memory_utilization": 0.92,
+    "logprobs_mode": "raw_logprobs",
+    "max_model_len": 4096,
+    "max_num_batched_tokens": 8192,
+    "max_num_seqs": 128,
+    "model": "/model-cache/cotcodec-models/qwen3-32b",
+    "seed": 42,
+    "tokenizer": "/model-cache/cotcodec-models/qwen3-32b",
+    "trust_remote_code": false
+  },
+  "exit": 0,
+  "gpu": {
+    "CUDA_VISIBLE_DEVICES": "0",
+    "name": "NVIDIA H100 80GB HBM3",
+    "pci_bus_id": 98,
+    "uuid": "34c1e8e2-bec3-3ce7-c1be-618cb05ca896"
+  },
+  "init_s": 35.7,
+  "passes": [
+    {
+      "info": {
+        "aborted": 0,
+        "add_s": 0.003,
+        "finished": 16,
+        "max_inflight": null,
+        "not_started": 0,
+        "steps": 3,
+        "stopped_by": null,
+        "unmatched": 0,
+        "wall_s": 1.177
+      },
+      "name": "smoke",
+      "requests": 16,
+      "status": "complete"
+    },
+    {
+      "info": {
+        "aborted": 0,
+        "add_s": 0.334,
+        "finished": 3052,
+        "max_inflight": null,
+        "not_started": 0,
+        "steps": 73,
+        "stopped_by": null,
+        "unmatched": 0,
+        "wall_s": 23.513
+      },
+      "name": "all",
+      "requests": 3052,
+      "status": "complete"
+    }
+  ],
+  "prompt_ids_sha256": "6ad350544edeeb99c28fd1fa50c3b59ec785dac38eeff05b486bcf22b90ec0eb",
+  "step": {
+    "batch_invariant": true,
+    "enforce_eager": true,
+    "id": "judge32",
+    "judge": "primary",
+    "kind": "judge"
+  }
+}

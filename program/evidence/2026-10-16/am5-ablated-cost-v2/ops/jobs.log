@@ -1,0 +1,16 @@
+2026-10-16T00:16:19Z clean checkout of 6578e0f0110eef16b4214cb15aa4a8161c3e125b (tree 205d9c53) from bundle 413faf2c; git archive sha256 c304ebe5377a549b48dba481469a855d7a36e7f0e969a1a22f75ab7eeb3d3550
+2026-10-16T00:17:23Z capsule 00b96a16f89587119df265166c575a3d1da9f3b246701c38c08e43c93e220f93 (git 6578e0f0)
+2026-10-16T00:17:38Z vLLM overlay build job 1548 submitted (git 6578e0f0, archive 00b96a16, root overlay-build-vllm-6578e0f0, 1 H100, limit 5 min)
+2026-10-16T00:19:00Z job 1548 ended: JobState=COMPLETED Reason=None RunTime=00:01:06
+2026-10-16T00:19:07Z image sha256:b1201ec35575d055ae53f291e16cbe253fa05efda9242659b05e8e0969ad7880 for 6578e0f0 from overlay-build-vllm-6578e0f0: provenance and receipt checked against the pins
+2026-10-16T00:19:13Z post-build CPU selftest 1549 submitted (population heldout, image b1201ec3, git 6578e0f0, no GRES)
+2026-10-16T00:20:20Z job 1549 ended: JobState=COMPLETED Reason=None RunTime=00:01:04
+2026-10-16T00:20:44Z am5r heldout GPU job submit: 1552 (git 6578e0f0, image b1201ec3, artifact 68a75dcf, 1 H100, limit 80 min)
+2026-10-16T00:41:29Z job 1552 ended: JobState=COMPLETED Reason=None RunTime=00:19:40
+2026-10-16T00:42:11Z rerun rule heldout job 1552: complete - every essential step completed
+2026-10-16T00:42:40Z extract heldout job 1552 at 6578e0f0: extract exit 0
+2026-10-16T00:43:40Z hand-check sample at 6578e0f0: 195 items in 4 chunks, sample bcfe5b1252d6cb83 plan 25019896f948b4f5
+2026-10-16T00:44:11Z hand stage first claimed for labelling at 6578e0f0
+2026-10-16T00:53:04Z hand labels merged, stage first: {'launch': 'subagent', 'labelling_attempts': 4, 'valid_rows': 195, 'malformed_rows': 0, 'repeated_items': 0} chunks failing the transcript audit 0 0 
+2026-10-16T00:53:19Z hand labels receipted, stage first: raw 9e95cc87721272ce final 9e95cc87721272ce
+2026-10-16T00:54:50Z analyze reg at 6578e0f0: 2 commands exited 0; analyze outputs byte-identical

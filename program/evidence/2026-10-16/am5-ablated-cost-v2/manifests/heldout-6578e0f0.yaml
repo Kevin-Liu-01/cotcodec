@@ -1,0 +1,57 @@
+# am5-ablated-cost-v2 (reg; population heldout): scripts/memcredit_am5r.py run in the
+# cotcodec-vllm cu129 overlay built from commit 6578e0f0's capsule. Steps on 1 H100, in order:
+# readers Qwen3-8B (eager batch-invariant; the replay control's gated reader), OLMo-2-1124-7B-Instruct
+# (eager batch-invariant, default-mode fallback only if it does not complete) and Qwen3.5-9B (eager,
+# default mode), 71 requests per pool; then the Qwen3-32B judge (eager, batch-invariant). Slurm
+# limit 80 min = 1.34 GPU-h cap. The lane's model is the judge, Qwen3-32B; the driver
+# re-verifies every other model against its receipt and the config's pins.
+runtime: docker-single-node-discovery-v1
+name: am5r-heldout
+image_id: sha256:b1201ec35575d055ae53f291e16cbe253fa05efda9242659b05e8e0969ad7880
+git_sha: "6578e0f0110eef16b4214cb15aa4a8161c3e125b"
+source_sha256: "00b96a16f89587119df265166c575a3d1da9f3b246701c38c08e43c93e220f93"
+run_root: ~/cotcodec-runs/stage0/am5-ablated-cost-v2/runs/heldout
+container_profile: vllm
+resources:
+  gpu_type: h100
+  gpus: 1
+  cpus: 16
+  memory_gb: 128
+  minutes: 80
+budget:
+  max_gpu_hours: 1.34
+randomness_contract: assignment-seed-matrix
+seeds: [42, 43, 44]
+seed_binding:
+  flag: "--seeds"
+model:
+  cache_host_path: ~/cotcodec-runs/hf-cache
+  model_id: qwen3-32b
+  revision: "9216db5781bf21249d130ec9da846c4624c16137"
+  receipt_sha256: "06e4a7e981eee4f6c079fd6b02dc58e3a9fd798e0d806820383d873cf9cd1fd1"
+  artifact_root_sha256: "8fcd9106bfb1854a5b160c64a0ff3d3463208ab69854ae8c1cc26ba19dbf5714"
+study_artifact:
+  source_id: am5-ablated-cost-v2-heldout-ablated-pools
+  revision: "6578e0f0110eef16b4214cb15aa4a8161c3e125b"
+  license: MIT
+  host_path: ~/cotcodec-runs/stage0/am5-ablated-cost-v2/inputs/heldout-ablated-artifact.json
+  sha256: "68a75dcf1bc37ebe54fde61ec288d9c393adc1d0197b88168d7c153be34c1ce6"
+  size_bytes: 2493448
+command:
+  - python
+  - scripts/memcredit_am5r.py
+  - run
+  - "--population"
+  - heldout
+  - "--seeds"
+  - "42"
+  - "43"
+  - "44"
+  - "--output-dir"
+  - /outputs/am5r
+  - "--allocation-minutes"
+  - "80"
+  - "--evidence"
+  - /inputs/study-artifact.json
+  - "--expected-evidence-sha256"
+  - "68a75dcf1bc37ebe54fde61ec288d9c393adc1d0197b88168d7c153be34c1ce6"

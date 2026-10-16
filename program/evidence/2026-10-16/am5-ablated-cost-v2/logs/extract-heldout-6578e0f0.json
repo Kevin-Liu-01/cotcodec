@@ -1,0 +1,184 @@
+{
+  "features_sha256": "7ea8584e043ed3bc59bdd89c0a2f75a33d71e8fd805d97ddd729e870d68c4710",
+  "job_id": "1552",
+  "population": "heldout",
+  "readers": {
+    "olmo-2-1124-7b-instruct": {
+      "batch_invariant": true,
+      "enforce_eager": true,
+      "finish": {
+        "length": 18,
+        "stop": 29092
+      },
+      "missing_logprobs": 0,
+      "pass_sha256": {
+        "sessions/rd-olmo2/all.json": "2db711cea305e913144d692aaa20af69da7285c960c8372ff042d996bc9c3f96",
+        "sessions/rd-olmo2/all.npz": "12f199369c1cdb243e9fcd445d993278e453373e8ea0c10a90c804b7ac40de95",
+        "sessions/rd-olmo2/all.texts.jsonl.gz": "ddf9fb81c7731d14f497ec4d91909ecefd85614b8f5a63914f5d56e7c0202d73"
+      },
+      "pools_complete_primary": 410,
+      "requests": 29110,
+      "step": "rd-olmo2"
+    },
+    "qwen3-8b": {
+      "batch_invariant": true,
+      "enforce_eager": true,
+      "finish": {
+        "length": 7,
+        "stop": 29103
+      },
+      "missing_logprobs": 0,
+      "pass_sha256": {
+        "sessions/rd-qwen3-8b/all.json": "1741683f80113bc57f721b1f23259e7cc23fb8f751911265e55d0f0c290d3ef1",
+        "sessions/rd-qwen3-8b/all.npz": "8596c92421c5ff0de5b6b21b7b79d94736d6c2d4009220fb1d58ce0285eba52a",
+        "sessions/rd-qwen3-8b/all.texts.jsonl.gz": "35c9d2f225986009d7aef283ea980f58200ab14fee83f466198c6e9257148750"
+      },
+      "pools_complete_primary": 410,
+      "requests": 29110,
+      "step": "rd-qwen3-8b"
+    },
+    "qwen3.5-9b": {
+      "batch_invariant": false,
+      "enforce_eager": true,
+      "finish": {
+        "stop": 29110
+      },
+      "missing_logprobs": 0,
+      "pass_sha256": {
+        "sessions/rd-qwen35-9b-default/all.json": "62b66906b52f26dfc4abbcb1c62d83489d9cf0d786b1a108d75994a6903974e7",
+        "sessions/rd-qwen35-9b-default/all.npz": "08a6a19f52286ba1c5a0c9e594fb4aa5f3f04f6efe7b3c46547899538c96dcd1",
+        "sessions/rd-qwen35-9b-default/all.texts.jsonl.gz": "5edb18ee1ecff9b0ef4a3d7baba9e85f67a02f3131d7b7ab7197ecadba334b8e"
+      },
+      "pools_complete_primary": 410,
+      "requests": 29110,
+      "step": "rd-qwen35-9b-default"
+    }
+  },
+  "replay": {
+    "anchor_r1": true,
+    "anchor_r2": true,
+    "control_cells": 4473,
+    "control_questions": 63,
+    "judge_item_replay": {
+      "primary": {
+        "compared": 458,
+        "same": 458
+      }
+    },
+    "pass": true,
+    "readers": {
+      "olmo-2-1124-7b-instruct": {
+        "cells": 4473,
+        "compared": 4473,
+        "identical_bits": 4473,
+        "identical_text": 4473,
+        "identical_tokens": 4473,
+        "label_compared_identical_reply_primary": 4473,
+        "label_compared_identical_reply_secondary": 0,
+        "label_compared_primary": 4473,
+        "label_compared_secondary": 0,
+        "label_same_identical_reply_primary": 4473,
+        "label_same_identical_reply_secondary": 0,
+        "label_same_primary": 4473,
+        "label_same_secondary": 0,
+        "r1": true,
+        "r2": true
+      },
+      "qwen3-8b": {
+        "cells": 4473,
+        "compared": 4473,
+        "identical_bits": 4473,
+        "identical_text": 4473,
+        "identical_tokens": 4473,
+        "label_compared_identical_reply_primary": 4473,
+        "label_compared_identical_reply_secondary": 0,
+        "label_compared_primary": 4473,
+        "label_compared_secondary": 0,
+        "label_same_identical_reply_primary": 4473,
+        "label_same_identical_reply_secondary": 0,
+        "label_same_primary": 4473,
+        "label_same_secondary": 0,
+        "r1": true,
+        "r2": true
+      },
+      "qwen3.5-9b": {
+        "cells": 4473,
+        "compared": 4473,
+        "identical_bits": 3942,
+        "identical_text": 4470,
+        "identical_tokens": 4470,
+        "label_compared_identical_reply_primary": 4470,
+        "label_compared_identical_reply_secondary": 0,
+        "label_compared_primary": 4473,
+        "label_compared_secondary": 0,
+        "label_same_identical_reply_primary": 4470,
+        "label_same_identical_reply_secondary": 0,
+        "label_same_primary": 4472,
+        "label_same_secondary": 0,
+        "r1": false,
+        "r2": false
+      }
+    },
+    "reference": "job 1487 (AM5): rd-qwen3-8b, rd-olmo2, rd-qwen35-9b-default; judge32",
+    "reference_sha256": {
+      "judge-items.json": "4bbb7f5c6d333f1e5f1b5c2108078276a8d200a04f9543458161458d45d77c7a",
+      "sessions/judge32/all.json": "2b9b7861aff80d845ed5500169daed5f9feac2701562d15eef23943ddd6c93d4",
+      "sessions/judge32/all.npz": "50c8ed52f100d3491d43bad2c5184902776c4fff83dda556e10599c9a77d8973",
+      "sessions/judge32/all.texts.jsonl.gz": "ddeeddb55081535e4fc2440f0545d4987e679754e34d57e415113c66780a71f8",
+      "sessions/rd-olmo2/all.json": "738c43bbf7edd1ece9367decd761a53a8b5a197063c5c274027a6326a0b39790",
+      "sessions/rd-olmo2/all.npz": "02cd025e128b1665c9bb75ea7d4a3e2466c30e3307d833ce36502e4bd5b014a3",
+      "sessions/rd-olmo2/all.texts.jsonl.gz": "51cd722a5ccd3add5153792c39905572537c5a594fc71193652a7760878aa7d6",
+      "sessions/rd-qwen3-8b/all.json": "b7d000af47c894d12548c033f4ebc4aaf6b25c738374bb031ab8f06877b2e3c3",
+      "sessions/rd-qwen3-8b/all.npz": "4e5dab115ee96bf1133cd4dc44182986ff810684f3ee8a48a73137dbaad81bf1",
+      "sessions/rd-qwen3-8b/all.texts.jsonl.gz": "eae016a8229eef668913d30e3ccba03ae68b854a3b07676b55b064f819b09300",
+      "sessions/rd-qwen35-9b-default/all.json": "9c9fd63cd50ada6623bcca5e5530b0d496c655fe6af148ac1a4189902f2b9dd1",
+      "sessions/rd-qwen35-9b-default/all.npz": "e6ae1525e11c121bcb6df603ce54ebda06ec99f54ed5fcc703659c09b1fb44bf",
+      "sessions/rd-qwen35-9b-default/all.texts.jsonl.gz": "27a8b16c8597baacc5caacf1b8927d81f9ce5334ee563fcf451969555ccac430"
+    }
+  },
+  "validation": {
+    "judge_items": 3052,
+    "judge_items_reader": 1824,
+    "judge_items_sha256": "90302cc326749dff4ab3aa2f4fab67d593259d875cee5193199d7154b7abbcc5",
+    "judge_pass_sha256": {
+      "sessions/judge32/all.json": "ea9d799c5b2ec8b615da2cd77c215a4ba35107d231742dd87587d5fce93693f4",
+      "sessions/judge32/all.npz": "a0f756f76225437960be32bc0d958c2f633014568faedf48b8b581b6a6885879",
+      "sessions/judge32/all.texts.jsonl.gz": "642b27cc34ef0943c61ca894694747ed784d0fbbb0e7fc50a74d7b28cc86a7ac"
+    },
+    "judge_validation": {
+      "validation:idk": {
+        "items": 347,
+        "missing": 0,
+        "yes": 0
+      },
+      "validation:other-answer": {
+        "items": 346,
+        "missing": 0,
+        "yes": 3
+      },
+      "validation:reference": {
+        "items": 322,
+        "missing": 0,
+        "yes": 322
+      }
+    },
+    "judge_validation_control": {
+      "validation:idk": {
+        "items": 63,
+        "missing": 0,
+        "yes": 0
+      },
+      "validation:other-answer": {
+        "items": 62,
+        "missing": 0,
+        "yes": 4
+      },
+      "validation:reference": {
+        "items": 58,
+        "missing": 0,
+        "yes": 58
+      }
+    },
+    "labelled": 3052
+  }
+}
