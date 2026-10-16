@@ -1,0 +1,28 @@
+{
+ "url": "https://arxiv.org/abs/2511.13029",
+ "fetched_at": "2026-10-16T04:56:19Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41757,
+ "raw_sha256": "41aa1f70c4d0b85984c7c8f5c91feb6dcf4456e43c80d1ab8df850796cde8c07",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "AA-Omniscience: Evaluating Cross-Domain Knowledge Reliability in Large Language Models",
+  "authors": [
+   "Jackson, Declan",
+   "Keating, William",
+   "Cameron, George",
+   "Hill-Smith, Micah"
+  ],
+  "citation_date": "2025/11/17",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 17 Nov 2025 06:27:16 UTC"
+   }
+  ],
+  "abstract": "Existing language model evaluations primarily measure general capabilities, yet reliable use of these models across a range of domains demands factual accuracy and recognition of knowledge gaps. We introduce AA-Omniscience, a benchmark designed to measure both factual recall and knowledge calibration across 6,000 questions. Questions are derived from authoritative academic and industry sources, and cover 42 economically relevant topics within six different domains. The evaluation measures a model's Omniscience Index, a bounded metric (-100 to 100) measuring factual recall that jointly penalizes hallucinations and rewards abstention when uncertain, with 0 equating to a model that answers questions correctly as much as it does incorrectly. Among evaluated models, Claude 4.1 Opus attains the highest score (4.8), making it one of only three models to score above zero. These results reveal persistent factuality and calibration weaknesses across frontier models. Performance also varies by domain, with the models from three different research labs leading across the six domains. This performance variability suggests models should be chosen according to the demands of the use case rather than general performance for tasks where knowledge is important.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

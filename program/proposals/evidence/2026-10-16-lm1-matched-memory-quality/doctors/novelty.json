@@ -1,0 +1,21 @@
+{
+ "name": "Novelty",
+ "status": "FAIL",
+ "evidence": {
+  "frontier_verdict": "NARROWED, not OCCUPIED",
+  "killshot_verdict": "NARROWED, not OCCUPIED",
+  "closest_prior": "CC-MoE (arXiv 2509.25689), read in full by the frontier cell and the synthesis owner",
+  "closest_priors_read_full_by_synthesis": [
+   "2509.25689",
+   "2504.02010",
+   "2604.18556",
+   "2610.15372"
+  ],
+  "not_run": [
+   "blind closest-prior discrimination",
+   "novelty refuter"
+  ],
+  "open_risk": "recombination of CC-MoE Table 2, 2504.02010 Finding 1 and 2610.15372's wall-clock framing"
+ },
+ "remediation": "Run the blind critic on blind/ (roles in compute/blind-roles.json, recorder only) and the novelty refuter within the remaining query budget"
+}

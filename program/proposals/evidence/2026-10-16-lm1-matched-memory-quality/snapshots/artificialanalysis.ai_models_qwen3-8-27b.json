@@ -1,0 +1,13 @@
+{
+ "url": "https://artificialanalysis.ai/models/qwen3-8-27b",
+ "fetched_at": "2026-10-16T04:56:16Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 1562990,
+ "raw_sha256": "950630c7ec53a059d79ce7f662983e84ec3d31a697bacd8bb4d7d459e7b7dcd9",
+ "raw_stored": false,
+ "primary": false,
+ "extract": {
+  "html_title": "Qwen3.8 27B (xhigh) - Intelligence, Performance & Price Analysis | Artificial Analysis"
+ }
+}

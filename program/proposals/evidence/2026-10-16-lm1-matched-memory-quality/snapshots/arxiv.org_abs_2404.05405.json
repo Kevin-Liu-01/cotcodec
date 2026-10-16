@@ -1,0 +1,26 @@
+{
+ "url": "https://arxiv.org/abs/2404.05405",
+ "fetched_at": "2026-10-16T04:56:16Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42011,
+ "raw_sha256": "3b4a706ba04e2774d2b1d59c333fb550a68d017c78c60218d23a199c6d05a744",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "Physics of Language Models: Part 3.3, Knowledge Capacity Scaling Laws",
+  "authors": [
+   "Allen-Zhu, Zeyuan",
+   "Li, Yuanzhi"
+  ],
+  "citation_date": "2024/04/08",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 8 Apr 2024 11:11:31 UTC"
+   }
+  ],
+  "abstract": "Scaling laws describe the relationship between the size of language models and their capabilities. Unlike prior studies that evaluate a model's capability via loss or benchmarks, we estimate the number of knowledge bits a model stores. We focus on factual knowledge represented as tuples, such as (USA, capital, Washington D.C.) from a Wikipedia page. Through multiple controlled datasets, we establish that language models can and only can store 2 bits of knowledge per parameter, even when quantized to int8, and such knowledge can be flexibly extracted for downstream applications. Consequently, a 7B model can store 14B bits of knowledge, surpassing the English Wikipedia and textbooks combined based on our estimation. More broadly, we present 12 results on how (1) training duration, (2) model architecture, (3) quantization, (4) sparsity constraints such as MoE, and (5) data signal-to-noise ratio affect a model's knowledge storage capacity. Notable insights include: * The GPT-2 architecture, with rotary embedding, matches or even surpasses LLaMA/Mistral architectures in knowledge storage, particularly over shorter training durations. This arises because LLaMA/Mistral uses GatedMLP, which is less stable and harder to train. * Prepending training data with domain names (e.g., this http URL) significantly increases a model's knowledge capacity. Language models can autonomously identify and prioritize domains rich in knowledge, optimizing their storage capacity.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

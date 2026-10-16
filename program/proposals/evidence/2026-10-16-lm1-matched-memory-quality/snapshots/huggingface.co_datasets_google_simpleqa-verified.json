@@ -1,0 +1,13 @@
+{
+ "url": "https://huggingface.co/datasets/google/simpleqa-verified",
+ "fetched_at": "2026-10-16T04:56:26Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 645151,
+ "raw_sha256": "5f3d803ce18cdd8b6b02f3012886b5efbeeeb12bdd471eee5d872897bb4182c1",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "html_title": "google/simpleqa-verified · Datasets at Hugging Face"
+ }
+}

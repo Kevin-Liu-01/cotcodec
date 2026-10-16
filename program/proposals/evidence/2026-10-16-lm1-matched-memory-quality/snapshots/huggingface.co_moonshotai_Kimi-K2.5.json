@@ -1,0 +1,13 @@
+{
+ "url": "https://huggingface.co/moonshotai/Kimi-K2.5",
+ "fetched_at": "2026-10-16T04:56:28Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 668287,
+ "raw_sha256": "97dd6c3826264ec94f6c591ddf4ad55f4ac66ab4622edaf086eaf351caac675b",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "html_title": "moonshotai/Kimi-K2.5 · Hugging Face"
+ }
+}

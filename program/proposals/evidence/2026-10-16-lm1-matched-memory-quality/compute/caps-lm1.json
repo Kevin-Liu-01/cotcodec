@@ -1,0 +1,377 @@
+{
+ "script": "compute/caps_lm1.py",
+ "assumptions": {
+  "seeds": 3,
+  "primary_items": 1600,
+  "secondary_items": 400,
+  "prompt_tokens": {
+   "primary": 220,
+   "secondary": 480
+  },
+  "tail": 1.15,
+  "overhead_h_per_job": 0.1,
+  "arms": {
+   "kimi_k3": [
+    "3",
+    "(600, 1500)",
+    "(100, 450)",
+    "(15, 80)",
+    "(40, 400)",
+    "3.3"
+   ],
+   "v4f_q2": [
+    "2",
+    "(1500, 3000)",
+    "(240, 500)",
+    "(10, 60)",
+    "(30, 300)",
+    "0.9"
+   ],
+   "v4f_iq3": [
+    "2",
+    "(1500, 3000)",
+    "(240, 500)",
+    "(10, 60)",
+    "(30, 300)",
+    "0.9"
+   ],
+   "qwen_q3": [
+    "2",
+    "(2000, 4000)",
+    "(240, 500)",
+    "(10, 60)",
+    "(30, 300)",
+    "0.9"
+   ],
+   "gptoss_lo": [
+    "1",
+    "(3000, 6000)",
+    "(600, 1500)",
+    "(120, 500)",
+    "(200, 800)",
+    "0.6"
+   ]
+  }
+ },
+ "pilot": {
+  "jobs": [
+   {
+    "job": "P1-kimi_k3",
+    "gpus": 3,
+    "prefill_tokens": [
+     544000,
+     1632000
+    ],
+    "primary_items_done_if_pessimistic": [
+     894,
+     1131
+    ],
+    "decode_tokens": [
+     120000,
+     864000
+    ],
+    "gpu_h": [
+     0.903,
+     11.187
+    ],
+    "guard_gpu_h": 3.3,
+    "wall_limit_min": 66,
+    "share_of_order_done_if_pessimistic": 0.276
+   },
+   {
+    "job": "P1-v4f_q2",
+    "gpus": 2,
+    "prefill_tokens": [
+     544000,
+     1632000
+    ],
+    "primary_items_done_if_pessimistic": [
+     920,
+     1221
+    ],
+    "decode_tokens": [
+     84000,
+     648000
+    ],
+    "gpu_h": [
+     0.423,
+     2.62
+    ],
+    "guard_gpu_h": 0.9,
+    "wall_limit_min": 27,
+    "share_of_order_done_if_pessimistic": 0.289
+   },
+   {
+    "job": "P1-v4f_iq3",
+    "gpus": 2,
+    "prefill_tokens": [
+     544000,
+     1632000
+    ],
+    "primary_items_done_if_pessimistic": [
+     920,
+     1221
+    ],
+    "decode_tokens": [
+     84000,
+     648000
+    ],
+    "gpu_h": [
+     0.423,
+     2.62
+    ],
+    "guard_gpu_h": 0.9,
+    "wall_limit_min": 27,
+    "share_of_order_done_if_pessimistic": 0.289
+   },
+   {
+    "job": "P1-qwen_q3",
+    "gpus": 2,
+    "prefill_tokens": [
+     544000,
+     1632000
+    ],
+    "primary_items_done_if_pessimistic": [
+     1014,
+     1274
+    ],
+    "decode_tokens": [
+     84000,
+     648000
+    ],
+    "gpu_h": [
+     0.394,
+     2.446
+    ],
+    "guard_gpu_h": 0.9,
+    "wall_limit_min": 27,
+    "share_of_order_done_if_pessimistic": 0.312
+   },
+   {
+    "job": "P1-gptoss_lo",
+    "gpus": 1,
+    "prefill_tokens": [
+     544000,
+     1632000
+    ],
+    "primary_items_done_if_pessimistic": [
+     575,
+     608
+    ],
+    "decode_tokens": [
+     816000,
+     3360000
+    ],
+    "gpu_h": [
+     0.303,
+     2.063
+    ],
+    "guard_gpu_h": 0.6,
+    "wall_limit_min": 36,
+    "share_of_order_done_if_pessimistic": 0.255
+   },
+   {
+    "job": "J-judge (Qwen3-32B, vLLM, prefix cache)",
+    "gpus": 1,
+    "grades": 24000,
+    "gpu_h": [
+     0.146,
+     0.349
+    ],
+    "guard_gpu_h": 0.3,
+    "wall_limit_min": 18
+   },
+   {
+    "job": "P2-thinking-time-matched (conditional)",
+    "gpus": 2,
+    "gpu_h": [
+     0.458,
+     2.652
+    ],
+    "guard_gpu_h": 0.7,
+    "wall_limit_min": 21,
+    "budget_tokens": 4096
+   }
+  ],
+  "sum_of_guards_gpu_h": 7.6,
+  "sum_of_guards_without_conditional_P2": 6.9,
+  "expected_unconditional_gpu_h": [
+   2.59,
+   6.9
+  ],
+  "line_gpu_h": 8.0
+ },
+ "p2_mac_time_matching": {
+  "kimi_pool_gb": 232.5,
+  "prefill_s_at_10.6_and_3.4_GBps": [
+   21.9,
+   68.4
+  ],
+  "decode_s_30_tokens_at_2.2": 13.6,
+  "kimi_mac_s_per_item": [
+   35.6,
+   82.0
+  ],
+  "v4f_q2_tokens_in_same_time_at_39.35": [
+   1400,
+   3227
+  ],
+  "registered_budget_tokens": 4096
+ },
+ "full_study": {
+  "tier_T_generated_tokens_per_arm": 18846000,
+  "tokens_per_gpu_h": {
+   "kimi_k4": [
+    135000.0,
+    405000.0
+   ],
+   "two_gpu_arm": [
+    430000.0,
+    900000.0
+   ],
+   "q8_three_gpu": [
+    260000.0,
+    530000.0
+   ],
+   "gptoss": [
+    2200000.0,
+    5400000.0
+   ],
+   "qwen38_27b_one_gpu": [
+    600000.0,
+    2000000.0
+   ]
+  },
+  "arm_cost_gpu_h": {
+   "kimi_k26_iq1m": [
+    46.5,
+    139.6
+   ],
+   "kimi_k26_int4_vllm_tp8": [
+    34.3,
+    251.3
+   ],
+   "v4f_q2": [
+    20.9,
+    43.8
+   ],
+   "v4f_iq3": [
+    20.9,
+    43.8
+   ],
+   "v4f_q8": [
+    35.6,
+    72.5
+   ],
+   "gptoss_high": [
+    3.5,
+    8.6
+   ],
+   "qwen38_27b": [
+    9.4,
+    31.4
+   ],
+   "qwen_235b_thinking_q3": [
+    20.9,
+    43.8
+   ]
+  },
+  "knowledge_block_gpu_h": {
+   "k26_iq1m_primary": [
+    0.6,
+    3.3
+   ],
+   "qwen38_27b_primary": [
+    0.2,
+    0.6
+   ],
+   "kernel_path_cuda_vs_cpu": [
+    0.5,
+    1.5
+   ],
+   "kimi_top4_primary": [
+    0.6,
+    3.3
+   ],
+   "k26_int4_reference_primary": [
+    1.0,
+    6.0
+   ]
+  },
+  "branches": {
+   "NOT_WORTH": {
+    "arms_tier_T": [
+     "v4f_q2",
+     "v4f_iq3",
+     "v4f_q8",
+     "gptoss_high",
+     "qwen38_27b",
+     "qwen_235b_thinking_q3"
+    ],
+    "knowledge_extras": [
+     "k26_iq1m_primary",
+     "qwen38_27b_primary",
+     "kernel_path_cuda_vs_cpu"
+    ],
+    "gpu_h": [
+     112.5,
+     249.3
+    ],
+    "setup_gpu_h": [
+     3,
+     8
+    ]
+   },
+   "UNRESOLVED": {
+    "arms_tier_T": [
+     "kimi_k26_iq1m",
+     "v4f_q2",
+     "v4f_iq3",
+     "v4f_q8",
+     "gptoss_high",
+     "qwen38_27b"
+    ],
+    "knowledge_extras": [
+     "k26_iq1m_primary",
+     "qwen38_27b_primary",
+     "kernel_path_cuda_vs_cpu"
+    ],
+    "gpu_h": [
+     138.1,
+     345.1
+    ],
+    "setup_gpu_h": [
+     3,
+     8
+    ]
+   },
+   "LEADS": {
+    "arms_tier_T": [
+     "kimi_k26_iq1m",
+     "kimi_k26_int4_vllm_tp8",
+     "v4f_q2",
+     "v4f_iq3",
+     "v4f_q8",
+     "gptoss_high",
+     "qwen38_27b"
+    ],
+    "knowledge_extras": [
+     "k26_iq1m_primary",
+     "qwen38_27b_primary",
+     "kernel_path_cuda_vs_cpu",
+     "kimi_top4_primary",
+     "k26_int4_reference_primary"
+    ],
+    "gpu_h": [
+     174.0,
+     605.7
+    ],
+    "setup_gpu_h": [
+     3,
+     8
+    ]
+   }
+  }
+ },
+ "reviewer_lane_gpu_h": 0.5
+}

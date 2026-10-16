@@ -1,0 +1,13 @@
+{
+ "url": "https://artificialanalysis.ai/models/kimi-k2-5",
+ "fetched_at": "2026-10-16T04:56:16Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 4193878,
+ "raw_sha256": "1ed24e229d251adef3c5108b289f9b0c7db18ad234dd3e1e9715af0567f15cf7",
+ "raw_stored": false,
+ "primary": false,
+ "extract": {
+  "html_title": "Kimi K2.5 - Intelligence, Performance & Price Analysis | Artificial Analysis"
+ }
+}

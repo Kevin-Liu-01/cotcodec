@@ -1,0 +1,679 @@
+{
+ "schema_version": 1,
+ "proposal": "program/proposals/2026-10-16-lm1-matched-memory-quality.md",
+ "proposal_sha256": "32c83dc1a563d139882abc6864d782e191428bdbf1c4f4a41e1eb1460220baaf",
+ "draft_registration": {
+  "path": "program/preregistrations/lm1-matched-memory-quality-v1.md",
+  "sha256": "fdde887de4d6bcc9a983b540f1d2b56d907b8e3da095302f4deeff04170211e4",
+  "status": "DRAFT"
+ },
+ "source_snapshots": [
+  {
+   "url": "https://artificialanalysis.ai/models/comparisons/deepseek-v4-flash-vs-kimi-k2-6",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:15Z",
+   "raw_sha256": "72d4ec02849591e42abf32ddac825634f4dd073dccbc08e2b223fb33b5003cb4",
+   "raw_bytes": 1513723,
+   "primary": false,
+   "artifact": "snapshots/artificialanalysis.ai_models_comparisons_deepseek-v4-flash-vs-kimi-k2-6.json",
+   "sha256": "cd8101504d03a9218d05c80d3a961135f905f58fce6fd3a1c35de2ad3187f27a"
+  },
+  {
+   "url": "https://artificialanalysis.ai/models/kimi-k2-5",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:16Z",
+   "raw_sha256": "1ed24e229d251adef3c5108b289f9b0c7db18ad234dd3e1e9715af0567f15cf7",
+   "raw_bytes": 4193878,
+   "primary": false,
+   "artifact": "snapshots/artificialanalysis.ai_models_kimi-k2-5.json",
+   "sha256": "0a99e8c0c43165accd48a26f9eb0c1ddea0cfa51e94a9015ce60eecb25161494"
+  },
+  {
+   "url": "https://artificialanalysis.ai/models/qwen3-8-27b",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:16Z",
+   "raw_sha256": "950630c7ec53a059d79ce7f662983e84ec3d31a697bacd8bb4d7d459e7b7dcd9",
+   "raw_bytes": 1562990,
+   "primary": false,
+   "artifact": "snapshots/artificialanalysis.ai_models_qwen3-8-27b.json",
+   "sha256": "d0ef700ab0477dfc9c4ccc79f08a0402b460dace64ed082910784afe83f23809"
+  },
+  {
+   "url": "https://arxiv.org/abs/2212.09720",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:16Z",
+   "raw_sha256": "53fb78d732b83746246cf13b18a9471b148abc954bf4a382e47bbc7ce5f6a08c",
+   "raw_bytes": 42210,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2212.09720.json",
+   "sha256": "7ebe33b52b517df276baad637ab1b2155f95beb372af1ad7d39078f9e8871e6d"
+  },
+  {
+   "url": "https://arxiv.org/abs/2404.05405",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:16Z",
+   "raw_sha256": "3b4a706ba04e2774d2b1d59c333fb550a68d017c78c60218d23a199c6d05a744",
+   "raw_bytes": 42011,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2404.05405.json",
+   "sha256": "d71570fc2392f8e2fb9ab69e12e8783623282fc2f9b26b0a25fe886081b8fa56"
+  },
+  {
+   "url": "https://arxiv.org/abs/2411.00640",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:17Z",
+   "raw_sha256": "951cac93eacd8adf7e184896a3ca3fb203e337e5d010dc18a915e1f72e2ac3d2",
+   "raw_bytes": 39830,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2411.00640.json",
+   "sha256": "dad9fb18710a9c297e0f71c2707b1a6393715140da60b481afd284074e40781b"
+  },
+  {
+   "url": "https://arxiv.org/abs/2502.14739",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:17Z",
+   "raw_sha256": "0860a07db85961b71e958fb7a6605ce04fe0a873b83633e5fd2ff604b50a65f8",
+   "raw_bytes": 57127,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2502.14739.json",
+   "sha256": "6d677e2065fb90b5b9f88b2c7ddc02003c07d443134e1e66cf60545441c9c7d0"
+  },
+  {
+   "url": "https://arxiv.org/abs/2504.02010",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:17Z",
+   "raw_sha256": "34c43624e9297346c14e3d37bea34fb57a3724c668b1c6e95ffe35775df6e360",
+   "raw_bytes": 45336,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2504.02010.json",
+   "sha256": "e6ac6324e49dc98265289ce17948d7c77232e61d4d6ee0dcfc23ac2c23976a39"
+  },
+  {
+   "url": "https://arxiv.org/abs/2508.10925",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:18Z",
+   "raw_sha256": "6b543ce8edf95fd2c2644ba33f535f62d808fe07a4ce195d50ed583f1e1f4088",
+   "raw_bytes": 61234,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2508.10925.json",
+   "sha256": "f54065537d035e90da710b87a659b64e5f1748744c10d319550a4da69b42bb42"
+  },
+  {
+   "url": "https://arxiv.org/abs/2509.07968",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:18Z",
+   "raw_sha256": "469f36cee3371d370b6f0bf599a3ae25e13f6f95904b08fa45ccaf5a35ab2d52",
+   "raw_bytes": 41175,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2509.07968.json",
+   "sha256": "c0367c64a640c9e8ca7241e9519003b04e6d6dddc1774b4da356af8c17b0f025"
+  },
+  {
+   "url": "https://arxiv.org/abs/2509.25689",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:18Z",
+   "raw_sha256": "abcf4132f21c36877ada69369632379d24ab6a46f18aeece1eda0521c3d43693",
+   "raw_bytes": 42307,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2509.25689.json",
+   "sha256": "8b091f51d11e71f60a1c5eeca81db2f05b47445961876fcdc85c77e02e55263c"
+  },
+  {
+   "url": "https://arxiv.org/abs/2510.10964",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:18Z",
+   "raw_sha256": "848790a88d8e251cce81bfa970c8d4dd5f849bc95b4058013f61d907c33a7829",
+   "raw_bytes": 42413,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2510.10964.json",
+   "sha256": "3c673ae73256d58548910ec8026760bc1dcba0d01c2dd55ad32d942ec7215f04"
+  },
+  {
+   "url": "https://arxiv.org/abs/2511.13029",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:19Z",
+   "raw_sha256": "41aa1f70c4d0b85984c7c8f5c91feb6dcf4456e43c80d1ab8df850796cde8c07",
+   "raw_bytes": 41757,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2511.13029.json",
+   "sha256": "05247d6ebac9aa8e0db7a591bd6415a1f82092b94448e6a3597b751a370a9f90"
+  },
+  {
+   "url": "https://arxiv.org/abs/2512.21326",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:19Z",
+   "raw_sha256": "1fa2b76dd4dfae4da99c605b3d61df395edfbefa13599d6873c057c4ae8136fc",
+   "raw_bytes": 42027,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2512.21326.json",
+   "sha256": "fc8155d087590fc52e54841682db48460d5ea91ef009c6bccea9d951acaff871"
+  },
+  {
+   "url": "https://arxiv.org/abs/2604.18556",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:19Z",
+   "raw_sha256": "e3687a86217504417308048f3b3d066641f232a4f80eea210933e93c473b72e1",
+   "raw_bytes": 44375,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2604.18556.json",
+   "sha256": "556f39d1ff0726281588e72b9eddd63aca31e836da29227b975b87b9eb853c98"
+  },
+  {
+   "url": "https://arxiv.org/abs/2606.25519",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:19Z",
+   "raw_sha256": "427f1c7295636e0d327ce346bf2fa9e0095d246202c6291e49227de927e82f92",
+   "raw_bytes": 43055,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2606.25519.json",
+   "sha256": "bca562a385d85342bd792e8b6c24b0502e74aaedd1c745570cef1fcbd38a2c1a"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.12150",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:19Z",
+   "raw_sha256": "5b88af54f1ee72028097c09ba1fe0f8fcb73ae35e12d35fd0f90edad158b779e",
+   "raw_bytes": 40884,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2608.12150.json",
+   "sha256": "73410d4beccccb91f157d03b5a4d314a27c467ea0aa99e11f0adb30b9c3a9936"
+  },
+  {
+   "url": "https://arxiv.org/abs/2608.21693",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:20Z",
+   "raw_sha256": "11e47036740e1149a6c284289aed8c4fc46d2315117b70f3279dd5fba93768de",
+   "raw_bytes": 44357,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2608.21693.json",
+   "sha256": "07b97ac4831c8b4acc446cea482ac6392e695a39ce806f4cc06272ef272b7b8c"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.00482",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:20Z",
+   "raw_sha256": "e06a6d3ec904dc94c1a8c3a64ab12062de843b494cd8a7f6c52658253befe151",
+   "raw_bytes": 42848,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2609.00482.json",
+   "sha256": "d4bbadcb1ddf1ca93c08d4254e4b055a100a435d962de13ef8d35b2a88216742"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.12111",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:20Z",
+   "raw_sha256": "55dc856f14ce13f5d85b5214f8e38b4f78cb995519fd6e3fd54e82b104625cef",
+   "raw_bytes": 42045,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2609.12111.json",
+   "sha256": "ebb7d1a15f6d2565165bafa4dd38cf8876f6999003a19c67edf461eeefd0a288"
+  },
+  {
+   "url": "https://arxiv.org/abs/2609.13714",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:20Z",
+   "raw_sha256": "78a7148c991d5d9c5b902597c85d710831d46acdbd031f26d4b62955d6b00dcd",
+   "raw_bytes": 43226,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2609.13714.json",
+   "sha256": "6843f88b29813abe60570967cff8d00baf3b8c8997d246c11bc186e6a3abfd59"
+  },
+  {
+   "url": "https://arxiv.org/abs/2610.05458",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:21Z",
+   "raw_sha256": "18ca800ecf77d83e5833386c6376891f09108ca3ec7fdc238646532980c0cfef",
+   "raw_bytes": 43148,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2610.05458.json",
+   "sha256": "23cb1bae8361caaef044d93475e2d40d679bc2564b10dcd7bc153c9037dc30cb"
+  },
+  {
+   "url": "https://arxiv.org/abs/2610.15372",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:21Z",
+   "raw_sha256": "3b26b0655058830cf2395b421493d952011422c5858129a0a31c967c4b7bb492",
+   "raw_bytes": 41310,
+   "primary": true,
+   "artifact": "snapshots/arxiv.org_abs_2610.15372.json",
+   "sha256": "aa6211a22837d7353d14993eb72b93be1effe78950e3038c318c11d2403f8da6"
+  },
+  {
+   "url": "https://github.com/Anemll/anemll-flash-llama.cpp",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:22Z",
+   "raw_sha256": "d67f8f3ffa6c2bf2188531f6de038ab6bf3155634e0f5d63becf400efd50a278",
+   "raw_bytes": 796983,
+   "primary": true,
+   "artifact": "snapshots/github.com_Anemll_anemll-flash-llama.cpp.json",
+   "sha256": "3e5b7684ea0fbfd7d9997b8a1fb786b058f84357a38ed77583de71d5c32fe8eb"
+  },
+  {
+   "url": "https://github.com/antirez/ds4/blob/main/docs/PERFORMANCE.md",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:22Z",
+   "raw_sha256": "594e9cdaf915b4fcfa11859d2cbf2ab53f670d2a8d5f51f014c741942c682c71",
+   "raw_bytes": 243724,
+   "primary": true,
+   "artifact": "snapshots/github.com_antirez_ds4_blob_main_docs_PERFORMANCE.md.json",
+   "sha256": "b9192b645c92eb3327a2823f528d266bb1eb2f8c3ca9657c785e2c28ced79655"
+  },
+  {
+   "url": "https://github.com/ggml-org/llama.cpp/blob/620d2225cc436ab0b001e3200e590e3b286ef9ab/docs/multi-gpu.md",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:23Z",
+   "raw_sha256": "ad58fc16225ff660e188ef4767396062cf0c60ab894c6dd46727212d28f44637",
+   "raw_bytes": 305646,
+   "primary": true,
+   "artifact": "snapshots/github.com_ggml-org_llama.cpp_blob_620d2225cc436ab0b001e3200e590e3b286ef9ab_docs_multi-gpu.md.json",
+   "sha256": "c3737579ae0f897b8d4c0e6ade59dd1ead363795e20513aa5917b389ed96f135"
+  },
+  {
+   "url": "https://github.com/ggml-org/llama.cpp/blob/620d2225cc436ab0b001e3200e590e3b286ef9ab/tools/server/README.md",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:24Z",
+   "raw_sha256": "5368892990574bb1c78ebb5a45f4fe40700fefad829dfabe229d44dd1a64730f",
+   "raw_bytes": 1165320,
+   "primary": true,
+   "artifact": "snapshots/github.com_ggml-org_llama.cpp_blob_620d2225cc436ab0b001e3200e590e3b286ef9ab_tools_server_README.md.json",
+   "sha256": "df3c9789cbb7ccd0de19727dafbc1da8d0915ec880ce819f500032f930c67ce1"
+  },
+  {
+   "url": "https://huggingface.co/Qwen/Qwen3-235B-A22B-Instruct-2507",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:24Z",
+   "raw_sha256": "08794e32792cf109149a971070371aa4a503209fdc7b453d8ffa232ae6a90ce2",
+   "raw_bytes": 346548,
+   "primary": true,
+   "artifact": "snapshots/huggingface.co_Qwen_Qwen3-235B-A22B-Instruct-2507.json",
+   "sha256": "43364129c77f8d3d9e3e3bf5bf0ab94ccad4135b4e26dee26b6414998a021421"
+  },
+  {
+   "url": "https://huggingface.co/Qwen/Qwen3.8-27B",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:25Z",
+   "raw_sha256": "7356defd9d4bf45512cc78fec0232ea501ada8bef0b961d8058b93ed76a24762",
+   "raw_bytes": 594089,
+   "primary": true,
+   "artifact": "snapshots/huggingface.co_Qwen_Qwen3.8-27B.json",
+   "sha256": "68f2f74c7a3336089ce93342d390e4f9b92a73d6b65062b91a3eda19b38f5015"
+  },
+  {
+   "url": "https://huggingface.co/bartowski/moonshotai_Kimi-K2.6-GGUF",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:25Z",
+   "raw_sha256": "daebb9d33e377bd3103b76784aa6aa339e164324effc15523128909f2ecf5d1d",
+   "raw_bytes": 309864,
+   "primary": true,
+   "artifact": "snapshots/huggingface.co_bartowski_moonshotai_Kimi-K2.6-GGUF.json",
+   "sha256": "40d040e065a6f0a71148d0d53d0f8f8d9f159c65c47adab3ceffd4c76ca5e8f6"
+  },
+  {
+   "url": "https://huggingface.co/datasets/ArtificialAnalysis/AA-Omniscience-Public",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:26Z",
+   "raw_sha256": "bf442a8f95bfd9c98cabcf7b40986a9468d0d150728853a88a3436248c03e60d",
+   "raw_bytes": 577340,
+   "primary": true,
+   "artifact": "snapshots/huggingface.co_datasets_ArtificialAnalysis_AA-Omniscience-Public.json",
+   "sha256": "44aa846d72ac07a0356a4b1fdc85942c1e94769b081641362aee03c181e839d2"
+  },
+  {
+   "url": "https://huggingface.co/datasets/AtomicChat/dsv4-eval-artifacts",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:26Z",
+   "raw_sha256": "bab1b6c767b07d5525ef58bdd098704887aedd72a2cfa291b34ae777d38dc712",
+   "raw_bytes": 348230,
+   "primary": true,
+   "artifact": "snapshots/huggingface.co_datasets_AtomicChat_dsv4-eval-artifacts.json",
+   "sha256": "f821cdc12e6b47bb82da5617df2bcf9d9419044835044ff80657496f559587a1"
+  },
+  {
+   "url": "https://huggingface.co/datasets/google/simpleqa-verified",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:26Z",
+   "raw_sha256": "5f3d803ce18cdd8b6b02f3012886b5efbeeeb12bdd471eee5d872897bb4182c1",
+   "raw_bytes": 645151,
+   "primary": true,
+   "artifact": "snapshots/huggingface.co_datasets_google_simpleqa-verified.json",
+   "sha256": "05c2471ec36725b43fc750f8d24037b64ca7bc13931cd5ba1083056130fa300f"
+  },
+  {
+   "url": "https://huggingface.co/datasets/m-a-p/SuperGPQA",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:27Z",
+   "raw_sha256": "a05b589f4d0a65f620e554fdd3325b1e063dd08f071110bc5899d465750e1b64",
+   "raw_bytes": 1124786,
+   "primary": true,
+   "artifact": "snapshots/huggingface.co_datasets_m-a-p_SuperGPQA.json",
+   "sha256": "05f06d1174a8fc32e04b75c263b48b7515a1bf726af909978eecf6ac3c491027"
+  },
+  {
+   "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:27Z",
+   "raw_sha256": "d8d2ad682b330c07613d020074f32b9b002000d675cdace320a19b61b21821f2",
+   "raw_bytes": 290035,
+   "primary": true,
+   "artifact": "snapshots/huggingface.co_deepseek-ai_DeepSeek-V4-Flash-0731.json",
+   "sha256": "398a5744e501e369274c93a8dbf2ed437c261418a0e9015e7055a7ab3834b2bc"
+  },
+  {
+   "url": "https://huggingface.co/moonshotai/Kimi-K2.5",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:28Z",
+   "raw_sha256": "97dd6c3826264ec94f6c591ddf4ad55f4ac66ab4622edaf086eaf351caac675b",
+   "raw_bytes": 668287,
+   "primary": true,
+   "artifact": "snapshots/huggingface.co_moonshotai_Kimi-K2.5.json",
+   "sha256": "99f6ee6fdc00d280bc43a38fe445680c13abae5dccbeb158e77ba5f727c11daa"
+  },
+  {
+   "url": "https://huggingface.co/unsloth/Kimi-K2.5-GGUF",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:28Z",
+   "raw_sha256": "b5fb2c70b3d9665608277d683627aced43c0a793051ca6e09f41bb0d4941e387",
+   "raw_bytes": 392160,
+   "primary": true,
+   "artifact": "snapshots/huggingface.co_unsloth_Kimi-K2.5-GGUF.json",
+   "sha256": "41f0ae750ac9e13726dd44112d9a44505a65de5c779f70197fe73696c7583d1a"
+  },
+  {
+   "url": "https://unsloth.ai/docs/basics/dynamic-3.0-ggufs/unsloth-dynamic-ggufs-on-aider-polyglot",
+   "http_status": 200,
+   "fetched_at": "2026-10-16T04:56:29Z",
+   "raw_sha256": "9f208a96ad539157a2abdde5bd97d52766f684e18323450f73a9f2729826ec69",
+   "raw_bytes": 1180414,
+   "primary": false,
+   "artifact": "snapshots/unsloth.ai_docs_basics_dynamic-3.0-ggufs_unsloth-dynamic-ggufs-on-aider-polyglot.json",
+   "sha256": "820b6fa39f7a999c9ff6af1dd6f541cde64eb265d4bedb8a4e5fab32b6a2321a"
+  }
+ ],
+ "query_log": {
+  "artifact": "query-log.json",
+  "sha256": "27722ee348251215ffe896a7858ad854724f2c80d275752c1387e830369ca82e"
+ },
+ "reviews": [],
+ "reviews_status": "not run: the blind critic, the refute-first triad and both reviewers follow this synthesis; no trusted Ed25519 store exists (D24)",
+ "compute": {
+  "scope": "lm1-matched-memory-quality-v1 is a DRAFT pilot registration. The llama.cpp image, the six GGUFs and a smoke test exist from the LM1 host prep (D127); no LM1 harness, manifest or host attestation exists. Only the decision-rule simulation and cap arithmetic were run (compute/attestations-not-run.md).",
+  "image_digest": "127.0.0.1:5000/cotcodec-llamacpp@sha256:d445e09f9f0167cbce65be9fecd0f38c539b243ea321ee281ebeea259e904131",
+  "image_scope": "stock llama.cpp b11669 (620d2225), image id sha256:fb8600d96560412d65ec9c269b555c8db6ed4bcfd86a3556658b1c108073e848, built on docker.io/nvidia/cuda@sha256:4b9ed5fa8361736996499f64ecebf25d4ec37ff56e4d11323ccde10aa36e0c43; the judge runs in the cotcodec-vllm overlay on docker.io/vllm/vllm-openai@sha256:b18abb2df97b8f798e81862bd93f872ea18613372e2c3adc0cc2ac21e66ac12f",
+  "real_model_loop": false,
+  "benchmark_adapter": null,
+  "manifest": null,
+  "manifest_scope": "no LM1 manifest is rendered",
+  "container_smoke": {
+   "label": "container_smoke",
+   "status": "NOT_RUN",
+   "return_code": null,
+   "note": "the image's smoke test (job 1582, D127) loaded all six GGUFs; no LM1 request has been sent",
+   "artifact": "compute/attestations-not-run.md",
+   "sha256": "b6bb5749b7c52f2bc88370001f070e7ceb225ae0a59abe316ce646a5e87e4247"
+  },
+  "slurm_test": {
+   "label": "slurm_test",
+   "status": "NOT_RUN",
+   "return_code": null,
+   "artifact": "compute/attestations-not-run.md",
+   "sha256": "b6bb5749b7c52f2bc88370001f070e7ceb225ae0a59abe316ce646a5e87e4247"
+  },
+  "provenance_verification": {
+   "label": "provenance_verification",
+   "status": "NOT_RUN",
+   "return_code": null,
+   "note": "model receipts and image provenance exist (D127); datasets not fetched",
+   "artifact": "compute/attestations-not-run.md",
+   "sha256": "b6bb5749b7c52f2bc88370001f070e7ceb225ae0a59abe316ce646a5e87e4247"
+  },
+  "executable_pilot": null,
+  "executable_pilot_scope": "none run; the gauntlet's host rule allowed only the open-weight reviewer's lane job",
+  "pilot_caps_gpu_h": {
+   "guards_unconditional": 6.9,
+   "line": 8.0,
+   "expected_unconditional": [
+    2.59,
+    6.9
+   ],
+   "jobs": [
+    {
+     "job": "P1-kimi_k3",
+     "gpus": 3,
+     "guard": 3.3,
+     "estimate": [
+      0.903,
+      11.187
+     ]
+    },
+    {
+     "job": "P1-v4f_q2",
+     "gpus": 2,
+     "guard": 0.9,
+     "estimate": [
+      0.423,
+      2.62
+     ]
+    },
+    {
+     "job": "P1-v4f_iq3",
+     "gpus": 2,
+     "guard": 0.9,
+     "estimate": [
+      0.423,
+      2.62
+     ]
+    },
+    {
+     "job": "P1-qwen_q3",
+     "gpus": 2,
+     "guard": 0.9,
+     "estimate": [
+      0.394,
+      2.446
+     ]
+    },
+    {
+     "job": "P1-gptoss_lo",
+     "gpus": 1,
+     "guard": 0.6,
+     "estimate": [
+      0.303,
+      2.063
+     ]
+    },
+    {
+     "job": "J-judge (Qwen3-32B, vLLM, prefix cache)",
+     "gpus": 1,
+     "guard": 0.3,
+     "estimate": [
+      0.146,
+      0.349
+     ]
+    },
+    {
+     "job": "P2-thinking-time-matched (conditional)",
+     "gpus": 2,
+     "guard": 0.7,
+     "estimate": [
+      0.458,
+      2.652
+     ]
+    }
+   ]
+  },
+  "full_study_gpu_h_by_branch": {
+   "NOT_WORTH": [
+    112.5,
+    249.3
+   ],
+   "UNRESOLVED": [
+    138.1,
+    345.1
+   ],
+   "LEADS": [
+    174.0,
+    605.7
+   ]
+  },
+  "downloads_GB": {
+   "pilot": 0,
+   "full_study_conditional": {
+    "qwen3.8-27b_bf16_approx": 54,
+    "kimi-k2.6_iq1_m": 232.43
+   }
+  },
+  "supplementary_cpu_evidence": [
+   {
+    "label": "decision-rule operating characteristics (superpopulation simulation, seeds 42-44, 1,000 replicates per cell per seed)",
+    "script": {
+     "artifact": "compute/sim_lm1.py",
+     "sha256": "0f7cc22a7fcc27ed731029ca60dc7ceacade6da016f892084ed2f48caa8d0f77"
+    },
+    "output": {
+     "artifact": "compute/sim-lm1.json",
+     "sha256": "ed42144ba259a4084b7c7efadf2d4996141add677fe4a69a4a73566aa3eae394"
+    },
+    "stdout": {
+     "artifact": "compute/sim-lm1.stdout",
+     "sha256": "bea0f22420e3699b54279dc6308d9725ed4eda8e7f26319a8a02ba34622739b7"
+    }
+   },
+   {
+    "label": "pilot guards, full-study arithmetic by branch, Mac-time matching for P2",
+    "script": {
+     "artifact": "compute/caps_lm1.py",
+     "sha256": "9cde5e6eb72e3fe3738f19b6c7240757fda2e831b24eacd4c08b06833b3659cd"
+    },
+    "output": {
+     "artifact": "compute/caps-lm1.json",
+     "sha256": "cc872b794f790b9eab2c12d9feed6d591dba2fcec1eced5e74d05d40b2c76c0f"
+    },
+    "stdout": {
+     "artifact": "compute/caps-lm1.stdout",
+     "sha256": "ac5409cab22d589e2e7a9e66c5ff2e165ee12607452d5aec10d3df0b25062ff2"
+    }
+   }
+  ]
+ },
+ "doctors": [
+  {
+   "name": "Source",
+   "status": "PASS",
+   "artifact": "doctors/source.json",
+   "sha256": "d53583216be71a4fe60d03ca3908e9649d4124f450ddbcec4fae553a733d9582"
+  },
+  {
+   "name": "Citation",
+   "status": "PASS",
+   "artifact": "doctors/citation.json",
+   "sha256": "53058d2ff51847dc9c786a308550ea688eb58e3ec329ce5896eb66515f8c5c40"
+  },
+  {
+   "name": "Novelty",
+   "status": "FAIL",
+   "artifact": "doctors/novelty.json",
+   "sha256": "9e22787b98ccd13ef8fbdbc04571c63fb1e01a70716d8b63af7b02f25730ebda"
+  },
+  {
+   "name": "Design",
+   "status": "PASS",
+   "artifact": "doctors/design.json",
+   "sha256": "5c778401f86ed38eecc06d2fe3d77b83c3eeceaa22213c573dd56466c5a52c0d"
+  },
+  {
+   "name": "Compute",
+   "status": "FAIL",
+   "artifact": "doctors/compute.json",
+   "sha256": "50e4789ad59c8f1be94d7689073bfcf796dd85ac31207d3c9e44f972a92b52ed"
+  },
+  {
+   "name": "Safety",
+   "status": "PASS",
+   "artifact": "doctors/safety.json",
+   "sha256": "2eb29439ed56a01d62e6b98364cc74ec8799f54703b86a03e3f67242eab08771"
+  }
+ ],
+ "audit_log": null,
+ "audit_log_status": "no gauntlet row yet; the recorder appends program/gauntlet/2026-10-16-lm1-matched-memory-quality.jsonl after the reviewers score",
+ "blind_discrimination_packet": {
+  "paragraphs": [
+   {
+    "artifact": "blind/paragraph-83cf9efb.txt",
+    "sha256": "83cf9efbc2a7647de98d34159aa077bd56abf5d2e7037e7544fa8562532b568f"
+   },
+   {
+    "artifact": "blind/paragraph-b473fdff.txt",
+    "sha256": "b473fdff08880e44078853d1576f01874b2c4b827a95cb45887e28f8890e0b94"
+   }
+  ],
+  "roles": {
+   "artifact": "compute/blind-roles.json",
+   "sha256": "01a3d9c31772aba483c89066b2c71e12a1fd6559f15ccaf1a42b0e33f9aaf263",
+   "note": "recorder only; never shown to the critic"
+  }
+ },
+ "source_reads_by_synthesis": {
+  "orx_full_text": [
+   "2509.25689",
+   "2504.02010",
+   "2610.15372",
+   "2604.18556",
+   "2404.05405",
+   "2508.10925"
+  ],
+  "orx_abstract": [
+   "2604.24827",
+   "2609.12111",
+   "2610.02462",
+   "2609.06076",
+   "2505.24832"
+  ],
+  "llamacpp_commit": "620d2225cc436ab0b001e3200e590e3b286ef9ab",
+  "hub_revisions": {
+   "AA-Omniscience-Public": "e4883edbb9f5ccf2b2a8fdc6fb65e01a58e99849",
+   "simpleqa-verified": "0dc97e0d28d8233463e005cdc4475cc2a13ba2dc",
+   "SuperGPQA": "4430d4458112c7d4497fdcf94d7cc223313d6acf",
+   "Kimi-K2.5": "4d01dfe0332d63057c186e0b262165819efb6611",
+   "Qwen3-235B-A22B-Instruct-2507": "ac9c66cc9b46af7306746a9250f23d47083d689e",
+   "DeepSeek-V4-Flash-0731": "7872f01b1d1fe23eabc4c98b48bffcef5a386062",
+   "Qwen3.8-27B": "1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0"
+  }
+ },
+ "budget_ledger": {
+  "declared": {
+   "queries": 150,
+   "wall_minutes": 720,
+   "tokens": 10000000,
+   "dollars": 150,
+   "waves": 3,
+   "gpu_hours": 0.5
+  },
+  "queries": {
+   "frontier": 41,
+   "kill_shot": 8,
+   "cross_domain": 24,
+   "asset_cost": 13,
+   "synthesis": 6,
+   "total_counted": 92,
+   "declared": 150,
+   "reserved_for_refuters": 30,
+   "remaining_after_synthesis": 58,
+   "orx_discover_records": 52
+  },
+  "gpu_hours_used_by_synthesis": 0.0,
+  "host_jobs_submitted_by_synthesis": 0,
+  "tokens_wall_dollars": "metered by the orchestrator over the whole wave"
+ },
+ "evidence_root_sha256": "ccaf76678ddad7a0ffeaa71649045fa63835a1bb3bd4b9f2626f92e331be4b21",
+ "direction_doctor_run": {
+  "command": "uv run python scripts/research_direction_doctor.py program/proposals/2026-10-16-lm1-matched-memory-quality.md",
+  "status": "FAIL",
+  "acceptedScore": 0,
+  "hardCaps": [
+   89
+  ],
+  "evidence_root_at_run": "ccaf76678ddad7a0ffeaa71649045fa63835a1bb3bd4b9f2626f92e331be4b21",
+  "artifact": "doctors/direction-doctor-output.json",
+  "sha256": "35a0fe785c5cb72ab9ead97310bb046c4d4aa4416baa6ccf34a486f2c0f6a1cb"
+ }
+}

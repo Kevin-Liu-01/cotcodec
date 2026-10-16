@@ -1,0 +1,13 @@
+{
+ "url": "https://github.com/antirez/ds4/blob/main/docs/PERFORMANCE.md",
+ "fetched_at": "2026-10-16T04:56:22Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 243724,
+ "raw_sha256": "594e9cdaf915b4fcfa11859d2cbf2ab53f670d2a8d5f51f014c741942c682c71",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "html_title": "ds4/docs/PERFORMANCE.md at main · antirez/ds4 · GitHub"
+ }
+}

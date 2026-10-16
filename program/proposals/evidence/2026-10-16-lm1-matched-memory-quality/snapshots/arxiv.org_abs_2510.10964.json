@@ -1,0 +1,29 @@
+{
+ "url": "https://arxiv.org/abs/2510.10964",
+ "fetched_at": "2026-10-16T04:56:18Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42413,
+ "raw_sha256": "848790a88d8e251cce81bfa970c8d4dd5f849bc95b4058013f61d907c33a7829",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "Not All Bits Are Equal: Scale-Dependent Memory Optimization Strategies for Reasoning Models",
+  "authors": [
+   "Kim, Junhyuck",
+   "Ewer, Ethan",
+   "Moon, Taehong",
+   "Park, Jongho",
+   "Papailiopoulos, Dimitris"
+  ],
+  "citation_date": "2025/10/13",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 13 Oct 2025 03:14:28 UTC"
+   }
+  ],
+  "abstract": "While 4-bit quantization has emerged as a memory-optimal choice for non-reasoning models and zero-shot tasks across scales, we show that this universal prescription fails for reasoning models, where the KV cache rather than model size can dominate memory. Through systematic experiments across 1,700 inference scenarios on AIME25 and GPQA-Diamond, we find a scale-dependent trade-off: models with an effective size below 8-bit 4B parameters achieve better accuracy by allocating memory to more weights rather than longer generation, while larger models achieve better accuracy by allocating memory to longer generations. This scale threshold also determines when parallel scaling becomes memory-efficient and whether KV cache eviction outperforms KV quantization. Our findings show that memory optimization for LLMs cannot be scale-agnostic, while providing principled guidelines: for small reasoning models, prioritize model capacity over test-time compute, while for larger ones, maximize test-time compute. Our results suggest that optimizing reasoning models for deployment requires fundamentally different strategies from those established for non-reasoning models.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

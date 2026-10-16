@@ -1,0 +1,30 @@
+{
+ "url": "https://arxiv.org/abs/2609.00482",
+ "fetched_at": "2026-10-16T04:56:20Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42848,
+ "raw_sha256": "e06a6d3ec904dc94c1a8c3a64ab12062de843b494cd8a7f6c52658253befe151",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "Are Near-Tied LLM Rankings Robust to Family-DIF-Guided Benchmark Recomposition?",
+  "authors": [
+   "Zheng, Qiaoyuan",
+   "Yang, Yiqu"
+  ],
+  "citation_date": "2026/08/31",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 31 Aug 2026 23:29:50 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Wed, 7 Oct 2026 23:17:37 UTC"
+   }
+  ],
+  "abstract": "Small leaderboard gaps are often interpreted as evidence that one language model is better than another, but their sign may depend on which benchmark items are included. We test this using item-level responses from five benchmarks and a family-label-free spectral approximation to multidimensional item-response theory (MIRT). In owner-disjoint folds, one owner half identifies items with low residual differential item functioning across model families (low-DIF). These items are used to score models in the other half with frozen weights that preserve the benchmark's composition across metadata-defined item groups and easiness strata. Equally short matched-random subtests provide a baseline for variation due to item subsampling. Full-benchmark and low-DIF rankings remain strongly correlated ($\\tau_b=.900$--$.948$). Yet in four of five benchmarks, 30.9--47.1\\% of cross-family pairs initially within one percentage point reverse order, exceeding their matched-random medians by 16.9--28.6 percentage points (all $p=.001$). The fifth benchmark shows no reliable excess ($-0.9$ points, $p=.689$). The pattern survives all pre-specified population perturbations, and residual item--family signatures replicate across owner halves; however, no family shows a consistent advantage across benchmarks. Thus, globally stable rankings can still leave individual near-tie orderings sensitive to benchmark composition, and sub-one-point leaderboard gaps should be accompanied by evidence that the implied ordering is composition-robust.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

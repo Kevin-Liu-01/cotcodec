@@ -1,0 +1,13 @@
+{
+ "url": "https://huggingface.co/unsloth/Kimi-K2.5-GGUF",
+ "fetched_at": "2026-10-16T04:56:28Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 392160,
+ "raw_sha256": "b5fb2c70b3d9665608277d683627aced43c0a793051ca6e09f41bb0d4941e387",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "html_title": "unsloth/Kimi-K2.5-GGUF · Hugging Face"
+ }
+}

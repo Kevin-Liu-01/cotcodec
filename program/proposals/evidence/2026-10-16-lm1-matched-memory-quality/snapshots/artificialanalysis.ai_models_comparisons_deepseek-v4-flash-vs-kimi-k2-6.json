@@ -1,0 +1,13 @@
+{
+ "url": "https://artificialanalysis.ai/models/comparisons/deepseek-v4-flash-vs-kimi-k2-6",
+ "fetched_at": "2026-10-16T04:56:15Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 1513723,
+ "raw_sha256": "72d4ec02849591e42abf32ddac825634f4dd073dccbc08e2b223fb33b5003cb4",
+ "raw_stored": false,
+ "primary": false,
+ "extract": {
+  "html_title": "DeepSeek V4 Flash 0731 (Max) vs Kimi K2.6 (Reasoning): Model Comparison | Artificial Analysis"
+ }
+}

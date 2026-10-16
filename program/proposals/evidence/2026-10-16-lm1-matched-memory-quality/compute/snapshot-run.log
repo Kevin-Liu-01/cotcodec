@@ -1,0 +1,38 @@
+200 https://artificialanalysis.ai/models/comparisons/deepseek-v4-flash-vs-kimi-k2-6 DeepSeek V4 Flash 0731 (Max) vs Kimi K2.6 (Reasoning): Model Comparison | Artifi
+200 https://artificialanalysis.ai/models/kimi-k2-5 Kimi K2.5 - Intelligence, Performance & Price Analysis | Artificial Analysis
+200 https://artificialanalysis.ai/models/qwen3-8-27b Qwen3.8 27B (xhigh) - Intelligence, Performance & Price Analysis | Artificial An
+200 https://arxiv.org/abs/2212.09720 The case for 4-bit precision: k-bit Inference Scaling Laws
+200 https://arxiv.org/abs/2404.05405 Physics of Language Models: Part 3.3, Knowledge Capacity Scaling Laws
+200 https://arxiv.org/abs/2411.00640 Adding Error Bars to Evals: A Statistical Approach to Language Model Evaluations
+200 https://arxiv.org/abs/2502.14739 SuperGPQA: Scaling LLM Evaluation across 285 Graduate Disciplines
+200 https://arxiv.org/abs/2504.02010 When Reasoning Meets Compression: Understanding the Effects of LLMs Compression 
+200 https://arxiv.org/abs/2508.10925 gpt-oss-120b & gpt-oss-20b Model Card
+200 https://arxiv.org/abs/2509.07968 SimpleQA Verified: A Reliable Factuality Benchmark to Measure Parametric Knowled
+200 https://arxiv.org/abs/2509.25689 Collaborative Compression for Large-Scale MoE Deployment on Edge
+200 https://arxiv.org/abs/2510.10964 Not All Bits Are Equal: Scale-Dependent Memory Optimization Strategies for Reaso
+200 https://arxiv.org/abs/2511.13029 AA-Omniscience: Evaluating Cross-Domain Knowledge Reliability in Large Language 
+200 https://arxiv.org/abs/2512.21326 Measuring all the noises of LLM Evals
+200 https://arxiv.org/abs/2604.18556 GSQ: Highly-Accurate Low-Precision Scalar Quantization for LLMs via Gumbel-Softm
+200 https://arxiv.org/abs/2606.25519 Quantization Inflates Reasoning: Token Inflation as a Hidden Cost of Low-Bit Rea
+200 https://arxiv.org/abs/2608.12150 Who Thinks Best Depends on How Long You Let Them: Budget-Dependent Rankings in L
+200 https://arxiv.org/abs/2608.21693 Benchmarking Composable Compression Techniques in Mixture-of-Experts LLMs
+200 https://arxiv.org/abs/2609.00482 Are Near-Tied LLM Rankings Robust to Family-DIF-Guided Benchmark Recomposition?
+200 https://arxiv.org/abs/2609.12111 The Cost of Compression: A Rate-Distortion Limit on Factual Hallucination
+200 https://arxiv.org/abs/2609.13714 Certifying Model Upgrades with Slice-Wise Non-Regression and Incumbent Fallback
+200 https://arxiv.org/abs/2610.05458 Measuring and Reducing Cross-Vendor Mismatch in Language Models
+200 https://arxiv.org/abs/2610.15372 Fewer Bits, More Tries: Recovering Capability Under Memory Constraints
+200 https://github.com/Anemll/anemll-flash-llama.cpp GitHub - Anemll/anemll-flash-llama.cpp: Flash-MoE sidecar slot-bank runtime for 
+200 https://github.com/antirez/ds4/blob/main/docs/PERFORMANCE.md ds4/docs/PERFORMANCE.md at main · antirez/ds4 · GitHub
+200 https://github.com/ggml-org/llama.cpp/blob/620d2225cc436ab0b001e3200e590e3b286ef9ab/docs/multi-gpu.md llama.cpp/docs/multi-gpu.md at 620d2225cc436ab0b001e3200e590e3b286ef9ab · ggml-o
+200 https://github.com/ggml-org/llama.cpp/blob/620d2225cc436ab0b001e3200e590e3b286ef9ab/tools/server/README.md llama.cpp/tools/server/README.md at 620d2225cc436ab0b001e3200e590e3b286ef9ab · g
+200 https://huggingface.co/Qwen/Qwen3-235B-A22B-Instruct-2507 Qwen/Qwen3-235B-A22B-Instruct-2507 · Hugging Face
+200 https://huggingface.co/Qwen/Qwen3.8-27B Qwen/Qwen3.8-27B · Hugging Face
+200 https://huggingface.co/bartowski/moonshotai_Kimi-K2.6-GGUF bartowski/moonshotai_Kimi-K2.6-GGUF · Hugging Face
+200 https://huggingface.co/datasets/ArtificialAnalysis/AA-Omniscience-Public ArtificialAnalysis/AA-Omniscience-Public · Datasets at Hugging Face
+200 https://huggingface.co/datasets/AtomicChat/dsv4-eval-artifacts AtomicChat/dsv4-eval-artifacts · Datasets at Hugging Face
+200 https://huggingface.co/datasets/google/simpleqa-verified google/simpleqa-verified · Datasets at Hugging Face
+200 https://huggingface.co/datasets/m-a-p/SuperGPQA m-a-p/SuperGPQA · Datasets at Hugging Face
+200 https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731 deepseek-ai/DeepSeek-V4-Flash-0731 · Hugging Face
+200 https://huggingface.co/moonshotai/Kimi-K2.5 moonshotai/Kimi-K2.5 · Hugging Face
+200 https://huggingface.co/unsloth/Kimi-K2.5-GGUF unsloth/Kimi-K2.5-GGUF · Hugging Face
+200 https://unsloth.ai/docs/basics/dynamic-3.0-ggufs/unsloth-dynamic-ggufs-on-aider-polyglot Unsloth Dynamic GGUFs on Aider Polyglot | Unsloth Documentation

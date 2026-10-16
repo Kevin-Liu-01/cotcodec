@@ -1,0 +1,33 @@
+{
+ "url": "https://arxiv.org/abs/2509.07968",
+ "fetched_at": "2026-10-16T04:56:18Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41175,
+ "raw_sha256": "469f36cee3371d370b6f0bf599a3ae25e13f6f95904b08fa45ccaf5a35ab2d52",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "SimpleQA Verified: A Reliable Factuality Benchmark to Measure Parametric Knowledge",
+  "authors": [
+   "Haas, Lukas",
+   "Yona, Gal",
+   "D'Antonio, Giovanni",
+   "Goldshtein, Sasha",
+   "Das, Dipanjan"
+  ],
+  "citation_date": "2025/09/09",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Tue, 9 Sep 2025 17:53:58 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Tue, 10 Mar 2026 12:28:26 UTC"
+   }
+  ],
+  "abstract": "We introduce SimpleQA Verified, a 1,000-prompt benchmark for evaluating Large Language Model (LLM) short-form factuality based on OpenAI's SimpleQA. It addresses critical limitations in OpenAI's benchmark, including noisy and incorrect labels, topical biases, and question redundancy. SimpleQA Verified was created through a rigorous multi-stage filtering process involving de-duplication, topic balancing, and source reconciliation to produce a more reliable and challenging evaluation set, alongside improvements in the autorater prompt. On this new benchmark, Gemini 2.5 Pro achieves a state-of-the-art F1-score of 55.6, outperforming other frontier models, including GPT-5. This work provides the research community with a higher-fidelity tool to track genuine progress in parametric model factuality and to mitigate hallucinations. The benchmark dataset, evaluation code, and leaderboard are available at: this https URL.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

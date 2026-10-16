@@ -1,0 +1,35 @@
+{
+ "url": "https://arxiv.org/abs/2604.18556",
+ "fetched_at": "2026-10-16T04:56:19Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 44375,
+ "raw_sha256": "e3687a86217504417308048f3b3d066641f232a4f80eea210933e93c473b72e1",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "GSQ: Highly-Accurate Low-Precision Scalar Quantization for LLMs via Gumbel-Softmax Sampling",
+  "authors": [
+   "Dadgarnia, Alireza",
+   "Tabesh, Soroush",
+   "Nikdan, Mahdi",
+   "Helcig, Michael",
+   "Kurtic, Eldar",
+   "Kleinegger, Maximilian",
+   "Alistarh, Dan"
+  ],
+  "citation_date": "2026/04/20",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Mon, 20 Apr 2026 17:45:47 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Fri, 15 May 2026 09:34:30 UTC"
+   }
+  ],
+  "abstract": "Quantization has become a standard tool for efficient LLM deployment, especially for local inference, where models are now routinely served at 2-3 bits per parameter. The state of the art is currently split into simple scalar quantization techniques, such as GPTQ or AWQ, which are widely deployed but plateau in accuracy at 3-4 bits per parameter (bpp), and \"second-generation\" vector- or trellis-quantized methods, such as QTIP, GPTVQ and AQLM, which push the accuracy frontier but are notoriously hard to implement and to scale. In this paper, we ask whether this gap is fundamental, or whether a carefully optimized $\\textit{scalar}$ quantizer can recover most of it. We answer in the affirmative, by introducing GSQ (Gumbel-Softmax Quantization), a post-training scalar quantization method which jointly learns the per-coordinate grid assignments and the per-group scales using a Gumbel-Softmax relaxation of the discrete grid. GSQ matches the cardinality of the relaxation to the small number of levels available in the target bit-width regime (e.g., 3-8 levels for ternary and 3 bpp, respectively), making optimization tractable. Practically, on the standard Llama-3.1-8B/70B-Instruct models, GSQ closes most of the gap between scalar quantization and the QTIP frontier at 2 and 3 bits, while using a symmetric scalar grid with group-wise quantization, and thus remains compatible with existing scalar inference kernels. We further show that the same discrete-assignment optimization can be applied to practical GGUF K-Quant checkpoints: starting from publicly released GGUF models, GSQ improves accuracy while projecting the result back into the same deployment format. Finally, GSQ scales to trillion-scale Mixture-of-Experts models such as Kimi-K2.5, where vector-quantized methods are difficult to apply. The source code is publicly available at this https URL.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

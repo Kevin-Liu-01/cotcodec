@@ -1,0 +1,13 @@
+{
+ "url": "https://unsloth.ai/docs/basics/dynamic-3.0-ggufs/unsloth-dynamic-ggufs-on-aider-polyglot",
+ "fetched_at": "2026-10-16T04:56:29Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 1180414,
+ "raw_sha256": "9f208a96ad539157a2abdde5bd97d52766f684e18323450f73a9f2729826ec69",
+ "raw_stored": false,
+ "primary": false,
+ "extract": {
+  "html_title": "Unsloth Dynamic GGUFs on Aider Polyglot | Unsloth Documentation"
+ }
+}

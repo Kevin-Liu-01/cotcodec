@@ -1,0 +1,13 @@
+{
+ "url": "https://huggingface.co/datasets/AtomicChat/dsv4-eval-artifacts",
+ "fetched_at": "2026-10-16T04:56:26Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 348230,
+ "raw_sha256": "bab1b6c767b07d5525ef58bdd098704887aedd72a2cfa291b34ae777d38dc712",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "html_title": "AtomicChat/dsv4-eval-artifacts · Datasets at Hugging Face"
+ }
+}

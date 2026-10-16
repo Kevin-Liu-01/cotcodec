@@ -1,0 +1,33 @@
+{
+ "url": "https://arxiv.org/abs/2512.21326",
+ "fetched_at": "2026-10-16T04:56:19Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 42027,
+ "raw_sha256": "1fa2b76dd4dfae4da99c605b3d61df395edfbefa13599d6873c057c4ae8136fc",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "Measuring all the noises of LLM Evals",
+  "authors": [
+   "Wang, Sida I."
+  ],
+  "citation_date": "2025/12/24",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Wed, 24 Dec 2025 18:54:37 UTC"
+   },
+   {
+    "version": "v2",
+    "date": "Sun, 29 Mar 2026 00:57:41 UTC"
+   },
+   {
+    "version": "v3",
+    "date": "Tue, 13 Oct 2026 04:11:28 UTC"
+   }
+  ],
+  "abstract": "Applying well-established statistical methods effectively to LLM evals requires consideration of model correlations and prediction noises. Leading evals often ignore data noise, have low statistical power, or make unnecessary trade-offs. We define and measure three types of noise: 1) prediction noise from generating different answers on a given question, 2) data noise from sampling questions, and 3) their combined total noise following the law of total variance. To emphasize relative comparisons and gain statistical power, we propose \\emph{all-pairs comparison}, which applies paired comparison to all pairs of LLMs and measures all the noise components based on millions of question-level predictions across many evals and settings, revealing clear trends. First, most evals exhibit a characteristic and highly predictable total noise level across all model pairs. Second, paired prediction noise typically exceeds paired data noise, which means reducing prediction noise by averaging can significantly increase statistical power. By measuring all the noises together, we can assess eval results in context and make better empirical decisions.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}

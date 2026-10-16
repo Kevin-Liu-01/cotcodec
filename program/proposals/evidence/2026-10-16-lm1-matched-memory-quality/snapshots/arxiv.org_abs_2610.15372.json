@@ -1,0 +1,27 @@
+{
+ "url": "https://arxiv.org/abs/2610.15372",
+ "fetched_at": "2026-10-16T04:56:21Z",
+ "http_status": 200,
+ "content_type": "text/html; charset=utf-8",
+ "raw_bytes": 41310,
+ "raw_sha256": "3b26b0655058830cf2395b421493d952011422c5858129a0a31c967c4b7bb492",
+ "raw_stored": false,
+ "primary": true,
+ "extract": {
+  "title": "Fewer Bits, More Tries: Recovering Capability Under Memory Constraints",
+  "authors": [
+   "Galanti, Tomer",
+   "Susskind, Josh",
+   "Malach, Eran"
+  ],
+  "citation_date": "2026/10/11",
+  "submission_history": [
+   {
+    "version": "v1",
+    "date": "Sun, 11 Oct 2026 05:52:48 UTC"
+   }
+  ],
+  "abstract": "Large language models are generally more capable than smaller ones, but their memory requirements can make local deployment difficult. We ask whether part of this capability gap can instead be recovered by running a smaller or more compressed model multiple times and selecting among its outputs using public or model-generated tests. Single-user local inference can leave hardware underutilized, allowing parallel candidate generation to trade additional test-time computation for accuracy at modest latency cost. Across four code-generation benchmarks, verified retry recovers substantial accuracy lost to model size or compression. A 7B Qwen model with eight parallel attempts essentially matches a 32B model on MBPP+ and exceeds it on the other three benchmarks, while using about $4\\times$ less model memory, running up to $6\\times$ faster, and using less energy, as measured on Nvidia GPU. We observe similar tradeoff across model sizes, compression levels and hardware choices, although exact benefit depends on the hardware profile and problem setting. These results show that model capacity can be traded for verified test-time computation when correct solutions remain reachable within a modest retry budget.",
+  "extract_licence": "arXiv metadata (title, authors, abstract) is CC0 1.0"
+ }
+}
