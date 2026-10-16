@@ -1574,7 +1574,7 @@
         "1525 4B fp16 (FAILED 3:0 by design after the budget USR1, 00:26:32)",
         "1527 4B bf16 (USR1 after math; lane interval 00:28:37, Slurm record expired, counted as 00:28:39)"
       ],
-      "outcome": "every math phase complete (402 of 402 per engine, no time cut); math accuracy fp32 / fp16 / bf16: 4B 86.1 / 82.1 / 75.1, 9B 89.6 / 87.6 / 80.3 (paired fp16 - fp32 -4.0 [-7.5, -1.0] and -2.0 [-5.2, +1.2]; bf16 -10.9 and -9.2); the 16-bit states lengthen the reasoning (+930 and +2,900 tokens) and the loss is truncation at 32K; 9B long-context replies 94 (fp16) and 88 (bf16) of 100 token-identical to fp32. The 4B jobs were sent the lane's USR1 after their math phase (projected total 3.97 of 4.0 GPU-h), so their long-context phase ran as lme_extra (program/evidence/2026-10-16/g3-state-precision-accuracy/README.md)",
+      "outcome": "every math phase complete (402 of 402 per engine, no time cut); math accuracy fp32 / fp16 / bf16 (checker v2, after the independent checks; checker v1 was about 1-2 points lower): 4B 87.1 / 83.3 / 76.4, 9B 91.5 / 88.8 / 81.6 (paired fp16 - fp32 -3.7 [-7.2, -0.5] and -2.7 [-6.0, +0.5], marginal; bf16 -10.7 [-14.9, -6.7] and -10.0 [-13.9, -6.5]); the 16-bit states lengthen the reasoning (+930 and +2,900 tokens) and nearly all of the loss is rollouts reaching the 32,768-token cap without an answer; 9B long-context replies 94 (fp16) and 88 (bf16) of 100 token-identical to fp32. The 4B jobs were sent the lane's USR1 after their math phase (projected total 3.97 of 4.0 GPU-h), so their long-context phase ran as lme_extra (program/evidence/2026-10-16/g3-state-precision-accuracy/README.md)",
       "basis": "physical (scontrol RunTime on 1 H100 each; 1527 from the lane interval); six jobs side by side on GPUs 1-6, D110's job on GPU 0"
     },
     {
@@ -1594,7 +1594,7 @@
       "jobs": [
         "1546 judge (1 H100; COMPLETED 0:0, 00:02:50)"
       ],
-      "outcome": "358 of 358 labelled, 0 malformed; validation 194 of 200 (reference answers 94 of 100 yes, \"I don't know.\" 100 of 100 no); judge accuracy fp32 / fp16 / bf16: 9B 60 / 61 / 61, 4B 52 / 52 / 54; G3 total 3.8387 of the 4.0 cap; CPU analysis 1547 (program/evidence/2026-10-16/g3-state-precision-accuracy/README.md)",
+      "outcome": "358 of 358 labelled, 0 malformed; validation 194 of 200 (reference answers 94 of 100 yes, \"I don't know.\" 100 of 100 no); judge accuracy fp32 / fp16 / bf16: 9B 60 / 61 / 61, 4B 52 / 52 / 54; G3 total 13,819 GPU-s = 3.8386 of the 4.0 cap (the five rows, rounded each, sum to 3.8387); CPU analysis 1547 (program/evidence/2026-10-16/g3-state-precision-accuracy/README.md)",
       "basis": "physical (scontrol RunTime 00:02:50 on 1 H100)"
     }
   ],

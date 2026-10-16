@@ -2,7 +2,7 @@
 """G3 post-hoc descriptive extras (EXPLORATORY, CPU, from the committed text-free per-request
 file): paired length comparisons against fp32 on the same (question, seed), with an exact
 two-sided sign test as in G2b; and the math accuracy among rollouts that ended with EOS in both
-arms of a pair. Usage: posthoc_extras.py <data/per-request.jsonl.gz> <out.json>"""
+arms of a pair. Main-run rows only (the per-request file also holds the pilot's rows). Usage: posthoc_extras.py <data/per-request.jsonl.gz> <out.json>"""
 
 from __future__ import annotations
 
@@ -24,7 +24,11 @@ def main() -> None:
     rows = [json.loads(line) for line in gzip.open(sys.argv[1], "rt")]
     out: dict = {}
     for model in sorted({r["model"] for r in rows}):
-        m = {(r["arm"], r["request_id"]): r for r in rows if r["model"] == model and r["task"] == "math"}
+        m = {
+            (r["arm"], r["request_id"]): r
+            for r in rows
+            if r["model"] == model and r["task"] == "math" and r["phase"] == "main"
+        }
         ids = sorted({rid for arm, rid in m if arm == "fp32"})
         for arm in ("fp16", "bf16"):
             longer = shorter = tie = 0

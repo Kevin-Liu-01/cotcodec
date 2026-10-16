@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Build the top-level results.json of g3-state-precision-accuracy-v1 (EXPLORATORY) from
-analysis/results.json, analysis/posthoc.json and the job records below. Text-free.
+analysis/results.json (checker v2), analysis/extras.json, analysis/posthoc.json, the checker-v1
+outputs and the job records below. Text-free.
 Usage (from the evidence directory): python ops/build_results.py > results.json"""
 
 from __future__ import annotations
@@ -37,10 +38,20 @@ def main() -> None:
     res = json.loads((HERE / "analysis" / "results.json").read_text())
     post = json.loads((HERE / "analysis" / "posthoc.json").read_text())
     gpu = {k: round(sum(v.values()) / 3600, 4) for k, v in JOBS.items()}
+    seconds = sum(sum(v.values()) for v in JOBS.values())
+    extras = json.loads((HERE / "analysis" / "extras.json").read_text())
+    v1 = json.loads((HERE / "checker-v1" / "analysis" / "results.json").read_text())
     out = {
         "experiment_id": res["experiment_id"],
         "claim_level": "exploratory",
-        "gpu_hours_physical": gpu | {"total": round(sum(gpu.values()), 4), "cap": 4.0},
+        "checker": "v2 (harness.g3_state_precision.math_equiv; v1 outputs in checker-v1/)",
+        "gpu_hours_physical": gpu
+        | {
+            "total": round(seconds / 3600, 4),
+            "total_gpu_seconds": seconds,
+            "sum_of_rounded_rows": round(sum(gpu.values()), 4),
+            "cap": 4.0,
+        },
         "jobs_gpu_seconds": JOBS,
         "bootstrap": res["bootstrap"],
         "equivalence_margin_points": 100 * res["equivalence_margin"],
@@ -48,6 +59,16 @@ def main() -> None:
         "cells": {},
         "throughput": res["throughput"],
         "posthoc_paired_lengths": post,
+        "pooled_math_over_models": res.get("pooled_math"),
+        "pilot_partial_aa": extras["aa_math"],
+        "lme_pilot_aa": extras["aa_lme"],
+        "capped_rollout_repetition": extras["repetition"],
+        "checker_v1_math_accuracy_pct": {
+            name: {a: pct(c["correct"][a]["mean"]) for a in ARMS}
+            | {f"{a}_minus_fp32": pct(c["correct"][f"{a}_minus_fp32"]["diff"]) for a in ARMS[1:]}
+            for name, c in v1["cells"].items()
+            if name.endswith("/math")
+        },
         "lme_judge_changes_vs_fp32": LME_JUDGE_CHANGES,
     }
     for name, cell in res["cells"].items():
@@ -63,6 +84,7 @@ def main() -> None:
                     "diff": pct(c[f"{a}_minus_fp32"]["diff"]),
                     "ci95": [pct(x) for x in c[f"{a}_minus_fp32"]["ci95"]],
                     "ci90": [pct(x) for x in c[f"{a}_minus_fp32"]["ci90"]],
+                    "ci98_75_bonferroni_4": [pct(x) for x in c[f"{a}_minus_fp32"]["ci98_75"]],
                     "within_2pt_90": c[f"{a}_minus_fp32"].get("within_margin_90"),
                     "within_2pt_95": c[f"{a}_minus_fp32"].get("within_margin_95"),
                 } for a in ARMS[1:]
@@ -77,7 +99,7 @@ def main() -> None:
                 for a in ARMS[1:]
             }  # fmt: skip
         entry["vs_fp32_tokens"] = cell["vs_fp32_tokens"]
-        for extra in ("by_arm", "by_cap", "by_seed"):
+        for extra in ("by_arm", "by_cap", "by_seed", "seed_heterogeneity"):
             if extra in cell:
                 entry[extra] = cell[extra]
         out["cells"][name] = entry

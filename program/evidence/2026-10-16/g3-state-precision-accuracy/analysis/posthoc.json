@@ -1,7 +1,7 @@
 {
   "qwen3.5-4b/bf16_vs_fp32": {
-    "accuracy_both_eos_arm": 0.9801324503311258,
-    "accuracy_both_eos_fp32": 0.9801324503311258,
+    "accuracy_both_eos_arm": 0.9900662251655629,
+    "accuracy_both_eos_fp32": 0.9900662251655629,
     "arm_longer": 257,
     "arm_shorter": 105,
     "both_ended_eos": 302,
@@ -10,8 +10,8 @@
     "ties": 40
   },
   "qwen3.5-4b/fp16_vs_fp32": {
-    "accuracy_both_eos_arm": 0.9815384615384616,
-    "accuracy_both_eos_fp32": 0.9784615384615385,
+    "accuracy_both_eos_arm": 0.9907692307692307,
+    "accuracy_both_eos_fp32": 0.9876923076923076,
     "arm_longer": 215,
     "arm_shorter": 151,
     "both_ended_eos": 325,
@@ -20,8 +20,8 @@
     "ties": 36
   },
   "qwen3.5-9b/bf16_vs_fp32": {
-    "accuracy_both_eos_arm": 0.9785932721712538,
-    "accuracy_both_eos_fp32": 0.9755351681957186,
+    "accuracy_both_eos_arm": 0.9938837920489296,
+    "accuracy_both_eos_fp32": 0.9938837920489296,
     "arm_longer": 266,
     "arm_shorter": 109,
     "both_ended_eos": 327,
@@ -30,8 +30,8 @@
     "ties": 27
   },
   "qwen3.5-9b/fp16_vs_fp32": {
-    "accuracy_both_eos_arm": 0.98005698005698,
-    "accuracy_both_eos_fp32": 0.9743589743589743,
+    "accuracy_both_eos_arm": 0.9914529914529915,
+    "accuracy_both_eos_fp32": 0.9914529914529915,
     "arm_longer": 230,
     "arm_shorter": 151,
     "both_ended_eos": 351,

@@ -138,7 +138,7 @@ CASES = [
     ("0", "", False),
     ("8n^2 + 4n + 1", "8n^2+4n+1", True),
     ("-\\frac{24}{25}", "-0.96", True),
-    # Checker v2 (independent check of 2026-10-15): the four kinds of equivalent answer that v1
+    # Checker v2 (from the independent checks): the four kinds of equivalent answer that v1
     # missed on the main run, and guards that must stay wrong.
     ("1 \\pm \\sqrt{19}", "1-\\sqrt{19}, 1+\\sqrt{19}", True),  # a +- reference, unordered
     ("\\{1\\pm\\sqrt{5},-2\\}", "\\{-2, 1-\\sqrt{5}, 1+\\sqrt{5}\\}", True),  # set braces
