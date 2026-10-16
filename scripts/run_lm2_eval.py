@@ -323,6 +323,9 @@ class Runner:
             task, item, rank, seed = job
             key = request_key(self.args.arm, task, item["id"], seed)
             payload = chat_payload(self.plan, self.args.arm, task, item, seed)
+            if self.args.max_tokens is not None:
+                # A lower output cap for re-run holes (the 8,192-token reading); recorded per row.
+                payload["max_tokens"] = min(payload["max_tokens"], self.args.max_tokens)
             t0 = time.monotonic()
             row: dict[str, Any] = {
                 "key": key,
@@ -336,6 +339,7 @@ class Runner:
                 "job_id": self.job_id,
                 "worker": wid,
                 "payload_sha256": short_hash(json.dumps(payload, sort_keys=True)),
+                "max_tokens": payload["max_tokens"],
                 "started_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
             }
             remaining = self.abort_at - time.monotonic()
@@ -442,6 +446,7 @@ class Runner:
             "ctx_per_slot": self.arm["ctx_per_slot"],
             "extra_server_args": list(args.extra_server_arg or []),
             "diag_chat_mode": bool(args.diag_chat_mode),
+            "max_tokens_override": args.max_tokens,
         }
         summary_path = self.out / f"summary-{self.job_id}.json"
         if not visible or refused:
@@ -550,6 +555,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--receipt-root", type=Path, default=Path("/model-cache/cotcodec-receipts"))
     p.add_argument("--port", type=int, default=18941)
     p.add_argument("--slots", type=int)
+    p.add_argument("--max-tokens", type=int, help="lower every task cap to this value")
     p.add_argument("--server-log-verbosity", type=int, choices=(3, 4), default=4)
     p.add_argument("--ctx-per-slot", type=int)
     c = sub.add_parser("check-plan")

@@ -311,3 +311,61 @@ def test_driver_rejects_owned_flags_and_diag_mode_outside_diag(plan: dict, tmp_p
     runner = drv.Runner(args)
     with pytest.raises(lm2.LM2Error):
         runner.setup()
+
+
+def test_analysis_on_synthetic_grades(tmp_path: Path) -> None:
+    from scripts import analyze_lm2 as ana
+
+    rows = []
+    for arm, acc in (
+        ("v4f-q8", 1.0),
+        ("v4f-q2", 0.5),
+        ("v4f-iq3", 1.0),
+        ("qwen235-q3", 0.0),
+        ("gptoss120", 1.0),
+    ):
+        for i in range(6):
+            for seed in (42, 43, 44):
+                correct = (i % 2 == 0) or acc == 1.0 if acc else False
+                rows.append(
+                    {
+                        "arm": arm,
+                        "task": "math",
+                        "item_id": f"m/{i}",
+                        "source": "aime_2026",
+                        "seed": seed,
+                        "rank": i,
+                        "correct": correct,
+                        "has_answer": True,
+                        "finish_reason": "stop",
+                        "completion_tokens": 100 + i,
+                    }
+                )
+    grades = tmp_path / "grades.jsonl"
+    grades.write_text("\n".join(json.dumps(r) for r in rows) + "\n")
+    caps = tmp_path / "caps.json"
+    caps.write_text(json.dumps({"math": 4}))
+    out_json, out_md = tmp_path / "r.json", tmp_path / "t.md"
+    assert (
+        ana.main(
+            [
+                "--grades",
+                str(grades),
+                "--caps",
+                str(caps),
+                "--out-json",
+                str(out_json),
+                "--out-md",
+                str(out_md),
+            ]
+        )
+        == 0
+    )
+    result = json.loads(out_json.read_text())
+    assert result["accuracy"]["v4f-q8"]["math"]["items"] == 4
+    assert result["accuracy"]["v4f-q2"]["math"]["accuracy"] == 50.0
+    g4 = result["paired"]["g4"]["v4f-q2 - v4f-q8"]["math"]
+    assert g4["diff"] == -50.0 and g4["n_items"] == 4
+    assert result["arms"]["v4f-q2"]["fit"]["tier_at_32k"] == "Yes"
+    assert result["arms"]["v4f-q8"]["fit"]["tier_at_32k"] == "No"
+    assert "EXPLORATORY" in out_md.read_text()

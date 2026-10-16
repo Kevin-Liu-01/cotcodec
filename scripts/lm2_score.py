@@ -104,6 +104,13 @@ def prepare(args: argparse.Namespace) -> int:
             arm = plan["arms"][row["arm"]]
             item = items[row["item_id"]]
             text, how = final_text(row, bool(arm.get("thinking")))
+            tokens = int(row.get("completion_tokens") or 0)
+            over_cap = args.analysis_cap is not None and tokens > args.analysis_cap
+            if over_cap:
+                # The analysis cap (8,192): a response longer than the cap is scored as cut there.
+                # Its text within the first 8,192 tokens is not recovered, so it counts as having no
+                # answer (conservative for that arm).
+                text, how = None, "over_analysis_cap"
             grade: dict[str, Any] = {
                 "key": key,
                 "arm": row["arm"],
@@ -113,7 +120,10 @@ def prepare(args: argparse.Namespace) -> int:
                 "seed": row["seed"],
                 "rank": row.get("rank"),
                 "job_id": row.get("job_id"),
-                "finish_reason": row.get("finish_reason"),
+                "finish_reason": "length" if over_cap else row.get("finish_reason"),
+                "finish_reason_raw": row.get("finish_reason"),
+                "max_tokens": row.get("max_tokens") or 16384,
+                "over_analysis_cap": over_cap,
                 "completion_tokens": row.get("completion_tokens"),
                 "prompt_tokens": row.get("prompt_tokens"),
                 "wall_s": row.get("wall_s"),
@@ -196,6 +206,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--data", type=Path, required=True)
     p.add_argument("--runs", type=Path, nargs="+", required=True)
     p.add_argument("--out", type=Path, required=True)
+    p.add_argument("--analysis-cap", type=int, default=8192)
     f = sub.add_parser("finalize")
     f.add_argument("--pre", type=Path, required=True)
     f.add_argument("--verdicts", type=Path, nargs="+", required=True)
