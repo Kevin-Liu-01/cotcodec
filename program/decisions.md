@@ -3243,3 +3243,60 @@ local-giant-model line pauses here.**
   suites. With llama.cpp's V4 Flash decode on H100 (about 3 tok/s per slot),
   that is tens of GPU-h per arm. Kevin can reopen it; the assets stay on the
   host.
+
+**D131. Novelty audit of the program's recent findings: none is a new
+phenomenon, and all four rate LOW importance as they stand. The claims are
+narrowed accordingly.**
+- Method: Kevin asked "is this a good novel finding?" A workflow ran one
+  prior-art auditor and one adversarial refuter per finding, then a
+  synthesis that takes the more skeptical rating whenever a refuter cites
+  concrete prior work (`program/evidence/2026-10-16/novelty-audit/AUDIT.md`).
+- A, memory credit (AM1, keepset H-A): INCREMENTAL, LOW.
+  - Priors: Nematov et al. 2025 (exact Shapley reference in RAG; LOO worse),
+    MaxShapley 2025, Wang et al. 2024 (top-k by Shapley is not the best
+    subset), MeClear 2026, DRSR 2026, CMP 2026, TracLLM 2025, ContextCite
+    2024.
+  - What is new: keep-set regret against the exact keep-4 optimum on 694
+    exhaustive judged tables, the first exact-truth scores for CMP's SNIPW
+    and MeClear's permutation Shapley, and the rigour (preregistration,
+    bit-exact replay).
+  - Narrowed claim: LOO picks bad keep sets mainly in pools the 8B reader gets
+    wrong even with all 8 memories (64.6% of its regret comes from that 27%
+    of pools). Exact Shapley and Banzhaf are near-optimal. This is NOT
+    evidence that memory interactions defeat per-memory credit.
+- B, the abstention-gated keep rule (am3g, am5r): INCREMENTAL, with the rule
+  itself KNOWN; LOW.
+  - Direct prior: Wang, Ma and Kumar 2025, "When Should LLMs Admit
+    Ignorance?", which slides over BM25 windows and stops at the first
+    window that answers. Also ChunkRank 2026, Self-Route 2024 and RobustRAG
+    2024.
+  - What is new: the agent-memory setting, three readers, preregistration,
+    and the cost against gain with the evidence removed.
+  - The synthesis's post hoc check: a Self-Route-style fallback (top 4, else
+    all 8) recovers 43-78% of the gain.
+- C, the bf16 GDN-state loss (G3, G3b): headline KNOWN; LOW.
+  - Direct prior: LeapQuant 2026 (Qwen3.5-9B in vLLM, 81,920 tokens,
+    per-step bf16 state, AIME 87.9 to 72.1).
+  - fp32 is already the engine default. What is new: the 4B, the three-arm
+    test, and a weakly identified dependence on load and preemption.
+- D, local giant models: KNOWN; LOW. The speeds are other people's
+  measurements, and LM2 is underpowered.
+- Do not claim:
+  - LOO worse than Shapley as new;
+  - top-k by credit is not optimal;
+  - "search beats credit" in general;
+  - abstention-gated selection as new;
+  - token confidence being anti-informative as a finding;
+  - the bf16 loss as new.
+- The best result is A's exact keep-set tables, the one measurement with no
+  direct prior found. They are also a reusable asset.
+- What could produce something new (not started; Kevin's call):
+  - (1) a stronger reader on fresh questions, with the full-pool-correct
+    split registered as primary;
+  - (2) the retention decision on a shared memory store: exact tables per
+    question over one conversation's pool, retention chosen on training
+    questions by pooled credit or by search, and scored on held-out
+    questions against the exact optimum. No prior scores this against exact
+    truth.
+- `paper/memory-keepset-note/` is to be revised to these narrowed claims
+  before any use.
