@@ -24,6 +24,7 @@ import hashlib
 import importlib.util
 import json
 import sys
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -131,12 +132,39 @@ def score_workers(paths: list[Path]) -> list[dict[str, Any]]:
 # --------------------------------------------------------------------------- statistics
 
 
+def complete_pairs(rows: list[dict[str, Any]], key: str, arms: list[str]) -> list[dict[str, Any]]:
+    """The rows of the (question, seed) pairs that have a value of ``key`` in every arm. A rollout
+    cut by the time budget has no value where its outcome is unknown, and its pair is dropped
+    from every arm, so the comparison stays paired."""
+
+    have: dict[tuple[int, int], set[str]] = {}
+    for r in rows:
+        if r["arm"] in arms and r.get(key) is not None:
+            have.setdefault((r["question_index"], r["seed"]), set()).add(r["arm"])
+    keep = {k for k, v in have.items() if v >= set(arms)}
+    return [r for r in rows if r["arm"] in arms and (r["question_index"], r["seed"]) in keep]
+
+
+def paired(
+    rows: list[dict[str, Any]], key: str, arms: list[str], reps: int, seed: int
+) -> dict[str, Any]:
+    """G3's paired summary on the complete pairs, with the number of pairs dropped."""
+
+    sub = complete_pairs(rows, key, arms)
+    out = a3.paired_summary(sub, key, arms, reps, seed, None)
+    pairs = {(r["question_index"], r["seed"]) for r in rows if r["arm"] in arms}
+    out["pairs"] = len({(r["question_index"], r["seed"]) for r in sub})
+    out["pairs_dropped"] = len(pairs) - out["pairs"]
+    return out
+
+
 def seed_heterogeneity(
     rows: list[dict[str, Any]], key: str, arm: str, ref: str, reps: int, seed: int
 ) -> dict[str, Any]:
     """(arm - ref at seed 42) minus the mean of (arm - ref) at seeds 43-44, paired by question,
     with a question bootstrap. Seed 42 was submitted (and admitted) first."""
 
+    rows = complete_pairs(rows, key, [ref, arm])
     seeds = sorted({r["seed"] for r in rows})
     if len(seeds) < 2:
         return {}
@@ -173,6 +201,7 @@ def gap_change(
         means = sums / counts
         return {q: means[i] for i, q in enumerate(qs)}
 
+    new_rows = complete_pairs(new_rows, new_key, [g3b.REFERENCE_ARM, arm])
     new, old = per_q(new_rows, new_key), per_q(old_rows, old_key)
     qs = sorted(set(new) & set(old))
     if not qs:
@@ -217,7 +246,7 @@ def by_arm(rows: list[dict[str, Any]], arms: list[str], cap: int) -> dict[str, A
             "wrong_answer_given": sum(1 for r in ar if r["has_answer"] and not r["correct"]),
             "no_answer": sum(1 for r in ar if not r["has_answer"]),
             "cap_hit": sum(1 for r in ar if r["finish_reason"] == "length"),
-            "time_cut": sum(1 for r in ar if r["finish_reason"] == "cut_at_time_budget"),
+            "time_cut": sum(1 for r in ar if r["finish_reason"] == g3b.TIME_CUT),
             "capped_after_thinking_closed": sum(
                 1 for r in ar if r["finish_reason"] == "length" and r["thinking_closed"]
             ),
@@ -233,7 +262,13 @@ def by_arm(rows: list[dict[str, Any]], arms: list[str], cap: int) -> dict[str, A
             "past_cap_ended": sum(1 for r in long_ if r["finish_reason"] == "stop"),
             "past_cap_correct": sum(r["correct"] for r in long_),
             "solved": int(sum(r["correct"] for r in ar)),
-            "solved_at_cap": int(sum(r[f"c{cap}_correct"] for r in ar)),
+            "solved_at_cap": int(sum(r[f"c{cap}_correct"] or 0 for r in ar)),
+            "undetermined_at_cap": sum(1 for r in ar if r[f"c{cap}_correct"] is None),
+            "time_cut_rollouts": [
+                {"request_id": r["request_id"], "tokens_at_cut": r["completion_len"]}
+                for r in ar
+                if r["finish_reason"] == g3b.TIME_CUT
+            ],
         }
     return out
 
@@ -255,6 +290,11 @@ def g3_rows_on(g3_rows: list[dict[str, Any]], questions: list[int]) -> list[dict
     return out
 
 
+def overlaps(engine: dict[str, Any], window: dict[str, str]) -> bool:
+    start, end = engine.get("phase_start_utc"), engine.get("phase_end_utc")
+    return bool(start and end and start < window["end_utc"] and window["start_utc"] < end)
+
+
 def analyze(
     rows: list[dict[str, Any]],
     summaries: list[dict[str, Any]],
@@ -262,7 +302,11 @@ def analyze(
     reps: int,
     seed: int,
     cap: int = g3b.G3_CAP,
+    timing_windows: list[dict[str, str]] | None = None,
 ) -> dict[str, Any]:
+    """``timing_windows``: external events ({start_utc, end_utc, note}) that can distort wall-clock
+    and throughput figures; an engine whose generation phase overlaps one is flagged."""
+
     config = g3b.load_config()
     questions = [int(q) for q in config["questions"]["indices"]]
     main = [dict(r) for r in rows if r["phase"] in ("main", "aa")]
@@ -270,12 +314,22 @@ def analyze(
     if arms[:1] != [g3b.REFERENCE_ARM]:
         raise g3b.G3bConfigError("the analysis needs the fp32 arm")
     for r in main:
-        r["cap_hit"] = int(r["finish_reason"] == "length")
-        r["time_cut"] = int(r["finish_reason"] == "cut_at_time_budget")
+        cut = r["finish_reason"] == g3b.TIME_CUT
+        r["time_cut"] = int(cut)
         r["ended"] = int(r["finish_reason"] == "stop")
-        r["has_answer_i"] = int(bool(r["has_answer"]))
-        r[f"c{cap}_has_answer_i"] = int(bool(r[f"c{cap}_has_answer"]))
-        r[f"len_capped_{cap}"] = min(int(r["completion_len"]), cap)
+        # At 81,920 a time-cut rollout's outcome is unknown: as run it counts as unsolved (its text
+        # has no answer); "complete" drops its pair from both arms; "upper" counts it as solved.
+        r["correct_complete"] = None if cut else r["correct"]
+        r["correct_upper"] = 1 if cut else r["correct"]
+        r["cap_hit"] = None if cut else int(r["finish_reason"] == "length")
+        r["has_answer_i"] = None if cut else int(bool(r["has_answer"]))
+        r["len_complete"] = None if cut else int(r["completion_len"])
+        c = r[f"c{cap}_correct"]
+        r[f"c{cap}_correct_lower"] = 0 if c is None else c
+        r[f"c{cap}_correct_upper"] = 1 if c is None else c
+        h = r[f"c{cap}_has_answer"]
+        r[f"c{cap}_has_answer_i"] = None if h is None else int(bool(h))
+        r[f"len_capped_{cap}"] = r[f"c{cap}_len"]
     results: dict[str, Any] = {
         "experiment_id": g3b.EXPERIMENT_ID,
         "claim_level": "exploratory",
@@ -289,39 +343,50 @@ def analyze(
         "rescore_cap": cap,
     }
     keys = {
-        "correct": "accuracy at 81,920",
-        f"c{cap}_correct": f"accuracy rescored at {cap}",
-        "completion_len": "length (tokens)",
+        "correct": "accuracy at 81,920, as run (a time-cut rollout counts as unsolved)",
+        "correct_complete": "accuracy at 81,920, pairs with no time-cut rollout",
+        "correct_upper": "accuracy at 81,920, time-cut rollouts counted as solved (bound)",
+        f"c{cap}_correct": f"accuracy rescored at {cap:,}, pairs with a known outcome",
+        f"c{cap}_correct_lower": f"accuracy rescored at {cap:,}, unknown counted unsolved",
+        f"c{cap}_correct_upper": f"accuracy rescored at {cap:,}, unknown counted solved",
+        "len_complete": "length (tokens), complete pairs",
         "cap_hit": "reached 81,920",
-        f"c{cap}_cap_hit": f"past {cap}",
+        f"c{cap}_cap_hit": f"past {cap:,}",
         "has_answer_i": "final answer given at 81,920",
-        f"c{cap}_has_answer_i": f"final answer given within {cap}",
+        f"c{cap}_has_answer_i": f"final answer given within {cap:,}",
         "time_cut": "cut by the time budget",
-        f"len_capped_{cap}": f"length capped at {cap}",
+        f"len_capped_{cap}": f"length capped at {cap:,}",
     }
-    results["paired"] = {key: a3.paired_summary(main, key, arms, reps, seed, None) for key in keys}
+    results["paired"] = {key: paired(main, key, arms, reps, seed) for key in keys}
     results["paired_labels"] = keys
     results["by_arm"] = by_arm(main, arms, cap)
     # Descriptive accuracy curve (G3's rule: correct and ended within L tokens).
     curve = {}
     for c in CURVE_CAPS:
         for r in main:
-            r["correct_curve"] = int(bool(r["correct"]) and r["completion_len"] <= c)
-        curve[str(c)] = a3.paired_summary(main, "correct_curve", arms, reps, seed, None)
+            unknown = r["finish_reason"] == g3b.TIME_CUT and r["completion_len"] < c
+            r["correct_curve"] = (
+                None if unknown else int(bool(r["correct"]) and r["completion_len"] <= c)
+            )
+        curve[str(c)] = paired(main, "correct_curve", arms, reps, seed)
     results["curve_ended_within"] = curve
     # Seed order: seed 42 submitted and admitted first.
     results["by_seed"] = {
         key: {
-            str(s): a3.paired_summary(
-                [r for r in main if r["seed"] == s], key, arms, reps, seed, None
-            )
+            str(s): paired([r for r in main if r["seed"] == s], key, arms, reps, seed)
             for s in SEEDS
         }
-        for key in ("correct", f"c{cap}_correct", "completion_len", f"c{cap}_cap_hit")
+        for key in (
+            "correct",
+            "correct_complete",
+            f"c{cap}_correct",
+            "len_complete",
+            f"c{cap}_cap_hit",
+        )
     }
     results["seed_heterogeneity"] = {
         key: seed_heterogeneity(main, key, "bf16", g3b.REFERENCE_ARM, reps, seed)
-        for key in ("correct", f"c{cap}_correct")
+        for key in ("correct_complete", f"c{cap}_correct")
     }
     results["admission_by_seed"] = {
         arm: {str(s): median_first_token(main, arm, s) for s in SEEDS} for arm in arms
@@ -343,7 +408,7 @@ def analyze(
     }
     results["g3b_vs_g3"] = {
         f"at_{cap}": gap_change(main, f"c{cap}_correct", old, "correct", "bf16", reps, seed),
-        "at_81920": gap_change(main, "correct", old, "correct", "bf16", reps, seed),
+        "at_81920": gap_change(main, "correct_complete", old, "correct", "bf16", reps, seed),
         f"cap_hit_at_{cap}": gap_change(
             main, f"c{cap}_cap_hit", old, "cap_hit", "bf16", reps, seed
         ),
@@ -372,9 +437,11 @@ def analyze(
             continue
         ba = results["by_arm"].get(s["arm"], {})
         solved, solved_cap = ba.get("solved"), ba.get("solved_at_cap")
+        affected = [w["note"] for w in timing_windows or [] if overlaps(s, w)]
         engines.append(
             s
             | {
+                "timing_affected_by": affected,
                 "solved": solved,
                 "solved_at_cap": solved_cap,
                 "solved_per_1000_engine_s": 1000 * solved / s["wall_s"] if s["wall_s"] else None,
@@ -385,8 +452,19 @@ def analyze(
             }
         )
     results["engines"] = engines
+    results["timing_windows"] = timing_windows or []
     results["preemptions_total"] = sum((e.get("preemptions") or 0) for e in engines)
     return results
+
+
+def phase_start_utc(progress: Path) -> str | None:
+    if not progress.is_file():
+        return None
+    for line in progress.read_text(encoding="utf-8").splitlines():
+        event = json.loads(line)
+        if event.get("event") == "phase-start":
+            return str(event["utc"])
+    return None
 
 
 def worker_summaries(paths: list[Path]) -> list[dict[str, Any]]:
@@ -397,6 +475,11 @@ def worker_summaries(paths: list[Path]) -> list[dict[str, Any]]:
             if "task" not in data or "phase" not in data:
                 continue
             p, e = data["phase"], data["engine"]
+            start = phase_start_utc(summary.parent / "worker-progress.jsonl")
+            end = None
+            if start and p.get("wall_s") is not None:
+                t0 = datetime.strptime(start, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=UTC)
+                end = (t0 + timedelta(seconds=float(p["wall_s"]))).strftime("%Y-%m-%dT%H:%M:%SZ")
             out.append(
                 {
                     "arm": data["arm"],
@@ -420,6 +503,8 @@ def worker_summaries(paths: list[Path]) -> list[dict[str, Any]]:
                     "max_model_len": e.get("max_model_len"),
                     "fit": e.get("fit"),
                     "init_s": e.get("init_s"),
+                    "phase_start_utc": start,
+                    "phase_end_utc": end,
                 }
             )
     return out
@@ -450,12 +535,23 @@ def tables_md(results: dict[str, Any]) -> str:
         "",
         "## Accuracy",
         "",
-        "| Budget | " + " | ".join(arms) + " | " + " | ".join(f"{a} - fp32" for a in others) + " |",
-        "|---|" + "---:|" * len(arms) + "---|" * len(others),
+        "| Budget and treatment of time-cut rollouts | Pairs | "
+        + " | ".join(arms)
+        + " | "
+        + " | ".join(f"{a} - fp32" for a in others)
+        + " |",
+        "|---|---:|" + "---:|" * len(arms) + "---|" * len(others),
     ]
-    for key, label in (("correct", "81,920"), (f"c{cap}_correct", f"rescored at {cap:,}")):
+    for key in (
+        "correct",
+        "correct_complete",
+        "correct_upper",
+        f"c{cap}_correct",
+        f"c{cap}_correct_lower",
+        f"c{cap}_correct_upper",
+    ):
         c = results["paired"][key]
-        row = [label] + [_pct(c[a]["mean"]) for a in arms]
+        row = [results["paired_labels"][key], str(c["pairs"])] + [_pct(c[a]["mean"]) for a in arms]
         row += [_diff(c[f"{a}_minus_fp32"]) for a in others]
         lines.append("| " + " | ".join(row) + " |")
     g = results["g3_same_questions"]["correct"]
@@ -496,7 +592,7 @@ def tables_md(results: dict[str, Any]) -> str:
         "|---|" + "---:|" * len(arms) + "---|" * len(others),
     ]
     for key, scale, digits in (
-        ("completion_len", 1.0, 0),
+        ("len_complete", 1.0, 0),
         ("cap_hit", 100.0, 1),
         (f"c{cap}_cap_hit", 100.0, 1),
         ("has_answer_i", 100.0, 1),
@@ -505,6 +601,7 @@ def tables_md(results: dict[str, Any]) -> str:
     ):
         c = results["paired"][key]
         label = results["paired_labels"][key] + ("" if scale == 1.0 else " (%)")
+        label += f", {c['pairs']} pairs"
         row = [label] + [f"{scale * c[a]['mean']:.{digits}f}" for a in arms]
         row += [_diff(c[f"{a}_minus_fp32"], scale, digits) for a in others]
         lines.append("| " + " | ".join(row) + " |")
@@ -542,7 +639,10 @@ def tables_md(results: dict[str, Any]) -> str:
         "|---|---:|---:|---:|---|---:|---:|---|",
     ]
     gs = results["g3_same_questions"]["by_seed"]
-    for key, label in (("correct", "81,920"), (f"c{cap}_correct", f"{cap:,}")):
+    for key, label in (
+        ("correct_complete", "81,920 (complete pairs)"),
+        (f"c{cap}_correct", f"{cap:,}"),
+    ):
         for s, v in results["by_seed"][key].items():
             o = gs[s]
             lines.append(
@@ -558,34 +658,60 @@ def tables_md(results: dict[str, Any]) -> str:
         "| Run | Budget | Contrast [95%] |",
         "|---|---|---|",
     ]
-    for key, label in (("correct", "81,920"), (f"c{cap}_correct", f"{cap:,}")):
+    for key, label in (
+        ("correct_complete", "81,920 (complete pairs)"),
+        (f"c{cap}_correct", f"{cap:,}"),
+    ):
         h = results["seed_heterogeneity"][key]
         if h:
-            lines.append(f"| G3b | {label} | {100 * h['contrast']:+.1f} {a3.fmt_ci(h['ci95'])} |")
+            lines.append(
+                f"| G3b | {label} | {100 * h['contrast']:+.1f} {a3.fmt_ci(h['ci95'])} "
+                f"({h['n_questions']} questions) |"
+            )
     h = results["g3_same_questions"]["seed_heterogeneity"]
     if h:
-        lines.append(f"| G3 | 32,768 | {100 * h['contrast']:+.1f} {a3.fmt_ci(h['ci95'])} |")
+        lines.append(
+            f"| G3 | 32,768 | {100 * h['contrast']:+.1f} {a3.fmt_ci(h['ci95'])} "
+            f"({h['n_questions']} questions) |"
+        )
     lines += [
         "",
         "## Engines (one per arm; single runs)",
         "",
         "| Arm | Requests | Wall (s) | Output tokens | Output tok/s | Mean running | Peak running "
         "| Preemptions | Peak KV | Blocks x size | Fit (max sequences at max_model_len) "
-        "| Solved | Solved per 1,000 s | Tokens per solved | Tokens per solved at 32,768 |",
-        "|---|---:|---:|---:|---:|---:|---:|---:|---:|---|---|---:|---:|---:|---:|",
+        "| Time-cut | Solved (as run) | Solved per 1,000 s | Tokens per solved | Tokens per solved "
+        "at 32,768 | Wall-clock figures |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|---:|---|---|---:|---:|---:|---:|---:|---|",
     ]
     for e in results["engines"]:
         fit = e.get("fit") or {}
+        hit = e.get("timing_affected_by") or []
+        timing = "affected: " + "; ".join(hit) if hit else "clean"
         lines.append(
             f"| {e['arm']} | {e['requests']} | {e['wall_s']:.0f} | {e['output_tokens']:,} | "
             f"{e['output_tok_per_s']:.0f} | {(e['mean_running'] or 0):.1f} | "
             f"{(e['peak_running'] or 0):.0f} | {(e['preemptions'] or 0):.0f} | "
             f"{100 * (e['peak_kv_usage'] or 0):.0f}% | {e['num_gpu_blocks']} x {e['block_size']} | "
             f"{fit.get('max_sequences_that_fit', 'n/a')} >= {e['max_num_seqs']} | "
+            f"{e['requests'] - e['finished']} | "
             f"{e['solved']} | {(e['solved_per_1000_engine_s'] or 0):.1f} | "
             f"{(e['tokens_per_solved'] or 0):,.0f} | "
-            f"{(e['tokens_within_cap_per_solved_at_cap'] or 0):,.0f} |"
+            f"{(e['tokens_within_cap_per_solved_at_cap'] or 0):,.0f} | "
+            f"{timing} |"
         )
+    cuts = [(arm, v["time_cut_rollouts"]) for arm, v in results["by_arm"].items()]
+    if any(c for _, c in cuts):
+        lines += [
+            "",
+            "## Rollouts cut by the job's time budget (outcome unknown at 81,920)",
+            "",
+            "| Arm | Request | Tokens at the cut |",
+            "|---|---|---:|",
+        ]
+        for arm, c in cuts:
+            for x in c:
+                lines.append(f"| {arm} | {x['request_id']} | {x['tokens_at_cut']:,} |")
     lines += [
         "",
         "## Token-level agreement with the fp32 arm (same request id and seed)",
@@ -624,8 +750,16 @@ def cmd_analyze(args: argparse.Namespace) -> int:
     if g3b.capped_questions(g3_rows) != [int(q) for q in config["questions"]["indices"]]:
         raise g3b.G3bConfigError("the pinned questions do not follow from G3's data")
     summaries = worker_summaries([Path(p) for p in args.summaries])
+    windows = json.loads(Path(args.timing_windows).read_text()) if args.timing_windows else None
     a = config["analysis"]
-    results = analyze(rows, summaries, g3_rows, int(a["bootstrap_reps"]), int(a["bootstrap_seed"]))
+    results = analyze(
+        rows,
+        summaries,
+        g3_rows,
+        int(a["bootstrap_reps"]),
+        int(a["bootstrap_seed"]),
+        timing_windows=windows,
+    )
     out = Path(args.output_dir)
     out.mkdir(parents=True, exist_ok=True)
     (out / "results.json").write_text(json.dumps(results, indent=2, sort_keys=True) + "\n")
@@ -650,6 +784,7 @@ def main() -> int:
             / "program/evidence/2026-10-16/g3-state-precision-accuracy/data/per-request.jsonl.gz"
         ),
     )
+    a.add_argument("--timing-windows", default=None)
     a.add_argument("--output-dir", required=True)
     args = parser.parse_args()
     return {"score": cmd_score, "analyze": cmd_analyze}[args.command](args)

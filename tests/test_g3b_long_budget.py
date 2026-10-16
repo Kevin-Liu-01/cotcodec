@@ -173,11 +173,26 @@ def test_score_at_cap() -> None:
     assert g3b.score_at_cap(40000, "length", full_ok, trunc, 32768)["correct"] == 1
     with pytest.raises(g3b.G3bConfigError):
         g3b.score_at_cap(40000, "stop", full_ok, None, 32768)
+    # Cut by the time budget before the cap: no outcome at the cap. Cut after it: scored there.
+    none = g3b.score_at_cap(20000, g3b.TIME_CUT, full_ok, None, 32768)
+    assert set(none.values()) == {None}
+    trunc = g3b.score_text("<think>a b c", ref)
+    assert g3b.score_at_cap(40000, g3b.TIME_CUT, full_ok, trunc, 32768)["cap_hit"] == 1
 
 
-def _worker(root: Path, arm: str, rows: list[tuple[dict, dict, list[int]]], phase: str) -> Path:
+def _worker(
+    root: Path,
+    arm: str,
+    rows: list[tuple[dict, dict, list[int]]],
+    phase: str,
+    phase_start: str | None = None,
+) -> Path:
     path = root / f"qwen3.5-4b-{arm}-math"
     path.mkdir(parents=True)
+    if phase_start:
+        (path / "worker-progress.jsonl").write_text(
+            json.dumps({"event": "phase-start", "utc": phase_start}) + "\n"
+        )
     (path / "records.json").write_text(
         json.dumps(
             {
@@ -219,7 +234,7 @@ def _worker(root: Path, arm: str, rows: list[tuple[dict, dict, list[int]]], phas
                     "output_tokens": out_tokens,
                     "output_tok_per_s": out_tokens / 100.0,
                     "requests": len(rows),
-                    "finished": len(rows),
+                    "finished": sum(1 for r, _, _ in rows if r["finish_reason"] != g3b.TIME_CUT),
                     "mean_running": 2.0,
                     "peak_running": 4,
                     "preemptions_delta": 0.0,
@@ -253,6 +268,14 @@ def test_score_and_analyze_end_to_end(tmp_path: Path) -> None:
                 elif arm == "fp32" and q == qs[2] and seed == 42:
                     req_len, finish = 81920, "length"
                     entry = {"text": "<think>\nforever", "text_at_32768": "<think>\nforever"}
+                elif arm == "bf16" and q == qs[4] and seed == 44:
+                    # Cut by the time budget before 32,768 tokens: unknown at both budgets.
+                    req_len, finish = 20000, g3b.TIME_CUT
+                    entry = {"text": "<think>\nworking"}
+                elif arm == "bf16" and q == qs[5] and seed == 44:
+                    # Cut after 32,768 tokens without an answer: unsolved at 32,768.
+                    req_len, finish = 40000, g3b.TIME_CUT
+                    entry = {"text": "<think>\nworking", "text_at_32768": "<think>\nworking"}
                 else:
                     req_len, finish = 1000, "stop"
                     entry = {"text": ok}
@@ -269,7 +292,8 @@ def test_score_and_analyze_end_to_end(tmp_path: Path) -> None:
                 }
                 tokens = [1, 2, 3] if arm != "bf16" or q != qs[3] else [1, 2, 9]
                 rows.append((req, entry, tokens))
-        workers.append(_worker(tmp_path / arm, arm, rows, phase))
+        start = "2026-10-16T02:58:53Z" if arm == "bf16" else None
+        workers.append(_worker(tmp_path / arm, arm, rows, phase, start))
     scored = analysis.score_workers(workers)
     assert len(scored) == 3 * 18
     q0 = [r for r in scored if r["arm"] == "bf16" and r["question_index"] == qs[0]]
@@ -280,26 +304,37 @@ def test_score_and_analyze_end_to_end(tmp_path: Path) -> None:
     assert all("identical_to_fp32" in r for r in aa)
     g3_rows = g3b.read_g3_rows(G3_DATA)
     summaries = analysis.worker_summaries([tmp_path / a for a in ("fp32", "bf16", "fp32_aa")])
-    results = analysis.analyze(scored, summaries, g3_rows, 500, 42)
+    window = {"start_utc": "2026-10-16T02:59:00Z", "end_utc": "2026-10-16T02:59:30Z", "note": "x"}
+    results = analysis.analyze(scored, summaries, g3_rows, 500, 42, timing_windows=[window])
     p = results["paired"]
     assert results["arms"] == ["fp32", "bf16", "fp32_aa"]
-    # fp32: 17 of 18 correct (q2 seed 42 capped without an answer); bf16: q1 wrong everywhere.
+    # fp32: 17 of 18 correct (q2 seed 42 capped without an answer); bf16: q1 wrong everywhere,
+    # and two seed-44 rollouts cut by the time budget (q4 before 32,768 tokens, q5 after).
     assert p["correct"]["fp32"]["mean"] == pytest.approx(1 - 1 / 18)
-    assert p["correct"]["bf16_minus_fp32"]["diff"] == pytest.approx(-1 / 6 + 1 / 18)
-    # Rescored at 32,768, bf16 also loses q0.
-    assert p["c32768_correct"]["bf16_minus_fp32"]["diff"] == pytest.approx(-2 / 6 + 1 / 18)
+    assert p["correct"]["bf16_minus_fp32"]["diff"] == pytest.approx(-4 / 18)
+    assert p["correct_upper"]["bf16_minus_fp32"]["diff"] == pytest.approx(-2 / 18)
+    assert p["correct_complete"]["pairs"] == 16 and p["correct_complete"]["pairs_dropped"] == 2
+    assert p["correct_complete"]["bf16_minus_fp32"]["diff"] == pytest.approx((-1 + 1 / 3) / 6)
+    # Rescored at 32,768: bf16 also loses q0 and q5 seed 44; q4 seed 44 is unknown (dropped).
+    assert p["c32768_correct"]["pairs"] == 17
+    assert p["c32768_correct"]["bf16_minus_fp32"]["diff"] == pytest.approx(-1 / 3)
+    assert p["c32768_correct_lower"]["pairs"] == 18
     assert p["cap_hit"]["fp32"]["mean"] == pytest.approx(1 / 18)
-    assert p["c32768_cap_hit"]["bf16"]["mean"] == pytest.approx(1 / 6)
     assert p["correct"]["fp32_aa_minus_fp32"]["diff"] == pytest.approx(1 / 18)
     ba = results["by_arm"]["bf16"]
-    assert ba["past_cap"] == 3 and ba["past_cap_ended"] == 3 and ba["past_cap_correct"] == 3
-    het = results["seed_heterogeneity"]["correct"]
-    assert het["n_questions"] == 6
-    # fp32 lost q2 at seed 42 only: the bf16 gap is 1/6 point smaller there.
-    assert het["contrast"] == pytest.approx(1 / 6)
+    assert ba["past_cap"] == 4 and ba["past_cap_ended"] == 3 and ba["past_cap_correct"] == 3
+    assert ba["time_cut"] == 2 and ba["undetermined_at_cap"] == 1
+    assert [x["tokens_at_cut"] for x in ba["time_cut_rollouts"]] == [20000, 40000]
+    het = results["seed_heterogeneity"]["correct_complete"]
+    # q4 and q5 lose seed 44 and leave the contrast; fp32 lost q2 at seed 42 only.
+    assert het["n_questions"] == 4
+    assert het["contrast"] == pytest.approx(1 / 4)
     assert results["preemptions_total"] == 0
     assert results["g3b_vs_g3"]["at_32768"]["n_questions"] == 6
     assert results["g3_same_questions"]["correct"]["n_questions"] == 51
+    flags = {e["arm"]: e["timing_affected_by"] for e in results["engines"]}
+    assert flags == {"fp32": [], "bf16": ["x"], "fp32_aa": []}
     text = analysis.tables_md(results)
-    assert "## Seed order" in text and "| 81,920 |" in text
+    assert "## Seed order" in text and "| 81,920 (complete pairs) | 42 |" in text
+    assert "affected: x" in text and "| bf16 | m/q" in text
     assert "## Engines" in text

@@ -1,0 +1,7 @@
+[
+  {
+    "start_utc": "2026-10-16T04:05:00Z",
+    "end_utc": "2026-10-16T04:08:15Z",
+    "note": "host load average about 17,600 from another project's CPU-only run outside Slurm, 04:05-04:08 UTC (killed 04:08; load 13,729 and falling at 04:08:15)"
+  }
+]

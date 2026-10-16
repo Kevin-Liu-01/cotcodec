@@ -24,7 +24,8 @@ printf '%s\n' "${workers[@]}" > "$G3B_OUT/workers.txt"
 A="uv run --locked python scripts/analyze_g3b_long_budget.py"
 $A score --workers "${workers[@]}" --output "$G3B_OUT/scored.jsonl.gz"
 if [[ "${G3B_MODE:-analyze}" == analyze ]]; then
-  $A analyze --scored "$G3B_OUT/scored.jsonl.gz" --summaries $G3B_RUNS --output-dir "$G3B_OUT"
+  $A analyze --scored "$G3B_OUT/scored.jsonl.gz" --summaries $G3B_RUNS --output-dir "$G3B_OUT" \
+    ${G3B_TIMING_WINDOWS:+--timing-windows "$G3B_TIMING_WINDOWS"}
 fi
 sha256sum "$G3B_OUT"/* > "$G3B_OUT/SHA256SUMS.txt" 2>/dev/null || true
 echo done

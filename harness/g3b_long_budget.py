@@ -38,6 +38,8 @@ PHASES = ("pilot", "main", "aa")
 TASK = "math"
 MODEL_ROOT = g3.MODEL_ROOT
 G3_CAP = 32768
+#: The worker's finish reason for a rollout still running when the job's time budget ended.
+TIME_CUT = "cut_at_time_budget"
 
 
 class G3bConfigError(ValueError):
@@ -271,8 +273,12 @@ def score_at_cap(
 ) -> dict[str, Any]:
     """A rollout as a run capped at ``cap`` generated tokens would have scored it: unchanged if it
     ended within the cap, else its first ``cap`` tokens (``truncated``, scored from the text the
-    worker decoded) with the cap reached. The tokens before the cap do not depend on the cap."""
+    worker decoded) with the cap reached. The tokens before the cap do not depend on the cap.
+    A rollout cut by the job's time budget before it reached the cap has no outcome at the cap
+    (every field None): it would have gone on."""
 
+    if completion_len < cap and finish_reason == TIME_CUT:
+        return {"correct": None, "has_answer": None, "cap_hit": None, "ended": None, "len": None}
     if completion_len <= cap:
         return {
             "correct": int(full["correct"]),
