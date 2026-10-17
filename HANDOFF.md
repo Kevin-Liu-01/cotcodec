@@ -109,9 +109,11 @@ for whatever gains actual results"; D80). Under that delegation:
   Kumar 2025 for the abstention rule; LeapQuant 2026 for the bf16 loss. The
   strongest result is the exact keep-set tables. Two experiments could be
   new: a stronger reader on fresh questions, and retention on a shared store
-  scored against exact truth. Kevin has not yet chosen between running the
-  second and pivoting. `paper/memory-keepset-note/` must be revised to the
-  narrowed claims before any use.
+  scored against exact truth. `paper/memory-keepset-note/` is revised to the
+  narrowed claims and verified (D133). On 2026-10-16 Kevin answered "sg!",
+  read as: start the retention study's design (SR1) on CPU, with GPU work
+  after the pause. Its gauntlet wave 1 runs on branch
+  `gauntlet/sr1-shared-store-retention`.
 - **Host sharing (D127, D132):** the transcreate speedrun holds up to 4 GPUs,
   with no end date, under Kevin's extended R570 risk acceptance.
   - Its CPU cap is 128 while any other job runs or waits, and up to 200 when
@@ -137,7 +139,7 @@ See `pending_decisions_for_kevin` in `program/state.json`.
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
 `uv run python scripts/preregister.py check-chain`, 27 rows). Decisions taken
-on Kevin's behalf are D1-D132 in `program/decisions.md`. GPU-hours are in
+on Kevin's behalf are D1-D133 in `program/decisions.md`. GPU-hours are in
 `program/state.json` (`gpu_hours_ledger`, physical hours): 43.11 in total.
 
 | Registration | Outcome | Evidence |

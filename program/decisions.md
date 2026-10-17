@@ -3336,3 +3336,30 @@ with no end date. Kevin extends D127's R570 risk acceptance to match.**
     weights; empty input and output folders; no job, container or process)
     was deleted on 2026-10-16. Its file list is kept in the private hosting
     notes. LaMa's directory is deleted after its chain ends.
+
+**D133. The memory keep-set note is revised to D131's narrowed claims, and
+an erratum to D131.**
+- `paper/memory-keepset-note/` (still an internal draft, D101) now:
+  - frames every result as incremental or known, citing the audit's priors as
+    the audit describes them;
+  - names the exact keep-set tables as the strongest result, with the audit's
+    coverage;
+  - narrows Result 1 to "leave-one-out fails mainly where the reader fails",
+    labelled post hoc;
+  - reframes Result 3 as a replication of Wang, Ma and Kumar's 2025 stop
+    rule, with the post hoc Self-Route-style fallback comparison;
+  - adds AM4, AM5, the v1 void and `am5-ablated-cost-v2`.
+- Verification:
+  - Five independent checkers covered numbers (all 219 rows), D131
+    compliance, prior-art citations, the later studies and completeness. They
+    raised 40 findings. A single owner confirmed and fixed 30 and rejected 7
+    with reasons.
+  - A fresh recheck found 5 defects in those fixes, all now fixed.
+  - The numbers check passes: 228 rows, 0 problems.
+  - AM1b reruns byte-identical, and AM4's crosscheck shows no difference.
+- Erratum to D131: the Self-Route-style fallback recovers 43-77% of the
+  rule's gain, not 43-78%. The audit's own counts are 23/39, 15/35 and 24/31,
+  and 24/31 is 77.4%. AUDIT.md keeps its original wording; the note states
+  both figures.
+- Wording note on D123: `ea4a7206` is v1's freeze commit, and the ledger's
+  `git_head_at_freeze` for row 26 is the fill commit `f46242ee`.
