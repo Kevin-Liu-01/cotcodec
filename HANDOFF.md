@@ -1,4 +1,4 @@
-# Handoff — 2026-10-15
+# Handoff — 2026-10-16
 
 ## Resume here (2026-10-15)
 
@@ -104,12 +104,24 @@ for whatever gains actual results"; D80). Under that delegation:
   long-reasoning math accuracy on Qwen3.5. The loss survives at 81,920 tokens
   (−13 to −22 on hard items) and is larger without preemption. Keep the state
   at fp32. The line is complete.
-- **Host sharing (D127):** the transcreate speedrun holds up to 4 GPUs and
-  128 CPUs through 2026-10-20, under Kevin's R570 risk acceptance. LaMa is on
-  job 1451.
+- **Novelty audit (D131).** All four recent findings are incremental or
+  known, and low in importance as they stand. Direct priors: Wang, Ma and
+  Kumar 2025 for the abstention rule; LeapQuant 2026 for the bf16 loss. The
+  strongest result is the exact keep-set tables. Two experiments could be
+  new: a stronger reader on fresh questions, and retention on a shared store
+  scored against exact truth. Kevin has not yet chosen between running the
+  second and pivoting. `paper/memory-keepset-note/` must be revised to the
+  narrowed claims before any use.
+- **Host sharing (D127, D132):** the transcreate speedrun holds up to 4 GPUs,
+  with no end date, under Kevin's extended R570 risk acceptance.
+  - Its CPU cap is 128 while any other job runs or waits, and up to 200 when
+    the node is otherwise idle (its governor). Submitting a job of ours
+    returns the cap to 128.
+  - LaMa (job 1451, successor 1556) ends with its chain on 2026-10-21. Delete
+    `~/transcreate-runs/lama` after that: `chmod -R u+w` first, and check that
+    no successor job remains. ROSE was deleted on 2026-10-16.
+  - Never touch `~/tc-speedrun` or `tcsr-*` jobs.
   - G2-RL is closed at an honest exit (gauntlet 63; D114).
-  - The node also hosts LaMa and ROSE inference for another of Kevin's
-    projects through 2026-10-20 (D110).
 - The public-history purge ran (D99). Old commit ids resolve through
   `program/history-rewrite-2026-10-14/` (the map plus an 11-row supplement,
   D100). No GitHub Support request (D101).
@@ -125,7 +137,7 @@ See `pending_decisions_for_kevin` in `program/state.json`.
 The restarted program is in Stage 0. Everything runs through frozen
 preregistrations in `program/preregistrations/ledger.jsonl` (hash-chained;
 `uv run python scripts/preregister.py check-chain`, 27 rows). Decisions taken
-on Kevin's behalf are D1-D130 in `program/decisions.md`. GPU-hours are in
+on Kevin's behalf are D1-D132 in `program/decisions.md`. GPU-hours are in
 `program/state.json` (`gpu_hours_ledger`, physical hours): 43.11 in total.
 
 | Registration | Outcome | Evidence |

@@ -3322,3 +3322,17 @@ with no end date. Kevin extends D127's R570 risk acceptance to match.**
 - LaMa (D110) runs through its chain's end date of 2026-10-21 unless
   transcreate asks for longer. ROSE's weights are still deleted at the
   hosting cleanup.
+- Addendum, 2026-10-16 (transcreate session's reply, with Kevin's answer as it
+  relayed it):
+  - The 128-CPU cap applies only while other work is on the node. When no
+    non-`tcsr` job runs or waits, transcreate's governor
+    (`~/tc-speedrun/src/jobs/governor.py`) releases `tcsr` jobs up to 200
+    CPUs. As soon as any other job runs or waits, it drops back to 128. Kevin
+    answered "absolutely. i paused cotcodec for you". This program loses
+    nothing it would use: its own jobs, once submitted, return the cap to 128.
+    The GPU cap stays at 4.
+  - LaMa is not needed past 2026-10-21, so its chain ends as planned. ROSE is
+    not needed either. Its directory on the host (22 GB, almost all model
+    weights; empty input and output folders; no job, container or process)
+    was deleted on 2026-10-16. Its file list is kept in the private hosting
+    notes. LaMa's directory is deleted after its chain ends.
