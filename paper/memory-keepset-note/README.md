@@ -14,7 +14,7 @@ of the results is a new phenomenon; the audit found prior work for each.
    beyond it). On them, top-4 keep sets by leave-one-out credit are misspecified
    (`am1-memory-credit-v1`, confirmatory). Post hoc, most of that loss sits in pools the reader
    gets wrong even with all 8 memories, and exact Shapley and Banzhaf keep an optimal set in
-   95.6% and 96.4% of the tables (no adequacy verdict is licensed); this is not evidence that
+   95.6% and 96.4% of the 251 non-constant retrieved tables (no adequacy verdict is licensed); this is not evidence that
    memory interactions defeat per-memory credit.
 2. **Search with an oracle.** Given the judged utility, search over keep sets beats
    leave-one-out and sampled credit rules in six of seven registered comparisons; the comparison

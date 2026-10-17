@@ -53,7 +53,7 @@ was found through 2026-10-16 under the audit's coverage (section 8), not that no
   exact-truth score for those two.
 - **Leave-one-out fails mainly where the reader fails [post hoc].** 64.6% of its regret comes
   from the 69 of the 251 tables that the reader gets wrong even with all 8 memories. Exact
-  Shapley and exact Banzhaf keep an optimal set in 95.6% and 96.4% of the tables. This is not
+  Shapley and exact Banzhaf keep an optimal set in 95.6% and 96.4% of those 251 tables. This is not
   evidence that memory interactions defeat per-memory credit.
 - **With an oracle utility, search over keep sets beats the credit rules tested; the registered
   verdict is INCONCLUSIVE [confirmatory].** Keeping the best of random 4-subsets loses less than
@@ -305,7 +305,7 @@ AND or OR of m needed memories already puts 1 - m/(2^m - 1) at order 2 or higher
 over that baseline at each question's gold count is +0.156 [+0.119, +0.194] on the retrieved arm
 and +0.094 [+0.058, +0.129] on the gold arm. Of the 251 non-constant retrieved tables, 167 are
 non-monotone, 57 depend on a single memory, 12 are AND, 8 are OR and 7 are monotone but mixed; a
-non-gold memory matters in 182 [AM1]. The audit reads part of the excess as position brittleness,
+non-gold memory matters in 182 [AM1]. The audit reads part of the order ≥ 2 share as position brittleness,
 since a content-free reorder changes 17.1% of full-pool answers (AM2 below) [AUDIT]; order effects
 were not separated from other causes (section 7).
 
@@ -543,7 +543,7 @@ retrieved arm, primary judge [AUDIT, "Synthesis recomputation"].
 
 - **The fallback recovers 43-77% of the rule's gain.** It beats BM25 top 4 by 23 to 0
   (Qwen3-8B), 15 to 0 (OLMo-2) and 24 to 0 (Qwen3.5-9B), against the rule's 39, 35 and 31
-  (D131 and [AUDIT] give 78% as the upper end; their counts give 24/31 = 77.4%).
+  (D131 and [AUDIT] give 78% as the upper end; the audit's own counts give 24/31 = 77.4%).
 - **The overlapping-subset search adds something for two readers.** The rule beats the fallback
   18:2 (Qwen3-8B, exact p 4e-4) and 25:5 (OLMo-2, 3e-4); for Qwen3.5-9B it is 10:3 (0.09).
 - **The fallback is safer on unanswerable questions.** On the 30 abstention questions the
@@ -755,7 +755,8 @@ This section cites only work that the program's own records cite: the AM1 regist
 section 1, the 2026-10-14 question sweep [SWEEP] and the 2026-10-16 novelty audit, which ran a
 prior-art auditor and an adversarial refuter per finding [AUDIT]. Descriptions follow the audit
 wherever it describes a work; the details tagged only [SWEEP] or [AM1-REG] (CMP's call count,
-UpliftMem, Re-feeding Is Not Replaying, AT2 and Preference Is Not Intervention) follow those
+Nematov et al.'s query count, Hindsight Memory-PRM's rule, UpliftMem, Re-feeding Is Not
+Replaying, AT2 and Preference Is Not Intervention) follow those
 records and were not checked by the audit. This note's author did not re-read the papers.
 Identifiers and dates are under Sources.
 
@@ -763,8 +764,8 @@ Identifiers and dates are under Sources.
 
 - **Leave-one-out against Shapley is known.** Leave-one-out fails under duplicates in data
   valuation (Ghorbani and Zou, 2019). Nematov et al. (2025) compare credit estimators against
-  an exhaustive 2^10 Shapley reference on 100 RAG queries with 10 documents each, with a
-  log-likelihood utility [AM1-REG section 1; AUDIT]. MaxShapley (2025) computes exact Shapley
+  an exhaustive 2^10 Shapley reference with a log-likelihood utility [AUDIT], on 100 RAG queries
+  with 10 documents each [AM1-REG section 1]. MaxShapley (2025) computes exact Shapley
   over 2^6 sources with an LLM-judge utility that sees the reference answer and finds that
   leave-one-out under-credits redundancy. TracLLM (2025) finds leave-one-out sub-optimal when
   texts jointly cause the output. In the memory setting, MeClear (2026), a direct directional
@@ -777,7 +778,7 @@ Identifiers and dates are under Sources.
   optimum. The point estimates in Table 2 fall in the order exact Banzhaf, exact Shapley, the
   sampled estimators, leave-one-out [descriptive; no ranking is licensed], which is the order
   data-valuation work predicts (Beta Shapley; Data Banzhaf; Wang et al. 2024, Theorem 6) [AUDIT].
-- **Memory learners.** The rules tested are those of Hindsight Memory-PRM (one-shot deletion),
+- **Memory learners.** The rules tested are those of Hindsight Memory-PRM (one-shot deletion [AM1-REG section 1]),
   MeClear (permutation Shapley-16) and CMP (SNIPW over random exposures). CMP shows that
   memories act jointly, estimating exposure effects from 80,187 calls of a closed model
   [AM1-REG section 1], but never scores them against an exact optimum [AUDIT]. DRSR (2026),

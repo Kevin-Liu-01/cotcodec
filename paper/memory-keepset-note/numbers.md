@@ -262,15 +262,17 @@ Source keys:
 | N231 | 4.2 | Six; seven; three | confirmatory (the three and three derived from Table 4's call columns) | KS | Six of seven comparisons are SEARCH_BETTER. |
 | N232 | 5.4 | two | confirmatory (hand check) | AM3G | The two held-out disagreements are in distractor pairs and would be hidden gains |
 | N233 | 6.1 | four | derived (two + one + one questions) | AM3G | The judge accepted plain answers as "identified as unanswerable" on two knowledge-update questions, one single-session-user and one multi-session. |
+| N234 | 5.5 | two | post hoc (audit recomputation) | AUDIT | Overlapping-subset search adds something beyond escalation for two readers. |
+| N235 | 6.1 | Two | descriptive (hand labels) | AM3G | **Two corrections from the hand labels** (the verifier's; descriptive): |
 
 ## Result of the check
 
-- 226 rows. Every source fragment was found in its file at `1cf31346`, every number was
+- 228 rows. Every source fragment was found in its file at `1cf31346`, every number was
   found in its fragments (except in `derived` rows, which show their arithmetic), and every
   number was found in `note.md` (spelled-out numbers compared without case).
 - Coverage: every numeric token in `note.md` outside code spans and code blocks is listed in
   some row, apart from the identifiers named above. Spelled-out counts that report a result or
-  a check outcome and restate no listed digit are listed too (N228-N233, and the words in N112,
+  a check outcome and restate no listed digit are listed too (N228-N235, and the words in N112,
   N127, N170, N188 and N198). Spelled-out design and structural counts (three readers, five
   rules, seven comparisons, four patterns, two pool arms, four registrations) are not.
 - The mechanical check shows that a number exists in its source; it does not show that the
