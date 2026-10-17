@@ -10,21 +10,24 @@ of the results is a new phenomenon; the audit found prior work for each.
 
 1. **Exact keep-set tables (the strongest result).** Keep-set regret against the exact keep-4
    optimum, on 694 exhaustive judged tables, is the one measurement for which the audit found no
-   direct prior. On them, top-4 keep sets by leave-one-out credit are misspecified
+   direct prior (through 2026-10-16, under the audit's coverage; this is not evidence of novelty
+   beyond it). On them, top-4 keep sets by leave-one-out credit are misspecified
    (`am1-memory-credit-v1`, confirmatory). Post hoc, most of that loss sits in pools the reader
-   gets wrong even with all 8 memories, and exact Shapley and Banzhaf are near-optimal; this is
-   not evidence that memory interactions defeat per-memory credit.
-2. **Search with an oracle.** Given the judged utility, search over keep sets beats sampled
-   credit rules in six of seven registered comparisons; the comparison with greedy backward
-   elimination is not separated, so the registered verdict is INCONCLUSIVE
+   gets wrong even with all 8 memories, and exact Shapley and Banzhaf keep an optimal set in
+   95.6% and 96.4% of the tables (no adequacy verdict is licensed); this is not evidence that
+   memory interactions defeat per-memory credit.
+2. **Search with an oracle.** Given the judged utility, search over keep sets beats
+   leave-one-out and sampled credit rules in six of seven registered comparisons; the comparison
+   with greedy backward elimination is not separated, so the registered verdict is INCONCLUSIVE
    (`am1-keepset-search-v1`, H-A). This is a known wrapper-versus-filter effect.
 3. **A known abstention-gated keep rule, replicated.** Switching away from a keep set whose
    reply abstains, a variant of the stop rule of Wang, Ma and Kumar (2025), gains on answerable
    questions for three readers (`am1-keepset-search-v1` H-C, `am3-nonabstain-generality-v1` H1).
    Its cost was measured on LongMemEval-S's 30 unanswerable questions (descriptive,
-   judge-qualified), across read caps (AM4, exploratory and post hoc), and on held-out questions
-   with their evidence removed (AM5 on development data; `am5-ablated-cost-v2`, confirmatory:
-   cost below gain for the two Qwen readers at a cap of 8 reads, not separated for OLMo-2).
+   judge-qualified), across read caps (AM4, exploratory and post hoc), and with each question's
+   evidence removed (AM5 on the 63 development questions; `am5-ablated-cost-v2` on the 347
+   held-out questions, confirmatory: cost below gain for the two Qwen readers at a cap of 8
+   reads, not separated for OLMo-2).
 
 ## Files
 

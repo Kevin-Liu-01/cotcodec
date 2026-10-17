@@ -42,7 +42,8 @@ Qwen3-32B. That gives, for each question, the exact outcome of every keep set, s
 choice can be scored against the best 4-subset. None of the findings is a new phenomenon
 (D131). The strongest result is the exact tables: keep-set regret against the exact keep-4
 optimum, on 694 exhaustive judged tables, is the one measurement for which the novelty audit
-found no direct prior [AUDIT].
+found no direct prior [AUDIT]. Wherever this note says the audit found no prior, it means none
+was found through 2026-10-16 under the audit's coverage (section 8), not that none exists.
 
 - **Exact tables score the credit rules that memory learners use [confirmatory].** On 251
   held-out questions whose table is not constant, keeping the top 4 by leave-one-out credit
@@ -54,12 +55,13 @@ found no direct prior [AUDIT].
   from the 69 of the 251 tables that the reader gets wrong even with all 8 memories. Exact
   Shapley and exact Banzhaf keep an optimal set in 95.6% and 96.4% of the tables. This is not
   evidence that memory interactions defeat per-memory credit.
-- **With an oracle utility, search over keep sets beats sampled credit; the registered verdict
-  is INCONCLUSIVE [confirmatory].** Keeping the best of random 4-subsets loses less than
+- **With an oracle utility, search over keep sets beats the credit rules tested; the registered
+  verdict is INCONCLUSIVE [confirmatory].** Keeping the best of random 4-subsets loses less than
   leave-one-out, SNIPW-64 and MSR-Banzhaf-64 at equal calls, and less than SNIPW-64,
   MSR-Banzhaf-64 and permutation Shapley-16 when it reads 26 subsets to their 57-83. Against
   greedy backward elimination it is not separated (one-sided upper bound +0.0014). The utility
-  needs the reference answer.
+  needs the reference answer, and the search is easy: on average 37.5% of the 70 candidate
+  4-subsets are optimal [post hoc].
 - **A known abstention-gated keep rule replicates in the agent-memory setting [confirmatory].**
   Keeping the first BM25-ranked 4-subset whose reply does not abstain, a variant of the stop
   rule of Wang, Ma and Kumar (2025), beats BM25 top 4 for Qwen3-8B (+0.112 [0.081, 0.147], 39
@@ -70,8 +72,9 @@ found no direct prior [AUDIT].
   LongMemEval-S's 30 unanswerable questions it turns a correct abstention into a wrong answer 5,
   8 and 1 times for the three readers (hand counts 5, 8 and 0). With each held-out question's
   evidence removed and the rule capped at 8 reads, its cost is below its gain for Qwen3-8B (6
-  against 31 of 347) and Qwen3.5-9B (6 against 26), and not separated for OLMo-2 (22 against
-  27). The gain side and the cap were known before that registration.
+  against 31 of 347) and Qwen3.5-9B (6 against 26; uncapped, 16 against 31, not separated
+  [descriptive]), and not separated for OLMo-2 (22 against 27). The gain side and the cap were
+  known before that registration.
 
 The scope throughout is one dataset, one prompt that asks for "I don't know", BM25 user-turn
 pools of 8, a budget of 4 and the Qwen3-32B judge (section 7).
@@ -90,8 +93,8 @@ what cost (Result 3 and section 6).
 
 The line came from the program's 2026-10-14 question sweep, which ranked AM1 the memory lead and
 folded two other candidates into it as placebo arms (AM2) and an internal-signal analysis (AM6)
-[SWEEP entries 3, 5 and 6; DEC D103, D104]. After the line was complete (D126), a novelty audit
-searched for prior work on each result, and D131 narrowed the claims [AUDIT].
+[SWEEP entries 3, 5 and 6; DEC D103, D104]. Only AM1, AM2 and AM6 keep the sweep's meanings: in
+the sweep, AM3-AM5 name other candidates (D120) [SWEEP].
 
 **Table 1. The studies of the memory line.**
 
@@ -100,7 +103,7 @@ searched for prior work on each result, and D131 narrowed the claims [AUDIT].
 | AM1 Step 0 | exploratory | eight demo questions | replay works (D107) |
 | AM1 development pilot | exploratory | 63 development questions, 126 tables | design of AM1 (D111) |
 | `am1-memory-credit-v1` (AM1) | confirmatory | 347 held-out questions, 694 tables | H2: five rules MISSPECIFIED (D112) |
-| AM1b | exploratory | the pilot's tables, CPU only | search beats credit on development (D113) |
+| AM1b | exploratory | the pilot's tables, CPU only | with an oracle utility, direct search beats query-based credit at equal calls on development (D113) |
 | AM1d | exploratory | the pilot's replies, CPU only | abstention is the usable signal (D115) |
 | `am1-keepset-search-v1` | confirmatory | AM1's held-out tables and replies, CPU only | H-A INCONCLUSIVE; H-C NONABSTAIN_HELPS (D117) |
 | AM3 | exploratory | 63 development questions, three readers | direction holds, not separated (D118) |
@@ -219,9 +222,9 @@ The four confirmatory studies followed one process:
   kind [AM1B; AM1D; AM3D; AM5], except AM4, which has a second computation route (section 9).
 
 Intervals are question-cluster percentile bootstraps, 95% unless stated: 4,000 resamples in AM1
-[AM1-REG section 6] and 10,000 in AM1b, AM1d, AM4 and the later registrations. Paired accuracy
-comparisons use the exact McNemar test, and rates over the 30 abstention questions get exact
-Clopper-Pearson intervals.
+(1,000 for AUROC) [AM1-REG section 6] and 10,000 in AM1b, AM1d, AM4 and the later
+registrations. Paired accuracy comparisons use the exact McNemar test, and rates over the 30
+abstention questions get exact Clopper-Pearson intervals.
 
 ## 3. Result 1: exact keep-set tables; leave-one-out credit picks bad keep sets (AM1)
 
@@ -258,10 +261,12 @@ kill line), and 251 non-constant retrieved tables against a 150 floor [AM1].
   misspecified for keep and evict decisions on this benchmark (this reader, this judge, BM25
   user-turn pools, 4 of 8). Top-4 keep sets by deletion credit lose 0.277 of a correct answer
   per non-constant question and are suboptimal in 55% of tables. The reading is about
-  leave-one-out; it does not extend to per-memory credit as such [AUDIT].
-- **The loss is specific to deletion credit [confirmatory].** Leave-one-out loses 0.233
-  [0.194, 0.273] more than exact Shapley credit on the same tables. The other rules' paired
-  differences (+0.094, +0.050) are secondary descriptions with no decision rule.
+  leave-one-out; it does not extend to per-memory credit as such, and only per-query keep sets
+  were scored, not retention in a shared memory store [AUDIT].
+- **In the registered sense, the loss is specific to deletion credit [confirmatory]:**
+  leave-one-out loses 0.233 [0.194, 0.273] more than exact Shapley credit on the same tables.
+  Permutation Shapley-16 and SNIPW-64 are MISSPECIFIED too; their paired differences (+0.094,
+  +0.050) are secondary descriptions with no decision rule.
 - **Not licensed:** any statement about exact Shapley's adequacy (its 99% interval, [0.012,
   0.080], spans both thresholds) or a ranking of the rules. No rule is ADEQUATE, which the
   registration expected to need a true regret below about 0.01 [AM1-REG sections 7 and 9].
@@ -300,8 +305,9 @@ AND or OR of m needed memories already puts 1 - m/(2^m - 1) at order 2 or higher
 over that baseline at each question's gold count is +0.156 [+0.119, +0.194] on the retrieved arm
 and +0.094 [+0.058, +0.129] on the gold arm. Of the 251 non-constant retrieved tables, 167 are
 non-monotone, 57 depend on a single memory, 12 are AND, 8 are OR and 7 are monotone but mixed; a
-non-gold memory matters in 182 [AM1]. Part of the excess is position brittleness: a content-free
-reorder changes 17.1% of full-pool answers (AM2 below) [AUDIT].
+non-gold memory matters in 182 [AM1]. The audit reads part of the excess as position brittleness,
+since a content-free reorder changes 17.1% of full-pool answers (AM2 below) [AUDIT]; order effects
+were not separated from other causes (section 7).
 
 **Placebo floor for non-gold deletion labels (AM2) [descriptive: a registered secondary rule
 with no program decision].** A deletion label says that removing memory i flips judged
@@ -328,7 +334,7 @@ Shapley predict which memories are necessary at AUROC 0.890 [0.865, 0.914], 0.06
 cheap baseline (overlap with the reply, 0.830); raw attention (0.832) ties it. The heads need
 exact tables of other questions to select, so they are not a deployable signal [AM1].
 
-## 4. Result 2: with an oracle utility, search over keep sets beats sampled credit
+## 4. Result 2: with an oracle utility, search over keep sets beats the credit rules tested
 
 ### 4.1 Development: the cost curve (AM1b) [exploratory]
 
@@ -387,7 +393,8 @@ Carlo standard errors. SEARCH_DOMINATES needs all seven SEARCH_BETTER [KS-REG se
 
 The rules' regrets were 0.277 (leave-one-out), 0.085 (SNIPW-64), 0.078 (MSR-Banzhaf-64), 0.132
 (permutation Shapley-16) and 0.068 (greedy backward). Direct search's exact regret was 0.141 at
-8 calls, 0.126 at 9, 0.067 at 16, 0.036 at 26, 0.020 at 38, 0.003 at 64 and 0 at 70 [KS].
+8 calls, 0.126 at 9, 0.067 at 16, 0.036 at 26, 0.020 at 38, 0.003 at 64 and 0 at 70
+[descriptive] [KS].
 
 Read exactly:
 
@@ -462,9 +469,10 @@ two-sided McNemar test against BM25 top 4 over all 347 held-out questions, retri
   [+0.081, +0.147]; 39 questions gained and 0 lost; exact p = 3.6e-12 [KS]. The exact
   conditional interval is [+0.092, +0.112]; its upper end equals the estimate because every
   discordant pair favours the rule.
-- **Why it works.** 13,598 of 24,290 retrieved 4-subset replies abstain (56%). BM25 top 4's own
-  reply abstains on 116 questions; on 71 of them another 4-subset answers, and switching gained
-  39 and lost none. In 45 pools every 4-subset abstains, and the rule keeps BM25 top 4 [KS].
+- **Why it works [descriptive].** 13,598 of 24,290 retrieved 4-subset replies abstain (56%).
+  BM25 top 4's own reply abstains on 116 questions; on 71 of them another 4-subset answers, and
+  switching gained 39 and lost none. In 45 pools every 4-subset abstains, and the rule keeps
+  BM25 top 4 [KS].
 - **Why it rarely loses.** The rule leaves BM25 top 4 only when top 4's reply abstains, and
   the primary judge rejects abstentions on answerable questions ("I don't know." judged wrong on
   347 of 347 validation items). So losses are near 0 by construction, and the gain is the rate
@@ -489,9 +497,10 @@ ungated) and Qwen3.5-9B (default mode). The anchor's replies equal the pilot's e
   against 0 (p = 0.25). The anchor itself showed only 1 against 0 on these questions, against 39
   against 0 on held-out ones, so the development split cannot separate this rule.
 - **Under the second judge, losses appeared**: 6 losses on 3 questions, every one a pool whose
-  top-4 reply abstained and that Qwen3-8B judged correct. In 4 of the 6 the reply is a bare
-  "I don't know" on an answerable question, a judge error by the pilot's validation standard;
-  the other 2 are hedges that also contain the gold answer, and are ambiguous [AM3D, "(b)"].
+  top-4 reply abstained and that Qwen3-8B judged correct. In 4 of the 6 [post hoc] the reply is
+  a bare "I don't know" on an answerable question, a judge error by the pilot's validation
+  standard; the other 2 are hedges that also contain the gold answer, and are ambiguous [AM3D,
+  "(b)"].
 
 ### 5.4 Held-out: H1 of `am3-nonabstain-generality-v1` [confirmatory]
 
@@ -534,7 +543,7 @@ retrieved arm, primary judge [AUDIT, "Synthesis recomputation"].
 
 - **The fallback recovers 43-77% of the rule's gain.** It beats BM25 top 4 by 23 to 0
   (Qwen3-8B), 15 to 0 (OLMo-2) and 24 to 0 (Qwen3.5-9B), against the rule's 39, 35 and 31
-  (D131 and [AUDIT] round the upper end to 78%).
+  (D131 and [AUDIT] give 78% as the upper end; their counts give 24/31 = 77.4%).
 - **The overlapping-subset search adds something for two readers.** The rule beats the fallback
   18:2 (Qwen3-8B, exact p 4e-4) and 25:5 (OLMo-2, 3e-4); for Qwen3.5-9B it is 10:3 (0.09).
 - **The fallback is safer on unanswerable questions.** On the 30 abstention questions the
@@ -607,14 +616,14 @@ The rule calls the reader until a 4-subset's reply does not abstain.
 - **Unanswerable questions [descriptive].** The median is 70 reads and the mean 43-59: 90-97% of
   their 4-subset replies abstain, so the rule reads them all before falling back to BM25 top 4
   [AM3G].
-- **Read caps (AM4) [exploratory; post hoc; licenses nothing].** A cap K reads at most the first
-  K 4-subsets in BM25 order and otherwise keeps BM25 top 4. AM4 recomputed the registered run's
-  features on a CPU for K = 1, 2, 4, 8, 16, 26 and 70, after the registered results were known,
-  and selects no K [AM4]. By K = 8 the capped rule keeps 77-84% of the uncapped gains (31 of 39,
-  27 of 35 and 26 of 31), with c = 0, at a mean of 2.7-3.1 reads on answerable questions against
-  11.2-13.5 uncapped. On unanswerable questions it reads about K subsets, and b2 is 3, 3 and 0
-  at K = 8. The net rate at the 470:30 mix rises steeply up to K = 8 (+0.067 to +0.078) and
-  moves by at most +0.022 after that.
+- **Read caps (AM4) [exploratory; post hoc; licenses nothing; costs and net rates
+  judge-qualified].** A cap K reads at most the first K 4-subsets in BM25 order and otherwise
+  keeps BM25 top 4. AM4 recomputed the registered run's features on a CPU for K = 1, 2, 4, 8,
+  16, 26 and 70, after the registered results were known, and selects no K [AM4]. By K = 8 the
+  capped rule keeps 77-84% of the uncapped gains (31 of 39, 27 of 35 and 26 of 31), with c = 0,
+  at a mean of 2.7-3.1 reads on answerable questions. On unanswerable questions it reads about K
+  subsets, and b2 is 3, 3 and 0 at K = 8. The net rate at the 470:30 mix rises steeply up to
+  K = 8 (+0.067 to +0.078) and moves by at most +0.022 after that.
 - **Calls are not equal in cost.** A 4-memory call is shorter than an 8-memory one, and token
   cost was not modelled [AM1B, caveat 6; AM1D].
 
@@ -641,7 +650,7 @@ section 6].
   directional reading stands only if the blind hand check agrees [AM5R-REG section 7.1].
 
 **Table 8. Cost with the evidence removed against gain with it, K = 8, 347 held-out questions,
-Qwen3-32B judge** [confirmatory] [AM5R].
+Qwen3-32B judge** [confirmatory; the break-even share is descriptive] [AM5R].
 
 | Reader | Cost / gain | Cost minus gain [exact 95%] | p (Holm) | Reading | Hand-based cost / gain | Break-even share [95%] |
 |---|---|---|---:|---|---|---|
@@ -652,20 +661,21 @@ Qwen3-32B judge** [confirmatory] [AM5R].
 - **What is licensed**, for the two Qwen readers in this scope: capped at 8 reads, the rule
   loses fewer correct answers when a question's evidence is removed than it gains when it is
   present (1.7% against 8.9% for Qwen3-8B, 1.7% against 7.5% for Qwen3.5-9B), so with equal
-  weights it raises accuracy whenever at most about 81-84% of questions lack their evidence.
-  For OLMo-2 nothing directional is licensed, and NOT_SEPARATED is not evidence that cost equals
-  gain [AM5R].
+  weights it raises accuracy whenever at most half of such questions lack their evidence
+  [AM5R-REG section 7.1]. The break-even shares in Table 8 are registered descriptions, not part
+  of the licence. For OLMo-2 nothing directional is licensed, and NOT_SEPARATED is not evidence
+  that cost equals gain [AM5R].
 - **Caveats (D126).** The gain side was known before the registration, and K = 8 was chosen
   after AM4 had looked at these questions; only the cost side is new. Qwen3.5-9B is
   NOT_SEPARATED for the uncapped rule (K = 70: 16 / 31, Holm p 0.063) [descriptive]. Leakage
   favours COST_BELOW_GAIN: by a crude string match 27 of the 347 ablated pools hold a memory
-  containing the reference answer, though no judged-correct switch at K = 8 is in such a pool. A
-  path-guard test failed in the registered run ("1 failed, 230 passed") because of where the
-  checkout lay; from a fresh clone elsewhere all 231 tests pass, and the outputs are unchanged.
-  Qwen3-8B's gains rest on the judge alone [AM5R].
-- **Checks.** The replay control passed, and so did the judge's validation. The hand labels agree
-  with the judge on 186 of 195 items (κ 0.72) and confirm all 8 switched replies the judge called
-  correct [AM5R].
+  containing the reference answer, though no judged-correct switch at K = 8 is in such a pool
+  [descriptive]. A path-guard test failed in the registered run ("1 failed, 230 passed") because
+  of where the checkout lay; from a fresh clone elsewhere all 231 tests pass, and the outputs are
+  unchanged. Qwen3-8B's gains rest on the judge alone [AM5R].
+- **Checks [confirmatory].** The replay control passed, and so did the judge's validation. The
+  hand labels agree with the judge on 186 of 195 items (κ 0.72) and confirm all 8 switched
+  replies the judge called correct [AM5R].
 
 ## 7. What these results do not show
 
@@ -677,7 +687,8 @@ not to make [AUDIT].
 
 **Novelty.** Not claimed as new: that leave-one-out does worse than Shapley; that the top k by
 credit is not the best k-subset; that search beats credit in general; abstention-gated selection
-or its cost; that the reader's token confidence is anti-informative (D131).
+or its cost; that the reader's token confidence is anti-informative (D131). Not claimed at all:
+that memory interactions defeat per-memory credit (section 3).
 
 **Scope.**
 
@@ -704,7 +715,10 @@ the second judge. H2 rests on an abstention judge that failed G-J2, so its costs
 - The registrations do not rank credit rules and say nothing about exact Shapley's adequacy.
   The split by full-pool correctness is post hoc.
 - H-A's search reads labels, so it is not deployable, and on noiseless replays it says nothing
-  about the winner's curse a noisy utility would bring.
+  about the winner's curse a noisy utility would bring. It is also easy here: on average 37.5%
+  of the 70 4-subsets are optimal [post hoc].
+- Only per-query keep sets were scored; nothing is shown about what a shared memory store
+  should retain.
 - Credit's remaining case, one ranking for every budget or credits that transfer across
   questions, was not tested, and nothing is shown about training a memory learner on these
   credits.
@@ -728,17 +742,22 @@ answers. Why a reader answers without the evidence is not shown. The held-out qu
 four registrations, AM1's published figures fixed H-B's sign before `am1-keepset-search-v1` ran
 (D116), and the rule was chosen on development data.
 
-**What could be new.** D131 names two experiments that could produce a new result rather than a
-better measurement of a known one: a stronger reader on fresh questions with the
-full-pool-correct split registered as primary, and the retention decision on a shared memory
-store, scored on held-out questions against the exact optimum. Neither has started.
+**What could be new.** D131 names two experiments that could produce something new: a stronger
+reader on fresh questions with the full-pool-correct split registered as primary, which would
+test whether the gap is a weak-reader artifact, and the retention decision on a shared memory
+store, scored on held-out questions against the exact optimum, which the audit calls the one
+experiment that could give a new result rather than a better measurement of a known one
+[AUDIT]. Neither has started.
 
 ## 8. Related work
 
 This section cites only work that the program's own records cite: the AM1 registration's
 section 1, the 2026-10-14 question sweep [SWEEP] and the 2026-10-16 novelty audit, which ran a
-prior-art auditor and an adversarial refuter per finding [AUDIT]. Descriptions follow those
-records; this note's author did not re-read the papers. Identifiers and dates are under Sources.
+prior-art auditor and an adversarial refuter per finding [AUDIT]. Descriptions follow the audit
+wherever it describes a work; the details tagged only [SWEEP] or [AM1-REG] (CMP's call count,
+UpliftMem, Re-feeding Is Not Replaying, AT2 and Preference Is Not Intervention) follow those
+records and were not checked by the audit. This note's author did not re-read the papers.
+Identifiers and dates are under Sources.
 
 **Result 1.**
 
@@ -748,21 +767,26 @@ records; this note's author did not re-read the papers. Identifiers and dates ar
   log-likelihood utility [AM1-REG section 1; AUDIT]. MaxShapley (2025) computes exact Shapley
   over 2^6 sources with an LLM-judge utility that sees the reference answer and finds that
   leave-one-out under-credits redundancy. TracLLM (2025) finds leave-one-out sub-optimal when
-  texts jointly cause the output. In the memory setting MeClear (2026) finds permutation
-  Shapley-16 ahead of leave-one-out by +25.5 pp [+20.9, +29.8] on LoCoMo memory faults [AUDIT].
+  texts jointly cause the output. In the memory setting, MeClear (2026), a direct directional
+  prior, finds permutation Shapley-16 ahead of leave-one-out by +25.5 pp [+20.9, +29.8] on
+  LoCoMo memory faults [AUDIT].
 - **The top k by credit need not be the best set.** Wang et al. (2024) show this for all
   semivalues including leave-one-out and Banzhaf, show that credit-based subset selection can be
   no better than random, and show that Shapley top-k is optimal for monotone-transformed modular
   utilities; Chi et al. (2025) treat semivalue top-k as a myopic approximation of the exact
-  optimum. The ordering in Table 2 (exact Banzhaf, exact Shapley, the sampled estimators,
-  leave-one-out) is what Beta Shapley and Data Banzhaf predict [AUDIT].
+  optimum. The point estimates in Table 2 fall in the order exact Banzhaf, exact Shapley, the
+  sampled estimators, leave-one-out [descriptive; no ranking is licensed], which is the order
+  data-valuation work predicts (Beta Shapley; Data Banzhaf; Wang et al. 2024, Theorem 6) [AUDIT].
 - **Memory learners.** The rules tested are those of Hindsight Memory-PRM (one-shot deletion),
   MeClear (permutation Shapley-16) and CMP (SNIPW over random exposures). CMP shows that
   memories act jointly, estimating exposure effects from 80,187 calls of a closed model
-  [AM1-REG section 1], but never scores them against an exact optimum. DRSR (2026) finds that
-  singleton deletion scores do not determine set-deletion risk; UpliftMem (2026) learns
-  set-level uplift from sampled probes; ContextCite (2024) prunes context to the top k by
-  attribution, without exact-optimum regret [SWEEP entry 3; AUDIT].
+  [AM1-REG section 1], but never scores them against an exact optimum [AUDIT]. DRSR (2026),
+  another direct directional prior, finds that singleton deletion scores do not determine
+  set-deletion risk; Relevance Is Not Sufficiency (2026) and MemPursuit (2026) already show
+  set-level selection on memory benchmarks, the first on LongMemEval-S; ContextCite (2024)
+  prunes context to the top k by attribution, without exact-optimum regret; ProxySPEX and SPEX
+  (2025) model sparse interactions under context masking, which bears on the interaction share
+  (H1) [AUDIT]. UpliftMem (2026) learns set-level uplift from sampled probes [SWEEP entry 3].
 - **What the audit found no direct prior for:** keep-set regret, in correct answers, against the
   exact keep-4 optimum, from 694 exhaustive judged tables on an agent-memory benchmark, with the
   first exact-truth scores for SNIPW-64 and permutation Shapley-16. MaxShapley scores rank
@@ -776,29 +800,31 @@ that valuation-inspired selection of in-context examples loses to random samplin
 
 **Result 3.**
 
-- **The direct prior.** Wang, Ma and Kumar, "When Should LLMs Admit Ignorance?" (2025), slide a
-  window over BM25-ranked pages: if a window yields the answer the model answers and stops,
-  otherwise it says "Answer not found" and moves on. The audit rates the rule tested here the
-  same stop rule, with overlapping 4-subsets in place of disjoint windows [AUDIT].
-- **Other uses of the signal.** ChunkRank (2026) finds that no content ranker beats the first
+- **The closest direct prior.** Wang, Ma and Kumar, "When Should LLMs Admit Ignorance?" (2025),
+  slide a window over BM25-ranked pages: if a window yields the answer the model answers and
+  stops, otherwise it says "Answer not found" and moves on. The audit rates the rule tested here
+  the same stop rule, with overlapping 4-subsets in place of disjoint windows [AUDIT].
+- **The other direct priors.** ChunkRank (2026) finds that no content ranker beats the first
   non-empty answer: abstention, not ranking, does the work. Self-Route (2024) escalates to the
   full context when the model says it cannot answer (section 5.5). RobustRAG (2024) drops
   isolated groups whose reply says "I don't know" [AUDIT].
 - **The confidence half is expected.** A generic "I don't know" is a known high-likelihood reply
-  (Khayrallah and Sedoc, 2020), offering an "Unknown" option inflates abstention (2025), and
-  ChunkRank finds that confidence works once abstentions are removed [AUDIT].
-- **What the audit found no direct prior for:** this overlapping-subset variant, with
-  size-matched cost-against-gain accounting, in a memory keep-set setting; Mondal et al. (2026)
-  show why size matching matters for deletion-built insufficient-evidence sets [AUDIT].
+  (Khayrallah and Sedoc, 2020), offering an "Unknown" option inflates abstention (LLM Abstention
+  Can Be a Prompt Artifact, 2025), and ChunkRank finds that confidence works once abstentions are
+  removed [AUDIT].
+- **What the audit found no direct prior for:** this overlapping-subset variant of a known
+  rule, with size-matched cost-against-gain accounting, in a memory keep-set setting; Mondal et
+  al. (2026) show why size matching matters for deletion-built insufficient-evidence sets
+  [AUDIT].
 
 **Replay, internal signals and readers.** "Re-feeding Is Not Replaying" (2026) found engine
-replay noise in token-level credit and none with `VLLM_BATCH_INVARIANT=1` [SWEEP entry 5];
-section 2.3 agrees for eager mode, and GDN attention has no batch-invariant mode in vLLM 0.31.0
-[SWEEP, check O3]. AM6's cross-fitted heads follow AT2 (2025), which learns attention-head
-weights for attribution [AM1-REG section 1]. Whether per-memory effects transfer across readers
-is occupied by "Preference Is Not Intervention" (2026): over nine readers, effect signs disagree
-in 33% of jointly affected cells [SWEEP, "Not ranked"]. Section 5.4 concerns one keep rule's
-accuracy, not per-memory effects.
+replay noise in token-level credit and none with `VLLM_BATCH_INVARIANT=1` on vLLM 0.22.1 and an
+A100 [SWEEP entry 5]; section 2.3 agrees for eager mode on vLLM 0.31.0, and GDN attention has no
+batch-invariant mode there [SWEEP, check O3]. AM6's cross-fitted heads follow AT2 (2025), which
+learns attention-head weights for attribution [AM1-REG section 1]. Whether per-memory effects
+transfer across readers is occupied by "Preference Is Not Intervention" (2026): over nine
+readers, effect signs disagree in 33% of jointly affected cells [SWEEP, "Not ranked"]. Section 5.4
+concerns one keep rule's accuracy, not per-memory effects.
 
 **What the records cover.** The sweep's queries through 2026-10-14 found nothing that occupied
 AM1 [SWEEP, check O9]. The audit ran about 30 orx queries and 12 web searches for Finding A
@@ -846,10 +872,12 @@ rounded in D107), on H100s of one node.
   "Reproduce"] gave `results.json`, `per-table.json.gz` and `tables.md` byte-identical to the
   committed copies (34 s of CPU). AM4's second route, which recomputes the judge-based figures
   from the committed records of `am3-nonabstain-generality-v1` without the features [AM4],
-  compared 462 figures with no difference. The audit's two recomputations (sections 3 and 5.5)
-  used scripts it did not commit; they were recomputed independently from AM1's
-  `analysis/tables.json.gz` and the committed `per-table.json.gz` of
-  `am3-nonabstain-generality-v1`, and every figure quoted here matched.
+  compared 462 figures with no difference. The audit's two recomputations (quoted in sections 3,
+  4.2 and 5.5) used scripts it did not commit. The counts of its split table and of its fallback
+  table were recomputed independently from AM1's `analysis/tables.json.gz` and the committed
+  `per-table.json.gz` of `am3-nonabstain-generality-v1`, and matched (`numbers.md` N185, N187
+  and N191). The optimal-set rates, the auditor's bootstrap interval and the optimal-set density
+  are quoted from the audit; no rerun of them is recorded.
 
   ```bash
   uv run --locked --offline python scripts/memcredit_cost_curve.py \
@@ -894,8 +922,8 @@ Program evidence (paths from the repository root, at `1cf31346`):
 - [AM5R] `program/evidence/2026-10-16/am5-ablated-cost-v2/RESULTS.md` (confirmatory).
 - [AUDIT] `program/evidence/2026-10-16/novelty-audit/AUDIT.md`, the novelty audit behind D131.
 - [SWEEP] `program/evidence/2026-10-14/question-sweep-memory-gpu/dossier.md`, the question sweep
-  that ranked AM1 (entries 3, 5 and 6; owner checks O3, O5 and O9; "Not ranked").
-- [DEC] decisions D101, D103, D104, D107, D111-D121, D123, D126 and D131 in
+  that ranked AM1 (entries 3, 5 and 6; owner checks O3 and O9; "Not ranked").
+- [DEC] decisions D9, D101, D103, D104, D107, D111-D121, D123, D126 and D131 in
   `program/decisions.md`.
 
 External sources, as the program's records cite them, with the dates they give:
@@ -909,7 +937,9 @@ External sources, as the program's records cite them, with the dates they give:
 - Memory learners: Hindsight Memory-PRM, 2026-08-30, <https://arxiv.org/abs/2608.29605>;
   MeClear, 2026-09-08, <https://arxiv.org/abs/2609.09115>; CMP, 2026-10-01,
   <https://arxiv.org/abs/2610.02070>; UpliftMem, 2026-09-29, <https://arxiv.org/abs/2609.36805>;
-  DRSR, 2026-09-23, <https://arxiv.org/abs/2609.27276>.
+  DRSR, 2026-09-23, <https://arxiv.org/abs/2609.27276>; Relevance Is Not Sufficiency,
+  2026-10-07, <https://arxiv.org/abs/2610.09348>; MemPursuit, 2026-10-11,
+  <https://arxiv.org/abs/2610.15642>.
 - Attribution and data valuation: Nematov et al., 2025-07-06,
   <https://arxiv.org/abs/2507.04480>; MaxShapley, 2025-12-05, <https://arxiv.org/abs/2512.05958>;
   Wang et al., 2024-05-06, <https://arxiv.org/abs/2405.03875>; Chi et al., 2025-02-06,
@@ -917,7 +947,8 @@ External sources, as the program's records cite them, with the dates they give:
   <https://arxiv.org/abs/1904.02868>; Data Banzhaf, 2022-05, <https://arxiv.org/abs/2205.15466>;
   Beta Shapley, 2021-10, <https://arxiv.org/abs/2110.14049>; TracLLM, 2025-06,
   <https://arxiv.org/abs/2506.04202>; ContextCite, 2024-09-01, <https://arxiv.org/abs/2409.00729>;
-  AT2, 2025-04-18, <https://arxiv.org/abs/2504.13752>.
+  AT2, 2025-04-18, <https://arxiv.org/abs/2504.13752>; ProxySPEX, 2025-05-23,
+  <https://arxiv.org/abs/2505.17495>; SPEX, 2025-02-19, <https://arxiv.org/abs/2502.13870>.
 - Subset search: Kohavi and John, 1997, <https://doi.org/10.1016/S0004-3702(97)00043-X>; DSPy,
   2023-10, <https://arxiv.org/abs/2310.03714>; Schoch and Ji, 2025-05,
   <https://aclanthology.org/2025.insights-1.7/>.
