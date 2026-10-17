@@ -3,20 +3,28 @@
 **Status: internal draft, not published (D101).** Publication is an outward action and stays the
 program owner's call. Nothing in this directory has been posted, submitted or sent.
 
-This is the internal write-up of the program's agent-memory line (decisions D103-D119), which
-D119 asked for. It summarises, from the committed evidence only, three registered results on
-LongMemEval-S with exact 256-subset outcome tables:
+This is the internal write-up of the program's agent-memory line (decisions D103-D131), which
+D119 asked for. It summarises, from the committed evidence only, the line's results on
+LongMemEval-S with exact 256-subset outcome tables, narrowed to the novelty audit of D131. None
+of the results is a new phenomenon; the audit found prior work for each.
 
-1. per-memory deletion (leave-one-out) credit is misspecified for keep and evict decisions
-   (`am1-memory-credit-v1`, confirmatory);
-2. with an oracle utility, search over keep sets beats sampled credit rules at equal or fewer
-   reader calls, in six of seven registered comparisons; the comparison with greedy backward
+1. **Exact keep-set tables (the strongest result).** Keep-set regret against the exact keep-4
+   optimum, on 694 exhaustive judged tables, is the one measurement for which the audit found no
+   direct prior. On them, top-4 keep sets by leave-one-out credit are misspecified
+   (`am1-memory-credit-v1`, confirmatory). Post hoc, most of that loss sits in pools the reader
+   gets wrong even with all 8 memories, and exact Shapley and Banzhaf are near-optimal; this is
+   not evidence that memory interactions defeat per-memory credit.
+2. **Search with an oracle.** Given the judged utility, search over keep sets beats sampled
+   credit rules in six of seven registered comparisons; the comparison with greedy backward
    elimination is not separated, so the registered verdict is INCONCLUSIVE
-   (`am1-keepset-search-v1`, H-A);
-3. without labels, the reader's confidence is anti-informative and its abstention is usable:
-   switching away from an abstaining keep set gains on answerable questions for three readers
-   (`am1-keepset-search-v1` H-C, `am3-nonabstain-generality-v1` H1), at a measured,
-   judge-qualified cost on unanswerable questions (H2, descriptive).
+   (`am1-keepset-search-v1`, H-A). This is a known wrapper-versus-filter effect.
+3. **A known abstention-gated keep rule, replicated.** Switching away from a keep set whose
+   reply abstains, a variant of the stop rule of Wang, Ma and Kumar (2025), gains on answerable
+   questions for three readers (`am1-keepset-search-v1` H-C, `am3-nonabstain-generality-v1` H1).
+   Its cost was measured on LongMemEval-S's 30 unanswerable questions (descriptive,
+   judge-qualified), across read caps (AM4, exploratory and post hoc), and on held-out questions
+   with their evidence removed (AM5 on development data; `am5-ablated-cost-v2`, confirmatory:
+   cost below gain for the two Qwen readers at a cap of 8 reads, not separated for OLMo-2).
 
 ## Files
 
@@ -27,7 +35,7 @@ LongMemEval-S with exact 256-subset outcome tables:
 
 ## Basis
 
-Every evidence path in the note resolves on `main` at `db589d2f`, the base of the branch
-`paper/memory-keepset-note`. The note quotes no question, answer, reply or memory text; those
-stay on the host. No human has reviewed the note, and its hand-check figures rest on agent
+Every evidence path in the note resolves on `main` at `1cf31346`, the base of the branch
+`paper/memory-keepset-note-d131`. The note quotes no question, answer, reply or memory text;
+those stay on the host. No human has reviewed the note, and its hand-check figures rest on agent
 labels (D9).
