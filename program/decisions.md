@@ -3300,3 +3300,25 @@ narrowed accordingly.**
     truth.
 - `paper/memory-keepset-note/` is to be revised to these narrowed claims
   before any use.
+
+**D132. The transcreate speedrun on the H100 host continues past 2026-10-20,
+with no end date. Kevin extends D127's R570 risk acceptance to match.**
+- Request, relayed by the gt-transcreate session on 2026-10-16: Kevin decided
+  that the speedrun keeps running after 2026-10-20 ("change the agreement
+  because this is highest priority").
+- Kevin confirmed in this session on 2026-10-16. Asked whether the R570 risk
+  acceptance (model-written GPU code without per-job review) extends too, he
+  chose "Extend, no end date".
+- The limits are unchanged:
+  - at most 4 `tcsr-*` jobs holding a GPU, and at most 128 CPUs;
+  - Slurm only, with CPU jobs inside srun;
+  - no sudo, no docker, no listeners beyond 127.0.0.1;
+  - never touching `~/cotcodec-*` or `~/transcreate-runs`;
+  - killing only its own recorded PIDs.
+- This program's own rule is unchanged: model-generated code gets GPU access
+  only after review and pinning (D7, D110). If this program later needs more
+  than 3 GPUs (for example, a TP8 load of Kimi-K2.6), it asks the transcreate
+  session, and Kevin if needed.
+- LaMa (D110) runs through its chain's end date of 2026-10-21 unless
+  transcreate asks for longer. ROSE's weights are still deleted at the
+  hosting cleanup.
