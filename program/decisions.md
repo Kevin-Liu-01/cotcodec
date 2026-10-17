@@ -3376,3 +3376,13 @@ an erratum to D131.**
     so it can be restarted on request. The transcreate session was told.
 - This program now holds no job, container or GPU on the node. No new work
   starts until Kevin says so.
+
+**D135. While this program is paused, the transcreate speedrun may use the
+whole node (Kevin, 2026-10-17).**
+- Kevin, asked whether transcreate may use more than 4 GPUs while this
+  program is paused: "yes of course it should be using everything."
+- This lifts D127/D132's 4-GPU cap for the length of the pause. The other
+  limits stay: Slurm only, unprivileged, localhost only, and never touching
+  `~/cotcodec*` or `~/transcreate-runs`.
+- Before this program submits anything again, it tells the transcreate
+  session first, so its jobs can make room.
