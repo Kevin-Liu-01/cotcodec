@@ -3363,3 +3363,16 @@ an erratum to D131.**
   both figures.
 - Wording note on D123: `ea4a7206` is v1's freeze commit, and the ledger's
   `git_head_at_freeze` for row 26 is the fill commit `f46242ee`.
+
+**D134. Kevin pauses this program's work and asks for the GPU to be freed
+(2026-10-17).**
+- Kevin's words: "free up gpu space for now and not do work at the moment".
+- Done:
+  - the SR1 gauntlet wave 1 workflow was stopped partway. Nothing is
+    recorded, and the worktree is kept for a later restart;
+  - the LaMa server for transcreate was stopped early: the running job and
+    its successor were cancelled, and the chain's STOP file is set. It had
+    been idle for about 9.5 hours. GPU 0 is free, and the weights are kept
+    so it can be restarted on request. The transcreate session was told.
+- This program now holds no job, container or GPU on the node. No new work
+  starts until Kevin says so.
